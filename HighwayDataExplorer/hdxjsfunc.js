@@ -72,41 +72,61 @@ function startRead() {
     // first, retrieve the selected file (as a File object)
     // which must be done before we toggle the table to force
     // the pointbox to be displayed
-    var file = document.getElementById('filesel').files[0];
+    // var file = document.getElementById('filesel').files[0];
+	
+	var index = document.getElementById("file-select").selectedIndex;
+	var value = document.getElementById("file-select").options[index].value;
+	
+	if(value != ""){
+		// document.getElementById("test").innerHTML = value;
+		console.log(value);
+		
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				
+				var file = new Blob([xmlhttp.responseText], {type : "text/plain"});
+				file.name = value;
+				
+				// force highway data box to be displayed
+				var menu = document.getElementById("showHideMenu");
+				// menu.options[2].selected = true;
+				// toggleTable();
 
-    // force highway data box to be displayed
-    var menu = document.getElementById("showHideMenu");
-    // menu.options[2].selected = true;
-    // toggleTable();
+				if (file) {
+				//DBG.write("file: " + file.name);
+				document.getElementById('filename').innerHTML = file.name;
+				if ((file.name.indexOf(".wpt") == -1) &&
+					(file.name.indexOf(".pth") == -1) &&
+					(file.name.indexOf(".nmp") == -1) &&
+					(file.name.indexOf(".gra") == -1) &&
+					(file.name.indexOf(".tmg") == -1) &&
+					(file.name.indexOf(".wpl") == -1)) {
+					pointboxErrorMsg("Unrecognized file type!");
+					return;
+				}
+				// pointboxErrorMsg("Loading... (" + file.size + " bytes)");
+				var reader;
+				try {
+					reader = new FileReader();
+				}
+				catch(e) {
+					pointboxErrorMsg("Error: unable to access file (Perhaps no browser support?  Try recent Firefox or Chrome releases.).");
+					return;
+				}
+				reader.readAsText(file, "UTF-8");
+				reader.onload = fileLoaded;
+				//reader.onerror = fileLoadError;
+				}
+				else {
+				//DBG.write("file is null!");
+				}
+			}
+		};
+		xmlhttp.open("GET", "http://tm.teresco.org/graphs/"+value, true);
+		xmlhttp.send();
 
-    if (file) {
-	//DBG.write("file: " + file.name);
-	document.getElementById('filename').innerHTML = file.name;
-	if ((file.name.indexOf(".wpt") == -1) &&
-	    (file.name.indexOf(".pth") == -1) &&
-	    (file.name.indexOf(".nmp") == -1) &&
-	    (file.name.indexOf(".gra") == -1) &&
-	    (file.name.indexOf(".tmg") == -1) &&
-	    (file.name.indexOf(".wpl") == -1)) {
-	    pointboxErrorMsg("Unrecognized file type!");
-	    return;
 	}
-	// pointboxErrorMsg("Loading... (" + file.size + " bytes)");
-	var reader;
-	try {
-	    reader = new FileReader();
-	}
-	catch(e) {
-	    pointboxErrorMsg("Error: unable to access file (Perhaps no browser support?  Try recent Firefox or Chrome releases.).");
-	    return;
-	}
-	reader.readAsText(file, "UTF-8");
-	reader.onload = fileLoaded;
-	//reader.onerror = fileLoadError;
-    }
-    else {
-	//DBG.write("file is null!");
-    }
 }
 
 
