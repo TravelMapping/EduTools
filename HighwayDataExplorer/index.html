@@ -242,7 +242,7 @@ function getCurrentAlgorithm() {
             } else if (value == "RFS") {
                 startGraphTraversal("RFS");
             } else if (value == "ConvexHull") {
-                startConvexHull();
+                bruteForceConvexHull();
 			}else if (value == "connected") {
                 startConnectedPieces(-1, null);
             }

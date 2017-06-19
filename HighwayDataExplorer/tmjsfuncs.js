@@ -2103,8 +2103,212 @@ function listToVIndexString(items) {
 
 }
 
+//New Convex Hull 
+function addToHull(temp1, temp2){
+    hull[0] = temp1;
+    hull[1] = temp2;
+}
 
 
+//Compute Squared Distance 
+function squaredDistance(o1, o2) {
+	var dx, dy;
+	dx = o1.lon - o2.lon;
+	dy = o1.lat - o2.lat;
+	return dx * dx + dy * dy;
+}
+
+/**
+    Check if this point is directly in between the two given
+    points.  Note: the assumption is that they are colinear.
+
+    @param o1 one of the points
+    @param o2 the other point
+    @return whether this point is between the two given points
+    */
+
+function isBetween(o1, o2, o3) {
+	var sqDisto1o2 = squaredDistance(o1, o2);
+	alert("isBetween" + (squaredDistance(o3, o2) < sqDisto1o2) &&
+		(squaredDistance(o3, o2) < sqDisto1o2));
+	return (squaredDistance(o3, o2) < sqDisto1o2) &&
+		(squaredDistance(o3, o2) < sqDisto1o2);
+}
+
+var hull = [];
+
+var hullI = 0;
+var hullJ = 0;
+//var k = 0;
+var hull = [];
+
+var convexLineHull = [];
+
+var visitingLine = [];
+
+function showConvexLines(lineHull) {
+	for (var i = 0; i < lineHull.length; i++) {
+		connections[i].setMap(null);
+		connections[i] = new google.maps.Polyline({
+			map: map,
+			path: lineHull,
+			strokeColor: '#aa0000',
+			strokeOpacity: 0.6,
+			strokeWeight: 4
+		});
+	}
+}
+
+var currentSegment;
+
+function visitingLineHull(lineHull) {
+	//for (var i = 0; i < lineHull.length; i++) {
+	//currentSegment.setMap(null);
+	currentSegment = new google.maps.Polyline({
+		map: map,
+		path: lineHull,
+		strokeColor: '#0000aa',
+		strokeOpacity: 0.6,
+		strokeWeight: 4
+	});
+	//}
+}
+
+var point1;
+var point2;
+
+var a;
+var b;
+var c;
+
+var lookingForPositive;
+var foundProblem;
+var firstTestPoint;
+
+function bruteForceConvexHull() {
+	if(pause){
+		pause = false;
+		innerLoopConvexHull();
+		return;
+	}
+	for (var outerLoop = 0; outerLoop < connections.length; outerLoop++) {
+		connections[outerLoop].setMap(null);
+	}
+	hullJ = 1;
+	hullI = 0;
+	setTimeout(innerLoopConvexHull, delay);
+}
+
+function innerLoopConvexHull() {
+	
+	if(pause)
+		return;
+	
+	point1 = waypoints[hullI];
+	point2 = waypoints[hullJ];
+
+	//higlight the points being considered
+	//updateMarkerAndTable(i, visualSettings.leader, 30, false);
+	updateMarkerAndTable(hullJ, visualSettings.visiting, 30, false);
+
+	// from here, we need to see if all other points are
+	// on the same side of the line connecting point1 and point2
+	a = point2.lat - point1.lat;
+	b = point1.lon - point2.lon;
+	c = point1.lon * point2.lat - point1.lat * point2.lon;
+	// now check all other points to see if they're on the
+	// same side -- stop as soon as we find they're not
+	lookingForPositive = false;
+	foundProblem = false;
+	firstTestPoint = true;
+
+	visitingLine[0] = new google.maps.LatLng(point1.lat, point1.lon);
+	visitingLine[1] = new google.maps.LatLng(point2.lat, point2.lon);
+	visitingLineHull(visitingLine);
+
+	setTimeout(innerLoop2, delay);
+}
+
+function innerLoop2() {
+	
+	if(pause)
+		return;
+	
+	for (var k = 0; k < waypoints.length; k++) {
+
+		var point3 = waypoints[k];
+
+		if (point1 === point3 || point2 === point3) {
+			continue;
+		}
+		updateMarkerAndTable(k, visualSettings.hullK, 30, false);
+		var checkVal = a * point3.lon + b * point3.lat - c;
+
+		if (checkVal === 0) {
+			if (isBetween(point1, point2, point3)) {
+				continue;
+			} else {
+				foundProblem = true;
+				break;
+			}
+		}
+		if (firstTestPoint) {
+			lookingForPositive = (checkVal > 0);
+			firstTestPoint = false;
+		} else {
+			if ((lookingForPositive && (checkVal < 0) ||
+					(!lookingForPositive && (checkVal > 0)))) {
+				// segment not on hull, jump out of innermost loop
+				foundProblem = true;
+				break;
+				//possibly end 3rd for loop here
+			}
+		}
+	}
+
+	currentSegment.setMap(null);
+	if (!foundProblem) {
+
+		// purple line showing convex hull
+		hull[0] = new google.maps.LatLng(point1.lat, point1.lon);
+		hull[1] = new google.maps.LatLng(point2.lat, point2.lon);
+		polyline = new google.maps.Polyline({
+			map: map,
+			path: hull,
+			strokeColor: '#cc00ff',
+			strokeOpacity: 0.6,
+			strokeWeight: 6
+		});
+		updateMarkerAndTable(hullI, visualSettings.startVertex, 30, false);
+		updateMarkerAndTable(hullJ, visualSettings.startVertex, 30, false);
+	} else {
+		updateMarkerAndTable(hullJ, visualSettings.discarded, 30, false);
+	}
+	hullJ++;
+	if (hullJ == waypoints.length) {
+		updateMarkerAndTable(hullI, visualSettings.discarded, 30, false);
+		hullI++;
+		hullJ = hullI + 1;
+	}
+
+	if (hullI < waypoints.length - 1) {
+		updateMarkerAndTable(hullI, visualSettings.hullI, 30, false);
+		setTimeout(innerLoopConvexHull, delay);
+	} else {
+
+	}
+
+}
+
+//Compute Squared Distance 
+function squaredDistance(o1,o2) {
+        var dx, dy;
+        dx = o1.lon-o2.lon;
+        dy = o1.lat-o2.lat;
+        return dx*dx + dy*dy;
+}
+
+=======
 //New Convex Hull 
 function addToHull(temp1, temp2){
     hull[0] = temp1;
@@ -2429,6 +2633,8 @@ function makeTable(){
             table.setAttribute("border", "2");
             div.appendChild(table);
         }
+    return div;        
+}
 
 //Add gradient to points and corresponding table values 
 
