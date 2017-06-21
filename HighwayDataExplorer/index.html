@@ -236,7 +236,8 @@ function getCurrentAlgorithm() {
   var selectionIndex = menuSelection.selectedIndex;
   return menuSelection.options[selectionIndex].value;
 }
-        function showHiddenPseudocode() {
+    
+function showHiddenPseudocode() {
             var show = document.getElementById("showHidden").checked;
             var value = getCurrentAlgorithm();
             if (show == true) {
@@ -285,6 +286,7 @@ function getCurrentAlgorithm() {
                 } else if (value == "RFS") {
                     document.getElementById('pseudo').innerHTML = "<pre>// fill in for real later\nlongest = 0\n</pre>";
                 }
+                
             } else {
                 document.getElementById('pseudo').innerHTML = "";
             }
@@ -357,7 +359,11 @@ function getCurrentAlgorithm() {
                 document.getElementById('optionSection').innerHTML = 'Start Vertex <input id="startPoint" onfocus="startPointInput()" type="number" name="Starting Point" min="0" value="0" size="7" /> ' + '<br><input id="showHidden" type="checkbox" name="Show selected algorithm pseudocode" onclick="showHiddenPseudocode()" >&nbsp;Pseudocode<br>' + '<input id="showDataStructure" type="checkbox" onchange="toggleDS()" name="Show Data Structure">Show Data Structure';
             }else if (value == "Dijkstra") {
                 document.getElementById('optionSection').innerHTML = 'Start Vertex <input id="startPoint" onfocus="startPointInput()" type="number" min="0" name="Starting Point" value="0" size="7" /> <br>' + 'End &nbspVertex <input id="endPoint" onfocus="endPointInput()" type="number" min="0" name="End Point" value="0" size="7" /> <br>' + '<input id="showHidden" type="checkbox" name="Show selected algorithm pseudocode" onclick="showHiddenPseudocode()" >&nbsp;Pseudocode<br>' + '<input id="showDataStructure" type="checkbox" onchange="toggleDS()" name="Show Data Structure">Show Data Structure';
-            }else {
+            }
+            else if(value == "ConvexHull"){
+            alert("This is an n^3 algorithm. This means that it takes quite a while to execute fully so it would be most beneficial to use a small graph.");
+            }
+            else {
                 document.getElementById('optionSection').innerHTML = "";
             }
         }
@@ -427,6 +433,7 @@ function makeResize(){
 		document.getElementById("selected").appendChild(div);
 	$( "#contents_table" ).resizable();
 }
+
 </script>
 <p class="menubar">
   HDX: <span id="filename">Select a file to display</span>

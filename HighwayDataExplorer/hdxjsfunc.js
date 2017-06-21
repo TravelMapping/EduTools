@@ -91,6 +91,9 @@ function startRead() {
 	    pointboxErrorMsg("Unrecognized file type!");
 	    return;
 	}
+    if(file.name.includes("OCE-continent")){
+       alert("This map is best suited for use with the Connected Paths algorithm. \nIt cannot be used with the Convex Hull algorithm due to the fact that it crosses the international date line .");
+       }
 	// pointboxErrorMsg("Loading... (" + file.size + " bytes)");
 	var reader;
 	try {
