@@ -253,6 +253,7 @@ padding:0px;
 </style>
   <link rel="stylesheet" href="/leaflet/leaflet.css" />
   <script src="/leaflet/leaflet.js"></script>
+  <script src="/leaflet/leaflet-providers.js"></script>
   <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
