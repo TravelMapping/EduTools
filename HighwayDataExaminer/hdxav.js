@@ -120,7 +120,7 @@ var hdxAV = {
         this.avList.push(hdxNoAV);
 	groupStarts.push({
 	    first: this.avList.length,
-	    text: "Point-Only Algorithms"
+	    text: "Vertex-Only Algorithms"
 	});
         this.avList.push(hdxVertexExtremesSearchAV);
         this.avList.push(hdxExtremePairsAV);
