@@ -290,8 +290,8 @@ function showHideDatatables() {
     else {
         datatable.style.display = "none";
     }
-    
-    if (firstTime) {
+
+    if (firstTime && hdxAV.status == hdxStates.AV_SELECTED) {
         initWaypointsAndConnections(true, true,
             visualSettings.undiscovered);
         firstTime = false;
