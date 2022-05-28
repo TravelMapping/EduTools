@@ -17,6 +17,13 @@ function HDXInit() {
     // graph selector data initialization
     //HDXGraphSearchInit();
 
+    hdxGlobals.titleScreen = true;
+    // will we skip the title screen?
+    if (HDXQSIsSpecified("load")) {
+	hdxGlobals.titleScreen = false;
+    }
+    hdxGlobals.algSelectScreen = false;
+
     // HDX menuing system initialization
     defaultMenu();
 
@@ -44,9 +51,13 @@ function HDXInit() {
     // if the load= QS parameter is present, try to load the file
     // from the graphdata on the server
     if (HDXQSIsSpecified("load")) {
+	hdxGlobals.titleScreen = false;
 	HDXReadFileFromWebServer(HDXQSValue("load"));
     }
-    
+
     map.on('baselayerchange', newMapTileSelected);
     newMapTileSelected();
+
+    // Ensures that map is resized properly when window is resized
+    window.addEventListener('resize', resizePanels);
 }

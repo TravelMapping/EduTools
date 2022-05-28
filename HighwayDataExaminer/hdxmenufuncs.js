@@ -29,7 +29,7 @@ function basicMenu() {
     back.innerHTML = "Back";
     dataPanel.appendChild(back);
     back.addEventListener("click", HDXGraphSearchCleanup());
-    if (titleScreen) {
+    if (hdxGlobals.titleScreen) {
 	back.addEventListener("click", defaultMenu);
     }
     else {
@@ -91,7 +91,7 @@ function advancedMenu() {
     title.setAttribute("id", "advancedTitle");
     container.appendChild(title);
     
-    if (titleScreen) {
+    if (hdxGlobals.titleScreen) {
 	back.addEventListener("click", defaultMenu);
     }
     else {
