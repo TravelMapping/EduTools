@@ -285,15 +285,20 @@ function showHideDatatables() {
 
 const PANEL_SEPARATION = 12;  // separation between panels
 
+// event handler to resize the panels on a resize or display/undisplay
+// of one of the panels
 function resizePanels() {
 
     const STATUS_LEFT = 400;  // width of status panel
     const BORDER_THICKNESS = 0;  // border thickness
     let left = STATUS_LEFT + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
     let dtWidth;
-    var checked = document.getElementById("datatablesCheckbox").checked;
     let mapDOM = document.getElementById("map");
     let dtDOM = document.getElementById("datatable");
+
+    // determine which panels are displayed
+    let showDataTables = document.getElementById("datatablesCheckbox").checked;
+    let showAvPanel = !hdxAV.dataOnly() && hdxAV.currentAV.value != "NONE";
 
     if (hdxGlobals.titleScreen) {
 	// do nothing
@@ -302,8 +307,7 @@ function resizePanels() {
         mapDOM.style.left = (left + (1 * PANEL_SEPARATION) + (-1 * BORDER_THICKNESS)) + "px";
         mapDOM.style.width = (window.innerWidth - (left + (2 * PANEL_SEPARATION) + (1 * BORDER_THICKNESS))) + "px";
     }
-    else if (checked && hdxAV.currentAV != null &&
-	     hdxAV.currentAV.value != "NONE") {
+    else if (showDataTables && showAvPanel) {
 	// Datatables checked and an algorithm is selected
 	
         dtWidth = dtDOM.clientWidth;
@@ -314,15 +318,14 @@ function resizePanels() {
         dtDOM.style.left = (left + (1 * PANEL_SEPARATION) + (-1 * BORDER_THICKNESS)) + "px";
         dtDOM.style.maxHeight = (window.innerHeight - (PANEL_SEPARATION * 1) - 67) + "px";
     }
-    else if (!checked && hdxAV.currentAV != null &&
-	     hdxAV.currentAV.value != "NONE") {
+    else if (!showDataTables && showAvPanel) {
 	// Datatables not checked and an algorithm is selected
         
         mapDOM.style.left = (left + (1 * PANEL_SEPARATION) + (-1 * BORDER_THICKNESS)) + "px";
         mapDOM.style.width = (window.innerWidth - (left + (2 * PANEL_SEPARATION) + (1 * BORDER_THICKNESS))) + "px";
         
     }
-    else if (checked && (hdxAV.currentValue == null || hdxAV.currentAV.value == "NONE")) {
+    else if (showDataTables && !showAvPanel) {
 	// Datatables checked and no algorithm selected
         
         dtWidth = dtDOM.clientWidth;

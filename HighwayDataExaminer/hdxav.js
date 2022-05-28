@@ -109,6 +109,15 @@ var hdxAV = {
         return this.status != hdxStates.AV_RUNNING;
     },
 
+    // is data loaded but no AV selected or running?
+    dataOnly() {
+	return this.status == hdxStates.GRAPH_LOADED ||
+	    this.status == hdxStates.WPT_LOADED ||
+	    this.status == hdxStates.NMP_LOADED ||
+	    this.status == hdxStates.WPL_LOADED ||
+	    this.status == hdxStates.PTH_LOADED;
+    },
+    
     // all setup that needs to happen on page load for HDX
     initOnLoad() {
 
