@@ -205,6 +205,9 @@ function algOptionsDonePressed() {
     }
     else {
         hdxAV.setStatus(hdxStates.AV_SELECTED);
+	// set all waypoints and connections to undiscovered to start
+        initWaypointsAndConnections(true, true,
+            visualSettings.undiscovered);
         showAVStatusPanel();
     }
 
@@ -265,8 +268,6 @@ function loadDataOptionsPressed() {
     //deleteVariableSelector();
 }
 
-
-var firstTime = true;
 // event handler for "Show Data Tables" checkbox
 function showHideDatatables() {
 
@@ -274,28 +275,11 @@ function showHideDatatables() {
     let datatable = document.getElementById("datatable");
     if (checked) {
         datatable.style.display = "inline-block";
-        /*if (hdxAV.status == hdxStates.AV_SELECTED)
-        {
-            var tablesRows = document.querySelectorAll("#datatable tr");
-
-            for (let i = 0; i < tablesRows.length; i++)
-            {
-                cell = document.getElementById("waypoint" + i).firstChild;
-                cell.style.backgroundColor = "white";
-                cell.style.color = "black";
-            }
-        }*/
-        
     }
     else {
         datatable.style.display = "none";
     }
 
-    if (firstTime && hdxAV.status == hdxStates.AV_SELECTED) {
-        initWaypointsAndConnections(true, true,
-            visualSettings.undiscovered);
-        firstTime = false;
-    }
     resizePanels();
 }
 
