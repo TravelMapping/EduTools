@@ -721,6 +721,9 @@ function parsePTHContents(fileContents) {
 //
 function parseNMPContents(fileContents) {
 
+    const unmarkedColor = "crimson";
+    const fpColor = "#00a000";
+    const liColor = "gold";
     var table = '<table class="nmptable"><thead /><tbody>';
     // all lines describe waypoints
     var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
@@ -736,16 +739,16 @@ function parseNMPContents(fileContents) {
             if (xline.length == 3 || xline.length == 4) {
                 waypoints[waypoints.length] = new Waypoint(xline[0], xline[1], xline[2], "", "");
                 if (xline.length == 3) {
-                    waypointColors[waypointColors.length] = "crimson";
+                    waypointColors[waypointColors.length] = unmarkedColor;
 		    unmarkedCount++;
                 }
                 else {
                     if (xline[3] == "FP" || xline[3] == "FPLI") {
-                        waypointColors[waypointColors.length] = "#00a000";
+                        waypointColors[waypointColors.length] = fpColor;
 			fpCount++;
                     }
                     else { // must be "LI"
-                        waypointColors[waypointColors.length] = "gold";
+                        waypointColors[waypointColors.length] = liColor;
 			liCount++;
                     }
                 }
@@ -786,8 +789,11 @@ function parseNMPContents(fileContents) {
     usingAdjacencyLists = true;
     let graphInfo = document.getElementById("graphInfo");
     graphInfo.style.display = "block";
-    graphInfo.innerHTML = "# Pairs unmarked: " + unmarkedCount + ", FP: " +
-	fpCount + ", LI: " + liCount;
+    graphInfo.innerHTML = "# Pairs <span style='color: " + unmarkedColor +
+	"'>unmarked: " + unmarkedCount + "</span>, <span style='color: " +
+	fpColor + "'>FP: " +
+	fpCount + "</span>, <span style='color: " + liColor +
+	"'>LI: " + liCount + "</span>";
     hdxAV.setStatus(hdxStates.NMP_LOADED);
     // register the HDX-specific event handler for waypoint clicks
     registerMarkerClickListener(labelClickHDX);
