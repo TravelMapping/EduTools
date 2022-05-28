@@ -345,6 +345,10 @@ function HDXProcessFileContents(fileContents) {
     
     let datatable = document.getElementById("datatable");
     let showAVSelection = false;
+    // hide the graph info overlay, any file format that wants to
+    // put meaningful information into it should do so and unhide
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "none";
 
     // in case we had set colors (for an NMP file) previously:
     waypointColors = new Array();
@@ -442,7 +446,8 @@ function parseTMGContents(fileContents) {
     var numE = parseInt(counts[1]);
     var numTravelers = 0;
 
-    var graphInfo = document.getElementById("graphInfo");
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
     graphInfo.innerHTML = numV + " vertices, " + numE + " edges";
     
     // is this a traveled format graph?
@@ -600,6 +605,9 @@ function parseGRAContents(fileContents) {
             + waypoints[graphEdges[i].v2].label + '</td></tr>';
     }
     eTable += '</tbody></table>';
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
+    graphInfo.innerHTML = numV + " vertices, " + numE + " edges";
     genEdges = false;
     hdxAV.setStatus(hdxStates.GRAPH_LOADED);
     return sideInfo + '<p />' + vTable + '<p />' + eTable;
@@ -626,6 +634,9 @@ function parseWPTContents(fileContents) {
             waypoints[waypoints.length] = WPTLine2Waypoint(lines[i]);
         }
     }
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
+    graphInfo.innerHTML = waypoints.length + " waypoints";
     genEdges = true;
     usingAdjacencyLists = false;
     hdxAV.setStatus(hdxStates.WPT_LOADED);
@@ -690,6 +701,9 @@ function parsePTHContents(fileContents) {
         }
     }
     table += '</tbody></table>';
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
+    graphInfo.innerHTML = (waypoints.length-1) + "  edges in path";
     genEdges = false;
     usingAdjacencyLists = true;
     hdxAV.setStatus(hdxStates.PTH_LOADED);
@@ -712,6 +726,10 @@ function parseNMPContents(fileContents) {
     var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     waypoints = new Array();
     waypointColors = new Array();
+    
+    let unmarkedCount = 0;
+    let fpCount = 0;
+    let liCount = 0;
     for (var i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             var xline = lines[i].split(' ');
@@ -719,13 +737,16 @@ function parseNMPContents(fileContents) {
                 waypoints[waypoints.length] = new Waypoint(xline[0], xline[1], xline[2], "", "");
                 if (xline.length == 3) {
                     waypointColors[waypointColors.length] = "crimson";
+		    unmarkedCount++;
                 }
                 else {
                     if (xline[3] == "FP" || xline[3] == "FPLI") {
                         waypointColors[waypointColors.length] = "#00a000";
+			fpCount++;
                     }
                     else { // must be "LI"
                         waypointColors[waypointColors.length] = "gold";
+			liCount++;
                     }
                 }
             }
@@ -763,6 +784,10 @@ function parseNMPContents(fileContents) {
     table += "</tbody></table>";
     genEdges = false;
     usingAdjacencyLists = true;
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
+    graphInfo.innerHTML = "# Pairs unmarked: " + unmarkedCount + ", FP: " +
+	fpCount + ", LI: " + liCount;
     hdxAV.setStatus(hdxStates.NMP_LOADED);
     // register the HDX-specific event handler for waypoint clicks
     registerMarkerClickListener(labelClickHDX);
@@ -801,6 +826,9 @@ function parseWPLContents(fileContents) {
     genEdges = false;
     usingAdjacencyLists = true;
     var summaryInfo = '<table class="gratable"><thead><tr><th>' + waypoints.length + " waypoints.</th></tr></table>";
+    let graphInfo = document.getElementById("graphInfo");
+    graphInfo.style.display = "block";
+    graphInfo.innerHTML = waypoints.length + " points";
     hdxAV.setStatus(hdxStates.WPL_LOADED);
     return summaryInfo + '<p />' + vTable;
 }
