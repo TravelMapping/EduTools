@@ -409,6 +409,7 @@ function HDXProcessFileContents(fileContents) {
     hideLoadDataPanel();
     mapStatus = mapStates.HDX;
     updateMap(null,null,null);
+    hdxGlobals.titleScreen = false;
     if (showAVSelection) {
 	showAlgorithmSelectionPanel();
     }
@@ -626,8 +627,9 @@ function parseWPTContents(fileContents) {
         }
     }
     genEdges = true;
+    usingAdjacencyLists = false;
     hdxAV.setStatus(hdxStates.WPT_LOADED);
-    return "<h2>Raw file contents:</h2><pre>" + fileContents + "</pre>";
+    return "<h2>wpt file contents:</h2><pre>" + fileContents + "</pre>";
 }
 
 // parse the contents of a .pth file
@@ -688,7 +690,7 @@ function parsePTHContents(fileContents) {
         }
     }
     table += '</tbody></table>';
-    //genEdges = true;
+    genEdges = false;
     usingAdjacencyLists = true;
     hdxAV.setStatus(hdxStates.PTH_LOADED);
     return table;
@@ -760,6 +762,7 @@ function parseNMPContents(fileContents) {
 
     table += "</tbody></table>";
     genEdges = false;
+    usingAdjacencyLists = true;
     hdxAV.setStatus(hdxStates.NMP_LOADED);
     // register the HDX-specific event handler for waypoint clicks
     registerMarkerClickListener(labelClickHDX);
@@ -796,6 +799,7 @@ function parseWPLContents(fileContents) {
     // no edges here
     graphEdges = new Array();
     genEdges = false;
+    usingAdjacencyLists = true;
     var summaryInfo = '<table class="gratable"><thead><tr><th>' + waypoints.length + " waypoints.</th></tr></table>";
     hdxAV.setStatus(hdxStates.WPL_LOADED);
     return summaryInfo + '<p />' + vTable;

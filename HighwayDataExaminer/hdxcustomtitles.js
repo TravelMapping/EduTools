@@ -13,7 +13,7 @@
 // them into span tag under document.body. This then adds various
 // styles and class, that function as ids (allowing for more "ids")
 function HDXAddCustomTitles() {
-    
+
     var body = document.body;
     // selects all things with attribute custom-title
     var titles = document.querySelectorAll("[custom-title]");

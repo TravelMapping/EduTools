@@ -299,7 +299,6 @@ function resizePanels() {
     // determine which panels are displayed
     let showDataTables = document.getElementById("datatablesCheckbox").checked;
     let showAvPanel = !hdxAV.dataOnly() && hdxAV.currentAV.value != "NONE";
-
     if (hdxGlobals.titleScreen) {
 	// do nothing
     }
@@ -327,7 +326,6 @@ function resizePanels() {
     }
     else if (showDataTables && !showAvPanel) {
 	// Datatables checked and no algorithm selected
-        
         dtWidth = dtDOM.clientWidth;
         var left2 = dtWidth + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
         
@@ -443,15 +441,12 @@ function showLoadDataPanel() {
     document.getElementById("loadDataPanel").style.display = "table";
     document.getElementById("hideLoadDataPanel").disabled=false;
     document.getElementById("map").style.filter = "blur(6px)";
-    
-
 }
 
 function hideLoadDataPanel() {
 
     document.getElementById("loadDataPanel").style.display ="none";
-    datatable.style.display = "none";
-
+    document.getElementById("map").style.filter = "none";
 }
 
 // the algorithm selection panel, where an algorithm is selected
@@ -632,8 +627,9 @@ function newMapTileSelected(e) {
     else {
         visualSettings.undiscovered.color = "rgb(60, 60, 60)";
         visualSettings.undiscovered.textColor = "white";
-        visualSettings.undiscovered.icon.borderColor = "rgb(60, 60, 60)";
-        console.log("made it 70");
+	if (visualSettings.undiscovered.hasOwnProperty("icon")) {
+            visualSettings.undiscovered.icon.borderColor = "rgb(60, 60, 60)";
+	}
         darkMap = false;
 
         markerList = document.querySelectorAll(".circle-dot");
