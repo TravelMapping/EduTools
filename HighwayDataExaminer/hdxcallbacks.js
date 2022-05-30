@@ -383,7 +383,7 @@ function showTopControlPanel() {
     let av1 = document.getElementById("topControlPanelAV1");
     let av2 = document.getElementById("topControlPanelAV2");
     let av3 = document.getElementById("topControlPanelAV3");
-    
+    let pseudocheck = document.getElementById("topControlPanelPseudo");
     // show only the relevant components given the current
     // state of HDX
     switch (hdxAV.status) {
@@ -396,6 +396,8 @@ function showTopControlPanel() {
         av2.style.display = "none";
 	// show the checkboxes
         av3.style.display = "";
+	// but the pseudocode checkbox doesn't make sense
+	pseudocheck.style.display = "none";
         break;
 
     case hdxStates.GRAPH_LOADED:
@@ -419,6 +421,7 @@ function showTopControlPanel() {
         av1.style.display = "";
         av2.style.display = "";
         av3.style.display = "";
+	pseudocheck.style.display = "";
         speedChanged();
         document.getElementById("pseudoCheckbox").checked = true;
         document.getElementById("datatablesCheckbox").checked = false;
