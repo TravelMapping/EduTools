@@ -695,7 +695,6 @@ var hdxQuadtreeAV = {
         let wEnds = [[this.n,this.w],[this.s,this.w]];
         
         if(document.getElementById("squareBB").checked){
-            console.log('squareBB');
             let EW = distanceInMiles(nEnds[0][0],nEnds[0][1],nEnds[1][0],nEnds[1][1]);
             let NS = distanceInMiles(eEnds[0][0],eEnds[0][1],eEnds[1][0],eEnds[1][1]);
             let difference;
