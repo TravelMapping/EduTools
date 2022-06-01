@@ -634,8 +634,13 @@ var hdxQuadtreeAV = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
+
+
         let newAO = 'Refinement Threshold <input type="number" id="refinement" min="2" max="' 
         + (waypoints.length) + '" value="3">';
+
+        newAO += `<br /><input id="squareBB" type="checkbox" name="Square Bounding Box"/>&nbsp;
+        Square Bounding Box<br />`;
 
         hdxAV.algOptions.innerHTML = newAO;
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
@@ -682,10 +687,36 @@ var hdxQuadtreeAV = {
         }
 
         //creating the polylines for the bounding box
+        
+        //if square bounding box is not selected, then the quadtree will be split as a rectangle
         let nEnds = [[this.n,this.w],[this.n,this.e]];
         let sEnds = [[this.s,this.w],[this.s,this.e]];
         let eEnds = [[this.n,this.e],[this.s,this.e]];
         let wEnds = [[this.n,this.w],[this.s,this.w]];
+        
+        if(document.getElementById("squareBB").checked){
+            let EW = distanceInMiles(nEnds[0][0],nEnds[0][1],nEnds[1][0],nEnds[1][1]);
+            let NS = distanceInMiles(eEnds[0][0],eEnds[0][1],eEnds[1][0],eEnds[1][1]);
+            let difference;
+            //check if the difference between the east west is longer than the north south
+            if(EW > NS){
+                difference = (EW - NS) / 69;
+                this.n += difference / 2;
+                this.s -= difference / 2;
+
+            } else {
+                difference = (NS - EW) / (Math.cos(Math.abs(this.n - this.s) / 2) * 69);
+                this.e += difference / 2;
+                this.w -= difference / 2;
+            }
+        
+
+            nEnds = [[this.n,this.w],[this.n,this.e]];
+            sEnds = [[this.s,this.w],[this.s,this.e]];
+            eEnds = [[this.n,this.e],[this.s,this.e]];
+            wEnds = [[this.n,this.w],[this.s,this.w]];
+        }
+        
 
             this.boundingPoly.push(
                 L.polyline(nEnds, {
