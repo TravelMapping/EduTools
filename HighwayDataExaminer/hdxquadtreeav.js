@@ -563,7 +563,7 @@ var hdxQuadtreeAV = {
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `qt &larr; new Quadtree(minLat,maxLat,minLng,maxLng,refinement)<br />`;
         this.code += `qt.points &larr; []<br />`
-        this.code += `qt.nw, qt.ne, qt.sw, qt.se <- null<br />`;
+        this.code += `qt.nw, qt.ne, qt.sw, qt.se &larr; null<br />`;
 
         //pseudocode for the top loop
         this.code += '</td></tr>' +
