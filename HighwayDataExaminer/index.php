@@ -88,7 +88,7 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxlinear.js" type="text/javascript"></script>
 <script src="hdxpresort.js" type="text/javascript"></script>
 <script src="hdxgraphsearchbox.js" type="text/javascript"></script>
-<script src="hdxapclosestpts.js" type="text/javascript"></script>
+<script src="hdxapclosestpts.js" type="text/javascript"></script> <!-- Mark V's all pairs closest points-->
 <script src="hdxkruskalav.js" type="text/javascript"></script>
 <script src="hdxdegreeav.js" type="text/javascript"></script>
 <script src="hdxdfsrecav.js" type="text/javascript"></script>
