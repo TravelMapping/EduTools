@@ -5,3 +5,10 @@
 //
 // Primary Authors: Mark Verra
 //
+
+var hdxAPClosestPtsAV = {
+    // entries for list of AVs
+    value: "APClosestPts",
+    name: "All Points Closest Pairs (Serial)",
+    description: "Search for the closest pair of vertices (waypoints)."
+}
