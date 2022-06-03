@@ -95,6 +95,7 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxquadtreeav.js" type="text/javascript"></script>
 <script src="rainbowvis.js" type="text/javascript"></script>
 <script src="hdxorderingav.js" type="text/javascript"></script>
+<script src="hdxbftravelav.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
