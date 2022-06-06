@@ -226,11 +226,8 @@ var hdxBFTravelingSalesmanAV = {
                     let table = '<table class="gratable"><thead>' +
                     '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance (mi)</th></tr></thead><tbody>';
 
-                    console.log(thisAV.shortestPath.length);
-                    console.log(thisAV.shortestPath);
                     for(let i = 0; i < thisAV.shortestPath.length;i++){
                         table += thisAV.hullTableRow(i);
-                        console.log("in loop " +  i)
                     }
                     table += '</tbody></table>';
 
