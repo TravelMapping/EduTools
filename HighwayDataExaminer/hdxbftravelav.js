@@ -14,7 +14,14 @@ var hdxBFTravelingSalesmanAV = {
 
     description: "This description is used to decribe the algorithm to the user. NOTE: Only use on small graphs, 10 vertices and less",
 
-    highlightPoly: [],
+    currPoly: null,
+
+    shortPoly: null,
+
+    shortestPath: null,
+
+    currDistances: null,
+    shortestDistances: null,
 
     nextToCheck: -1,
     avActions : [
@@ -35,12 +42,22 @@ var hdxBFTravelingSalesmanAV = {
                 thisAV.currDistance = 0;
                 thisAV.minDistance = Number.MAX_SAFE_INTEGER;
 
+                //stores the list point
                 thisAV.currPath = null;
-
                 thisAV.shortestPath = null;
 
+                //stores the poly lines for the current path
+                thisAV.currPoly = null;
+                //stores the poly lines for the shortest path
+                thisAV.shortPoly = null;
 
-            
+                //this stores the vertices for the current polyline
+                thisAV.currCoords = [];
+
+                thisAV.currEdgeDistances = [];
+                thisAV.shortestEdgeDistances = [];
+
+                //this is to generate all the possible permutations of the path
                 thisAV.permutation = [];
                 for(let i = 0; i < waypoints.length;i++){
                     if(i != thisAV.startVertex) thisAV.permutation.push(i);
@@ -67,6 +84,8 @@ var hdxBFTravelingSalesmanAV = {
 
                 thisAV.nextToCheck++;
                 thisAV.pathsRemaining--;
+
+                //this generates the next permutation to check
                 thisAV.currPath = thisAV.permutationGenerator.next();
                 if(!thisAV.currPath.done){
 
@@ -80,6 +99,7 @@ var hdxBFTravelingSalesmanAV = {
                     hdxAV.nextAction = 'cleanup';
                 }
             
+                hdxAV.iterationDone = true;
             },
             logMessage: function(thisAV){
                 return "Top of loop for paths, checking path " + thisAV.nextToCheck;
@@ -92,23 +112,43 @@ var hdxBFTravelingSalesmanAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+                if(thisAV.currPoly != null) thisAV.currPoly.remove();
+                
+                thisAV.currCoords = [];
+
                 let jumped = false;
                 let v1;
                 let v2;
                 thisAV.currDistance = 0;
+                thisAV.currEdgeDistances = [];
+                thisAV.currEdgeDistances.push(0);
                 for(let index = 0; index < thisAV.currPath.value.length - 1; index++){
                     v1 = waypoints[thisAV.currPath.value[index]];
                     v2 = waypoints[thisAV.currPath.value[index+1]];
-                    thisAV.currDistance += distanceInMiles(v1.lat,v1.lon,
+                    thisAV.currCoords.push([v1.lat,v1.lon]);
+                    
+                    let currEdgeDist = distanceInMiles(v1.lat,v1.lon,
                         v2.lat,v2.lon);
+                    thisAV.currDistance += currEdgeDist;
+                    thisAV.currEdgeDistances.push(currEdgeDist);
 
                     if(thisAV.currDistance > thisAV.minDistance){
                         jumped = true;
                         break;
                     }
                 }
+                thisAV.currCoords.push([v2.lat,v2.lon]);
+                
+                thisAV.currPoly = 
+                    L.polyline(thisAV.currCoords, {
+                        color: visualSettings.discovered.color,
+                        opacity: 0.7,
+                        weight: 3
+                    });
 
-                updateAVControlEntry("currSum","Distance of Current Path: " + thisAV.currDistance.toFixed(2) + " miles");
+                thisAV.currPoly.addTo(map);
+
+                updateAVControlEntry("currSum","Distance of Current Path: " + thisAV.currDistance.toFixed(3) + " miles");
                 if(jumped){
                     hdxAV.nextAction = "topForLoop";
 
@@ -126,10 +166,33 @@ var hdxBFTravelingSalesmanAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
-                thisAV.minDistance = thisAV.currDistance;
-                thisAV.shortestPath = thisAV.currPath;
+                if(thisAV.shortPoly != null){
+                    thisAV.shortPoly.remove();
+                }
 
-                updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(2) + " miles");
+                thisAV.minDistance = thisAV.currDistance;
+
+                thisAV.shortestPath = [];
+                thisAV.shortestEdgeDistances = [];
+                for(let i = 0; i < thisAV.currPath.value.length; i++){
+                    thisAV.shortestPath.push(thisAV.currPath.value[i]);
+                    thisAV.shortestEdgeDistances.push(thisAV.currEdgeDistances[i]);
+                }
+
+                
+                
+                thisAV.shortPoly = null;
+
+                thisAV.shortPoly = L.polyline(thisAV.currCoords, {
+                    color: visualSettings.spanningTree.color,
+                    opacity: 0.7,
+                    weight: 4
+                });
+                
+                thisAV.shortPoly.addTo(map);
+
+
+                updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(3) + " miles");
 
                 hdxAV.nextAction = 'topForLoop';
             },
@@ -145,6 +208,8 @@ var hdxBFTravelingSalesmanAV = {
                 code: function(thisAV) {
                     
 
+                    updateAVControlEntry("currSum","");
+
 
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;
@@ -152,9 +217,24 @@ var hdxBFTravelingSalesmanAV = {
                     /*here is a loop where we remove all the polylines from the map
                         note this is not the same as popping the polylines
                         */
-                    for (var i = 0; i < thisAV.highlightPoly.length; i++) {
-                        thisAV.highlightPoly[i].remove();
+                    
+                    thisAV.currPoly.remove();
+                    thisAV.currPoly = null;
+                    
+
+                    //creating data table
+                    let table = '<table class="gratable"><thead>' +
+                    '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance (mi)</th></tr></thead><tbody>';
+
+                    console.log(thisAV.shortestPath.length);
+                    console.log(thisAV.shortestPath);
+                    for(let i = 0; i < thisAV.shortestPath.length;i++){
+                        table += thisAV.hullTableRow(i);
+                        console.log("in loop " +  i)
                     }
+                    table += '</tbody></table>';
+
+                    updateAVControlEntry("minPath",table);
                     
                 },
                 logMessage: function(thisAV) {
@@ -181,10 +261,10 @@ var hdxBFTravelingSalesmanAV = {
 
         //pseudocode for the top of the for loop
         this.code += '</td></tr>' +
-            pcEntry(0,'for each path)',"topForLoop");
+            pcEntry(0,'for each path',"topForLoop");
         this.code += '</td></tr>' +
             pcEntry(1,'sum &larr; distance(path)<br />' +
-                pcIndent(2) + 'if(currDistance < minDistance)',"checkSum");
+                pcIndent(2) + 'if(currDistance < minDistance)',"findSum");
         this.code += '</td></tr>' +
             pcEntry(2,'minDistance &larr; currDistance<br />' + pcIndent(4) + 'shortestPath &larr; path','setMin');
 
@@ -198,7 +278,7 @@ var hdxBFTravelingSalesmanAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-        let newAO = 'Start Vertex <input type="number" id="startVertex" min="2" max="' 
+        let newAO = 'Start Vertex <input type="number" id="startVertex" min="0" max="' 
         + (waypoints.length - 1) + '" value="0">';
 
         hdxAV.algOptions.innerHTML = newAO;
@@ -207,13 +287,18 @@ var hdxBFTravelingSalesmanAV = {
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
         addEntryToAVControlPanel("currSum",visualSettings.discovered);
         addEntryToAVControlPanel("minSum",visualSettings.spanningTree);
+        addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
     },
 
     cleanupUI() {
-        for(var i = 0; i < this.highlightPoly.length; i++){
-            this.highlightPoly[i].remove();
+        if(this.currPoly != null){
+            this.currPoly.remove();
         }
-        this.highlightPoly = [];
+        if(this.shortPoly != null){
+            this.shortPoly.remove();
+        }
+        this.currPoly = null;
+        this.shortPoly = null;
 
     },
 
@@ -222,6 +307,15 @@ var hdxBFTravelingSalesmanAV = {
 	
         return action.label;
     },
+
+    //this code is copied from the hdxbfchav.js file for adding rows to an html table
+    hullTableRow(i) {
+
+        return '<tr><td>' + i + '</td><td>' + waypoints[this.shortestPath[i]].label +
+            '</td><td>' + this.shortestEdgeDistances[i].toFixed(3) + 
+            '</td></tr>';
+    },
+
     //note this is currently not working
     setConditionalBreakpoints(name) {
         let max = waypoints.length-1;
@@ -253,64 +347,7 @@ var hdxBFTravelingSalesmanAV = {
     }
 }
 
-
-/*this in the object for the permutation constructor. Basically you start with a list of points, and each next() returns 
-the next permutation in heap's algorithm
-*/
-function permutationGenerator(start,numVertices){
-    this.start = start;
-    this.n = numVertices - 1;
-    this.maxPermutation = Math.factorial(numVertices - 1);
-    this.count = 0;
-    this.positionCode = 0;
-
-    //contains waypoints objects
-    this.currentPath = [];
-    this.returnPath = [];
-    
-    this.hasNext = function(){
-        return this.count != this.maxPermutation;
-    }
-
-    this.next = function(){
-        this.count++;
-        return this.get();
-    }
-
-    this.remove = function(){
-        this.count++;
-    }
-
-    this.get = function(){
-        if(this.hasNext()){
-            if(this.count == 0){
-                this.returnPath.push(this.start);
-                //this is using the spread operator which allows me to concatenate the list to the end
-                this.returnPath.push(...currentPath);
-                this.returnPath.push(this.start);
-
-                return this.returnPath;
-            } else {
-                this.positionCode = count;
-                for(let position = this.n; position > 0; position--){
-                    this.returnPath = [];
-                    let selected = this.positionCode / Math.factorial(position - 1);
-                    this.returnPath.push(currentPath[selected]);
-                    this.positionCode %= Math.factorial(position-1)
-                    this.returnPath.push(...currentPath.slice(0,selected));
-                    this.returnPath.push(...currentPath.slice(selected,n));
-                    this.currentPath = this.returnPath;
-                }
-
-                this.returnPath.splice(0,0,this.start);
-                this.returnPath.push(this.start);
-                return this.returnPath;
-
-            }
-        }
-    }
-}
-
+//permutation generator
 function* permute(permutation) {
     var length = permutation.length,
         c = Array(length).fill(0),
