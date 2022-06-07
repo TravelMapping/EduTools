@@ -37,6 +37,12 @@ var hdxBFTravelingSalesmanAV = {
                 //we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startVertex, visualSettings.startVertex, 30, false);
 
+
+                let sample = [1,2,3,4,5];
+                let check = permute(sample);
+                while(!check.done){
+                    console.log(check.value)
+            }
                 thisAV.nextToCheck = -1;
 
                 thisAV.currDistance = 0;
