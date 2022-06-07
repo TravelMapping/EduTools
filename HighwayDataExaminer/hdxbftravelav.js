@@ -17,6 +17,7 @@ var hdxBFTravelingSalesmanAV = {
     currPoly: null,
 
     shortPoly: null,
+    finalPoly: [],
 
     shortestPath: null,
 
@@ -34,15 +35,10 @@ var hdxBFTravelingSalesmanAV = {
                 //gets the staring vertex selected by the user as an integer
                 thisAV.startVertex = Number(document.getElementById("startVertex").value);
 
+
                 //we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startVertex, visualSettings.startVertex, 30, false);
 
-
-                let sample = [1,2,3,4,5];
-                let check = permute(sample);
-                while(!check.done){
-                    console.log(check.value)
-            }
                 thisAV.nextToCheck = -1;
 
                 thisAV.currDistance = 0;
@@ -56,6 +52,8 @@ var hdxBFTravelingSalesmanAV = {
                 thisAV.currPoly = null;
                 //stores the poly lines for the shortest path
                 thisAV.shortPoly = null;
+                //stores the poly lines at the end
+                thisAV.finalPoly = [];
 
                 //this stores the vertices for the current polyline
                 thisAV.currCoords = [];
@@ -127,7 +125,7 @@ var hdxBFTravelingSalesmanAV = {
                 let v2;
                 thisAV.currDistance = 0;
                 thisAV.currEdgeDistances = [];
-                thisAV.currEdgeDistances.push(0);
+                //thisAV.currEdgeDistances.push(0);
                 for(let index = 0; index < thisAV.currPath.value.length - 1; index++){
                     v1 = waypoints[thisAV.currPath.value[index]];
                     v2 = waypoints[thisAV.currPath.value[index+1]];
@@ -171,6 +169,7 @@ var hdxBFTravelingSalesmanAV = {
             label: 'setMin',
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
+
                 
                 if(thisAV.shortPoly != null){
                     thisAV.shortPoly.remove();
@@ -216,6 +215,44 @@ var hdxBFTravelingSalesmanAV = {
 
                     updateAVControlEntry("currSum","");
 
+                     //make rainbow for final scr
+                     thisAV.rainbowGradiant = new Rainbow();
+                    thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
+                    thisAV.rainbowGradiant.setSpectrum('ff0000','ffc000','00ff00','00ffff','0000ff','c700ff');
+
+                    for(var i = 0; i < waypoints.length; i++){
+                        waypoints[i].num = i;
+                        
+                    }
+
+                    thisAV.currCoords = thisAV.shortPoly.getLatLngs();
+
+                    for(var i = 0; i < waypoints.length; i++){
+                        let newcolor = {
+                            color: "#" + thisAV.rainbowGradiant.colorAt(
+                                i),
+                                textColor: "white",
+                                scale: 7,
+                                name: "color",
+                                value: 0,
+                                opacity: 1
+                            }
+                            updateMarkerAndTable(waypoints[thisAV.shortestPath[i]].num, newcolor, 30, false);
+                            let visitingLine = [];
+                            visitingLine.push(thisAV.currCoords[i])
+                            visitingLine.push(thisAV.currCoords[i+1]);
+                            thisAV.finalPoly.push(
+                                L.polyline(visitingLine, {
+                                color: newcolor.color,
+                                opacity: 0.7,
+                                weight: 5
+                                })
+                            );
+                    }
+                    for(var i = 0; i < thisAV.finalPoly.length; i++){
+                        thisAV.finalPoly[i].addTo(map);
+                    }  
+
 
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;
@@ -223,16 +260,18 @@ var hdxBFTravelingSalesmanAV = {
                     /*here is a loop where we remove all the polylines from the map
                         note this is not the same as popping the polylines
                         */
-                    
+                
                     thisAV.currPoly.remove();
                     thisAV.currPoly = null;
+                    thisAV.shortPoly.remove();
+                    thisAV.shortPoly = null;
                     
 
                     //creating data table
                     let table = '<table class="gratable"><thead>' +
-                    '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance (mi)</th></tr></thead><tbody>';
+                    '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance</th></tr></thead><tbody>';
 
-                    for(let i = 0; i < thisAV.shortestPath.length;i++){
+                    for(let i = 0; i < thisAV.shortestPath.length - 1;i++){
                         table += thisAV.hullTableRow(i);
                     }
                     table += '</tbody></table>';
@@ -300,6 +339,11 @@ var hdxBFTravelingSalesmanAV = {
         if(this.shortPoly != null){
             this.shortPoly.remove();
         }
+
+        for(let i = 0; i < this.finalPoly.length; i++){
+            this.finalPoly[i].remove();
+        }
+        this.finalPoly = [];
         this.currPoly = null;
         this.shortPoly = null;
 
@@ -314,7 +358,7 @@ var hdxBFTravelingSalesmanAV = {
     //this code is copied from the hdxbfchav.js file for adding rows to an html table
     hullTableRow(i) {
 
-        return '<tr><td>' + i + '</td><td>' + waypoints[this.shortestPath[i]].label +
+        return '<tr><td>' + waypoints[this.shortestPath[i]].num + ' &rarr; ' + waypoints[this.shortestPath[i+1]].num + '</td><td>' + waypoints[this.shortestPath[i]].label +
             '</td><td>' + this.shortestEdgeDistances[i].toFixed(3) + 
             '</td></tr>';
     },
