@@ -297,18 +297,18 @@ var hdxBFTravelingSalesmanAV = {
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 
         //pseudocode for the start state
-        this.code += `currDistance &larr; 0 <br />`;
-        this.code += `minDistance &larr; &infin;<br />`
-        this.code += `shortestPath &larr; null<br />`;
+        this.code += `d<sub>current</sub> &larr; 0 <br />`;
+        this.code += `d<sub>min</sub> &larr; &infin;<br />`
+        this.code += `path<sub>shortest</sub> &larr; null<br />`;
 
         //pseudocode for the top of the for loop
         this.code += '</td></tr>' +
             pcEntry(0,'for each path',"topForLoop");
         this.code += '</td></tr>' +
-            pcEntry(1,'sum &larr; distance(path)<br />' +
-                pcIndent(2) + 'if(currDistance < minDistance)',"findSum");
+            pcEntry(1,'d<sub>current</sub> &larr; distance(path)<br />' +
+                pcIndent(2) + 'if(d<sub>current</sub> < d<sub>min</sub>)',"findSum");
         this.code += '</td></tr>' +
-            pcEntry(2,'minDistance &larr; currDistance<br />' + pcIndent(4) + 'shortestPath &larr; path','setMin');
+            pcEntry(2,'d<sub>min</sub> &larr; d<sub>current</sub><br />' + pcIndent(4) + 'path<sub>shortest</sub> &larr; path','setMin');
 
 },
     //setup UI is called after you click the algorithm in algorithm selection but before you press the visualize button, required
