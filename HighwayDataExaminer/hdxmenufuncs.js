@@ -330,7 +330,7 @@ function defaultMenu() {
     
     
     var instruct = document.createElement("p");
-    instruct.innerHTML = "Load a graph from METAL's database";
+    instruct.innerHTML = "Load a graph from the METAL database";
     
     mainbox.appendChild(instruct);
     
