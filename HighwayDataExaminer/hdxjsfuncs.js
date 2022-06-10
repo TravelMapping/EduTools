@@ -367,7 +367,7 @@ function HDXProcessFileContents(fileContents) {
 	document.getElementById("currentAlgorithm").innerHTML =
             hdxAV.currentAV.name;
     }
-    
+    console.time('loading');
     // parse the file and process as appropriate
     // its name should have been stored in hdxGlobals.loadingFile
     if (hdxGlobals.loadingFile.indexOf(".wpt") >= 0) {
@@ -409,10 +409,13 @@ function HDXProcessFileContents(fileContents) {
 	    showAVSelection = true;
 	}
     }
-    
+	console.timeEnd('loading');    
+
     hideLoadDataPanel();
     mapStatus = mapStates.HDX;
+    console.time('Visual');
     updateMap(null,null,null);
+    console.timeEnd('Visual');
     hdxGlobals.titleScreen = false;
     if (showAVSelection) {
 	showAlgorithmSelectionPanel();
@@ -434,18 +437,44 @@ function parseTMGContents(fileContents) {
     if (header[0] != "TMG") {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Invalid TMG file (missing TMG marker on first line)</th></tr></table>';
     }
-    if ((header[1] != "1.0") && (header[1] != "2.0")) {
+    if ((header[1] != "1.0") && (header[1] != "2.0")&&(header[1]!="3.0")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG file version (' + header[1] + ')</th></tr></table>';
     }
     if ((header[2] != "simple") && (header[2] != "collapsed")
-        && (header[2] != "traveled")) {
+        && (header[2] != "traveled")&&(header[2]!="custom")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG graph format (' + header[2] + ')</th></tr></table>';
     }
     var counts = lines[1].split(' ');
     var numV = parseInt(counts[0]);
     var numE = parseInt(counts[1]);
+    var offset=2;
     var numTravelers = 0;
+    var Vcolspan=3;
+    var Ecolspan=3;
+    var Vstring='';
+    var Estring='';
+    var Vfields='';
+    var Efields='';
+    hdxGlobals.keywords=["color","scale","opacity"];
+    if(header[1]=="3.0"){
+         Vfields=lines[2].split(' ');
+         Efields=lines[3].split(' ');
+         
+         for (x of Vfields){
+             if(!hdxGlobals.keywords.includes(x.toLowerCase())){
+                  Vstring=Vstring+'<th scope="col" class="dtHeader">'+x+'</th>';
+                  Vcolspan++;
+             }
+        }
+       for (x of Efields){
+             if(!hdxGlobals.keywords.includes(x.toLowerCase())){
+                  Estring=Estring+'<th scope="col" class="dtHeader">'+x+'</th>';
+                  Ecolspan++;
+             }
+        }
 
+         offset=4;   
+    }
     let graphInfo = document.getElementById("graphInfo");
     graphInfo.style.display = "block";
     graphInfo.innerHTML = numV + " vertices, " + numE + " edges";
@@ -468,39 +497,49 @@ function parseTMGContents(fileContents) {
     
     summaryInfo += ".</th></tr></table>";*/
     
-    var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="3" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th></tr></thead><tbody>';
-    
+    var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
     waypoints = new Array(numV);
     for (var i = 0; i < numV; i++) {
-        var vertexInfo = lines[i+2].split(' ');
+        var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
-        
-        var vsubstr =  parseFloat(vertexInfo[1]).toFixed(3) + ',' +
-            parseFloat(vertexInfo[2]).toFixed(3) 
-            +'</td>' + '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10);
-        var e = "...";
-        if (((waypoints[i]).label).length > 10) {
-            vsubstr =  parseFloat(vertexInfo[1]).toFixed(3) + ',' +
-                parseFloat(vertexInfo[2]).toFixed(3) 
-                +'</td>' + '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10) + e;
+        var c=1;
+        for (x of Vfields){
+              waypoints[i][x]=vertexInfo[2+c];
+              c++;
         }
-        
+
+        var e = "...";
+        var Vinfo='';
+        var coord='<td style ="word-break:break-all;">'+parseFloat(vertexInfo[1]).toFixed(3) + ',' +parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
+        var Vlabel='';
+        if (((waypoints[i]).label).length > 10) {
+            Vlabel = '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10) + e+'</td>';
+        }
+       else{
+            Vlabel = '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10)+'</td>';
+        }
+        for (x of Vfields){
+             if(!hdxGlobals.keywords.includes(x.toLowerCase())){
+                  Vinfo += '<td style ="word-break:break-all;">' +waypoints[i][x]+'</td>'
+             }
+        }
+
         var vsubstrL =  parseFloat(vertexInfo[1]).toFixed(3) + ',' +
             parseFloat(vertexInfo[2]).toFixed(3) 
             + waypoints[i].label;
         
         vTable += '<tr id="waypoint' + i + '" custom-title = "' + vsubstrL +'" onmouseover = "hoverV('+i+', false)" onmouseout = "hoverEndV('+i+', false)" onclick = "labelClickHDX('+i+')" ><td style ="word-break:break-all;">' + i +'</td>';
-        
-        var vstr = '<td style ="word-break:break-all;"' ; 
-        var vstr2 = vstr +'>' + vsubstr + '</td></tr>';
-        vTable += vstr2;
+         
+        vTable += coord + Vlabel +Vinfo+ '</tr>';
     }
+
     vTable += '</tbody></table>';
-    
-    var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="3" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th></tr></thead><tbody>';
+
+    var Einfo='';
+    var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
     graphEdges = new Array(numE);
     for (var i = 0; i < numE; i++) {
-        var edgeInfo = lines[i+numV+2].split(' ');
+        var edgeInfo = lines[i+numV+offset].split(' ');
         var newEdge;
         if (haveTravelers) {
             if (edgeInfo.length > 4) {
@@ -520,30 +559,44 @@ function parseTMGContents(fileContents) {
             if (edgeInfo.length > 3) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null,
-                                        edgeInfo.slice(3));
+                                        edgeInfo.slice(3+Efields.length));
             }
             else {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null, null);
             }
+            var c=1;
+            
+            for (x of Efields){
+            console.log(Efields);
+              newEdge[x]=edgeInfo[2+c];
+              c++;
+            }
+
         }
         var firstNode = Math.min(parseInt(newEdge.v1), parseInt(newEdge.v2));
         var secondNode = Math.max(parseInt(newEdge.v1), parseInt(newEdge.v2));
         // add this new edge to my endpoint vertex adjacency lists
         waypoints[newEdge.v1].edgeList.push(newEdge);
         waypoints[newEdge.v2].edgeList.push(newEdge);
-        var test = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
+        var EhoverText = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
             ' &harr; ' + edgeInfo[1] + ':&nbsp;'
             + waypoints[newEdge.v2].label;
         var subst = '<td style ="word-break:break-all;">'
             + edgeInfo[0] + '&nbsp;'  +
             ' &harr;&nbsp; ' + edgeInfo[1] + '&nbsp;'
              + '</td>';
+
+        eTable += '<tr custom-title = "' + EhoverText + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
         
-        eTable += '<tr custom-title = "' + test + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
-        
-        var subst2 = '<td style ="word-break:break-all;"'; 
-        var subst3 = subst2 + '>' + edgeInfo[2] + subst;
+        Einfo='';
+        for (x of Efields){
+             if(!hdxGlobals.keywords.includes(x.toLowerCase())){
+                  Einfo += '<td style ="word-break:break-all;">' +newEdge[x]+'</td>'
+             }
+        }
+
+        var subst3 = '<td style ="word-break:break-all;">' + edgeInfo[2] + subst+Einfo;
         eTable += subst3;
         
         graphEdges[i] = newEdge;
