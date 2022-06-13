@@ -461,8 +461,8 @@ function parseTMGContents(fileContents) {
     var Ecolspan=3;
     var Vstring='';
     var Estring='';
-    hdxGlobals.Vfields='';
-    hdxGlobals.Efields='';
+    var Vfields='';
+    var Efields='';
     hdxGlobals.keywords=["color","scale","opacity"];
     if(hdxGlobals.FileVersion=='3.0'){
          Vfields=lines[2].split(' ');
