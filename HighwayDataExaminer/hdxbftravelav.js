@@ -213,6 +213,7 @@ var hdxBFTravelingSalesmanAV = {
                 code: function(thisAV) {
                     
 
+                    updateAVControlEntry('undiscovered','');
                     updateAVControlEntry("currSum","");
 
                      //make rainbow for final scr
@@ -322,6 +323,11 @@ var hdxBFTravelingSalesmanAV = {
 
         let newAO = 'Start Vertex <input type="number" id="startVertex" min="0" max="' 
         + (waypoints.length - 1) + '" value="0">';
+
+        /*
+        newAO += '<br />Generate first' + '<input type="number" id="refinement" min="1" max="' 
+        + (factorial(waypoints.length)) + '" value="">  '
+        */
 
         hdxAV.algOptions.innerHTML = newAO;
 
