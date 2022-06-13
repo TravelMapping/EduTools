@@ -367,7 +367,7 @@ function HDXProcessFileContents(fileContents) {
 	document.getElementById("currentAlgorithm").innerHTML =
             hdxAV.currentAV.name;
     }
-    console.time('loading');
+    
     // parse the file and process as appropriate
     // its name should have been stored in hdxGlobals.loadingFile
     if (hdxGlobals.loadingFile.indexOf(".wpt") >= 0) {
@@ -408,12 +408,10 @@ function HDXProcessFileContents(fileContents) {
 	if (!HDXQSIsSpecified("noav")) {
 	    showAVSelection = true;
 	}
-    }
-	console.timeEnd('loading');    
+    }    
 
     hideLoadDataPanel();
     mapStatus = mapStates.HDX;
-    console.time('Visual');
     updateMap(null,null,null);
 
     //Updating custom colors and scales
@@ -425,7 +423,6 @@ function HDXProcessFileContents(fileContents) {
         updatePolylineAndTable(i, { color: graphEdges[i].color, weight: graphEdges[i].scale,opacity: graphEdges[i].opacity, textColor: "white" }, false);
      }
     }
-    console.timeEnd('Visual');
     hdxGlobals.titleScreen = false;
     if (showAVSelection) {
 	showAlgorithmSelectionPanel();
