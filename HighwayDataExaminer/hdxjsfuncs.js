@@ -415,6 +415,16 @@ function HDXProcessFileContents(fileContents) {
     mapStatus = mapStates.HDX;
     console.time('Visual');
     updateMap(null,null,null);
+
+    //Updating custom colors and scales
+   if(hdxGlobals.FileVersion=='3.0'){
+    for (i in waypoints){
+        updateMarkerAndTable(i, { color: waypoints[i].color, scale: waypoints[i].scale, opacity: waypoints[i].opacity, textColor: "white" }, 0, false);
+     }
+    for (i in graphEdges){
+        updatePolylineAndTable(i, { color: graphEdges[i].color, weight: graphEdges[i].scale,opacity: graphEdges[i].opacity, textColor: "white" }, false);
+     }
+    }
     console.timeEnd('Visual');
     hdxGlobals.titleScreen = false;
     if (showAVSelection) {
@@ -444,6 +454,7 @@ function parseTMGContents(fileContents) {
         && (header[2] != "traveled")&&(header[2]!="custom")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG graph format (' + header[2] + ')</th></tr></table>';
     }
+    hdxGlobals.FileVersion=header[1];
     var counts = lines[1].split(' ');
     var numV = parseInt(counts[0]);
     var numE = parseInt(counts[1]);
@@ -453,10 +464,10 @@ function parseTMGContents(fileContents) {
     var Ecolspan=3;
     var Vstring='';
     var Estring='';
-    var Vfields='';
-    var Efields='';
+    hdxGlobals.Vfields='';
+    hdxGlobals.Efields='';
     hdxGlobals.keywords=["color","scale","opacity"];
-    if(header[1]=="3.0"){
+    if(hdxGlobals.FileVersion=='3.0'){
          Vfields=lines[2].split(' ');
          Efields=lines[3].split(' ');
          
@@ -502,12 +513,16 @@ function parseTMGContents(fileContents) {
     for (var i = 0; i < numV; i++) {
         var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
-        var c=1;
-        for (x of Vfields){
+       if(hdxGlobals.FileVersion=='3.0'){
+          waypoints[i].color="rgb(60, 60, 60)";
+          waypoints[i].scale= 4;
+          waypoints[i].opacity=0.6;
+          var c=1;
+          for (x of Vfields){
               waypoints[i][x]=vertexInfo[2+c];
               c++;
-        }
-
+          }
+       }
         var e = "...";
         var Vinfo='';
         var coord='<td style ="word-break:break-all;">'+parseFloat(vertexInfo[1]).toFixed(3) + ',' +parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
@@ -518,12 +533,13 @@ function parseTMGContents(fileContents) {
        else{
             Vlabel = '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10)+'</td>';
         }
-        for (x of Vfields){
+        if(hdxGlobals.FileVersion=='3.0'){
+          for (x of Vfields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Vinfo += '<td style ="word-break:break-all;">' +waypoints[i][x]+'</td>'
              }
+          }
         }
-
         var vsubstrL =  parseFloat(vertexInfo[1]).toFixed(3) + ',' +
             parseFloat(vertexInfo[2]).toFixed(3) 
             + waypoints[i].label;
@@ -565,12 +581,16 @@ function parseTMGContents(fileContents) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null, null);
             }
-            var c=1;
-            
-            for (x of Efields){
-            console.log(Efields);
-              newEdge[x]=edgeInfo[2+c];
-              c++;
+            if(hdxGlobals.FileVersion=='3.0'){
+              var c=1;
+              newEdge.color="rgb(60, 60, 60)";
+              newEdge.scale= 4;
+              newEdge.opacity=0.6;
+
+              for (x of Efields){
+                 newEdge[x]=edgeInfo[2+c];
+                 c++;
+              }
             }
 
         }
@@ -588,14 +608,14 @@ function parseTMGContents(fileContents) {
              + '</td>';
 
         eTable += '<tr custom-title = "' + EhoverText + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
-        
+        if(hdxGlobals.FileVersion=='3.0'){
         Einfo='';
-        for (x of Efields){
+          for (x of Efields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Einfo += '<td style ="word-break:break-all;">' +newEdge[x]+'</td>'
              }
+          }
         }
-
         var subst3 = '<td style ="word-break:break-all;">' + edgeInfo[2] + subst+Einfo;
         eTable += subst3;
         
