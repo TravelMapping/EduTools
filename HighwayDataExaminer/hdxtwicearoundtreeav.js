@@ -237,6 +237,7 @@ var hdxTwiceAroundTreeAV = {
                 updateAVControlEntry('v2','');
                 updateAVControlEntry('undiscovered','');
 
+
                     
                 for(let i = 0; i < waypoints.length; i++){
                     for(let j = 0; j < waypoints.length; j++){
@@ -289,11 +290,15 @@ var hdxTwiceAroundTreeAV = {
        
     },
     cleanupUI() {
+
+        
         for(let i = 0; i < waypoints.length; i++){
+            if(this.edgePoly[i] != null){
             for(let j = 0; j < waypoints.length; j++){
-                if(this.edgePoly[i][j] != null){
-                    this.edgePoly[i][j].remove();
-                }
+                    if(this.edgePoly[i][j] != null){
+                        this.edgePoly[i][j].remove();
+                    }
+               }
             }
         }
         for(let i = 0; i < this.finalPoly.length; i++){

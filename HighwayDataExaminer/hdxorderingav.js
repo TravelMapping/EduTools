@@ -65,15 +65,13 @@ var hdxOrderingAV = {
                 thisAV.longestEdgeLength = 0;
                 thisAV.lengthOfEdges = [];
 
-                thisAV.rainbowGradiant = new Rainbow();
-                thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
-                thisAV.rainbowGradiant.setSpectrum('ff0000','ffc000','00ff00','00ffff','0000ff','c700ff');
 
                 updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
 
                 thisAV.option = document.getElementById("traversalOrdering").value;
                 thisAV.refinement = document.getElementById("refinement").value;
                 thisAV.showBB = document.getElementById("boundingBox").checked;
+                thisAV.extraEdge = document.getElementById("extraEdge").checked;
 
                 if(thisAV.showBB){
                     thisAV.generateBoundingBox();
@@ -174,6 +172,14 @@ var hdxOrderingAV = {
                         break;
                 };
 
+
+                if(thisAV.extraEdge){
+                    waypoints.push(waypoints[0]);
+                }
+
+                thisAV.rainbowGradiant = new Rainbow();
+                thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
+                thisAV.rainbowGradiant.setSpectrum('ff0000','ffc000','00ff00','00ffff','0000ff','c700ff');
             },
             logMessage: function(thisAV){
                 return "Sorting waypoints based on the selected ordering";
@@ -323,6 +329,10 @@ var hdxOrderingAV = {
 
         newAO += `<br /><input id="boundingBox" type="checkbox" name="Show Bounding Box"/>&nbsp;
         Show Bounding Box<br />`
+
+        newAO +=
+        `<br /><input id="extraEdge" type="checkbox" name="Draw Edge from Last to First"/>&nbsp;
+        Draw Edge from Last to First<br />`
 
         hdxAV.algOptions.innerHTML = newAO;
 
