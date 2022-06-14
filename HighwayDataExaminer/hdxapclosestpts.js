@@ -24,17 +24,23 @@ var hdxAPClosestPtsAV = {
     // the distance between the two closest points in the array of points.
     globalMinD: -1,
 
+    // Loop index variables
+    OutLoop: 0,
+    InLoop: 0,
 
-avActions: [
-    {
-        label: "START",
-        comment: "Initialize all points closest pairs variables",
-        code: function(thisAV) {
-            highlightPseudocode(this.label, visualSettings.visiting);
-            
+
+    avActions: [
+        {
+            label: "START",
+            comment: "Initialize all points closest pairs variables",
+            code: function (thisAV) {
+                highlightPseudocode(this.label, visualSettings.visiting);
+                
+            }
         }
-    }
-]
+
+
+    ]
 
 
 }
