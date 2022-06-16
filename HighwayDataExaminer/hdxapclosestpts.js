@@ -35,8 +35,14 @@ var hdxAPClosestPtsAV = {
             comment: "Initialize all points closest pairs variables",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-
+                hdxAV.nextAction("v1ForLoopTop");
             }
+        },
+
+        {
+            label: "v1ForLoopTop",
+            comment: "Start of first for loop",
+
         }
 
 
@@ -60,13 +66,21 @@ var hdxAPClosestPtsAV = {
         this.code += '</td></tr>' +
             pcEntry(0, 'for (v<sub>1</sub> &larr; 0 to |V| - 1)',"v1ForLoopTop");
         this.code += '</td></tr>' +
-            pcEntry(1, 'v<sub>closest</sub> &larr; -1<br />', "InitVars") +
-            pcEntry(1, 'd<sub>closest</sub> &larr; &infin;<br />', "InitVars") +
+            pcEntry(1, 'v<sub>closest</sub> &larr; -1<br />', "resetClosest") +
+            pcEntry(1, 'd<sub>closest</sub> &larr; &infin;<br />', "resetClosest");
+        this.code += '</td></tr>' +
             pcEntry(1, 'for (v2 &larr; 0 to |V| - 1)', "v2ForLoopTop");
         this.code += '</td></tr>' +
-            pcEntry(2,'if (v<sub>1</sub> &ne; v<sub>2</sub>)') +
-            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)') +
-            pcEntry(3, 'if(d < d<sub>closest</sub>)');
+            pcEntry(2, 'if (v<sub>1</sub> &ne; v<sub>2</sub>)', "CheckEquals");
+        this.code += '</td></tr>' +
+            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)', "ifClosest") +
+            pcEntry(3, 'if(d < d<sub>closest</sub>)<br />', "ifClosest");
+        this.code += '</td></tr>' +
+            pcEntry(4, 'v<sub>closest</sub> &larr; v<sub>2</sub>', "setClosest") +
+            pcEntry(4, 'd<sub>closest</sub> &larr; d', "setClosest");
+        this.code += '</td></tr>' +
+            pcEntry(1, 'closestVertex[v<sub>1</sub>] &larr; v<sub>closest</sub', "setPair");
+
             
 
 }
