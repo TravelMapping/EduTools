@@ -212,7 +212,7 @@ var hdxBFTravelingSalesmanAV = {
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
                     
-
+                    updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(3) + " miles");
                     updateAVControlEntry('undiscovered','');
                     updateAVControlEntry("currSum","");
 
