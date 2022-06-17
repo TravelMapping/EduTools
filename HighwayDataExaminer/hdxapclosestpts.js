@@ -19,6 +19,7 @@ var hdxAPClosestPtsAV = {
 
     // points is the array of waypoint objects that are read from a TMG file
     // points: [],
+    numVertices: waypoints.length,
 
     // closest is the array of indexes which correspond to the closest points in the "points" array.
     closestVertices: Array(waypoints.length).fill(0),
@@ -37,8 +38,8 @@ var hdxAPClosestPtsAV = {
     vert2: null,
 
     // Loop index variables
-    outLoop: 0,
-    inLoop: 0,
+    outLoop: -1,
+    inLoop: -1,
 
     boundingPoly: [],
 
@@ -52,15 +53,27 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.nextAction = "v1ForLoopTop";
+                thisAV.outLoop = 0;
+                thisAV.inLoop = 0;
+                thisAV.numVertices = waypoints.length;
+                
+            },
+            logMessage: function (thisAV) {
+                return "Initialize points array and other variables"
             }
         },
 
         {
             label: "v1ForLoopTop",
-            comment: "Start of loop which traverses array of vertices",
+            comment: "Start of for-loop which traverses array of vertices",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+                outLoop++;
                 hdxAV.nextAction = "resetClosest";
+                thisAV.inLoop = 0;
+            },
+            logMessage: function (thisAV) {
+                return "Start of iteration #" + thisAV.outLoop + " of first for-loop";
             }
 
         },
@@ -71,6 +84,11 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.nextAction = "v2ForLoopTop";
+                thisAV.vClosest = -1;
+                thisAV.dClosest = Number.MAX_SAFE_INTEGER;
+            },
+            logMessage: function (thisAV) {
+                return "Reset variables to default state for new iteration";
             }
         },
 
@@ -80,8 +98,14 @@ var hdxAPClosestPtsAV = {
              " from the first loop pairs with second loop vertex",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(inLoop = waypoints.length - 1) hdxAV.nextAction = "checkEquals";
+                inLoop++;
+                console.log(thisAV.inLoop);
+                console.log(thisAV.numVertices);
+                if(thisAV.inLoop < thisAV.numVertices - 1) hdxAV.nextAction = "checkEquals";
                 else hdxAV.nextAction = "setPair";
+            },
+            logMessage: function (thisAV) {
+                return "Start of iteration #" + thisAV.inLoop + " of second for-loop";
             }
         },
 
@@ -96,6 +120,9 @@ var hdxAPClosestPtsAV = {
                     hdxAV.nextAction = "setPair";
                 }
                 
+            },
+            logMessage: function (thisAV) {
+                return "Checking that outer loop index does not equal inner loop index";
             }
         },
 
@@ -107,6 +134,9 @@ var hdxAPClosestPtsAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 if(d < dClosest) hdxAV.nextAction = "setClosest";
                 else hdxAV.nextAction = "setClosest";
+            },
+            logMessage: function (thisAV) {
+                return "Setting d equal to the distance between vertex #" + thisAV.outLoop + " and vertex #" + thisAV.inLoop;
             }
         },
 
@@ -116,6 +146,10 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.discovered)
                 hdxAV.nextAction = "v2ForLoopTop";
+            },
+            logMessage: function (thisAV) {
+                return "Set closest[" + thisAV.outLoop + "] to vertex #" + thisAV.inLoop + " to denote " +
+                "that the closest vertex to vertex #" + thisAV.outLoop + " is vertex #" + thisAV.inLoop;
             }
         }
 
@@ -140,15 +174,15 @@ var hdxAPClosestPtsAV = {
         this.code += '</td></tr>' +
             pcEntry(0, 'for (v<sub>1</sub> &larr; 0 to |V| - 1)',"v1ForLoopTop");
         this.code += '</td></tr>' +
-            pcEntry(1, 'v<sub>closest</sub> &larr; -1<br />', "resetClosest") +
-            pcEntry(1, 'd<sub>closest</sub> &larr; &infin;<br />', "resetClosest");
+            pcEntry(1, 'v<sub>closest</sub> &larr; -1<br />' + pcIndent(2) +
+            'd<sub>closest</sub> &larr; &infin;<br />', "resetClosest");
         this.code += '</td></tr>' +
             pcEntry(1, 'for (v2 &larr; 0 to |V| - 1)', "v2ForLoopTop");
         this.code += '</td></tr>' +
             pcEntry(2, 'if (v<sub>1</sub> &ne; v<sub>2</sub>)', "CheckEquals");
         this.code += '</td></tr>' +
-            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)', "ifClosest") +
-            pcEntry(3, 'if(d < d<sub>closest</sub>)<br />', "ifClosest");
+            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)', "ifClosest" +
+            pcIndent(6) + 'if(d < d<sub>closest</sub>)<br />', "ifClosest");
         this.code += '</td></tr>' +
             pcEntry(4, 'v<sub>closest</sub> &larr; v<sub>2</sub>', "setClosest") +
             pcEntry(4, 'd<sub>closest</sub> &larr; d', "setClosest");
@@ -192,6 +226,28 @@ cleanupUI() {
     }
     this.boundingPoly = [];
     this.highlightPoly = [];
+},
+
+idOfAction(action) {
+	
+    return action.label;
+},
+
+setConditionalBreakpoints(name) {
+    let max = waypoints.length-1;
+    let temp = HDXCommonConditionalBreakpoints(name);
+    if (temp != "No innerHTML") {
+        return temp;
+    }
+    switch (name) {
+        case "isLeaf":
+            html = createInnerHTMLChoice("boolean","",
+                                         "",
+                                         "");
+            return html;
+            
+        }
+    return "No innerHTML";
 },
 
 
