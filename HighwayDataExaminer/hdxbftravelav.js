@@ -35,7 +35,6 @@ var hdxBFTravelingSalesmanAV = {
                 //gets the staring vertex selected by the user as an integer
                 thisAV.startVertex = Number(document.getElementById("startVertex").value);
 
-
                 //we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startVertex, visualSettings.startVertex, 30, false);
 
@@ -69,6 +68,7 @@ var hdxBFTravelingSalesmanAV = {
 
                 thisAV.permutationGenerator = permute(thisAV.permutation);
 
+            
                 thisAV.pathsRemaining = factorial(thisAV.permutation.length);
 
                 updateAVControlEntry("undiscovered",thisAV.pathsRemaining + " paths not yet visited");
@@ -212,7 +212,7 @@ var hdxBFTravelingSalesmanAV = {
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
                     
-
+                    updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(3) + " miles");
                     updateAVControlEntry('undiscovered','');
                     updateAVControlEntry("currSum","");
 
@@ -323,11 +323,6 @@ var hdxBFTravelingSalesmanAV = {
 
         let newAO = 'Start Vertex <input type="number" id="startVertex" min="0" max="' 
         + (waypoints.length - 1) + '" value="0">';
-
-        /*
-        newAO += '<br />Generate first' + '<input type="number" id="refinement" min="1" max="' 
-        + (factorial(waypoints.length)) + '" value="">  '
-        */
 
         hdxAV.algOptions.innerHTML = newAO;
 

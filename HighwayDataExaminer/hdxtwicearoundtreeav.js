@@ -232,7 +232,7 @@ var hdxTwiceAroundTreeAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
 
-
+                updateAVControlEntry("currSum","Distance of Path: " + thisAV.currSum.toFixed(3) + " miles");
                 updateAVControlEntry('v1','');
                 updateAVControlEntry('v2','');
                 updateAVControlEntry('undiscovered','');
@@ -265,7 +265,7 @@ var hdxTwiceAroundTreeAV = {
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `k<sub>n</sub> &larr; completeGraph(v[]) <br />`;
         this.code += '</td></tr>' + pcEntry(0,'mst &larr; minSpanTree(k<sub>n</sub>)','minSpanTree');
-        this.code += '</td></tr>'+ pcEntry(0,'path<sub>initial</sub> &larr; dft(mst) <br />path<sub>final</sub> &larr [];','dft');
+        this.code += '</td></tr>'+ pcEntry(0,'path<sub>initial</sub> &larr; dft(mst) <br />path<sub>final</sub> &larr; []','dft');
         this.code += '</td></tr>' + pcEntry(0,'for each v in path<sub>initial</sub>','topForLoop');
         this.code += '</td></tr>' + pcEntry(4,'path<sub>final</sub>.add(v)','addToPath');
 },
