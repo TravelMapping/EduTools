@@ -63,6 +63,7 @@ var visualSettings = {
         color: "firebrick",
         textColor: "white",
         scale: 6,
+        weight: 6,
         name: "searchFailed",
         value: 0
     },
