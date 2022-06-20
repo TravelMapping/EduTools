@@ -19,7 +19,7 @@ var hdxAPClosestPtsAV = {
 
     // points is the array of waypoint objects that are read from a TMG file
     // points: [],
-    numVertices: waypoints.length,
+    //numVertices: waypoints.length,
 
     // closest is the array of indexes which correspond to the closest points in the "points" array.
     closestVertices: Array(waypoints.length).fill(0),
@@ -53,9 +53,9 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.nextAction = "v1ForLoopTop";
-                thisAV.outLoop = 0;
-                thisAV.inLoop = 0;
-                thisAV.numVertices = waypoints.length;
+                thisAV.outLoop = -1;
+                thisAV.inLoop = -1;
+                //thisAV.numVertices = waypoints.length;
                 
             },
             logMessage: function (thisAV) {
@@ -68,9 +68,10 @@ var hdxAPClosestPtsAV = {
             comment: "Start of for-loop which traverses array of vertices",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                outLoop++;
-                hdxAV.nextAction = "resetClosest";
-                thisAV.inLoop = 0;
+                thisAV.outLoop++;
+                if(thisAV.outLoop < waypoints.length) hdxAV.nextAction = "resetClosest";
+                else hdxAV.nextAction = "cleanUp"
+                thisAV.inLoop = -1;
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.outLoop + " of first for-loop";
@@ -98,11 +99,16 @@ var hdxAPClosestPtsAV = {
              " from the first loop pairs with second loop vertex",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                inLoop++;
+                thisAV.inLoop++;
                 console.log(thisAV.inLoop);
-                console.log(thisAV.numVertices);
-                if(thisAV.inLoop < thisAV.numVertices - 1) hdxAV.nextAction = "checkEquals";
-                else hdxAV.nextAction = "setPair";
+                //console.log();
+                if(thisAV.inLoop < waypoints.length - 1) {
+                    thisAV.vert1 = waypoints[thisAV.outLoop];
+                    thisAV.vert2 = waypoints[thisAV.inLoop];
+                    updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
+                    updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
+                    hdxAV.nextAction = "checkEquals";
+                } else hdxAV.nextAction = "setPair";
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.inLoop + " of second for-loop";
@@ -114,10 +120,12 @@ var hdxAPClosestPtsAV = {
             comment: "Check that we are not visiting the same vertex in both for loops",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(null) {
+                if(thisAV.outLoop != thisAV.inLoop) {
                     hdxAV.nextAction = "ifClosest";
+                } else if(!thisAV.inLoop < waypoints.length) {
+                    hdxAV.nextAction = "v2ForLoopTop"
                 } else {
-                    hdxAV.nextAction = "setPair";
+                    hdxAV.nextAction = "v2ForLoopTop";
                 }
                 
             },
@@ -132,11 +140,26 @@ var hdxAPClosestPtsAV = {
             " to see if this new distance should become the smallest distance between the two vertices.",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(d < dClosest) hdxAV.nextAction = "setClosest";
+                if(thisAV.d < thisAV.dClosest) hdxAV.nextAction = "setClosest";
                 else hdxAV.nextAction = "setClosest";
             },
             logMessage: function (thisAV) {
                 return "Setting d equal to the distance between vertex #" + thisAV.outLoop + " and vertex #" + thisAV.inLoop;
+            }
+        },
+
+        {
+            label: "setClosest",
+            comment: "Set vertex outLoop's closest vertex to the closest vertex found so far, and set " +
+            "and set the closest distance found so far to the distance between vertex outLoop and inLoop",
+            code: function (thisAV) {
+                highlightPseudocode(this.label, visualSettings.visiting);
+                if(!thisAV.inLoop < waypoints.length) hdxAV.nextAction = "v2ForLoopTop";
+                else hdxAV.nextAction = "setPair";
+            },
+            logMessage: function (thisAV) {
+                return "Setting vertex #" + thisAV.inLoop + " to v<sub>closest</sub> and " +
+                "setting";
             }
         },
 
@@ -151,7 +174,19 @@ var hdxAPClosestPtsAV = {
                 return "Set closest[" + thisAV.outLoop + "] to vertex #" + thisAV.inLoop + " to denote " +
                 "that the closest vertex to vertex #" + thisAV.outLoop + " is vertex #" + thisAV.inLoop;
             }
+        },
+
+        {
+            label: "cleanup",
+            comment: "cleanup and updates at the end of the visualization",
+            code: function (thisAV) {
+                
+            },
+            logMessage: function (thisAV) {
+                return "Cleanup and finalize visualization"
+            }
         }
+
 
 
     ],
@@ -209,10 +244,10 @@ setupUI() {
     //Square Bounding Box<br />`;
 
     //hdxAV.algOptions.innerHTML = newAO;
-    addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-    addEntryToAVControlPanel("visiting",visualSettings.visiting)
-    addEntryToAVControlPanel("numLeaves",visualSettings.discovered);
-    addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);
+    addEntryToAVControlPanel("v1visiting", visualSettings.v1);
+    addEntryToAVControlPanel("v2visiting", visualSettings.v2);
+    addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
+    addEntryToAVControlPanel("closeLeader", visualSettings.leader);
    
 },
 
