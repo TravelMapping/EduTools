@@ -232,7 +232,7 @@ var hdxTwiceAroundTreeAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
 
-
+                updateAVControlEntry("currSum","Distance of Path: " + thisAV.currSum.toFixed(3) + " miles");
                 updateAVControlEntry('v1','');
                 updateAVControlEntry('v2','');
                 updateAVControlEntry('undiscovered','');
