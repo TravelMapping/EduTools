@@ -186,9 +186,14 @@ var hdxSimpleBridgeAV = {
                 if(!thisAV.isBridge){
                     updatePolylineAndTable(thisAV.nextToCheck, visualSettings.undiscovered, false);
                 }
-                console.log(thisAV.bridges.length);
+
+                for(let i = 0; i < thisAV.visitedEdges.length; i++){
+                    if(thisAV.visitedEdges[i]){
+                        updatePolylineAndTable(i,visualSettings.undiscovered,false);
+                    }
+                }
+
                 for(let i = 0; i < thisAV.bridges.length; i++){
-                    console.log(thisAV.bridges[i]);
                     updatePolylineAndTable(thisAV.bridges[i],visualSettings.searchFailed,false);
                 }
                 ///*
@@ -197,11 +202,7 @@ var hdxSimpleBridgeAV = {
                         updateMarkerAndTable(i,visualSettings.undiscovered,false);
                     }
                 }
-                for(let i = 0; i < thisAV.visitedEdges.length; i++){
-                    if(thisAV.visitedEdges[i] && !thisAV.bridges.includes(i)){
-                        updatePolylineAndTable(i,visualSettings.undiscovered,false);
-                    }
-                }
+            
                 //*/
 
                 updateMarkerAndTable(thisAV.v1,visualSettings.undiscovered,false);
@@ -262,8 +263,7 @@ var hdxSimpleBridgeAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-       // let newAO;
-       // hdxAV.algOptions.innerHTML = newAO;
+        hdxAV.algOptions.innerHTML = '';
 
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
@@ -305,19 +305,23 @@ var hdxSimpleBridgeAV = {
     depthFirstTraversal(i){
         this.visited[i] = true;
         let connection = null;
-        let v1;
-        let v2;
+        let dv1;
+        let dv2;
         for(let j = 0; j < waypoints[i].edgeList.length; j++){
             connection = waypoints[i].edgeList[j].edgeListIndex;
             if(this.nextToCheck != connection){
-                v1 = graphEdges[connection].v1;
-                v2 = graphEdges[connection].v2;
-                if(!this.visited[v1] && v2 == i){
-                    this.visitedEdges[connection] = true;
-                    this.depthFirstTraversal(v1)
-                } else if (!this.visited[v2] && v1 == i){
-                    this.visitedEdges[connection] = true;
-                    this.depthFirstTraversal(v2);
+                dv1 = graphEdges[connection].v1;
+                dv2 = graphEdges[connection].v2;
+                if(dv2 != this.v2){
+                    if(!this.visited[dv1] && dv2 == i){
+                        this.visitedEdges[connection] = true;
+                        this.depthFirstTraversal(dv1)
+                    } else if (!this.visited[dv2] && dv1 == i){
+                        this.visitedEdges[connection] = true;
+                        this.depthFirstTraversal(dv2);
+                    }
+                } else {
+                    this.visited[this.v2] = true;
                 }
             }
         }
