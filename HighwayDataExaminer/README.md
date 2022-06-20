@@ -10,6 +10,7 @@ The JS code for HDX is split among several files for easier management.
 * `hdxav.js` contains the  `hdxAV` object, which is the main AV engine.
 * `hdxavcp.js` contains functionality of the Algorithm Visualization Control Panel (AVCP).
 * `hdxbfchav.js` contains the implementation for the brute-force convex hull AV.
+* `hdxbftravelav.js` contains the implementation of the brute force traveling salesman problem AV.
 * `hdxbreakpoints.js` contains conditional breakpoint support.
 * `hdxcallbacks.js` contains implementation of UI callback functions.
 * `hdxclosestpairsrecav.js` contains the recursive implementation of the vertex closest pairs AV.
@@ -31,7 +32,9 @@ The JS code for HDX is split among several files for easier management.
 * `hdxpseudocode.js` contains functions related to pseudocode display and highlighting.
 * `hdxqs.js` contains the support for Query String parameters.
 * `hdxquadtreeav.js` contains the implementation of the quadtree construction AV.
+* `hdxsimplebridgeav.js` contains the implementation of the naïve bridge detection AV.
 * `hdxtravspanavs.js` contains the implementations of the graph traversal (BFS, DFS, RFS) and spanning tree (Dijkstra's, Prim's) AVs.
+* `hdxtwicearoundtreeav.js` contains the implementation of the twice-around-the-tree traveling salesman approximation AV.
 * `hdxvertexextremesav.js` contains the implementation of the vertex-based extremes search AV.
 * `hdxvertexselector.js` contains the implemenation of the vertex selector objects, which allow the selection of a vertex as an AV parameter by entering its number, clicking on it on the map, or clicking on it in the data table.
 * `hdxvisualsettings.js` contains the object that defines visual settings (colors, sizes, opacities) that are used consistently across multiple AVs.
