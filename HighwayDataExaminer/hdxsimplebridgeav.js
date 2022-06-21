@@ -340,17 +340,38 @@ var hdxSimpleBridgeAV = {
         //}
         return false;
     },
+
+    //this is the dft algorithm that is used, it takes a the num of a vertex as input
     depthFirstTraversal(i){
+        //labelling the vertex as having been visited
         this.visited[i] = true;
+
+        //this variable holds the num of the edge that is going to be travelled along, this is done
         let connection = null;
+
+        //these variables hold the endpoints of the edge we are going to be traversing over
         let dv1;
         let dv2;
+
+        //loop over all edges in a vertex's edge list
         for(let j = 0; j < waypoints[i].edgeList.length; j++){
+
+            //getting num of edge in vertex i's edge list
             connection = waypoints[i].edgeList[j].edgeListIndex;
+
+            //make sure that the current connection is the edge we are already checking to be a bridge
             if(this.nextToCheck != connection){
+
+                //setting endpoints
                 dv1 = graphEdges[connection].v1;
                 dv2 = graphEdges[connection].v2;
+
+                //if the endpoint of the current connection is not the endpoint of the bridge we have been looking for
+                //then we continue the dft, if not then we set v2 as being visited. Not strictly necessary but boosts efficency.
                 if(dv2 != this.v2){
+
+                    //these 2 if statements are used to make sure that edge we are not calling dft
+                    //on a vertex we have already visited
                     if(!this.visited[dv1] && dv2 == i){
                         this.visitedEdges[connection] = true;
                         this.depthFirstTraversal(dv1)
@@ -359,6 +380,9 @@ var hdxSimpleBridgeAV = {
                         this.depthFirstTraversal(dv2);
                     }
                 } else {
+                    //if the endpoint in the current connection is the endpoint of the edge we are checking is a bridge
+                    //then we mark the end point as visited, and because it has been visited by another path, that means
+                    //the edge is not a bridge, so we no longer have to call dft
                     this.visited[this.v2] = true;
                 }
             }
