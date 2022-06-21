@@ -45,6 +45,8 @@ var hdxAPClosestPtsAV = {
 
     highlightPoly: [],
 
+    //leaderExists: false,
+
 
     avActions: [
         {
@@ -55,7 +57,15 @@ var hdxAPClosestPtsAV = {
                 hdxAV.nextAction = "v1ForLoopTop";
                 thisAV.outLoop = -1;
                 thisAV.inLoop = -1;
-                //thisAV.numVertices = waypoints.length;
+                
+                thisAV.v = 0;
+                thisAV.vClosest = -1;
+    
+                thisAV.d = 0;
+                thisAV.dClosest = Number.MAX_SAFE_INTEGER;
+
+                thisAV.leaderExists = false;
+                hdxAV.iterationDone = true;
                 
             },
             logMessage: function (thisAV) {
@@ -108,7 +118,9 @@ var hdxAPClosestPtsAV = {
                     updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
                     hdxAV.nextAction = "checkEquals";
-                } else hdxAV.nextAction = "setPair";
+                } else if (thisAV.inLoop >= waypoints.length) { hdxAV.nextAction = "setPair";
+                } else { hdxAV.nextAction = "setPair"; }
+                hdxAV.iterationDone = true;
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.inLoop + " of second for-loop";
@@ -120,6 +132,11 @@ var hdxAPClosestPtsAV = {
             comment: "Check that we are not visiting the same vertex in both for loops",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+                thisAV.d = convertToCurrentUnits(
+                           distanceInMiles(waypoints[thisAV.outLoop].lat,
+                                           waypoints[thisAV.outLoop].lon,
+                                           waypoints[thisAV.inLoop].lat,
+                                           waypoints[thisAV.inLoop].lon));
                 if(thisAV.outLoop != thisAV.inLoop) {
                     hdxAV.nextAction = "ifClosest";
                 } else if(!thisAV.inLoop < waypoints.length) {
@@ -136,12 +153,16 @@ var hdxAPClosestPtsAV = {
 
         {
             label: "ifClosest",
-            comment: "Set distance var to the distance between v<sub>1</sub> and v<sub>2</sub>, then check" +
+            comment: "Set distance var equal to the distance between v<sub>1</sub> and v<sub>2</sub>, then check" +
             " to see if this new distance should become the smallest distance between the two vertices.",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 if(thisAV.d < thisAV.dClosest) hdxAV.nextAction = "setClosest";
-                else hdxAV.nextAction = "setClosest";
+                else 
+                {
+                    hdxAV.nextAction = "v2ForLoopTop";
+                    hdxAV.iterationDone = true;
+                }
             },
             logMessage: function (thisAV) {
                 return "Setting d equal to the distance between vertex #" + thisAV.outLoop + " and vertex #" + thisAV.inLoop;
@@ -154,12 +175,19 @@ var hdxAPClosestPtsAV = {
             "and set the closest distance found so far to the distance between vertex outLoop and inLoop",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(!thisAV.inLoop < waypoints.length) hdxAV.nextAction = "v2ForLoopTop";
-                else hdxAV.nextAction = "setPair";
+                if(thisAV.vClosest == -1) updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
+                else {
+                    updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
+                    updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
+                }
+                thisAV.vClosest = thisAV.inLoop;
+                thisAV.dClosest = thisAV.d;
+                hdxAV.nextAction = "v2ForLoopTop";
+                
             },
             logMessage: function (thisAV) {
-                return "Setting vertex #" + thisAV.inLoop + " to v<sub>closest</sub> and " +
-                "setting";
+                return "Setting v<sub>closest</sub> equal to vertex #" + thisAV.inLoop + " and " +
+                "setting d<sub>closest</sub> equal to d";
             }
         },
 
@@ -168,7 +196,13 @@ var hdxAPClosestPtsAV = {
             comment: "Set index of closest array to index of closest vertex",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.discovered)
-                hdxAV.nextAction = "v2ForLoopTop";
+                thisAV.closestVertices[thisAV.outLoop] = thisAV.vClosest;
+                for(var i = 0; i < waypoints.length; i++)
+                {
+                    updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
+                }
+                hdxAV.nextAction = "v1ForLoopTop";
+                
             },
             logMessage: function (thisAV) {
                 return "Set closest[" + thisAV.outLoop + "] to vertex #" + thisAV.inLoop + " to denote " +
@@ -214,13 +248,13 @@ var hdxAPClosestPtsAV = {
         this.code += '</td></tr>' +
             pcEntry(1, 'for (v2 &larr; 0 to |V| - 1)', "v2ForLoopTop");
         this.code += '</td></tr>' +
-            pcEntry(2, 'if (v<sub>1</sub> &ne; v<sub>2</sub>)', "CheckEquals");
+            pcEntry(2, 'if (v<sub>1</sub> &ne; v<sub>2</sub>)', "checkEquals");
         this.code += '</td></tr>' +
-            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)', "ifClosest" +
+            pcEntry(3, 'd &larr; dist(v<sub>1</sub>, v<sub>2</sub>)<br />' +
             pcIndent(6) + 'if(d < d<sub>closest</sub>)<br />', "ifClosest");
         this.code += '</td></tr>' +
-            pcEntry(4, 'v<sub>closest</sub> &larr; v<sub>2</sub>', "setClosest") +
-            pcEntry(4, 'd<sub>closest</sub> &larr; d', "setClosest");
+            pcEntry(4, 'v<sub>closest</sub> &larr; v<sub>2</sub> <br />' +
+            pcIndent(8) + 'd<sub>closest</sub> &larr; d<br />', "setClosest");
         this.code += '</td></tr>' +
             pcEntry(1, 'closestVertex[v<sub>1</sub>] &larr; v<sub>closest</sub', "setPair");
 
@@ -248,6 +282,12 @@ setupUI() {
     addEntryToAVControlPanel("v2visiting", visualSettings.v2);
     addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
     addEntryToAVControlPanel("closeLeader", visualSettings.leader);
+
+    // ORIGINALS
+    // addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
+    // addEntryToAVControlPanel("v2visiting", this.visualSettings.v2);
+    // addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
+    // addEntryToAVControlPanel("closeLeader", visualSettings.leader);
    
 },
 
@@ -266,6 +306,37 @@ cleanupUI() {
 idOfAction(action) {
 	
     return action.label;
+},
+
+//this was copied directly over from hdxorderingav.js with some slight modifications
+drawLineVisiting() {
+
+    let visitingLine = [];
+    visitingLine[0] = [waypoints[thisAV.outLoop].lat, waypoints[thisAV.outLoop].lon];
+    visitingLine[1] = [waypoints[thisAV.inLoop].lat, waypoints[thisAV.inLoop].lon];
+
+    this.currentEdgeLength = convertToCurrentUnits(
+        distanceInMiles(waypoints[thisAV.outLoop].lat,
+                                waypoints[thisAV.outLoop].lon,
+                                waypoints[thisAV.inLoop].lat,
+                                waypoints[thisAV.inLoop].lon));
+    this.lengthEdges += this.currentEdgeLength;
+    this.lengthOfEdges.push(this.currentEdgeLength);
+
+    //updateAVControlEntry("totalLength","Total length of edges so far: " + this.lengthEdges.toFixed(2) + " mi");
+    
+    this.polyLines.push(
+        L.polyline(visitingLine, {
+        color: "#" + this.rainbowGradiant.colorAt(
+           this.nextToCheck),
+        opacity: 0.6,
+        weight: 4
+        })
+    );
+    for(var i = 0; i < this.polyLines.length; i++){
+        this.polyLines[i].addTo(map);
+    }  
+
 },
 
 setConditionalBreakpoints(name) {
