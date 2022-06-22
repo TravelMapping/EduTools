@@ -255,6 +255,8 @@ var hdxSimpleBridgeAV = {
                 label: "cleanup",
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
+                    //this removes waypoints from the data table, we do this because waypoints are not particularly interesting information
+                    document.getElementById("waypoints").style.display = "none";
 
                     //make sure to reset all control entries, other than that, there is no polylines to account for
                     updateAVControlEntry("undiscovered",'');
@@ -314,6 +316,8 @@ var hdxSimpleBridgeAV = {
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required
     cleanupUI() {
+        //here we make sure that waypoints are shown in the datatable again
+        document.getElementById("waypoints").style.display = "";
     },
 
     //this is necessary for HDXAV to access the code inside our state machine, required
