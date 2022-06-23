@@ -99,6 +99,8 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxbftravelav.js" type="text/javascript"></script>
 <script src="hdxtwicearoundtreeav.js" type="text/javascript"></script>
 <script src="hdxpartitionerrecursive.js" type="text/javascript"></script>
+<script src="hdxsimplebridgeav.js" type="text/javascript"></script>
+
 
 <link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 
