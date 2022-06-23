@@ -57,6 +57,7 @@ var hdxPartitionerAV = {
                 thisAV.partitionSection=thisAV.waypointParts;
                 thisAV.highlightBoundingBox();
                 thisAV.numPartitions=Math.pow(2,document.getElementById('parts').value);
+                hdxPart.numParts=thisAV.numPartitions;
                 thisAV.coloring=document.getElementById('ColoringMethod').value;
                 console.time("t");
                 thisAV.partitionStrt=Array(thisAV.numPartitions).fill(0);
@@ -312,7 +313,26 @@ var hdxPartitionerAV = {
                 label: "cleanup",
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
-                    
+                     hdxPart.parts=new Array(hdxPart.numParts);
+                     for(var p=0;p<hdxPart.numParts;p++){
+                            hdxPart.parts[p]=new Array();
+                            for(var i=thisAV.partitionStrt[p];i<=thisAV.partitionEnd[p];i++){
+                                 hdxPart.parts[p].push(thisAV.waypointParts[i]);
+                          }
+                    }
+                    hdxPart.partitionAnalysis();
+
+                    //cleaning up graph for final coloring
+                    for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                        thisAV.highlightRect[i].remove();
+                    }
+                    thisAV.highlightRect=[];
+                    for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                     thisAV.highlightPoly[i].setStyle(visualSettings.undiscovered);
+                    }
+                    addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
+                    updateAVControlEntry("stats", hdxPart.styling());
+
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;
                     
@@ -350,9 +370,10 @@ var hdxPartitionerAV = {
 
         let newAO = '<br />Number of Recursive Levels<input type="number" id="parts" min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2">';
         newAO+=`<br/>Coloring Method: <select id="ColoringMethod">
-        <option value="Waypoints">Waypoints</option>
         <option value="Overlays">Overlays</option>
+        <option value="Waypoints">Waypoints</option>
         </select>`;
+        newAO+=`<br/>`+hdxPart.colorHtml();
         hdxAV.algOptions.innerHTML = newAO;
 
         //here we insert the entries to control panels which allows us to update variables that the user sees on the sidebar
@@ -375,6 +396,7 @@ var hdxPartitionerAV = {
                         this.highlightRect[i].remove();
                     }
                     this.highlightRect=[];
+
 
     },
 
