@@ -321,7 +321,7 @@ var hdxPartitionerAV = {
                           }
                     }
                     hdxPart.partitionAnalysis();
-
+                    for(var i=0; i<graphEdges.length;i++){updatePolylineAndTable(i,visualSettings.undiscovered, false);}
                     //cleaning up graph for final coloring
                     for (var i = 0; i < thisAV.highlightRect.length; i++) {
                         thisAV.highlightRect[i].remove();
@@ -347,8 +347,8 @@ var hdxPartitionerAV = {
     prepToStart() {
         hdxAV.algStat.innerHTML = "Initializing";
         //this function determines if you are using vertices (first param), edges (second param), and color (this gives black)
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
-
+        initWaypointsAndConnections(true, true, visualSettings.undiscovered);
+        for(var i=0; i<graphEdges.length;i++){updatePolylineAndTable(i,{color:"#000",scale:0,opacity:0, textColor: "white"}, false);}
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += '</td></tr>' + pcEntry(0,'Partition()','methodCall');
         this.code += '</td></tr>'+ pcEntry(1,'findCuttingAxis()<br/>'+pcIndent(2)+'sort(cuttingAxis)<br/>'+pcIndent(2)+'findMid','cutSort');
