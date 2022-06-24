@@ -7,9 +7,9 @@
 //
 
 var hdxSimpleBridgeAV = {
-    value: "Simple Bridge Detection Algorithm",
+    value: "Simple Bridge Detection",
 
-    name: "Simple Bridge Detection Algorithm",
+    name: "Simple Bridge Detection",
 
     description: "Naïve algorithm that finds all bridges, an edge of a graph whose removal increases the number of connected components in the graph.",
 

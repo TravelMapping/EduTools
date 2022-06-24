@@ -134,7 +134,7 @@ var hdxAV = {
         this.avList.push(hdxVertexExtremesSearchAV);
         this.avList.push(hdxExtremePairsAV);
         this.avList.push(hdxBFConvexHullAV);
-        this.avList.push(hdxClosestPairsRecAV);
+        //this.avList.push(hdxClosestPairsRecAV);
         this.avList.push(hdxQuadtreeAV);
         this.avList.push(hdxOrderingAV);
         this.avList.push(hdxBFTravelingSalesmanAV);
@@ -155,6 +155,7 @@ var hdxAV = {
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
         this.avList.push(hdxSimpleBridgeAV);
+        this.avList.push(hdxGraphColoringAV);
         
         // populate the algorithm selection select with options
         // from the avList
