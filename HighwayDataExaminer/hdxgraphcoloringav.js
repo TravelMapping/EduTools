@@ -230,6 +230,7 @@ var hdxGraphColoringAV = {
             code: function(thisAV) {                    
 
                 updateAVControlEntry("undiscovered","");
+                updateAVControlEntry("visiting","");
 
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
