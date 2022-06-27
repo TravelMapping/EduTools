@@ -20,6 +20,7 @@ var hdxGraphColoringAV = {
     currVertex: -1,
 
     color: null,
+    countOfColor: [],
 
     avActions : [
         {
@@ -33,6 +34,7 @@ var hdxGraphColoringAV = {
                 thisAV.nextToCheck = -1;
                 thisAV.sharesColor = false;
                 thisAV.currVertex = -1;
+                thisAV.countOfColor = [];
             
                 //setting up rainbow
                 thisAV.rainbowGradiant = new Rainbow();
@@ -45,6 +47,7 @@ var hdxGraphColoringAV = {
                 for(let i = 0; i < waypoints.length; i++){
                     thisAV.sortedV[i] = i;
                     waypoints[i].color = -1;
+                    waypoints[i].num = i;
                 }
 
                 thisAV.sortedV.sort(thisAV.compareDegree);
@@ -80,6 +83,7 @@ var hdxGraphColoringAV = {
                 
                 if(thisAV.sortedV.length > 0){
                     updateAVControlEntry("totalColors","Number of Colors: " + (thisAV.currColor + 1));
+                    thisAV.countOfColor.push(0);
                     hdxAV.nextAction = "innerWhileLoop";
                 } else {
                     hdxAV.nextAction = "cleanup";
@@ -113,7 +117,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Visiting vertex #" + thisAV.currVertex + " " + waypoints[thisAV.sortedV[thisAV.nextToCheck]].label;
+                return "Visiting vertex #" + thisAV.currVertex + " " + waypoints[thisAV.currVertex].label;
             }
         },
         {
@@ -177,8 +181,11 @@ var hdxGraphColoringAV = {
 
                 //set the color in the waypoints array
                 waypoints[thisAV.currVertex].color = thisAV.currColor;
-                //here we delete the resent
+                //here we delete the recently colored point
                 thisAV.sortedV.splice(thisAV.nextToCheck,1);
+
+                //increment the currColor in countOfColor index
+                thisAV.countOfColor[thisAV.currColor]++;
 
                 updateAVControlEntry("undiscovered","Colorless Vertices: " + thisAV.sortedV.length);
 
@@ -235,6 +242,23 @@ var hdxGraphColoringAV = {
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
 
+                //creating data table
+                let table = '<table class="gratable"><thead>' +
+                '<tr style="text-align:center"><th>Color</th><th>Vertices</th></tr></thead><tbody>';
+
+                let color;
+                //adding rows to the data table for each edge in the shortest path
+                for(let i = 0; i < thisAV.countOfColor.length;i++){
+                    color = '#' + thisAV.rainbowGradiant.colorAt((i * 223) % 360);
+                    table += '<tr id="color' + i + '" custom-title = "Color' +i+'" onmouseover = "hdxGraphColoringAV.hoverP('+i+')" onmouseout = "hdxGraphColoringAV.hoverEndP('+i+')">';
+                    table += '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + (i) + 
+                    '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + thisAV.countOfColor[i] + '</td></tr>'
+                }
+                table += '</tbody></table>';
+
+                updateAVControlEntry("table",table);
+                
+
             },
             logMessage: function(thisAV) {
                 return "Cleanup and finalize visualization";
@@ -279,6 +303,7 @@ var hdxGraphColoringAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
         addEntryToAVControlPanel("totalColors",visualSettings.highlightBounding);
+        addEntryToAVControlPanel("table",visualSettings.pseudocodeDefault);
         
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required
@@ -291,7 +316,6 @@ var hdxGraphColoringAV = {
 	
         return action.label;
     },
-
      //note this is currently not working
      setConditionalBreakpoints(name) {
         let max = waypoints.length-1;
@@ -320,5 +344,20 @@ var hdxGraphColoringAV = {
     //comparator for the sorting function to sort waypoints by th
     compareDegree(a,b){
         return waypoints[b].edgeList.length - waypoints[a].edgeList.length ;
+    },
+    hoverP(p){
+        for(var w=0; w<  waypoints.length; w++){
+            if(waypoints[w].color == p){
+             updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:8, opacity:1, textColor: "white"} , 31, false); 
+            }
+        }
+    },
+  
+    hoverEndP(p){
+        for(var w=0; w<waypoints.length; w++){
+            if(waypoints[w].color == p){
+             updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:5, opacity:0.8, textColor: "white"} , 31, false); 
+            }    
+        }
     }
 }
