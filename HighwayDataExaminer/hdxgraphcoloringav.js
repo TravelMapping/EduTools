@@ -243,7 +243,7 @@ var hdxGraphColoringAV = {
                 hdxAV.iterationDone = true;
 
                 //creating data table
-                let table = '<table class="gratable"><thead>' +
+                let table = '<table class="gratable"; style="width:100%; text-align:center;><thead>' +
                 '<tr style="text-align:center"><th>Color</th><th>Vertices</th></tr></thead><tbody>';
 
                 let color;
@@ -303,7 +303,7 @@ var hdxGraphColoringAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
         addEntryToAVControlPanel("totalColors",visualSettings.highlightBounding);
-        addEntryToAVControlPanel("table",visualSettings.pseudocodeDefault);
+        addEntryToAVControlPanel("table",visualSettings.spanningTree);
         
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required
@@ -356,7 +356,7 @@ var hdxGraphColoringAV = {
     hoverEndP(p){
         for(var w=0; w<waypoints.length; w++){
             if(waypoints[w].color == p){
-             updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:5, opacity:0.8, textColor: "white"} , 31, false); 
+             updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:5, opacity:0.8, textColor: "white"} , 30, false); 
             }    
         }
     }
