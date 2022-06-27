@@ -56,7 +56,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Initializing each vertex as colorless.";
             }
         },
         {
@@ -88,7 +88,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Looping over remaining vertices with color #" + (thisAV.currColor + 1) + " Hex: " + thisAV.color.color;
             }
         },
         {
@@ -113,7 +113,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Visiting vertex #" + thisAV.currVertex + " " + waypoints[thisAV.sortedV[thisAV.nextToCheck]].label;
             }
         },
         {
@@ -158,7 +158,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Checking if any of vertex #" + thisAV.currVertex + "'s neighbors are color #" + (thisAV.currColor + 1);
             }
         },
 
@@ -187,7 +187,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Setting vertex #" + thisAV.currVertex + " to color #" + (thisAV.currColor + 1) + " and removing it from sortedV";
             }
         },
 
@@ -206,7 +206,7 @@ var hdxGraphColoringAV = {
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Checking the next vertex in sortedV";
             }
         },
         
@@ -220,7 +220,7 @@ var hdxGraphColoringAV = {
     
             },
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Increasing the value of color to" + thisAV.currColor;
             }
         },
         
@@ -278,7 +278,7 @@ var hdxGraphColoringAV = {
         //while the algorithms is being run
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
-        addEntryToAVControlPanel("totalColors",visualSettings.leader);
+        addEntryToAVControlPanel("totalColors",visualSettings.highlightBounding);
         
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required
