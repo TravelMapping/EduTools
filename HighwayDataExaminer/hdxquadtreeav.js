@@ -540,7 +540,6 @@ var hdxQuadtreeAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + waypoints.length + " waypoints.";
-                //updateAVControlEntry("undiscovered", "0 vertices not yet visited");
                 updateAVControlEntry("visiting","");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;

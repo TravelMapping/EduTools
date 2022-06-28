@@ -37,7 +37,7 @@ var hdxTemplateAV = {
             //label represents the current state in state machine you are accessing
             //if you want the psuedocode to highlight when 
             label: "START",
-            comment: "creates bounding box and initializes fields",
+            comment: "Initializes fields",
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 

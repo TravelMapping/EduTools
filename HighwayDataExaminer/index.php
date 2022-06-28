@@ -100,7 +100,7 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxtwicearoundtreeav.js" type="text/javascript"></script>
 <script src="hdxpartitionerrecursive.js" type="text/javascript"></script>
 <script src="hdxsimplebridgeav.js" type="text/javascript"></script>
-
+<script src="hdxgraphcoloringav.js" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 

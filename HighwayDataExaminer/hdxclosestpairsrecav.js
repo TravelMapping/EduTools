@@ -18,8 +18,7 @@ var hdxClosestPairsRecAV = {
     // state variables for closest pairs search
     minPoints: 3,
     recursiveIndex: 0,
-    stack: null,
-    //Stack: null,
+   // Stack: null,
     startIndex: 0,
     endIndex: 0,
     minLeft: 0,
@@ -30,6 +29,7 @@ var hdxClosestPairsRecAV = {
     forLoopIndex: 0,
     whileLoopIndex: 0,
     returnValue: 0,
+    lineCount: 0,
 
     originalWaypoints: waypoints.slice(),
     //vertices sorted by longitude
@@ -67,7 +67,7 @@ var hdxClosestPairsRecAV = {
                 updateAVControlEntry("totalChecked", "no checks done yet");
                 //thisAV.minPoints =
                   //  document.getElementById("minPoints").value;
-
+                  thisAV.lineCount = 0;
 
                 thisAV.WtoE = waypoints;
                 let presort = new HDXPresort();
@@ -84,8 +84,8 @@ var hdxClosestPairsRecAV = {
                 thisAV.lineStack = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");    
 
-                this.StoN = new Array(waypoints);
-                thisAV.stack = [];
+                //this.StoN = new Array(waypoints);
+                //thisAV.Stack = [];
                 //thisAV.savedArray = new Array();
                 thisAV.startIndex = 0;
                 //thisAV.rec_level_arr= [];
@@ -674,7 +674,7 @@ var hdxClosestPairsRecAV = {
     prepToStart() {
 
         hdxAV.algStat.innerHTML = "Initializing";
-        let lineCount = 0;
+        this.lineCount = 0;
 
         //reorder waypoints
         let presort = new HDXPresort();
@@ -730,7 +730,7 @@ var hdxClosestPairsRecAV = {
     // remove UI modifications made for vertex closest pairs
     cleanupUI() {
         waypoints = this.originalWaypoints;
-        updateMap();
+        //updateMap();
 
 	// clean up any polylines
 	if (this.lineVisiting != null) {
