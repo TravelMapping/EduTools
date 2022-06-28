@@ -11,14 +11,14 @@
 //additionally, the file of this AV must be linked in the index.php file
 var hdxPartitionerAV = {
     //entries for list of avs
-    value: 'Recurcive Graph Partitioner',
+    value: 'rcb',
 
     //name here is what is shown in the drop down menu when selecting from different algorithms
-    name: "Recurcive Graph Partitioner",
+    name: "Recursive Coordinate Bisection Partitioner",
 
     //description is what is shown after the user selects the algorithm in the drop down 
     //but before they press the visualise button
-    description: "This algorithm partitions grpahs using a recursive algorithm. It only does powers of 2 for the number of partitions",
+    description: "This algorithm partitions graphs using the geometric (vertices only) recursive coordinate bisection algorithm.  The number of partitions must be a power of 2.",
 
     //here you list global fields that you want your av to have access to on a global level 
     partitionStrt:[],

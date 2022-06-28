@@ -52,7 +52,7 @@ var hdxGraphColoringAV = {
 
                 thisAV.sortedV.sort(thisAV.compareDegree);
 
-                updateAVControlEntry("undiscovered","Colorless Verticies: " + thisAV.sortedV.length);
+                updateAVControlEntry("undiscovered","Colorless Vertices: " + thisAV.sortedV.length);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topWhileLoop";
