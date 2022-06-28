@@ -100,7 +100,6 @@ var hdxGraphColoringAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
     
-                console.log(thisAV.nextToCheck + " " + thisAV.sortedV.length);
                 if(thisAV.nextToCheck < thisAV.sortedV.length){
                     thisAV.sharesColor = false;
                     //this gives us the index of the vertex that we are currently checking
@@ -138,8 +137,6 @@ var hdxGraphColoringAV = {
                     v2 = waypoints[thisAV.currVertex].edgeList[i].v2;
 
                     if(v1 == thisAV.currVertex){
-                        console.log(waypoints[v2].color);
-                        console.log(thisAV.currColor);
                         if(waypoints[v2].color == thisAV.currColor){
                             thisAV.sharesColor = true;
                             break;
