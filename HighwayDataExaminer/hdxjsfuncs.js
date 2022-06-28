@@ -8,7 +8,7 @@
 //
 // Additional authors: Razie Fathi, Arjol Pengu, Maria Bamundo, Clarice Tarbay,
 // Michael Dagostino, Abdul Samad, Eric Sauer, Luke Jennings, Bailey Cross,
-// Spencer Moon
+// Spencer Moon, Michael Plekan
 
 // some globals used here (map, waypoints, markers, etc) come from tmjsfuncs.js
 
@@ -505,12 +505,13 @@ function parseTMGContents(fileContents) {
     
     summaryInfo += ".</th></tr></table>";*/
     
+    //Building the Vertices and the table for them
     var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
     waypoints = new Array(numV);
     for (var i = 0; i < numV; i++) {
         var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
-       if(hdxGlobals.FileVersion=='3.0'){
+       if(hdxGlobals.FileVersion=='3.0'){ //setting visual defaults
           waypoints[i].color="rgb(60, 60, 60)";
           waypoints[i].scale= 4;
           waypoints[i].opacity=0.6;
@@ -520,6 +521,7 @@ function parseTMGContents(fileContents) {
               c++;
           }
        }
+	//Building HTML string for the current waypoint
         var e = "...";
         var Vinfo='';
         var coord='<td style ="word-break:break-all;">'+parseFloat(vertexInfo[1]).toFixed(3) + ',' +parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
@@ -548,6 +550,7 @@ function parseTMGContents(fileContents) {
 
     vTable += '</tbody></table>';
 
+    //Building the Edges and the table for them
     var Einfo='';
     var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
     graphEdges = new Array(numE);
@@ -578,7 +581,7 @@ function parseTMGContents(fileContents) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null, null);
             }
-            if(hdxGlobals.FileVersion=='3.0'){
+            if (hdxGlobals.FileVersion=='3.0'){//setting visual defaults
               var c=1;
               newEdge.color="rgb(60, 60, 60)";
               newEdge.scale= 4;
@@ -596,6 +599,7 @@ function parseTMGContents(fileContents) {
         // add this new edge to my endpoint vertex adjacency lists
         waypoints[newEdge.v1].edgeList.push(newEdge);
         waypoints[newEdge.v2].edgeList.push(newEdge);
+	//Building HTML string for the current Edge
         var EhoverText = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
             ' &harr; ' + edgeInfo[1] + ':&nbsp;'
             + waypoints[newEdge.v2].label;
