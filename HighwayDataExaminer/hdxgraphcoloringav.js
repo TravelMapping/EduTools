@@ -250,7 +250,7 @@ var hdxGraphColoringAV = {
                 //adding rows to the data table for each edge in the shortest path
                 for(let i = 0; i < thisAV.countOfColor.length;i++){
                     color = '#' + thisAV.rainbowGradiant.colorAt((i * 223) % 360);
-                    table += '<tr id="color' + i + '" custom-title = "Color' +i+'" onmouseover = "hdxGraphColoringAV.hoverP('+i+')" onmouseout = "hdxGraphColoringAV.hoverEndP('+i+')">';
+                    table += '<tr id="color' + i + '" custom-title = "Color' +i+'" onmouseover = "hdxGraphColoringAV.hoverC('+i+')" onmouseout = "hdxGraphColoringAV.hoverEndC('+i+')">';
                     table += '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + (i) + 
                     '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + thisAV.countOfColor[i] + '</td></tr>'
                 }
@@ -345,7 +345,7 @@ var hdxGraphColoringAV = {
     compareDegree(a,b){
         return waypoints[b].edgeList.length - waypoints[a].edgeList.length ;
     },
-    hoverP(p){
+    hoverC(p){
         for(var w=0; w<  waypoints.length; w++){
             if(waypoints[w].color == p){
              updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:8, opacity:1, textColor: "white"} , 31, false); 
@@ -353,7 +353,7 @@ var hdxGraphColoringAV = {
         }
     },
   
-    hoverEndP(p){
+    hoverEndC(p){
         for(var w=0; w<waypoints.length; w++){
             if(waypoints[w].color == p){
              updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:5, opacity:0.8, textColor: "white"} , 30, false); 
