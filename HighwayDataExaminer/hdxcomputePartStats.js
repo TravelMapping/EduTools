@@ -11,7 +11,7 @@
 //additionally, the file of this AV must be linked in the index.php file
 var hdxComputePartStats = {
     //entries for list of avs
-    value: 'Sample',
+    value: 'Compute Stats',
 
     //name here is what is shown in the drop down menu when selecting from different algorithms
     name: "Compute Stats",
@@ -28,6 +28,9 @@ var hdxComputePartStats = {
             comment: "Initializes fields",
             code: function(thisAV){
                  hdxPart.partitionAnalysis();
+                 console.log(hdxPart);
+                 addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
+                 updateAVControlEntry("stats", hdxPart.styling());
                  hdxAV.iterationDone = true;
                 hdxAV.nextAction = "cleanup";
             },
@@ -59,7 +62,7 @@ var hdxComputePartStats = {
         //this function determines if you are using vertices (first param), edges (second param), and color (this gives black)
         initWaypointsAndConnections(true, true, visualSettings.undiscovered);
 
-        this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode"></td></tr>';
+        this.code =''; //'<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 },
     //setup UI is called after you click the algorithm in algorithm selection but before you press the visualize button, required
     setupUI() {
@@ -69,7 +72,7 @@ var hdxComputePartStats = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");        
-        hdxAV.algOptions.innerHTML =colorHtml();
+        hdxAV.algOptions.innerHTML =hdxPart.colorHtml();
        
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required

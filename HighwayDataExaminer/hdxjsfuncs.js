@@ -486,7 +486,7 @@ function parseTMGContents(fileContents) {
     }
     else if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType=="partitioned"){
         Vfields=["partition"];
-        hdxPart.numParts=counts[2];
+        hdxPart.numParts=parseFloat(counts[2]);
         hdxPart.parts=new Array(hdxPart.numParts);
         for(var x=0;x<hdxPart.numParts;x++){
             hdxPart.parts[x]=new Array();
@@ -538,7 +538,7 @@ function parseTMGContents(fileContents) {
                    console.log("File Error:Partition value of"+waypoints[i].label+" is higher than the number of Partitions");
              }
              else{
-                  hdxPart.parts[vertexInfo[3]].push(i);
+                  hdxPart.parts[vertexInfo[3]].push(Number(i));
              }
        }
       }

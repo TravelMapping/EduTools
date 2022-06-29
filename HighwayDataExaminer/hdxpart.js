@@ -83,7 +83,8 @@ var hdxPart={
       let statString='<table id="stats" class="table table-light table-bordered" style="width:100%; text-align:center;"><tr><td>Maximum Partition Size: '+this.maxPartsize+'</td></tr>'
       statString+='<tr><td>Average Partition Size: '+this.avgPartsize+'</td></tr>'
       statString+='<tr><td>Maximum Surface Index: '+this.maxSI+'</td></tr>'
-      statString+='<tr><td>Average Surface Index: '+this.avgSI+'</td></tr></table>'
+      statString+='<tr><td>Average Surface Index: '+this.avgSI+'</td></tr>'
+      statString+='<tr><td>Global Surface Index: '+this.globalSI+'</td></tr></table>'
       let pTable = '<table id="partitions" class="table table-light table-bordered" style="width:100%; text-align:center;"><thead class = "thead-dark"><tr><th scope="col" colspan="3" id="pt" style="text-align:center;">Partitions</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">SI</th><th scope="col" class="dtHeader">|V|</th></tr></thead><tbody>';
       var colscheme=document.getElementById('ColoringScheme').value;
       if(colscheme=="rainbow"){
