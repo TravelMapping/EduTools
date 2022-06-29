@@ -28,7 +28,6 @@ var hdxComputePartStats = {
             comment: "Initializes fields",
             code: function(thisAV){
                  hdxPart.partitionAnalysis();
-                 console.log(hdxPart);
                  addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
                  updateAVControlEntry("stats", hdxPart.styling());
                  hdxAV.iterationDone = true;
