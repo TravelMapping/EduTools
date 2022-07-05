@@ -64,7 +64,7 @@ var hdxGraphColoringAV = {
                 //sorts the vertices by the degree of each waypoint
                 thisAV.sortedV.sort(thisAV.compareDegree);
 
-                updateAVControlEntry("undiscovered","Colorless Verticies: " + thisAV.sortedV.length);
+                updateAVControlEntry("undiscovered","Colorless Vertices: " + thisAV.sortedV.length);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topWhileLoop";
