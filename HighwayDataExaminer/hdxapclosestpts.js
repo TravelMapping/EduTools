@@ -45,6 +45,10 @@ var hdxAPClosestPtsAV = {
 
     highlightPoly: [],
 
+    currentPoly: null,
+
+    leaderPoly: null,
+
     //leaderExists: false,
 
 
@@ -80,7 +84,7 @@ var hdxAPClosestPtsAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.outLoop++;
                 if(thisAV.outLoop < waypoints.length) hdxAV.nextAction = "resetClosest";
-                else hdxAV.nextAction = "cleanUp"
+                else hdxAV.nextAction = "cleanup"
                 thisAV.inLoop = -1;
             },
             logMessage: function (thisAV) {
@@ -117,6 +121,14 @@ var hdxAPClosestPtsAV = {
                     thisAV.vert2 = waypoints[thisAV.inLoop];
                     updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
+                    thisAV.currentPoly = L.polyline([[thisAV.vert1.lat, thisAV.vert1.lon], [thisAV.vert2.lat, thisAV.vert2.lon]],
+                        {
+                            color: visualSettings.visiting.color,
+                            opacity: 0.6,
+                            weight: 4
+                        });
+                    thisAV.currentPoly.addTo(map);
+                    
                     hdxAV.nextAction = "checkEquals";
                 } else if (thisAV.inLoop >= waypoints.length) { hdxAV.nextAction = "setPair";
                 } else { hdxAV.nextAction = "setPair"; }
@@ -160,6 +172,8 @@ var hdxAPClosestPtsAV = {
                 if(thisAV.d < thisAV.dClosest) hdxAV.nextAction = "setClosest";
                 else 
                 {
+                    thisAV.currentPoly.remove();
+                    updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
                     hdxAV.nextAction = "v2ForLoopTop";
                     hdxAV.iterationDone = true;
                 }
@@ -175,12 +189,36 @@ var hdxAPClosestPtsAV = {
             "and set the closest distance found so far to the distance between vertex outLoop and inLoop",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(thisAV.vClosest == -1) updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
-                else {
+                if(thisAV.vClosest == -1) {
+                    thisAV.currentPoly.remove();
+                    updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
+                    thisAV.leaderPoly = thisAV.currentPoly;
+                    thisAV.leaderPoly.setStyle({
+                        color: visualSettings.leader.color,
+                        opacity: 0.6,
+                        weight: 4
+                    });
+                    thisAV.leaderPoly.addTo(map);
+                    thisAV.currentPoly = null;
+                    
+                } else {
+                    updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
+                    thisAV.currentPoly.remove();
+                    thisAV.leaderPoly.remove();
+                    thisAV.leaderPoly = thisAV.currentPoly;
+                    thisAV.leaderPoly.setStyle({
+                        color: visualSettings.leader.color,
+                        opacity: 0.6,
+                        weight: 4
+                    })
+                    thisAV.leaderPoly.addTo(map);
+                    thisAV.currentPoly = null;
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
+                    //thisAV.LeaderPoly = thisAV.currentPoly;
                 }
                 thisAV.vClosest = thisAV.inLoop;
+                thisAV.closestVertices[thisAV.outLoop] = thisAV.inLoop;
                 thisAV.dClosest = thisAV.d;
                 hdxAV.nextAction = "v2ForLoopTop";
                 
@@ -214,7 +252,18 @@ var hdxAPClosestPtsAV = {
             label: "cleanup",
             comment: "cleanup and updates at the end of the visualization",
             code: function (thisAV) {
+                for(var i = 0; i < thisAV.closestVertices.length; i++)
+                {
+                    thisAV.highlightPoly.push(L.polyline([[waypoints[i].lat, waypoints[i].lon], [waypoints[thisAV.closestVertices[i]].lat,
+                    waypoints[thisAV.closestVertices[i]].lon]],visualSettings.undiscovered));
+                }
                 
+                for(var i = 0; i < thisAV.highlightPoly.length; i++){
+                    thisAV.highlightPoly[i].addTo(map);
+                }
+
+                hdxAV.nextAction = "DONE";
+                hdxAV.iterationDone = true;
             },
             logMessage: function (thisAV) {
                 return "Cleanup and finalize visualization"
@@ -309,35 +358,6 @@ idOfAction(action) {
 },
 
 //this was copied directly over from hdxorderingav.js with some slight modifications
-drawLineVisiting() {
-
-    let visitingLine = [];
-    visitingLine[0] = [waypoints[thisAV.outLoop].lat, waypoints[thisAV.outLoop].lon];
-    visitingLine[1] = [waypoints[thisAV.inLoop].lat, waypoints[thisAV.inLoop].lon];
-
-    this.currentEdgeLength = convertToCurrentUnits(
-        distanceInMiles(waypoints[thisAV.outLoop].lat,
-                                waypoints[thisAV.outLoop].lon,
-                                waypoints[thisAV.inLoop].lat,
-                                waypoints[thisAV.inLoop].lon));
-    this.lengthEdges += this.currentEdgeLength;
-    this.lengthOfEdges.push(this.currentEdgeLength);
-
-    //updateAVControlEntry("totalLength","Total length of edges so far: " + this.lengthEdges.toFixed(2) + " mi");
-    
-    this.polyLines.push(
-        L.polyline(visitingLine, {
-        color: "#" + this.rainbowGradiant.colorAt(
-           this.nextToCheck),
-        opacity: 0.6,
-        weight: 4
-        })
-    );
-    for(var i = 0; i < this.polyLines.length; i++){
-        this.polyLines[i].addTo(map);
-    }  
-
-},
 
 setConditionalBreakpoints(name) {
     let max = waypoints.length-1;
@@ -354,10 +374,10 @@ setConditionalBreakpoints(name) {
             
         }
     return "No innerHTML";
-},
-
-
 }
+};
+
+
 
 function ClosestToAll() {
     this.closest = points.length;
