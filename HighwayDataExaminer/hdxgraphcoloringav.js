@@ -29,11 +29,22 @@ var hdxGraphColoringAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+                //initializing variables
                 thisAV.currColor = 0;
+
+                //this stores the actual visualSetting that contains the color value hex
                 thisAV.color = null;
+
+                //loop variable that is used to determine the current vertex being checked
                 thisAV.nextToCheck = -1;
+
+                //boolean that is used to check whether or not our neighbors have the color we are currently using 
                 thisAV.sharesColor = false;
+
+                //contains integer value for the current vertex (derived from sortedV and thisAV.nextToCheck)
                 thisAV.currVertex = -1;
+
+                //array stores the count of each color when the algorithm is finished
                 thisAV.countOfColor = [];
             
                 //setting up rainbow
@@ -50,6 +61,7 @@ var hdxGraphColoringAV = {
                     waypoints[i].num = i;
                 }
 
+                //sorts the vertices by the degree of each waypoint
                 thisAV.sortedV.sort(thisAV.compareDegree);
 
                 updateAVControlEntry("undiscovered","Colorless Verticies: " + thisAV.sortedV.length);
@@ -68,6 +80,8 @@ var hdxGraphColoringAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
             
 
+                //creating the color, using the golden ratio algorithim
+                //223 is 360 * 1/phi
                 thisAV.color = {
                     color:"#" + thisAV.rainbowGradiant.colorAt((thisAV.currColor * 223) % 360),
                         textColor: "white",
