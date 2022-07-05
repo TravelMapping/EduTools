@@ -54,12 +54,12 @@ var hdxPartitionerAV = {
                 for (let x=0;x<waypoints.length;x++){
                        thisAV.waypointParts[x]=x;
                 } 
+                //setting up the needed variables
                 thisAV.partitionSection=thisAV.waypointParts;
                 thisAV.highlightBoundingBox();
                 thisAV.numPartitions=Math.pow(2,document.getElementById('parts').value);
                 hdxPart.numParts=thisAV.numPartitions;
                 thisAV.coloring=document.getElementById('ColoringMethod').value;
-                console.time("t");
                 thisAV.partitionStrt=Array(thisAV.numPartitions).fill(0);
                 thisAV.partitionEnd=Array(thisAV.numPartitions).fill(0);
                 thisAV.callStack.push({currentPart:0,lowerBound:0,upperBound:waypoints.length-1,PartsLeft:thisAV.numPartitions, maxLat:thisAV.maxlat , maxLon:thisAV.maxlon, minLat:thisAV.minlat , minLon:thisAV.minlon});
@@ -75,16 +75,20 @@ var hdxPartitionerAV = {
             comment: "Calls the method",
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
+                //setting polyline colors
                 for (var i = 0; i < thisAV.highlightPoly.length; i++) {
                      thisAV.highlightPoly[i].setStyle(visualSettings.undiscovered);
                 }
+                //coloring points dark gray
                 if(thisAV.coloring=="Waypoints"){
                    for(var i=0;i<waypoints.length;i++){
                        updateMarkerAndTable(thisAV.waypointParts[i],visualSettings.undiscovered, 31, false);
                    }
                 }
+                //popping new call of call stack
                 thisAV.currentCall=thisAV.callStack.pop();
                 
+               //removing old overlays
                if(thisAV.coloring=="Overlays"){
                     for (var i = 0; i < thisAV.highlightRect.length; i++) {
                          thisAV.highlightRect[i].remove();
@@ -106,28 +110,33 @@ var hdxPartitionerAV = {
             comment: "Finds the Cutting Axis, Median, and sorts",
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
+                //taking the part of the array I need for the current partition being split
                 thisAV.partitionSection=thisAV.waypointParts.slice(thisAV.currentCall.lowerBound, thisAV.currentCall.upperBound+1); 
 
+                //coloring
                 if(thisAV.coloring=="Waypoints"){
                    for(var i=thisAV.partitionStrt[thisAV.currentCall.currentPart];i<=thisAV.partitionEnd[thisAV.currentCall.currentPart];i++){
                         updateMarkerAndTable(thisAV.waypointParts[i], {color:"#F0F",scale:8,opacity:1, textColor: "white"} , 31, false);
                    }
                 }
                 
+                //finding extremes
                 thisAV.extremes();
+                //coloring
                 if(thisAV.coloring=="Overlays"){
                   thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], {color: "#F0F", weight: 0.5}) );
                   for (var i = 0; i < thisAV.highlightRect.length; i++) {
                     thisAV.highlightRect[i].addTo(map);
                   }
                }
-
+                //determine which axis to cut and sorting it along the orthonal axis
                 thisAV.rnglat=distanceInMiles(thisAV.minlat,0,thisAV.maxlat,0);
                 thisAV.rnglon=distanceInMiles(0,thisAV.minlon,0,thisAV.maxlon);
                 if(thisAV.rnglon>thisAV.rnglat){thisAV.partitionSection.sort(function(a, b){return waypoints[a].lon - waypoints[b].lon});}
                 else{thisAV.partitionSection.sort(function(a, b){return waypoints[a].lat - waypoints[b].lat});}
                
                 let i2=0
+                //updating the overall array with the new sorted array for the partition being worked on
                 for(let i =thisAV.currentCall.lowerBound;i<thisAV.currentCall.lowerBound+thisAV.partitionSection.length;i++){
                     thisAV.waypointParts[i]=thisAV.partitionSection[i2];
                     i2++;
@@ -146,6 +155,7 @@ var hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 let mid=Math.trunc(thisAV.partitionSection.length/2)+thisAV.currentCall.lowerBound;                
 
+                //setting the partitions based on cutting axis
                 if(thisAV.partitionSection.length %2==0){
                   thisAV.partitionStrt[(thisAV.currentCall.currentPart+thisAV.currentCall.PartsLeft/2)]=mid;
                   thisAV.partitionEnd[(thisAV.currentCall.currentPart+thisAV.currentCall.PartsLeft/2)]=thisAV.currentCall.upperBound;
@@ -167,6 +177,7 @@ var hdxPartitionerAV = {
                   else{ thisAV.median= (waypoints[thisAV.waypointParts[mid]].lat+waypoints[thisAV.waypointParts[mid+1]].lat)/2;}
                   
                 }
+                //coloring
                 if(thisAV.coloring=="Overlays"){
                     for (var i = 0; i < thisAV.highlightRect.length; i++) {
                         thisAV.highlightRect[i].remove();
@@ -193,7 +204,7 @@ var hdxPartitionerAV = {
                      thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.median, thisAV.currentCall.maxLon]], {color: "#00F", weight: 0.5}));
                   }
                }
-                
+                //drawing lines
                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
                      thisAV.highlightPoly[i].addTo(map);
                  }
@@ -228,6 +239,8 @@ var hdxPartitionerAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.iterationDone = true;
+                
+                //checking to see if the base case is hit and if there is anything left on the call stack
                 if(thisAV.currentCall.PartsLeft > 2){ hdxAV.nextAction = "recursiveCall";}
                 else{ hdxAV.nextAction = "end";}
             },
@@ -297,8 +310,8 @@ var hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
                                 
-            
-                if(thisAV.callStack.length==0){ console.timeEnd("t"); hdxAV.nextAction = "cleanup";}
+                //determine if call stack is empty
+                if(thisAV.callStack.length==0){ hdxAV.nextAction = "cleanup";}
                 else{ hdxAV.nextAction = "methodCall";}
             },
             
@@ -313,6 +326,7 @@ var hdxPartitionerAV = {
                 label: "cleanup",
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
+                     //filling 2d array with nessacary data for hdxPart
                      hdxPart.parts=new Array(hdxPart.numParts);
                      for(var p=0;p<hdxPart.numParts;p++){
                             hdxPart.parts[p]=new Array();
@@ -320,7 +334,7 @@ var hdxPartitionerAV = {
                                  hdxPart.parts[p].push(thisAV.waypointParts[i]);
                           }
                     }
-                    hdxPart.partitionAnalysis();
+                    //coloring
                     for(var i=0; i<graphEdges.length;i++){updatePolylineAndTable(i,visualSettings.undiscovered, false);}
                     //cleaning up graph for final coloring
                     for (var i = 0; i < thisAV.highlightRect.length; i++) {
@@ -330,6 +344,8 @@ var hdxPartitionerAV = {
                     for (var i = 0; i < thisAV.highlightPoly.length; i++) {
                      thisAV.highlightPoly[i].setStyle(visualSettings.undiscovered);
                     }
+                    //adding data table
+                    hdxPart.partitionAnalysis();
                     addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
                     updateAVControlEntry("stats", hdxPart.styling());
 
