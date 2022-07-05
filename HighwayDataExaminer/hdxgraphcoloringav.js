@@ -29,11 +29,22 @@ var hdxGraphColoringAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+                //initializing variables
                 thisAV.currColor = 0;
+
+                //this stores the actual visualSetting that contains the color value hex
                 thisAV.color = null;
+
+                //loop variable that is used to determine the current vertex being checked
                 thisAV.nextToCheck = -1;
+
+                //boolean that is used to check whether or not our neighbors have the color we are currently using 
                 thisAV.sharesColor = false;
+
+                //contains integer value for the current vertex (derived from sortedV and thisAV.nextToCheck)
                 thisAV.currVertex = -1;
+
+                //array stores the count of each color when the algorithm is finished
                 thisAV.countOfColor = [];
             
                 //setting up rainbow
@@ -50,9 +61,10 @@ var hdxGraphColoringAV = {
                     waypoints[i].num = i;
                 }
 
+                //sorts the vertices by the degree of each waypoint
                 thisAV.sortedV.sort(thisAV.compareDegree);
 
-                updateAVControlEntry("undiscovered","Colorless Verticies: " + thisAV.sortedV.length);
+                updateAVControlEntry("undiscovered","Colorless Vertices: " + thisAV.sortedV.length);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topWhileLoop";
@@ -68,6 +80,8 @@ var hdxGraphColoringAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
             
 
+                //creating the color, using the golden ratio algorithim
+                //223 is 360 * 1/phi
                 thisAV.color = {
                     color:"#" + thisAV.rainbowGradiant.colorAt((thisAV.currColor * 223) % 360),
                         textColor: "white",
@@ -100,7 +114,6 @@ var hdxGraphColoringAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
     
-                console.log(thisAV.nextToCheck + " " + thisAV.sortedV.length);
                 if(thisAV.nextToCheck < thisAV.sortedV.length){
                     thisAV.sharesColor = false;
                     //this gives us the index of the vertex that we are currently checking
@@ -138,8 +151,6 @@ var hdxGraphColoringAV = {
                     v2 = waypoints[thisAV.currVertex].edgeList[i].v2;
 
                     if(v1 == thisAV.currVertex){
-                        console.log(waypoints[v2].color);
-                        console.log(thisAV.currColor);
                         if(waypoints[v2].color == thisAV.currColor){
                             thisAV.sharesColor = true;
                             break;
@@ -250,7 +261,7 @@ var hdxGraphColoringAV = {
                 //adding rows to the data table for each edge in the shortest path
                 for(let i = 0; i < thisAV.countOfColor.length;i++){
                     color = '#' + thisAV.rainbowGradiant.colorAt((i * 223) % 360);
-                    table += '<tr id="color' + i + '" custom-title = "Color' +i+'" onmouseover = "hdxGraphColoringAV.hoverP('+i+')" onmouseout = "hdxGraphColoringAV.hoverEndP('+i+')">';
+                    table += '<tr id="color' + i + '" custom-title = "Color' +i+'" onmouseover = "hdxGraphColoringAV.hoverC('+i+')" onmouseout = "hdxGraphColoringAV.hoverEndC('+i+')">';
                     table += '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + (i) + 
                     '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' + thisAV.countOfColor[i] + '</td></tr>'
                 }
@@ -345,7 +356,7 @@ var hdxGraphColoringAV = {
     compareDegree(a,b){
         return waypoints[b].edgeList.length - waypoints[a].edgeList.length ;
     },
-    hoverP(p){
+    hoverC(p){
         for(var w=0; w<  waypoints.length; w++){
             if(waypoints[w].color == p){
              updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:8, opacity:1, textColor: "white"} , 31, false); 
@@ -353,7 +364,7 @@ var hdxGraphColoringAV = {
         }
     },
   
-    hoverEndP(p){
+    hoverEndC(p){
         for(var w=0; w<waypoints.length; w++){
             if(waypoints[w].color == p){
              updateMarkerAndTable(waypoints[w].num, {color:"#"+ this.rainbowGradiant.colorAt((p * 223) % 360), scale:5, opacity:0.8, textColor: "white"} , 30, false); 
