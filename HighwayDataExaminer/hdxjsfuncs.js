@@ -8,7 +8,7 @@
 //
 // Additional authors: Razie Fathi, Arjol Pengu, Maria Bamundo, Clarice Tarbay,
 // Michael Dagostino, Abdul Samad, Eric Sauer, Luke Jennings, Bailey Cross,
-// Spencer Moon
+// Spencer Moon, Michael Plekan
 
 // some globals used here (map, waypoints, markers, etc) come from tmjsfuncs.js
 
@@ -434,7 +434,7 @@ function HDXProcessFileContents(fileContents) {
 
 // parse the contents of a .tmg file
 //
-// supports version 1.0 and 2.0 "simple", "collapsed" or "traveled".
+// supports version 1.0, 2.0, and 3.0 "simple", "collapsed", "traveled","custom", or "partitioned".
 // see https://courses.teresco.org/metal/graph-formats.shtml
 //
 function parseTMGContents(fileContents) {
@@ -451,17 +451,23 @@ function parseTMGContents(fileContents) {
         && (header[2] != "traveled")&&(header[2]!="custom")&&(header[2]!="partitioned")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG graph format (' + header[2] + ')</th></tr></table>';
     }
+
+    //setting variables
     hdxGlobals.FileVersion=header[1];
     hdxGlobals.FileType=header[2];
-    var counts = lines[1].split(' ');// normals has Vertice and edge count, in partitioned format it also has partition count
+    var counts = lines[1].split(' ');// normally has Vertice and edge count,but may have partition count
     var numV = parseInt(counts[0]);
     var numE = parseInt(counts[1]);
     var offset=2;
     var numTravelers = 0;
     var Vcolspan=3;
     var Ecolspan=3;
+
+    //HTML strings for table
     var Vstring='';
     var Estring='';
+
+   //extra fields for each vertex/edges
     var Vfields='';
     var Efields='';
     hdxGlobals.keywords=["color","scale","opacity","partition"];
@@ -486,6 +492,7 @@ function parseTMGContents(fileContents) {
     }
     else if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType=="partitioned"){
         Vfields=["partition"];
+        //setting up numbers and arrays for the hdxPart support file
         hdxPart.numParts=parseFloat(counts[2]);
         hdxPart.parts=new Array(hdxPart.numParts);
         for(var x=0;x<hdxPart.numParts;x++){
@@ -523,6 +530,7 @@ function parseTMGContents(fileContents) {
         waypoints[i].lon=Number(parseFloat(waypoints[i].lon));
         
        if(hdxGlobals.FileVersion=='3.0'){
+          //setting default to be the same as undiscovered from visual settings
           waypoints[i].color="rgb(60, 60, 60)";
           waypoints[i].scale= 4;
           waypoints[i].opacity=0.6;
@@ -602,6 +610,7 @@ function parseTMGContents(fileContents) {
             }
             if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
               var c=1;
+              //setting default to be the same as undiscovered from visual settings
               newEdge.color="rgb(60, 60, 60)";
               newEdge.scale= 4;
               newEdge.opacity=0.6;
@@ -628,7 +637,7 @@ function parseTMGContents(fileContents) {
 
         eTable += '<tr custom-title = "' + EhoverText + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
         if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
-        Einfo='';
+        Einfo='';//resetting Einfo
           for (x of Efields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Einfo += '<td style ="word-break:break-all;">' +newEdge[x]+'</td>'
