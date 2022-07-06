@@ -1447,7 +1447,7 @@ hdxPrimAV.setupCode = function() {
     if (this.stoppingCondition == "StopAtEnd") {
         this.code +=
             pcEntry(0, "while not tree.contains(end)", "checkEndAdded") +
-            pcEntry(1, "if pq.isEmpty", "checkLDVEmpty") +
+            pcEntry(1, "if pq.isEmpty()", "checkLDVEmpty") +
             pcEntry(2, "error: no path", "LDVEmpty") +
             this.mainLoopBody(0);
     }
