@@ -25,6 +25,32 @@ var hdxPartitionerAV = {
     coloring:-1,
     highlightPoly: [],
     highlightRect:[],
+    parentPartition: {
+        color: "#F0F",
+        textColor: "white",
+        scale: 4,
+        weight: 0.5,
+        name: "parentPartition",
+        value: 0
+    },
+
+    childPartitionBlue: {
+        color: "#00F",
+        textColor: "white",
+        scale: 4,
+        weight: 0.5,
+        name: "childPartitionBlue",
+        value: 0
+    },
+
+    childPartitionRed: {
+        color: "#F00",
+        textColor: "white",
+        scale: 4,
+        weight: 0.5,
+        name: "childPartitionRed",
+        value: 0
+    },
 
     avActions : [
         {
@@ -99,7 +125,7 @@ var hdxPartitionerAV = {
                 //coloring
                 if (thisAV.coloring == "Waypoints") {
                    for (var i=thisAV.partitionStrt[thisAV.currentCall.currentPart];i <= thisAV.partitionEnd[thisAV.currentCall.currentPart];i++) {
-                        updateMarkerAndTable(thisAV.waypointParts[i], {color:"#F0F",scale:8,opacity:1, textColor: "white"} , 31, false);
+                        updateMarkerAndTable(thisAV.waypointParts[i], thisAV.parentPartition, 31, false);
                    }
                 }
                 
@@ -107,7 +133,7 @@ var hdxPartitionerAV = {
                 thisAV.extremes();
                 //coloring
                 if (thisAV.coloring == "Overlays") {
-                  thisAV.highlightRect.push (L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], {color: "#F0F", weight: 0.5}) );
+                  thisAV.highlightRect.push (L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], thisAV.parentPartition) );
                   for (var i = 0; i < thisAV.highlightRect.length; i++) {
                     thisAV.highlightRect[i].addTo(map);
                   }
@@ -174,8 +200,8 @@ var hdxPartitionerAV = {
                      L.polyline([[thisAV.currentCall.maxLat,thisAV.median],[thisAV.currentCall.minLat,thisAV.median]], visualSettings.visiting)
                     );
                    if (thisAV.coloring == "Overlays") {
-                        thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.median], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], {color: "#F00", weight: 0.5}));
-                        thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.median]], {color: "#00F", weight: 0.5}));
+                        thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.median], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]],thisAV.childPartitionRed));
+                        thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.median]], thisAV.childPartitionBlue));
                     }
                }
                else {
@@ -183,8 +209,8 @@ var hdxPartitionerAV = {
                     L.polyline([[thisAV.median,thisAV.currentCall.maxLon],[thisAV.median,thisAV.currentCall.minLon]], visualSettings.visiting)
                    );
                   if (thisAV.coloring == "Overlays") {
-                     thisAV.highlightRect.push(L.rectangle([[thisAV.median, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], {color: "#F00", weight: 0.5}));
-                     thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.median, thisAV.currentCall.maxLon]], {color: "#00F", weight: 0.5}));
+                     thisAV.highlightRect.push(L.rectangle([[thisAV.median, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], thisAV.childPartitionRed));
+                     thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.median, thisAV.currentCall.maxLon]], thisAV.childPartitionBlue));
                   }
                }
                 //drawing lines
@@ -200,11 +226,11 @@ var hdxPartitionerAV = {
              }
              if (thisAV.coloring == "Waypoints") {
                    for (var i=thisAV.partitionStrt[thisAV.currentCall.currentPart];i <= thisAV.partitionEnd[thisAV.currentCall.currentPart];i++) {
-                       updateMarkerAndTable(thisAV.waypointParts[i], {color:"#00F",scale:4,opacity:1, textColor: "white"} , 31, false);
+                       updateMarkerAndTable(thisAV.waypointParts[i], thisAV.childPartitionBlue , 31, false);
                    }
 
                   for (var i=thisAV.partitionStrt[(thisAV.currentCall.currentPart+thisAV.currentCall.PartsLeft/2)];i <= thisAV.partitionEnd[(thisAV.currentCall.currentPart+thisAV.currentCall.PartsLeft/2)];i++) {
-                       updateMarkerAndTable(thisAV.waypointParts[i], {color:"#F00",scale:4,opacity:1, textColor: "white"} , 31, false);
+                       updateMarkerAndTable(thisAV.waypointParts[i], thisAV.childPartitionRed , 31, false);
                   }
                }
 
