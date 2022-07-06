@@ -745,7 +745,7 @@ var hdxBFConvexHullAV = {
 
     // return whether the action with the given name in common or in
     // this AV has conditional breakpoints
-    hasConditonalBreakpoints(name) {
+    hasConditionalBreakpoints(name) {
         let answer = HDXHasCommonConditonalBreakpoints(name);
         if (answer) {
             return true;

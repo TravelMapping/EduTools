@@ -1071,7 +1071,7 @@ Show Extremes Bounding Box<br />
         return "No innerHTML";
     },
     
-    hasConditonalBreakpoints(name) {
+    hasConditionalBreakpoints(name) {
 	
         let answer = HDXHasCommonConditonalBreakpoints(name);
         if (answer) {

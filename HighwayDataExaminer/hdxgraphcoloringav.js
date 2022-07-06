@@ -335,10 +335,10 @@ var hdxGraphColoringAV = {
             return temp;
         }
         switch (name) {
-            case "isLeaf":
-                html = createInnerHTMLChoice("boolean","",
-                                             "",
-                                             "");
+            case "incrementColor":
+                html = createInnerHTMLChoice("boolean","Stop when next color is generated",
+                                             "checkVal = 0",
+                                             "checkVal != 0");
                 return html;
                 
             }
@@ -349,6 +349,10 @@ var hdxGraphColoringAV = {
         let answer = HDXHasCommonConditonalBreakpoints(name);
         if (answer) {
             return true;
+        }
+        switch(name){
+            case "incrementColor":
+                return true;
         }
         return false;
     },

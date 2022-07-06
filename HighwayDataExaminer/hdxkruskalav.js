@@ -493,7 +493,7 @@ var hdxKruskalAV = {
         return "No innerHTML";
     },
 
-    hasConditonalBreakpoints(name) {
+    hasConditionalBreakpoints(name) {
     
         let answer = HDXHasCommonConditonalBreakpoints(name);
         if (answer) {
