@@ -9,15 +9,14 @@
 var hdxPartitionerAV = {
     value: 'rcb',
     name: "Recursive Coordinate Bisection Partitioner",
-    description: "This algorithm partitions graphs using the geometric (vertices only)
- recursive coordinate bisection algorithm.  The number of partitions must be a power of 2.",
+    description: "This algorithm partitions graphs using the geometric (vertices only) recursive coordinate bisection algorithm.  The number of partitions must be a power of 2.",
 
     //making global variables
     partitionStrt:[],
     partitionEnd:[],
     waypointParts:[],
     callStack:[],
-    numPartitions:[],
+    numPartitions:4,
     currentCall:-1,
     median:-1,
     partitionSection:null,
@@ -368,7 +367,7 @@ var hdxPartitionerAV = {
         hdxAV.logMessageArr.push("Setting up");
 
         //building HTML options
-        let newAO = '<br />Number of Recursive Levels<input type="number" id="parts" min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2">';
+        let newAO = '<br />Number of Recursive Levels: 2<sup><input type="number" id="parts" onchange="hdxPartitionerAV.rcbCallback()"min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2"></sup><span id="rcbnumParts">='+this.numPartitions+'</span>';
         newAO+=`<br/>Coloring Method: <select id="ColoringMethod">
         <option value="Overlays">Overlays</option>
         <option value="Waypoints">Waypoints</option>
@@ -399,7 +398,10 @@ var hdxPartitionerAV = {
 	
         return action.label;
     },
-
+    rcbCallback(){
+        this.numPartitions=Math.pow(2,document.getElementById('parts').value);
+        document.getElementById('rcbnumParts').innerHTML='<span id="rcbnumParts">='+this.numPartitions+'</span>';
+    },
     extremes(){
        this.maxlat = waypoints[this.partitionSection[0]].lat;
        this.minlat = waypoints[this.partitionSection[0]].lat;
