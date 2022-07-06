@@ -415,7 +415,7 @@ function HDXProcessFileContents(fileContents) {
     updateMap(null,null,null);
 
     //Updating custom colors and scales
-   if(hdxGlobals.FileVersion=='3.0'){
+   if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
     for (i in waypoints){
         updateMarkerAndTable(i, { color: waypoints[i].color, scale: waypoints[i].scale, opacity: waypoints[i].opacity, textColor: "white" }, 0, false);
      }
@@ -448,11 +448,12 @@ function parseTMGContents(fileContents) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG file version (' + header[1] + ')</th></tr></table>';
     }
     if ((header[2] != "simple") && (header[2] != "collapsed")
-        && (header[2] != "traveled")&&(header[2]!="custom")) {
+        && (header[2] != "traveled")&&(header[2]!="custom")&&(header[2]!="partitioned")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG graph format (' + header[2] + ')</th></tr></table>';
     }
     hdxGlobals.FileVersion=header[1];
-    var counts = lines[1].split(' ');
+    hdxGlobals.FileType=header[2];
+    var counts = lines[1].split(' ');// normals has Vertice and edge count, in partitioned format it also has partition count
     var numV = parseInt(counts[0]);
     var numE = parseInt(counts[1]);
     var offset=2;
@@ -463,8 +464,8 @@ function parseTMGContents(fileContents) {
     var Estring='';
     var Vfields='';
     var Efields='';
-    hdxGlobals.keywords=["color","scale","opacity"];
-    if(hdxGlobals.FileVersion=='3.0'){
+    hdxGlobals.keywords=["color","scale","opacity","partition"];
+    if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType!="partitioned"){
          Vfields=lines[2].split(' ');
          Efields=lines[3].split(' ');
          
@@ -483,12 +484,20 @@ function parseTMGContents(fileContents) {
 
          offset=4;   
     }
+    else if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType=="partitioned"){
+        Vfields=["partition"];
+        hdxPart.numParts=parseFloat(counts[2]);
+        hdxPart.parts=new Array(hdxPart.numParts);
+        for(var x=0;x<hdxPart.numParts;x++){
+            hdxPart.parts[x]=new Array();
+        }
+    }
     let graphInfo = document.getElementById("graphInfo");
     graphInfo.style.display = "block";
     graphInfo.innerHTML = numV + " vertices, " + numE + " edges";
     
     // is this a traveled format graph?
-    if (header[2] == "traveled") {
+    if (hdxGlobals.FileType == "traveled") {
         haveTravelers = true;
         numTravelers = parseInt(counts[2]);
     }
@@ -510,16 +519,29 @@ function parseTMGContents(fileContents) {
     for (var i = 0; i < numV; i++) {
         var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
+        waypoints[i].lat=Number(parseFloat(waypoints[i].lat));
+        waypoints[i].lon=Number(parseFloat(waypoints[i].lon));
+        
        if(hdxGlobals.FileVersion=='3.0'){
           waypoints[i].color="rgb(60, 60, 60)";
           waypoints[i].scale= 4;
           waypoints[i].opacity=0.6;
           var c=1;
-          for (x of Vfields){
-              waypoints[i][x]=vertexInfo[2+c];
-              c++;
+          if(hdxGlobals.FileType!="partitioned"){
+              for (x of Vfields){
+                  waypoints[i][x]=vertexInfo[2+c];
+                  c++;
+             }
           }
+          else{
+             if(vertexInfo[3]>=hdxPart.numParts){
+                   console.log("File Error:Partition value of"+waypoints[i].label+" is higher than the number of Partitions");
+             }
+             else{
+                  hdxPart.parts[vertexInfo[3]].push(Number(i));
+             }
        }
+      }
         var e = "...";
         var Vinfo='';
         var coord='<td style ="word-break:break-all;">'+parseFloat(vertexInfo[1]).toFixed(3) + ',' +parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
@@ -530,7 +552,7 @@ function parseTMGContents(fileContents) {
        else{
             Vlabel = '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10)+'</td>';
         }
-        if(hdxGlobals.FileVersion=='3.0'){
+        if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
           for (x of Vfields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Vinfo += '<td style ="word-break:break-all;">' +waypoints[i][x]+'</td>'
@@ -578,7 +600,7 @@ function parseTMGContents(fileContents) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null, null);
             }
-            if(hdxGlobals.FileVersion=='3.0'){
+            if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
               var c=1;
               newEdge.color="rgb(60, 60, 60)";
               newEdge.scale= 4;
@@ -605,7 +627,7 @@ function parseTMGContents(fileContents) {
              + '</td>';
 
         eTable += '<tr custom-title = "' + EhoverText + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
-        if(hdxGlobals.FileVersion=='3.0'){
+        if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
         Einfo='';
           for (x of Efields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){

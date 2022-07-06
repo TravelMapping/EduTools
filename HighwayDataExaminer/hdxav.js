@@ -140,6 +140,8 @@ var hdxAV = {
         this.avList.push(hdxOrderingAV);
         this.avList.push(hdxBFTravelingSalesmanAV);
         this.avList.push(hdxTwiceAroundTreeAV);
+        this.avList.push(hdxPartitionerAV);
+        this.avList.push(hdxComputePartStats);
 	groupStarts.push({
 	    first: this.avList.length,
 	    text: "Edge-Only Algorithms"
@@ -156,6 +158,7 @@ var hdxAV = {
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
         this.avList.push(hdxSimpleBridgeAV);
+        this.avList.push(hdxGraphColoringAV);
         
         // populate the algorithm selection select with options
         // from the avList

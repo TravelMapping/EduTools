@@ -7,9 +7,9 @@
 //
 
 var hdxSimpleBridgeAV = {
-    value: "Simple Bridge Detection Algorithm",
+    value: "Simple Bridge Detection",
 
-    name: "Simple Bridge Detection Algorithm",
+    name: "Simple Bridge Detection",
 
     description: "Naïve algorithm that finds all bridges, an edge of a graph whose removal increases the number of connected components in the graph.",
 
@@ -33,6 +33,9 @@ var hdxSimpleBridgeAV = {
     //boolean used to indicate whether or not the current removedEdge is actually a bridge, if so then go to the addBridge state
     isBridge: false,
 
+    //this variable is used to stop dft once the other endpoint is found
+    stopDFT: false,
+
     //vertex variables, v1 is the initial endpoint, and v2 is the endpoint we are trying to find from v1 after the edge is removed
     v1: -1,
     v2: -1,
@@ -54,10 +57,10 @@ var hdxSimpleBridgeAV = {
                 thisAV.visitedEdges = new Array(graphEdges.length).fill(false);
                 thisAV.v1 = -1;
                 thisAV.v2 = -1;
+                thisAV.stopDFT;
 
                 //numBridges is incremented every time we find a new bridge
                 thisAV.numBridges = 0;
-
 
             
                 updateAVControlEntry("undiscovered", graphEdges.length + " edges not yet visited");
@@ -94,6 +97,8 @@ var hdxSimpleBridgeAV = {
                     thisAV.removedEdge.num = thisAV.nextToCheck;
 
                     hdxAV.nextAction = "removeEdge";
+
+                    
                 } else {
                     //if there are no more edges to be checked, then go to cleanup
                     hdxAV.nextAction = "cleanup";
@@ -140,6 +145,9 @@ var hdxSimpleBridgeAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+                
+                //make sure to reset stopDFT so that the DFT does not break
+                thisAV.stopDFT = false;
                 //here we reset the arrays used by the depth first traversal so that each iteration is independent of each other
                 thisAV.visited = new Array(waypoints.length).fill(false);
                 thisAV.visitedEdges = new Array(graphEdges.length).fill(false);
@@ -255,6 +263,8 @@ var hdxSimpleBridgeAV = {
                 label: "cleanup",
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
+                    //this removes waypoints from the data table, we do this because waypoints are not particularly interesting information
+                    document.getElementById("waypoints").style.display = "none";
 
                     //make sure to reset all control entries, other than that, there is no polylines to account for
                     updateAVControlEntry("undiscovered",'');
@@ -314,6 +324,8 @@ var hdxSimpleBridgeAV = {
     },
     //cleanupUI is called when you select a new AV or map when after running an algorithm, required
     cleanupUI() {
+        //here we make sure that waypoints are shown in the datatable again
+        document.getElementById("waypoints").style.display = "";
     },
 
     //this is necessary for HDXAV to access the code inside our state machine, required
@@ -340,26 +352,54 @@ var hdxSimpleBridgeAV = {
         //}
         return false;
     },
+
+    //this is the dft algorithm that is used, it takes a the num of a vertex as input
     depthFirstTraversal(i){
-        this.visited[i] = true;
-        let connection = null;
-        let dv1;
-        let dv2;
-        for(let j = 0; j < waypoints[i].edgeList.length; j++){
-            connection = waypoints[i].edgeList[j].edgeListIndex;
-            if(this.nextToCheck != connection){
-                dv1 = graphEdges[connection].v1;
-                dv2 = graphEdges[connection].v2;
-                if(dv2 != this.v2){
-                    if(!this.visited[dv1] && dv2 == i){
-                        this.visitedEdges[connection] = true;
-                        this.depthFirstTraversal(dv1)
-                    } else if (!this.visited[dv2] && dv1 == i){
-                        this.visitedEdges[connection] = true;
-                        this.depthFirstTraversal(dv2);
+
+        if(!this.stopDFT){
+            //labelling the vertex as having been visited
+            this.visited[i] = true;
+
+            //this variable holds the num of the edge that is going to be travelled along, this is done
+            let connection = null;
+
+            //these variables hold the endpoints of the edge we are going to be traversing over
+            let dv1;
+            let dv2;
+
+            //loop over all edges in a vertex's edge list
+            for(let j = 0; j < waypoints[i].edgeList.length; j++){
+
+                //getting num of edge in vertex i's edge list
+                connection = waypoints[i].edgeList[j].edgeListIndex;
+
+                //make sure that the current connection is the edge we are already checking to be a bridge
+                if(this.nextToCheck != connection){
+
+                    //setting endpoints
+                    dv1 = graphEdges[connection].v1;
+                    dv2 = graphEdges[connection].v2;
+
+                    //if the endpoint of the current connection is not the endpoint of the bridge we have been looking for
+                    //then we continue the dft, if not then we set v2 as being visited. Not strictly necessary but boosts efficency.
+                    if(dv2 != this.v2){
+
+                        //these 2 if statements are used to make sure that edge we are not calling dft
+                        //on a vertex we have already visited
+                        if(!this.visited[dv1] && dv2 == i){
+                            this.visitedEdges[connection] = true;
+                            this.depthFirstTraversal(dv1)
+                        } else if (!this.visited[dv2] && dv1 == i){
+                            this.visitedEdges[connection] = true;
+                            this.depthFirstTraversal(dv2);
+                        }
+                    } else {
+                        //if the endpoint in the current connection is the endpoint of the edge we are checking is a bridge
+                        //then we mark the end point as visited, and because it has been visited by another path, that means
+                        //the edge is not a bridge, so we no longer have to call dft
+                        this.stopDFT = true;
+                        this.visited[this.v2] = true;
                     }
-                } else {
-                    this.visited[this.v2] = true;
                 }
             }
         }

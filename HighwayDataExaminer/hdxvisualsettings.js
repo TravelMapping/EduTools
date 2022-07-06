@@ -174,7 +174,7 @@ var visualSettings = {
         opacity: 0.6
     },
     hoverV: {
-        color: "rgb(190, 235, 252)",
+        color: "rgb(235, 30, 235)",
         textColor: "black",
         scale: 8,
         name: "hoverV",
