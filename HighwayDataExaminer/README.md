@@ -10,6 +10,7 @@ The JS code for HDX is split among several files for easier management.
 * `hdxav.js` contains the  `hdxAV` object, which is the main AV engine.
 * `hdxavcp.js` contains functionality of the Algorithm Visualization Control Panel (AVCP).
 * `hdxbfchav.js` contains the implementation for the brute-force convex hull AV.
+* `hdxbftravelav.js` contains the implementation of the brute force traveling salesman problem AV.
 * `hdxbreakpoints.js` contains conditional breakpoint support.
 * `hdxcallbacks.js` contains implementation of UI callback functions.
 * `hdxclosestpairsrecav.js` contains the recursive implementation of the vertex closest pairs AV.
@@ -18,6 +19,7 @@ The JS code for HDX is split among several files for easier management.
 * `hdxdfsrecav.hs` contains the implementation of the recursive depth-first traversal AV.
 * `hdxedgeextremesav.js` contains the implementation of the edge-based extremes search AV.
 * `hdxextremepairsav.js` contains the implementation of the extreme pairs (closest and furthest pairs) AV.
+* `hdxgraphcoloringav.js` contains the implementation of the Welsh-Powell graph coloring algorithm visualization.
 * `hdxgraphsearchbox.js` contains the functionality related to the "Option 1" search box for loading graph data.
 * `hdxhover.js` contains the implementation of "hover over" highlighting of graph vertices and edges.
 * `hdxinit.js` provides the `HDXInit` function called on the main HDX page load.
@@ -31,7 +33,11 @@ The JS code for HDX is split among several files for easier management.
 * `hdxpseudocode.js` contains functions related to pseudocode display and highlighting.
 * `hdxqs.js` contains the support for Query String parameters.
 * `hdxquadtreeav.js` contains the implementation of the quadtree construction AV.
+* `hdxsimplebridgeav.js` contains the implementation of the naïve bridge detection AV.
 * `hdxtravspanavs.js` contains the implementations of the graph traversal (BFS, DFS, RFS) and spanning tree (Dijkstra's, Prim's) AVs.
+* `hdxtwicearoundtreeav.js` contains the implementation of the twice-around-the-tree traveling salesman approximation AV.
 * `hdxvertexextremesav.js` contains the implementation of the vertex-based extremes search AV.
 * `hdxvertexselector.js` contains the implemenation of the vertex selector objects, which allow the selection of a vertex as an AV parameter by entering its number, clicking on it on the map, or clicking on it in the data table.
 * `hdxvisualsettings.js` contains the object that defines visual settings (colors, sizes, opacities) that are used consistently across multiple AVs.
+* `hdxpartitionerrecursive.js` contains the implemenatation of a recursive coordinate bisection AV.
+* `hdxpart.js` contains a structure and supporting methods for partitioning algorithms.
