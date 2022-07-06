@@ -36,12 +36,16 @@ var hdxOrderingAV = {
     //used for the polylines of the bounding box
     boundingPoly: [],
 
+    //given that we are sorting the waypoints array, we want to store the original waypoints array so that we can revert back to
+    //it when we go to cleanup/cleanupUI
     originalWaypoints: [],
-    //fhc: fixedHilbertCurve(),
     numVUndiscovered: waypoints.length,
 
+    //the easiest way to generate the orderings is creating a quadtree containing all points in the graph, and then
+    //perform a specialized traversal algorithm. If want to know more, go to hdxquadtreeav.js
     quadtree: null,
 
+    //this is 
     lengthEdges: 0,
     currentEdgeLength: 0,
     lengthOfEdges: [],
@@ -244,11 +248,11 @@ var hdxOrderingAV = {
  
                 thisAV.drawLineVisiting();
 
-                updateAVControlEntry("totalLength","Total length of edges: " + thisAV.lengthEdges.toFixed(2) + " " + distanceUnits);
+                updateAVControlEntry("totalLength","Total length of edges: " + thisAV.lengthEdges.toFixed(3) + " " + distanceUnits);
 
                 if(thisAV.currentEdgeLength > thisAV.longestEdgeLength){
                     thisAV.longestEdgeLength = thisAV.currentEdgeLength;
-                    updateAVControlEntry("longestEdge","Longest edge added: " + thisAV.longestEdgeLength.toFixed(2) + " " + distanceUnits);
+                    updateAVControlEntry("longestEdge","Longest edge added: " + thisAV.longestEdgeLength.toFixed(3) + " " + distanceUnits);
                 }
 
                 updateAVControlEntry("varianceLength","Standard deviation of edges: " + thisAV.calculateStdevOfEdges() + " " + distanceUnits);
@@ -396,6 +400,7 @@ var hdxOrderingAV = {
 
     },
 
+    //function calculate the variance of the set of edge lengths and then square roots it to get the standard deviation
     calculateStdevOfEdges() {
         let variance = 0;
         let mean = this.lengthEdges / (this.nextToCheck + 1);
@@ -403,7 +408,7 @@ var hdxOrderingAV = {
             variance += Math.pow(this.lengthOfEdges[i] - mean,2)
         }
         let popStdev = Math.sqrt(variance / (this.nextToCheck + 1));
-        return popStdev.toFixed(2);
+        return popStdev.toFixed(3);
     },
 
     setConditionalBreakpoints(name) {

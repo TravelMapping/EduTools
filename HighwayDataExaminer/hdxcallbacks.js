@@ -47,6 +47,9 @@ function labelClickHDX(i) {
     hdxVertexSelector.select(i);
 
     // standard map center/infowindow display
+    markers[i].bindPopup('<p style="line-height:160%;"><span style="font-size:24pt;color:black;">' + waypoints[i].label + '</span><br><b>Waypoint ' + i + '<\/b><br><b><a target="_blank" href="http://www.openstreetmap.org/?lat='+waypoints[i].lat+'&lon='+waypoints[i].lon+'">Coords.:<\a><\/b> ' +
+ waypoints[i].lat + '&deg;, ' + waypoints[i].lon + '&deg;<\/p><div id="intersections' + i + '"><\/div>');
+
     map.panTo([waypoints[i].lat, waypoints[i].lon]);
 
     markers[i].openPopup();

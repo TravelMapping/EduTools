@@ -15,6 +15,7 @@ function HDXCommonConditionalBreakpoints(name) {
         case "v2forLoopTop":
         case "v1forLoopTop":
         case "forLoopTop":
+       // case "topForLoop":
         html = buildWaypointSelector2("generic2", "Stop at vertex #", 0);
         return html;
     }
@@ -29,7 +30,8 @@ function HDXHasCommonConditonalBreakpoints(name) {
     case "vtestforLoopTop":
     case "v2forLoopTop":
     case "v1forLoopTop":
-    case "forLoopTop":   
+    case "forLoopTop":
+   // case "topForLoop":
         return true;
     }
     return false;

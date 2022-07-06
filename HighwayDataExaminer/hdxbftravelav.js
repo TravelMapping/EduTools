@@ -14,17 +14,22 @@ var hdxBFTravelingSalesmanAV = {
 
     description: "This description is used to decribe the algorithm to the user. NOTE: Only use on small graphs, 10 vertices and less",
 
+    //this variable is used to store the polyline for the current permutation/path being checked
     currPoly: null,
 
+    //this variable stores the polyline of the shortest path found so far
     shortPoly: null,
+
+    //this variable stores the polylines of the shortest path but each edge is transformed into a different color
     finalPoly: [],
 
+    //this is used to store the array of indices of the shortest purmutation
     shortestPath: null,
 
-    currDistances: null,
-    shortestDistances: null,
-
+    //although nextToCheck is used as a loop variable in most AVs
+    //in this case it is merely used to track how many paths have been visited so far
     nextToCheck: -1,
+
     avActions : [
         {
             label: "START",
@@ -34,7 +39,6 @@ var hdxBFTravelingSalesmanAV = {
 
                 //gets the staring vertex selected by the user as an integer
                 thisAV.startVertex = Number(document.getElementById("startVertex").value);
-
 
                 //we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startVertex, visualSettings.startVertex, 30, false);
@@ -61,14 +65,17 @@ var hdxBFTravelingSalesmanAV = {
                 thisAV.currEdgeDistances = [];
                 thisAV.shortestEdgeDistances = [];
 
-                //this is to generate all the possible permutations of the path
+                //used to store the numbers of all vertices that is not the start vertex. This is because we always start and end
+                //at the same vertex, as such doing it this way, we only have to traverse (n-1)! permutations/paths
                 thisAV.permutation = [];
                 for(let i = 0; i < waypoints.length;i++){
                     if(i != thisAV.startVertex) thisAV.permutation.push(i);
                 }
 
+                //constructing our permutation generator/iterator
                 thisAV.permutationGenerator = permute(thisAV.permutation);
 
+                //calculate the number of paths we need to traverse (n-1)! where n is the number of vertices in the graph
                 thisAV.pathsRemaining = factorial(thisAV.permutation.length);
 
                 updateAVControlEntry("undiscovered",thisAV.pathsRemaining + " paths not yet visited");
@@ -89,10 +96,12 @@ var hdxBFTravelingSalesmanAV = {
                 thisAV.nextToCheck++;
                 thisAV.pathsRemaining--;
 
-                //this generates the next permutation to check
+                //this generates the next permutation to check as an array of integers, corresponding to the num of all vertices
+                //that are not the starting point.
                 thisAV.currPath = thisAV.permutationGenerator.next();
                 if(!thisAV.currPath.done){
 
+                    //add the start vertex to the start and end of the current permutation as we start and end at the same place
                     thisAV.currPath.value.push(thisAV.startVertex);
                     thisAV.currPath.value.splice(0,0,thisAV.startVertex);
 
@@ -120,19 +129,30 @@ var hdxBFTravelingSalesmanAV = {
                 
                 thisAV.currCoords = [];
 
+                //jumped is a boolean used to check if the current path is already longer than the shortest path
+                //if so then we break out of the loop. This is mostly used as an efficiency bonus, but also used
+                //to determine whether or not we set a new minimum or go back to the topForLoop state
                 let jumped = false;
+
+                //endpoints of the edge whose length we are finding
                 let v1;
                 let v2;
+
+                //used to track the length of the path so far, both as a total, and the individual lengths of each edge
                 thisAV.currDistance = 0;
                 thisAV.currEdgeDistances = [];
-                //thisAV.currEdgeDistances.push(0);
+
+                //loop over each vertex in the permutation
                 for(let index = 0; index < thisAV.currPath.value.length - 1; index++){
                     v1 = waypoints[thisAV.currPath.value[index]];
                     v2 = waypoints[thisAV.currPath.value[index+1]];
                     thisAV.currCoords.push([v1.lat,v1.lon]);
                     
+                    //calculate distance of the current edge
                     let currEdgeDist = distanceInMiles(v1.lat,v1.lon,
                         v2.lat,v2.lon);
+                    
+                    //add distance of current edge to total and push it onto the distances array
                     thisAV.currDistance += currEdgeDist;
                     thisAV.currEdgeDistances.push(currEdgeDist);
 
@@ -141,8 +161,11 @@ var hdxBFTravelingSalesmanAV = {
                         break;
                     }
                 }
+
+                //here we push each vertex onto an array to be later used to create the polyline of the current path
                 thisAV.currCoords.push([v2.lat,v2.lon]);
                 
+                //constructs the polyline using the array of points we just created
                 thisAV.currPoly = 
                     L.polyline(thisAV.currCoords, {
                         color: visualSettings.discovered.color,
@@ -150,6 +173,7 @@ var hdxBFTravelingSalesmanAV = {
                         weight: 3
                     });
 
+                //add the polyline to the map
                 thisAV.currPoly.addTo(map);
 
                 updateAVControlEntry("currSum","Distance of Current Path: " + thisAV.currDistance.toFixed(3) + " miles");
@@ -157,6 +181,8 @@ var hdxBFTravelingSalesmanAV = {
                     hdxAV.nextAction = "topForLoop";
 
                 }else{
+                    //if we never had to break out of the loop at any point for the current path being too large
+                    //that means the current path is the shortest one so far
                     hdxAV.nextAction = "setMin";
                 }
                 
@@ -170,13 +196,15 @@ var hdxBFTravelingSalesmanAV = {
             code: function(thisAV){
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                
+                //if we are setting a new minimum path, then we must remove the previous minimum path from the map
                 if(thisAV.shortPoly != null){
                     thisAV.shortPoly.remove();
                 }
 
+                //setting the current distance to the minimum distance
                 thisAV.minDistance = thisAV.currDistance;
 
+                //here we are copying over the current path and the distances of each edge in the path into the shortest path arrays
                 thisAV.shortestPath = [];
                 thisAV.shortestEdgeDistances = [];
                 for(let i = 0; i < thisAV.currPath.value.length; i++){
@@ -185,7 +213,7 @@ var hdxBFTravelingSalesmanAV = {
                 }
 
                 
-                
+                //reconstructing the shortest path polyline and adding it to the map
                 thisAV.shortPoly = null;
 
                 thisAV.shortPoly = L.polyline(thisAV.currCoords, {
@@ -212,22 +240,28 @@ var hdxBFTravelingSalesmanAV = {
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
                     
-
+                    updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(3) + " miles");
                     updateAVControlEntry('undiscovered','');
                     updateAVControlEntry("currSum","");
 
-                     //make rainbow for final scr
-                     thisAV.rainbowGradiant = new Rainbow();
+                    //rainbow constructor, used to make pattern so that users can better see the path in which the 
+                    thisAV.rainbowGradiant = new Rainbow();
+
+                    //the gradient is calculated based on a range, as such we make the range as long as the number of vertices
                     thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
+                    //this gradient is basically a rainbow, however it has a darker yellow and purple as they don't contrast well on white background
                     thisAV.rainbowGradiant.setSpectrum('ff0000','ffc000','00ff00','00ffff','0000ff','c700ff');
 
+                    //adding num variable to waypoints so that we can keep track of vertex numbers when printing out the table
                     for(var i = 0; i < waypoints.length; i++){
                         waypoints[i].num = i;
                         
                     }
 
+                    //this function just gets the list of points/coordinates from the shortest path polyline
                     thisAV.currCoords = thisAV.shortPoly.getLatLngs();
 
+                    //here we use the coordinates of the shortest path in order to make each edge a different color of the rainbow
                     for(var i = 0; i < waypoints.length; i++){
                         let newcolor = {
                             color: "#" + thisAV.rainbowGradiant.colorAt(
@@ -250,6 +284,8 @@ var hdxBFTravelingSalesmanAV = {
                                 })
                             );
                     }
+
+                    //add all the polylines to the map
                     for(var i = 0; i < thisAV.finalPoly.length; i++){
                         thisAV.finalPoly[i].addTo(map);
                     }  
@@ -258,10 +294,7 @@ var hdxBFTravelingSalesmanAV = {
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;
 
-                    /*here is a loop where we remove all the polylines from the map
-                        note this is not the same as popping the polylines
-                        */
-                
+                    //here we remove all the current and shortest poly as we now have the final rainbow poly
                     thisAV.currPoly.remove();
                     thisAV.currPoly = null;
                     thisAV.shortPoly.remove();
@@ -272,6 +305,7 @@ var hdxBFTravelingSalesmanAV = {
                     let table = '<table class="gratable"><thead>' +
                     '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance</th></tr></thead><tbody>';
 
+                    //adding rows to the data table for each edge in the shortest path
                     for(let i = 0; i < thisAV.shortestPath.length - 1;i++){
                         table += thisAV.hullTableRow(i);
                     }
@@ -324,11 +358,6 @@ var hdxBFTravelingSalesmanAV = {
         let newAO = 'Start Vertex <input type="number" id="startVertex" min="0" max="' 
         + (waypoints.length - 1) + '" value="0">';
 
-        /*
-        newAO += '<br />Generate first' + '<input type="number" id="refinement" min="1" max="' 
-        + (factorial(waypoints.length)) + '" value="">  '
-        */
-
         hdxAV.algOptions.innerHTML = newAO;
 
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
@@ -339,6 +368,7 @@ var hdxBFTravelingSalesmanAV = {
     },
 
     cleanupUI() {
+        //we need to make sure we remove any and all polylines that could be made throughout
         if(this.currPoly != null){
             this.currPoly.remove();
         }
@@ -362,6 +392,7 @@ var hdxBFTravelingSalesmanAV = {
     },
 
     //this code is copied from the hdxbfchav.js file for adding rows to an html table
+    //this is used to construct the table at the end
     hullTableRow(i) {
 
         return '<tr><td>' + waypoints[this.shortestPath[i]].num + ' &rarr; ' + waypoints[this.shortestPath[i+1]].num + '</td><td>' + waypoints[this.shortestPath[i]].label +
@@ -400,7 +431,11 @@ var hdxBFTravelingSalesmanAV = {
     }
 }
 
-//permutation generator
+//permutation generator, that every time permute.next() is called, you are guarenteed a unique permutation is visited
+//this generator has the noticable downside that given lengths of edges are the same going forwards as backwards
+//then this generator is going to make us iterate over twice as many permutations, and the latter half is not simply
+//the former but with all permutations in reverse.
+//It currently does the job but if someone else can find a better generator that would be great
 function* permute(permutation) {
     var length = permutation.length,
         c = Array(length).fill(0),
