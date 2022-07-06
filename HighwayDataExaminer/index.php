@@ -89,6 +89,7 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxlinear.js" type="text/javascript"></script>
 <script src="hdxpresort.js" type="text/javascript"></script>
 <script src="hdxgraphsearchbox.js" type="text/javascript"></script>
+<script src="hdxapclosestpts.js" type="text/javascript"></script> <!-- Mark V's all pairs closest points-->
 <script src="hdxkruskalav.js" type="text/javascript"></script>
 <script src="hdxdegreeav.js" type="text/javascript"></script>
 <script src="hdxdfsrecav.js" type="text/javascript"></script>
@@ -101,6 +102,7 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <script src="hdxpartitionerrecursive.js" type="text/javascript"></script>
 <script src="hdxsimplebridgeav.js" type="text/javascript"></script>
 <script src="hdxgraphcoloringav.js" type="text/javascript"></script>
+<script src="hdxcomputePartStats.js" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 

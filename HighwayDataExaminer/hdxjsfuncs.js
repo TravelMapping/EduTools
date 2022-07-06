@@ -415,7 +415,7 @@ function HDXProcessFileContents(fileContents) {
     updateMap(null,null,null);
 
     //Updating custom colors and scales
-   if(hdxGlobals.FileVersion=='3.0'){
+   if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
     for (i in waypoints){
         updateMarkerAndTable(i, { color: waypoints[i].color, scale: waypoints[i].scale, opacity: waypoints[i].opacity, textColor: "white" }, 0, false);
      }
@@ -434,7 +434,7 @@ function HDXProcessFileContents(fileContents) {
 
 // parse the contents of a .tmg file
 //
-// supports version 1.0 and 2.0 "simple", "collapsed" or "traveled".
+// supports version 1.0, 2.0, and 3.0 "simple", "collapsed", "traveled","custom", or "partitioned".
 // see https://courses.teresco.org/metal/graph-formats.shtml
 //
 function parseTMGContents(fileContents) {
@@ -448,23 +448,30 @@ function parseTMGContents(fileContents) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG file version (' + header[1] + ')</th></tr></table>';
     }
     if ((header[2] != "simple") && (header[2] != "collapsed")
-        && (header[2] != "traveled")&&(header[2]!="custom")) {
+        && (header[2] != "traveled")&&(header[2]!="custom")&&(header[2]!="partitioned")) {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Unsupported TMG graph format (' + header[2] + ')</th></tr></table>';
     }
+
+    //setting variables
     hdxGlobals.FileVersion=header[1];
-    var counts = lines[1].split(' ');
+    hdxGlobals.FileType=header[2];
+    var counts = lines[1].split(' ');// normally has Vertice and edge count,but may have partition count
     var numV = parseInt(counts[0]);
     var numE = parseInt(counts[1]);
     var offset=2;
     var numTravelers = 0;
     var Vcolspan=3;
     var Ecolspan=3;
+
+    //HTML strings for table
     var Vstring='';
     var Estring='';
+
+   //extra fields for each vertex/edges
     var Vfields='';
     var Efields='';
-    hdxGlobals.keywords=["color","scale","opacity"];
-    if(hdxGlobals.FileVersion=='3.0'){
+    hdxGlobals.keywords=["color","scale","opacity","partition"];
+    if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType!="partitioned"){
          Vfields=lines[2].split(' ');
          Efields=lines[3].split(' ');
          
@@ -483,12 +490,21 @@ function parseTMGContents(fileContents) {
 
          offset=4;   
     }
+    else if(hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType=="partitioned"){
+        Vfields=["partition"];
+        //setting up numbers and arrays for the hdxPart support file
+        hdxPart.numParts=parseFloat(counts[2]);
+        hdxPart.parts=new Array(hdxPart.numParts);
+        for(var x=0;x<hdxPart.numParts;x++){
+            hdxPart.parts[x]=new Array();
+        }
+    }
     let graphInfo = document.getElementById("graphInfo");
     graphInfo.style.display = "block";
     graphInfo.innerHTML = numV + " vertices, " + numE + " edges";
     
     // is this a traveled format graph?
-    if (header[2] == "traveled") {
+    if (hdxGlobals.FileType == "traveled") {
         haveTravelers = true;
         numTravelers = parseInt(counts[2]);
     }
@@ -505,23 +521,35 @@ function parseTMGContents(fileContents) {
     
     summaryInfo += ".</th></tr></table>";*/
     
-    //Building the Vertices and the table for them
     var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
     waypoints = new Array(numV);
     for (var i = 0; i < numV; i++) {
         var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
-       if(hdxGlobals.FileVersion=='3.0'){ //setting visual defaults
+        waypoints[i].lat=Number(parseFloat(waypoints[i].lat));
+        waypoints[i].lon=Number(parseFloat(waypoints[i].lon));
+        
+       if(hdxGlobals.FileVersion=='3.0'){
+          //setting default to be the same as undiscovered from visual settings
           waypoints[i].color="rgb(60, 60, 60)";
           waypoints[i].scale= 4;
           waypoints[i].opacity=0.6;
           var c=1;
-          for (x of Vfields){
-              waypoints[i][x]=vertexInfo[2+c];
-              c++;
+          if(hdxGlobals.FileType!="partitioned"){
+              for (x of Vfields){
+                  waypoints[i][x]=vertexInfo[2+c];
+                  c++;
+             }
           }
+          else{
+             if(vertexInfo[3]>=hdxPart.numParts){
+                   console.log("File Error:Partition value of"+waypoints[i].label+" is higher than the number of Partitions");
+             }
+             else{
+                  hdxPart.parts[vertexInfo[3]].push(Number(i));
+             }
        }
-	//Building HTML string for the current waypoint
+      }
         var e = "...";
         var Vinfo='';
         var coord='<td style ="word-break:break-all;">'+parseFloat(vertexInfo[1]).toFixed(3) + ',' +parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
@@ -532,7 +560,7 @@ function parseTMGContents(fileContents) {
        else{
             Vlabel = '<td style ="word-break:break-all;">' + (waypoints[i].label).substring(0,10)+'</td>';
         }
-        if(hdxGlobals.FileVersion=='3.0'){
+        if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
           for (x of Vfields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Vinfo += '<td style ="word-break:break-all;">' +waypoints[i][x]+'</td>'
@@ -550,7 +578,6 @@ function parseTMGContents(fileContents) {
 
     vTable += '</tbody></table>';
 
-    //Building the Edges and the table for them
     var Einfo='';
     var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
     graphEdges = new Array(numE);
@@ -581,8 +608,9 @@ function parseTMGContents(fileContents) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
                                         edgeInfo[2], null, null);
             }
-            if (hdxGlobals.FileVersion=='3.0'){//setting visual defaults
+            if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
               var c=1;
+              //setting default to be the same as undiscovered from visual settings
               newEdge.color="rgb(60, 60, 60)";
               newEdge.scale= 4;
               newEdge.opacity=0.6;
@@ -599,7 +627,6 @@ function parseTMGContents(fileContents) {
         // add this new edge to my endpoint vertex adjacency lists
         waypoints[newEdge.v1].edgeList.push(newEdge);
         waypoints[newEdge.v2].edgeList.push(newEdge);
-	//Building HTML string for the current Edge
         var EhoverText = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
             ' &harr; ' + edgeInfo[1] + ':&nbsp;'
             + waypoints[newEdge.v2].label;
@@ -609,8 +636,8 @@ function parseTMGContents(fileContents) {
              + '</td>';
 
         eTable += '<tr custom-title = "' + EhoverText + '"' + 'onmouseover="hoverE(event,'+i+')" onmouseout="hoverEndE(event,'+i+')" onclick="connectionClick({ connIndex: '+i+'})" id="connection' + i + '" class="v_' + firstNode + '_' + secondNode + '"><td id = "connectname" style ="word-break:break-all;" >' + i + '</td>';
-        if(hdxGlobals.FileVersion=='3.0'){
-        Einfo='';
+        if(hdxGlobals.FileVersion=='3.0'&&hdxGlobals.FileType=="custom"){
+        Einfo='';//resetting Einfo
           for (x of Efields){
              if(!hdxGlobals.keywords.includes(x.toLowerCase())){
                   Einfo += '<td style ="word-break:break-all;">' +newEdge[x]+'</td>'

@@ -269,6 +269,27 @@ var hdxOrderingAV = {
             label: "cleanup",
             description: "",
             code: function(thisAV){
+            //Partitioning
+                if(document.getElementById("calcparts").checked== true){
+                     var parts =Number(document.getElementById("numOfParts").value);
+                     hdxPart.parts=new Array(parts);
+                     hdxPart.numParts=parts;
+                     for(var p=0;p<parts;p++){
+                         hdxPart.parts[p]=new Array();
+                         let left=Math.trunc(waypoints.length%parts);
+	                    let inter=Math.trunc(waypoints.length/parts);
+	                    let strt=p*inter+Math.min(p,left);
+	                    let cnt=inter;
+	                    if(p<left) cnt++;
+	                    let end=strt+cnt;
+                         for(var i=strt;i<end;i++){
+                               hdxPart.parts[p].push(waypoints[i].num);
+                          }
+                      }
+                }
+
+
+
                 waypoints = thisAV.originalWaypoints;
                 hdxAV.algStat.innerHTML =
                 "Done! Visited " + waypoints.length + " waypoints.";
@@ -276,7 +297,7 @@ var hdxOrderingAV = {
                 updateAVControlEntry("undiscovered","0 vertices not yet visited");
                 updateAVControlEntry("v1","");
                 updateAVControlEntry("v2","");
-        
+
                 hdxAV.iterationDone = true;
             },
             logMessage: function(thisAV) {
@@ -337,7 +358,9 @@ var hdxOrderingAV = {
         newAO +=
         `<br /><input id="extraEdge" type="checkbox" name="Draw Edge from Last to First"/>&nbsp;
         Draw Edge from Last to First<br />`
-
+         
+        //partitioning
+        newAO +=hdxPart.partHtml();
         hdxAV.algOptions.innerHTML = newAO;
 
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 

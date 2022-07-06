@@ -134,12 +134,14 @@ var hdxAV = {
         this.avList.push(hdxVertexExtremesSearchAV);
         this.avList.push(hdxExtremePairsAV);
         this.avList.push(hdxBFConvexHullAV);
+        this.avList.push(hdxAPClosestPtsAV);
         this.avList.push(hdxClosestPairsRecAV);
         this.avList.push(hdxQuadtreeAV);
         this.avList.push(hdxOrderingAV);
         this.avList.push(hdxBFTravelingSalesmanAV);
         this.avList.push(hdxTwiceAroundTreeAV);
         this.avList.push(hdxPartitionerAV);
+        this.avList.push(hdxComputePartStats);
 	groupStarts.push({
 	    first: this.avList.length,
 	    text: "Edge-Only Algorithms"

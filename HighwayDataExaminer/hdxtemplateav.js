@@ -17,7 +17,7 @@ var hdxTemplateAV = {
     name: "Template",
 
     //description is what is shown after the user selects the algorithm in the drop down 
-    //but before they press the visualise button
+    //but before they press the "visualize" button
     description: "This description is used to decribe the algorithm to the user. Include note if something is broken",
 
     //here you list global fields that you want your av to have access to on a global level 
