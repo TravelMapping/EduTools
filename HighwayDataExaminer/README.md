@@ -7,6 +7,7 @@ The main index page `index.php` takes optional query string parameters to contro
 
 The JS code for HDX is split among several files for easier management.
 
+* `hdxapclosestpts.js` contains the implementation for the brute force All Points Closest Pairs AV.
 * `hdxav.js` contains the  `hdxAV` object, which is the main AV engine.
 * `hdxavcp.js` contains functionality of the Algorithm Visualization Control Panel (AVCP).
 * `hdxbfchav.js` contains the implementation for the brute-force convex hull AV.
