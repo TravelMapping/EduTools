@@ -334,25 +334,13 @@ var hdxGraphColoringAV = {
         if (temp != "No innerHTML") {
             return temp;
         }
-        switch (name) {
-            case "incrementColor":
-                html = createInnerHTMLChoice("boolean","Stop when next color is generated",
-                                             "checkVal = 0",
-                                             "checkVal != 0");
-                return html;
-                
-            }
         return "No innerHTML";
     },
     //note this is currently not working
     hasConditionalBreakpoints(name){
-        let answer = HDXHasCommonConditonalBreakpoints(name);
+        let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
-        }
-        switch(name){
-            case "incrementColor":
-                return true;
         }
         return false;
     },

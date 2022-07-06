@@ -468,7 +468,7 @@ var hdxPartitionerAV = {
     },
     //note this is currently not working
     hasConditionalBreakpoints(name){
-        let answer = HDXHasCommonConditonalBreakpoints(name);
+        let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
         }

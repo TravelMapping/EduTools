@@ -346,10 +346,10 @@ var hdxSimpleBridgeAV = {
     },
     //note this is currently not working
     hasConditionalBreakpoints(name){
-        //let answer = HDXHasCommonConditonalBreakpoints(name);
-        //if (answer) {
-        //    return true;
-        //}
+        let answer = HDXHasCommonConditionalBreakpoints(name);
+        if (answer) {
+            return true;
+        }
         return false;
     },
 
