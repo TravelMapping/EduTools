@@ -191,7 +191,7 @@ var hdxAPClosestPtsAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 if(thisAV.vClosest == -1) {
                     thisAV.currentPoly.remove();
-                    updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
+                    //updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
                     thisAV.leaderPoly = thisAV.currentPoly;
                     thisAV.leaderPoly.setStyle({
                         color: visualSettings.leader.color,
@@ -239,6 +239,8 @@ var hdxAPClosestPtsAV = {
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
                 }
+
+                thisAV.highlightPoly.push(thisAV.leaderPoly);
                 hdxAV.nextAction = "v1ForLoopTop";
                 
             },
@@ -254,8 +256,8 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 for(var i = 0; i < thisAV.closestVertices.length; i++)
                 {
-                    thisAV.highlightPoly.push(L.polyline([[waypoints[i].lat, waypoints[i].lon], [waypoints[thisAV.closestVertices[i]].lat,
-                    waypoints[thisAV.closestVertices[i]].lon]],visualSettings.undiscovered));
+                    //thisAV.highlightPoly.push(L.polyline([[waypoints[i].lat, waypoints[i].lon], [waypoints[thisAV.closestVertices[i]].lat,
+                    //waypoints[thisAV.closestVertices[i]].lon]],visualSettings.undiscovered));
                 }
                 
                 for(var i = 0; i < thisAV.highlightPoly.length; i++){
