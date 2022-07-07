@@ -290,6 +290,7 @@ var hdxAPClosestPtsAV = {
                 }
                 
                 for(var i = 0; i < thisAV.highlightPoly.length; i++){
+                    updateMarkerAndTable(i, visualSettings.leader, 0, false);
                     thisAV.highlightPoly[i].addTo(map);
                 }
 
