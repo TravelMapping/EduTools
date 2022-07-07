@@ -496,12 +496,12 @@ var hdxDegreeAV = {
         return "No innerHTML";
     },
 
-    hasConditonalBreakpoints(name) {
+    hasConditionalBreakpoints(name) {
         
         let isThere = name.search(/\d/);
         name = (isThere != -1) ? name.substring(0,isThere) : name;
     
-        let answer = HDXHasCommonConditonalBreakpoints(name);
+        let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
         }
