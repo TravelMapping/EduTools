@@ -531,9 +531,9 @@ var hdxExtremePairsAV = {
         return "No innerHTML";
     },
 
-    hasConditonalBreakpoints(name) {
+    hasConditionalBreakpoints(name) {
 	
-        let answer = HDXHasCommonConditonalBreakpoints(name);
+        let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
         }
