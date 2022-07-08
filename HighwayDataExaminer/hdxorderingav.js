@@ -4,6 +4,7 @@
 // METAL Project
 //
 // Primary Author: Luke Jennings
+//Edited by: Michael Plekan
 //
 
 var hdxOrderingAV = {
@@ -362,6 +363,63 @@ var hdxOrderingAV = {
         //partitioning
         newAO +=hdxPart.partHtml();
         hdxAV.algOptions.innerHTML = newAO;
+
+       //QS parameters
+       //Checking/setting the type of curve
+       if (HDXQSIsSpecified("curve")) {
+            var options=document.getElementById("traversalOrdering").options;
+            var size=document.getElementById("traversalOrdering").length;
+            var valid=false;
+            for (var i=0; i<size;i++) {
+                if (options[i].value == HDXQSValue("curve") ){
+                      document.getElementById("traversalOrdering").value=HDXQSValue("curve");
+                      refinementChanged();
+                      valid=true;
+                      break;
+                 }
+            }
+            if(!valid) { console.error("Type of curve given is not valid.");}
+       }
+
+       //Checking/setting the refinement
+       if (HDXQSIsSpecified("refine")) {
+            if(parseFloat(HDXQSValue("refine"))>=2 && parseFloat(HDXQSValue("refine"))<=waypoints.length) {
+                   document.getElementById("refinement").value=parseFloat(HDXQSValue("refine"));
+            }
+           else { console.error("The refinement level given is out of range.");}
+        }
+
+       //checking/setting the checkbox for bounding box
+       if(HDXQSIsSpecified("box")) {
+              if(HDXQSValue("box") == "true" || HDXQSValue("box") == "false") {
+                  document.getElementById("boundingBox").checked=(HDXQSValue("box")=="true");
+               }
+               else { console.error("The input given for the bounding box is invalid."); }
+        }
+
+       //checking/setting the checkbox for connecting line
+       if(HDXQSIsSpecified("connect")) {
+              if(HDXQSValue("connect") == "true" || HDXQSValue("connect") == "false") {
+                  document.getElementById("extraEdge").checked=(HDXQSValue("connect")=="true");
+               }
+               else { console.error("The input given for the line connecting last to first is invalid."); }
+        }
+
+       //checking/setting the checkbox for Calculating Partitions and number of Partitions
+       if(HDXQSIsSpecified("calcparts")) {
+              if(HDXQSValue("calcparts") == "true" || HDXQSValue("calcparts") == "false") {
+                  document.getElementById("calcparts").checked=(HDXQSValue("calcparts")=="true");
+                  partCallback();
+                  if (HDXQSValue("calcparts")=="true" && HDXQSIsSpecified("numparts")) {
+                        if(parseFloat(HDXQSValue("numparts"))>=1 && parseFloat(HDXQSValue("numparts"))<=waypoints.length) {
+                                document.getElementById("numOfParts").value=parseFloat(HDXQSValue("numparts"));
+                       }
+                       else{ console.error("Invalid number of Partitions."); }
+                  }
+               }
+               else { console.error("The input given for Calculating Partitions is invalid."); }
+        }
+
 
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("v1",visualSettings.v1);

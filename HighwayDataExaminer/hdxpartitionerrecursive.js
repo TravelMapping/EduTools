@@ -457,10 +457,35 @@ var hdxPartitionerAV = {
         <option value="Overlays">Overlays</option>
         <option value="Waypoints">Waypoints</option>
         </select>`;
-        newAO+='<input id="calcOnFly" type="checkbox"> Calculate Partitions';
+        newAO+='<br/><input id="calcOnFly" type="checkbox"> Show Partition data while running';
         newAO+=`<br/>`+hdxPart.colorHtml();
         hdxAV.algOptions.innerHTML = newAO;
+         
+       //QS parameters
+       //checking/setting the number of recurvise levels
+       if(HDXQSIsSpecified("levels")) {
+            if(parseFloat(HDXQSValue("levels"))>=1 && parseFloat(HDXQSValue("levels"))<=(Math.trunc(Math.log2(waypoints.length)))) {
+                document.getElementById("parts").value=parseFloat(HDXQSValue("levels"));
+                this.rcbCallback();
+            }
+           else { console.error("Number of recursive levels given is out of range.");}
+       }
+       //checking/setting the type of coloring Method
+       if(HDXQSIsSpecified("overlay")) {
+              if(HDXQSValue("overlay") == "Overlays" || HDXQSValue("overlay") == "Waypoints") {
+                  document.getElementById("ColoringMethod").value=HDXQSValue("overlay");
+               }
+               else { console.error("Coloring method given is not a valid option."); }
+        }
+       //checking/setting the checkbox for calcing partition data on the fly
+       if(HDXQSIsSpecified("onfly")) {
+              if(HDXQSValue("onfly") == "true" || HDXQSValue("onfly") == "false") {
+                  document.getElementById("calcOnFly").checked=(HDXQSValue("onfly")=="true");
+               }
+               else { console.error("The input given for the on the fly Partition stats is invalid."); }
+        }
 
+        
         addEntryToAVControlPanel ("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel ("visiting",visualSettings.visiting)
        
