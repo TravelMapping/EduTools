@@ -54,7 +54,18 @@ function HDXInit() {
 	hdxGlobals.titleScreen = false;
 	HDXReadFileFromWebServer(HDXQSValue("load"));
     }
-
+    if(HDXQSIsSpecified("av")) {
+        let value=HDXQSValue("av")
+       for (let i = 0; i < hdxAV.avList.length; i++) {
+        if ( value== hdxAV.avList[i].value) {
+            hdxAV.currentAV = hdxAV.avList[i];
+            document.getElementById("AlgorithmSelection").selectedIndex=i;
+            break;
+        }
+    }
+    document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
+    hdxAV.currentAV.setupUI();
+    }
     map.on('baselayerchange', newMapTileSelected);
     newMapTileSelected();
 
