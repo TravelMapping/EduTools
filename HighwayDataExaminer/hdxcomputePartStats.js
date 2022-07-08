@@ -8,12 +8,12 @@
 
 var hdxComputePartStats = {
     //entries for list of avs
-    value: 'Compute Stats',
+    value: 'Compute Part Stats',
 
     //name here is what is shown in the drop down menu when selecting from different algorithms
-    name: "Compute Stats",
+    name: "Compute Partition Stats",
 
-    description: "This computes the stats of the Partitioning being used",
+    description: "This computes the stats of the Partitioning being used<br/>NOTE: Only works if Partition data has been loaded or calculated",
 
     avActions : [
         {
@@ -23,7 +23,7 @@ var hdxComputePartStats = {
             comment: "Adding stats to page",
             code: function(thisAV){
                   //checking to see if the partittion data is there
-                 if (hdxPart.parts.length == 0 || hdxPart.parts.length != hdxPart.numParts) { console.log("Error: Partition data not found");}
+                 if (hdxPart.parts==null || hdxPart.parts.length == 0 || hdxPart.parts.length != hdxPart.numParts) {alert("Error: Partition data not found."); console.error("Error: Partition data not found");}
                  else {
                  //Calculating stats
                  hdxPart.partitionAnalysis();
