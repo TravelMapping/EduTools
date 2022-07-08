@@ -123,8 +123,6 @@ var hdxAPClosestPtsAV = {
                     thisAV.vert1 = waypoints[thisAV.outLoop];
                     thisAV.vert2 = waypoints[thisAV.inLoop];
                     updateAVControlEntry("checkingDistance", "Distance: " + thisAV.d.toFixed(3));
-                    // updateAVControlEntry("closeLeader", "Closest: [" + 
-                    // thisAV.v1 + "," + thisAV.v2 + "], d<sub>closest</sub>: " + thisAV.d_closest.toFixed(3));
                     updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
                     thisAV.currentPoly = L.polyline([[thisAV.vert1.lat, thisAV.vert1.lon], [thisAV.vert2.lat, thisAV.vert2.lon]],
