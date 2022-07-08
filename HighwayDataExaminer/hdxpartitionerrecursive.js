@@ -17,6 +17,7 @@ var hdxPartitionerAV = {
     waypointParts:[],
     callStack:[],
     numPartitions:4,
+    curNumParts:1,
     currentCall:-1,
     median:-1,
     partitionSection:null,
@@ -67,12 +68,13 @@ var hdxPartitionerAV = {
                 thisAV.partitionSection=thisAV.waypointParts;
                 thisAV.highlightBoundingBox();
                 thisAV.numPartitions=Math.pow(2,document.getElementById('parts').value);
-                hdxPart.numParts=thisAV.numPartitions;
                 thisAV.coloring=document.getElementById('ColoringMethod').value;
                 thisAV.partitionStrt=Array(thisAV.numPartitions).fill(0);
                 thisAV.partitionEnd=Array(thisAV.numPartitions).fill(0);
                 thisAV.callStack.push({currentPart:0,lowerBound:0,upperBound:waypoints.length-1,PartsLeft:thisAV.numPartitions, maxLat:thisAV.maxlat , maxLon:thisAV.maxlon, minLat:thisAV.minlat , minLon:thisAV.minlon});
                 hdxAV.nextAction = "methodCall";
+                addEntryToAVControlPanel("cut", visualSettings.pseudocodeDefault);
+
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
@@ -186,6 +188,7 @@ var hdxPartitionerAV = {
                   else{ thisAV.median= (waypoints[thisAV.waypointParts[mid]].lat+waypoints[thisAV.waypointParts[mid+1]].lat)/2;}
                   
                 }
+                thisAV.curNumParts++;
                 //coloring
                 if (thisAV.coloring == "Overlays") {
                     for (var i = 0; i < thisAV.highlightRect.length; i++) {
@@ -199,6 +202,8 @@ var hdxPartitionerAV = {
                      thisAV.highlightPoly.push(
                      L.polyline([[thisAV.currentCall.maxLat,thisAV.median],[thisAV.currentCall.minLat,thisAV.median]], visualSettings.visiting)
                     );
+                    updateAVControlEntry("cut", "Cutting on "+thisAV.median+" Longitude");
+
                    if (thisAV.coloring == "Overlays") {
                         thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.median], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]],thisAV.childPartitionRed));
                         thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.median]], thisAV.childPartitionBlue));
@@ -208,6 +213,8 @@ var hdxPartitionerAV = {
                    thisAV.highlightPoly.push(
                     L.polyline([[thisAV.median,thisAV.currentCall.maxLon],[thisAV.median,thisAV.currentCall.minLon]], visualSettings.visiting)
                    );
+                    updateAVControlEntry("cut", "Cutting on "+thisAV.median+" Latitude");
+
                   if (thisAV.coloring == "Overlays") {
                      thisAV.highlightRect.push(L.rectangle([[thisAV.median, thisAV.currentCall.minLon], [thisAV.currentCall.maxLat, thisAV.currentCall.maxLon]], thisAV.childPartitionRed));
                      thisAV.highlightRect.push(L.rectangle([[thisAV.currentCall.minLat, thisAV.currentCall.minLon], [thisAV.median, thisAV.currentCall.maxLon]], thisAV.childPartitionBlue));
@@ -235,13 +242,51 @@ var hdxPartitionerAV = {
                }
 
 
-                hdxAV.nextAction = "base";
+               if(document.getElementById("calcOnFly").checked) {hdxAV.nextAction = "calcOnfly";}
+               else {hdxAV.nextAction = "base";}
             },
             
             logMessage: function(thisAV){
                 return "Setting Partitions";
             }
         },
+{
+                label: "calcOnfly",
+                comment: "calculations for current partitioning",
+                code: function(thisAV) {
+                     //filling 2d array with nessacary data for hdxPart
+                     hdxPart.numParts=thisAV.curNumParts;
+                     hdxPart.parts=new Array(hdxPart.numParts);
+                     var partnum=0;
+                     for (var p=0;p < thisAV.numPartitions;p++) {
+                           if(thisAV.partitionStrt[p] != 0 || thisAV.partitionEnd[p] != 0) {
+                                hdxPart.parts[partnum]=new Array();
+                                for (var i=thisAV.partitionStrt[p];i <= thisAV.partitionEnd[p];i++) {
+                                    hdxPart.parts[partnum].push(thisAV.waypointParts[i]);
+                                }
+                                partnum++;
+                          }
+                    }
+
+                    //coloring
+                    for (var i=0; i < graphEdges.length;i++) {updatePolylineAndTable(i,visualSettings.undiscovered, false);}
+
+                    //adding data table
+                    hdxPart.partitionAnalysis();
+                    removeEntryFromAVControlPanel("stats");
+                    addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
+                    updateAVControlEntry("stats", hdxPart.styling());
+
+                    hdxAV.nextAction = "base";                    
+                },
+                logMessage: function(thisAV) {
+                    return "calculating stats for current partitioning";
+                }
+        },
+
+
+
+
 { 
             label: "base",
             comment: "Checks whether the base case has been hit",
@@ -320,7 +365,7 @@ var hdxPartitionerAV = {
                 
                                 
                 //determine if call stack is empty
-                if (thisAV.callStack.length == 0) { hdxAV.nextAction = "cleanup";}
+                if (thisAV.callStack.length == 0) { hdxAV.nextAction = "calculating";}
                 else { hdxAV.nextAction = "methodCall";}
             },
             
@@ -328,13 +373,13 @@ var hdxPartitionerAV = {
                 return "Ending the recursion this Partition";
             }
         },
-
-
+        
         {
-                label: "cleanup",
-                comment: "cleanup and updates at the end of the visualization",
+                label: "calculating",
+                comment: "calculations at the end of the visualization",
                 code: function(thisAV) {
                      //filling 2d array with nessacary data for hdxPart
+                     hdxPart.numParts=thisAV.curNumParts;
                      hdxPart.parts=new Array(hdxPart.numParts);
                      for (var p=0;p < hdxPart.numParts;p++) {
                             hdxPart.parts[p]=new Array();
@@ -354,9 +399,23 @@ var hdxPartitionerAV = {
                     }
                     //adding data table
                     hdxPart.partitionAnalysis();
+                    removeEntryFromAVControlPanel("cut");
                     addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
                     updateAVControlEntry("stats", hdxPart.styling());
 
+                    hdxAV.nextAction = "cleanup";                    
+                },
+                logMessage: function(thisAV) {
+                    return "calculating";
+                }
+        },
+
+
+        {
+                label: "cleanup",
+                comment: "cleanup and updates at the end of the visualization",
+                code: function(thisAV) {
+                    map.setZoom(map.getZoom());
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;
                     
@@ -393,11 +452,12 @@ var hdxPartitionerAV = {
         hdxAV.logMessageArr.push("Setting up");
 
         //building HTML options
-        let newAO = '<br />Number of Recursive Levels: 2<sup><input type="number" id="parts" onchange="hdxPartitionerAV.rcbCallback()"min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2"></sup><span id="rcbnumParts">='+this.numPartitions+'</span>';
+        let newAO = '<br />Number of Recursive Levels: 2<sup><sup><input type="number" id="parts" style="height: 20px; max-width: 30px; font-size: 12px;" onchange="hdxPartitionerAV.rcbCallback()"min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2"></sup></sup><span id="rcbnumParts">='+this.numPartitions+'</span>';
         newAO+=`<br/>Coloring Method: <select id="ColoringMethod">
         <option value="Overlays">Overlays</option>
         <option value="Waypoints">Waypoints</option>
         </select>`;
+        newAO+='<input id="calcOnFly" type="checkbox"> Calculate Partitions';
         newAO+=`<br/>`+hdxPart.colorHtml();
         hdxAV.algOptions.innerHTML = newAO;
 
