@@ -15,20 +15,32 @@ var hdxPart={
    avgSI:0,
    maxPartsize:waypoints.length,
    avgPartsize:waypoints.length,
+   adjacency:[],
+   maxAdj:-1,
+   avgAdj:0,
    colscheme:"rainbow",
 
 //runs the methods in the correct order
    partitionAnalysis() {
       this.setWaypointFields();
       this.partSizes();
-      this.surfaceIndex();
+      this.calculatePartBdryStats();
    },
+//make your own partitions
+   connectedComp(){
+       
 
+
+
+
+   },
 //Calculates the surface Indice Stats
-   surfaceIndex() {
+   calculatePartBdryStats() {
         var boundaryEdges=new Array(this.numParts).fill(0);
         var PartEdges=new Array(this.numParts).fill(0);
         var globalBoundaryEdges=0;
+        this.adjacency=new Array(this.numParts);
+        for (var i=0;i<this.numParts;i++) {this.adjacency[i]=new Array();}
         //Goes through each edge and determines if it is a boundary edge. Then adds to the correct list(s) depending on the result
         for (var e=0;e < graphEdges.length;e++) {
              if (waypoints[graphEdges[e].v1].partId == waypoints[graphEdges[e].v2].partId) {
@@ -40,6 +52,28 @@ var hdxPart={
                   PartEdges[waypoints[graphEdges[e].v2].partId]++;
                   boundaryEdges[waypoints[graphEdges[e].v1].partId]++;
                   boundaryEdges[waypoints[graphEdges[e].v2].partId]++;
+                  
+                  var length=this.adjacency[waypoints[graphEdges[e].v2].partId].length;
+                  var adjCheck=1;//boolean for if they are already counted as adjacent
+                  for (var i=0;i<length;i++) {
+                       if (waypoints[graphEdges[e].v1].partId == this.adjacency[waypoints[graphEdges[e].v2].partId][i]) {
+                           adjCheck=0;
+                           break;
+                       }
+                  }
+                  if (adjCheck == 1) {this.adjacency[waypoints[graphEdges[e].v2].partId].push(waypoints[graphEdges[e].v1].partId);}
+
+                  length=this.adjacency[waypoints[graphEdges[e].v1].partId].length;
+                  adjCheck=1;//boolean for if they are already counted as adjacent
+                  for (var i=0;i<length;i++) {
+                       if (waypoints[graphEdges[e].v2].partId == this.adjacency[waypoints[graphEdges[e].v1].partId][i]) {
+                           adjCheck=0;
+                           break;
+                       }
+                  }
+                  if (adjCheck == 1) {this.adjacency[waypoints[graphEdges[e].v1].partId].push(waypoints[graphEdges[e].v2].partId);}
+
+
             }
         }
         this.globalSI=globalBoundaryEdges/graphEdges.length;
@@ -52,6 +86,15 @@ var hdxPart={
               if (this.surfaceIndices[i] > this.maxSI) this.maxSI=this.surfaceIndices[i];
         }
         this.avgSI/=this.numParts;
+
+        this.avgAdj=0;
+        this.maxAdj=-1;
+        for (var i=0;i<this.adjacency.length;i++) {
+           this.adjacency[i]=new Number(this.adjacency[i].length/(this.numParts-1));
+           this.avgAdj+=this.adjacency[i];
+           if (this.adjacency[i] > this.maxAdj) {this.maxAdj=this.adjacency[i];}
+        }
+        this.avgAdj/=this.numParts;
    },
 
 //calculates Partition sizes
@@ -96,8 +139,11 @@ var hdxPart={
       statString+='<tr><td>Average Partition Size: '+this.avgPartsize+'</td></tr>'
       statString+='<tr><td>Maximum Surface Index: '+this.maxSI.toFixed(2)+'</td></tr>'
       statString+='<tr><td>Average Surface Index: '+this.avgSI.toFixed(2)+'</td></tr>'
-      statString+='<tr><td>Global Surface Index: '+this.globalSI.toFixed(2)+'</td></tr></table>'
-      let pTable = '<table id="partitions" class="table table-light table-bordered" style="width:100%; text-align:center;"><thead class = "thead-dark"><tr><th scope="col" colspan="3" id="pt" style="text-align:center;">Partitions</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">SI</th><th scope="col" class="dtHeader">|V|</th></tr></thead><tbody>';
+      statString+='<tr><td>Global Surface Index: '+this.globalSI.toFixed(2)+'</td></tr>'
+      statString+='<tr><td>Maximum Interprocess Adjacency: '+(this.maxAdj*100).toFixed(2)+"%"+'</td></tr>'
+      statString+='<tr><td>Average Interprocess Adjacency: '+(this.avgAdj*100).toFixed(2)+"%"+'</td></tr>'
+      statString+='</table>'
+      let pTable = '<table id="partitions" class="table table-light table-bordered" style="width:100%; text-align:center;"><thead class = "thead-dark"><tr><th scope="col" colspan="4" id="pt" style="text-align:center;">Partitions</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">SI</th><th scope="col" class="dtHeader">Adjacency</th><th scope="col" class="dtHeader">|V|</th></tr></thead><tbody>';
       //uncomment line below to restore color scheme options functionality
      //this.colscheme=document.getElementById('ColoringScheme').value;
       if (this.colscheme == "rainbow") {
@@ -116,7 +162,7 @@ var hdxPart={
          for (var i=0;i < this.numParts;i++) {
            var color="#"+ rainbowGradiant.colorAt((i * 223) % 360);
           pTable += '<tr id="partition' + i + '" custom-title = "Partition ' +i+'" onmouseover = "hoverP('+i+')" onmouseout = "hoverEndP('+i+')">';
-          pTable+= '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>'+i+'</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.surfaceIndices[i].toFixed(5)  + '</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.parts[i].length  + '</td></tr>';
+          pTable+= '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>'+i+'</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.surfaceIndices[i].toFixed(5)  + '</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +(this.adjacency[i]*100).toFixed(2)+"%"+ '</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.parts[i].length  + '</td></tr>';
          }
      }
      //add else if here if new option is added
