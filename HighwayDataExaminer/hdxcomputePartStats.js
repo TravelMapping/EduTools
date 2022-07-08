@@ -6,9 +6,6 @@
 // Primary Authors: Michael Plekan
 //
 
-//this variable name is used to store the document containaing all the necessary fields, functions, and states for a given AV
-//variable must be pushed to the this.avList in the hdxav.js file
-//additionally, the file of this AV must be linked in the index.php file
 var hdxComputePartStats = {
     //entries for list of avs
     value: 'Compute Stats',
@@ -16,41 +13,42 @@ var hdxComputePartStats = {
     //name here is what is shown in the drop down menu when selecting from different algorithms
     name: "Compute Stats",
 
-    //description is what is shown after the user selects the algorithm in the drop down 
-    //but before they press the visualise button
-    description: "This description is used to decribe the algorithm to the user. Include note if something is broken",
+    description: "This computes the stats of the Partitioning being used",
 
     avActions : [
         {
             //label represents the current state in state machine you are accessing
             //if you want the psuedocode to highlight when 
             label: "START",
-            comment: "Initializes fields",
+            comment: "Adding stats to page",
             code: function(thisAV){
+                  //checking to see if the partittion data is there
+                 if (hdxPart.parts.length == 0 || hdxPart.parts.length != hdxPart.numParts) { console.log("Error: Partition data not found");}
+                 else {
+                 //Calculating stats
                  hdxPart.partitionAnalysis();
+                 
+                 //Adding table and coloring points(the work is done in hdxPart.styling())
                  addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
                  updateAVControlEntry("stats", hdxPart.styling());
+                 }
                  hdxAV.iterationDone = true;
                 hdxAV.nextAction = "cleanup";
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
             logMessage: function(thisAV){
-                return "Doing some setup stuff";
+                return "Adding stats to page";
             }
         },
         {
-            //all avs need a cleanup state from which things such as additional polylines and global variables are reset
                 label: "cleanup",
-                comment: "cleanup and updates at the end of the visualization",
+                comment: "cleanup",
                 code: function(thisAV) {
-                    
-
-
                     hdxAV.nextAction = "DONE";
                     hdxAV.iterationDone = true;                    
                 },
                 logMessage: function(thisAV) {
-                    return "Cleanup and finalize visualization";
+                    return "Cleanup and finalize";
                 }
         }
     ],
@@ -65,6 +63,7 @@ var hdxComputePartStats = {
 },
     //setup UI is called after you click the algorithm in algorithm selection but before you press the visualize button, required
     setupUI() {
+        //sets up HTML for options
         var algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
@@ -102,7 +101,7 @@ var hdxComputePartStats = {
     },
     //note this is currently not working
     hasConditionalBreakpoints(name){
-        let answer = HDXHasCommonConditonalBreakpoints(name);
+        let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
         }

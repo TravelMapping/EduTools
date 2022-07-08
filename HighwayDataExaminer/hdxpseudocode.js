@@ -327,7 +327,7 @@ function setInnerHTML(label) {
 // Does a label have a setInnerHTML with a return other than "No innerHTML"
 function hasInnerHTML(label) {
 
-    return hdxAV.currentAV.hasConditonalBreakpoints(label);
+    return hdxAV.currentAV.hasConditionalBreakpoints(label);
 }
 
 function deleteVariableSelector() {
