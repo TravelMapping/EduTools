@@ -83,6 +83,7 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.outLoop++;
+                updateAVControlEntry("v1Visiting", "V<sub>1</sub>: " + thisAV.outLoop);
                 if(thisAV.outLoop < waypoints.length) hdxAV.nextAction = "resetClosest";
                 else hdxAV.nextAction = "cleanup"
                 thisAV.inLoop = -1;
@@ -114,12 +115,16 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.inLoop++;
+                updateAVControlEntry("v2Visiting", "V<sub>2</sub>: " + thisAV.inLoop);
                 console.log(thisAV.inLoop);
                 //console.log();
-                if(thisAV.inLoop < waypoints.length - 1) {
+                if(thisAV.inLoop < waypoints.length) {
                     thisAV.v = thisAV.inLoop
                     thisAV.vert1 = waypoints[thisAV.outLoop];
                     thisAV.vert2 = waypoints[thisAV.inLoop];
+                    updateAVControlEntry("checkingDistance", "Distance: " + thisAV.d.toFixed(3));
+                    // updateAVControlEntry("closeLeader", "Closest: [" + 
+                    // thisAV.v1 + "," + thisAV.v2 + "], d<sub>closest</sub>: " + thisAV.d_closest.toFixed(3));
                     updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
                     thisAV.currentPoly = L.polyline([[thisAV.vert1.lat, thisAV.vert1.lon], [thisAV.vert2.lat, thisAV.vert2.lon]],
@@ -213,6 +218,8 @@ var hdxAPClosestPtsAV = {
                     // Adds the leader polyline to the map 
                     thisAV.leaderPoly.addTo(map);
                     thisAV.currentPoly = null;
+                    updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
+                    + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
                     
                 // CASE 2: We already have a leader, however, we have found a new leader in the previous state "ifClosest"    
                 } else {
@@ -244,6 +251,8 @@ var hdxAPClosestPtsAV = {
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
                     
+                    updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
+                    + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
                     //thisAV.LeaderPoly = thisAV.currentPoly;
                 }
                 thisAV.vClosest = thisAV.inLoop;
@@ -264,6 +273,7 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.discovered)
                 thisAV.closestVertices[thisAV.outLoop] = thisAV.vClosest;
+                //updateAVControlEntry("closestPairs", "")
                 for(var i = 0; i < waypoints.length; i++)
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
@@ -359,10 +369,11 @@ setupUI() {
     //Square Bounding Box<br />`;
 
     //hdxAV.algOptions.innerHTML = newAO;
-    addEntryToAVControlPanel("v1visiting", visualSettings.v1);
-    addEntryToAVControlPanel("v2visiting", visualSettings.v2);
+    addEntryToAVControlPanel("v1Visiting", visualSettings.v1);
+    addEntryToAVControlPanel("v2Visiting", visualSettings.v2);
     addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
     addEntryToAVControlPanel("closeLeader", visualSettings.leader);
+    addEntryToAVControlPanel("closestPairs", visualSettings.discovered);
 
     // ORIGINALS
     // addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
@@ -406,6 +417,10 @@ setConditionalBreakpoints(name) {
             
         }
     return "No innerHTML";
+},
+
+hasConditionalBreakpoints(name) {
+
 }
 };
 
