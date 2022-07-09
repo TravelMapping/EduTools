@@ -7,7 +7,7 @@
 //
 
 var hdxGraphColoringAV = {
-    value: 'Welsh-Powell Graph Coloring',
+    value: "coloring",
 
     name: "Welsh-Powell Graph Coloring",
 

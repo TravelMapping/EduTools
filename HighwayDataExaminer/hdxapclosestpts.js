@@ -10,7 +10,7 @@
 
 var hdxAPClosestPtsAV = {
     // entries for list of AVs
-    value: "APClosestPts",
+    value: "apcp",
     name: "All Points Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints).",
 

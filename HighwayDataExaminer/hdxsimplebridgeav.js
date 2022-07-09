@@ -7,7 +7,7 @@
 //
 
 var hdxSimpleBridgeAV = {
-    value: "Simple Bridge Detection",
+    value: "bridge",
 
     name: "Simple Bridge Detection",
 
