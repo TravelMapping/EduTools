@@ -7,7 +7,7 @@
 //
 
 var hdxTwiceAroundTreeAV = {
-    value: 'Sample',
+    value: 'tsptwice',
 
     name: "Twice-Around-the-Tree TSP Approximation",
 

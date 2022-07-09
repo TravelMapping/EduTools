@@ -8,7 +8,7 @@
 
 var hdxBFTravelingSalesmanAV = {
     //entries for list of avs
-    value: 'bf Traveling Salesman',
+    value: 'bftsp',
 
     name: "Brute Force Traveling Salesman",
 
