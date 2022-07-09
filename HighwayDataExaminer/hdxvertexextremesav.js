@@ -991,7 +991,46 @@ Show Extremes Bounding Box<br />
 &nbsp;Show Average Coordinate<br />
 </div>
 `;
+       //QS parameters
+       //checking/setting the checkbox for bounding box
+       if(HDXQSIsSpecified("box")) {
+              if(HDXQSValue("box") == "true" || HDXQSValue("box") == "false") {
+                  document.getElementById("boundingBox").checked=(HDXQSValue("box")=="true");
+               }
+               else { console.error("The input given for the bounding box is invalid."); }
+        }
+        //checking/setting the type of tie handling
+       if(HDXQSIsSpecified("ties")) {
+              if(HDXQSValue("ties") == "all" || HDXQSValue("ties") == "first") {
+                  document.getElementById("tieHandling").value=HDXQSValue("ties");
+               }
+               else { console.error("Tie handling method given is invalid."); }
+        }
+        //checking/setting the checkbox for label lengths
+       if(HDXQSIsSpecified("label")) {
+              if(HDXQSValue("label") == "true" || HDXQSValue("label") == "false") {
+                  document.getElementById("longshort").checked=(HDXQSValue("label")=="true");
+               }
+               else { console.error("The input given for the label lengths is invalid."); }
+        }
+        //checking/setting the checkbox for Alphabetical labels
+       if(HDXQSIsSpecified("alphabet")) {
+              if(HDXQSValue("alphabet") == "true" || HDXQSValue("alphabet") == "false") {
+                  document.getElementById("firstlast").checked=(HDXQSValue("alphabet")=="true");
+               }
+               else { console.error("The input given for the labels in Alphabetical ordering is invalid."); }
+        }
+        //checking/setting the checkbox for Average Coords
+       if(HDXQSIsSpecified("avgcoords")) {
+              if(HDXQSValue("avgcoords") == "true" || HDXQSValue("avgcoords") == "false") {
+                  document.getElementById("showavgcoord").checked=(HDXQSValue("avgcoords")=="true");
+               }
+               else { console.error("The input given for the average Coordinates is invalid."); }
+        }
 
+
+
+    
     },
         
         

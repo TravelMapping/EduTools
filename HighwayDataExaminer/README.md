@@ -4,6 +4,7 @@ The main index page `index.php` takes optional query string parameters to contro
 
 * `load=tmgfilename` will attempt to load a `.tmg` file from the TM/METAL graph data repository.
 * `noav` bypasses the AV selection panel after a file is loaded.
+* `av` will attempt to pick the AV from the list.
 
 The JS code for HDX is split among several files for easier management.
 
@@ -30,6 +31,12 @@ The JS code for HDX is split among several files for easier management.
 * `hdxmenufuncs.js` contains the implementation of the various panels in HDX.
 * `hdxnoav.js` contains the implementation of the dummy "no AV selected" AV.
 * `hdxorderingav.js` contains the implementation of the 1D traversal AV.
+** `curve` Contain what type of curve is used.
+** `refine` the refinement level(only use when it matters).
+** `box` toggles the bounding box.
+** `connect`toggles the connecting line between the first and last.
+** `calcparts` toggles the calculation of partitions.
+** `numparts` number of partitions(only read if `calcparts` is true).
 * `hdxpresort.js` contains the waypoint sorting needed for recursive closest pairs.
 * `hdxpseudocode.js` contains functions related to pseudocode display and highlighting.
 * `hdxqs.js` contains the support for Query String parameters.
@@ -39,6 +46,14 @@ The JS code for HDX is split among several files for easier management.
 * `hdxtwicearoundtreeav.js` contains the implementation of the twice-around-the-tree traveling salesman approximation AV.
 * `hdxvertexextremesav.js` contains the implementation of the vertex-based extremes search AV.
 * `hdxvertexselector.js` contains the implemenation of the vertex selector objects, which allow the selection of a vertex as an AV parameter by entering its number, clicking on it on the map, or clicking on it in the data table.
+** `box` toggles the bounding box.
+** `ties` contains how to handle ties.
+** `label` toggles the longest and shortest label.
+** `alphabet` toggles the alphabetical labels.
+** `avgcoords` toggles avgerage coordinates.
 * `hdxvisualsettings.js` contains the object that defines visual settings (colors, sizes, opacities) that are used consistently across multiple AVs.
 * `hdxpartitionerrecursive.js` contains the implemenatation of a recursive coordinate bisection AV.
+** `levels` contains number of recursive levels.
+** `overlay` type of coloring method used while AV is running.
+** `onfly` Option for partition stats to be shown as AV runs.
 * `hdxpart.js` contains a structure and supporting methods for partitioning algorithms.

@@ -54,8 +54,10 @@ function HDXInit() {
 	hdxGlobals.titleScreen = false;
 	HDXReadFileFromWebServer(HDXQSValue("load"));
     }
+
+    //if the av= QS parameter is present, try to set the current AV
     if(HDXQSIsSpecified("av")) {
-        let value=HDXQSValue("av")
+        let value=HDXQSValue("av");
        for (let i = 0; i < hdxAV.avList.length; i++) {
         if ( value== hdxAV.avList[i].value) {
             hdxAV.currentAV = hdxAV.avList[i];
@@ -64,7 +66,6 @@ function HDXInit() {
         }
     }
     document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
-    hdxAV.currentAV.setupUI();
     }
     map.on('baselayerchange', newMapTileSelected);
     newMapTileSelected();

@@ -129,7 +129,7 @@ var hdxPart={
    },
 
   partHtml() {
-      return '<br /><input id="calcparts" type="checkbox" name="partitions" onclick="partCallback()"> Calculate Partitions <br /> <p id="numpartsselector" style="display :none;" > Number of Partitions<input type="number" id="numOfParts" min="1" max="' + waypoints.length + '" value="2" ><p/>';
+      return '<br /><input id="calcparts" type="checkbox" name="partitions" onclick="partCallback()"> Calculate Partitions <br /> <span id="numpartsselector" style="display :none;" > Number of Partitions<input type="number" id="numOfParts" min="1" max="' + waypoints.length + '" value="2" ><span/>';
 },
 
 
