@@ -14,42 +14,41 @@ var hdxAPClosestPtsAV = {
     name: "All Points Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints).",
 
-    // ***Most of my code and comments here will be based on my understanding of OOP from CS-225 in Java, 
-    // please feel free to correct any misconceptions or incorrect assumptions I have made!***
-
-    // points is the array of waypoint objects that are read from a TMG file
-    // points: [],
-    //numVertices: waypoints.length,
-
-    // closest is the array of indexes which correspond to the closest points in the "points" array.
+    // This variable stores the array of corresponding indices for which vertices are closest to which other vertices.  
+    // For example, if the closest vertex to vertex #0 is vertex #10, then closestVertices[0] will be set to "10".
     closestVertices: Array(waypoints.length).fill(0),
 
-    // the distance between the two closest points in the array of points.
-    globalMinD: -1,
-
+    // The variable "v" is the index of the vertex we are currently checking in the inner loop.
+    // The variable "vClosest" stores the index of the vertex which is closest to the vertex we are currently checking using the outLoop variable, or the outer loop's index.
     v: 0,
     vClosest: -1,
     
+    // The variable "d" is the current distance between the two vertices we are in the process of checking.
+    // The variable "dClosest" is the distance between the two closest points we have found so far during each traversal through the array of vertices.
     d: 0,
     dClosest: Number.MAX_SAFE_INTEGER,
     
-
+    // vert1 stores the waypoint object at index outLoop.  vert2 stores the waypoint object at index inLoop.
     vert1: null,
     vert2: null,
 
-    // Loop index variables
+    // Outer Loop index variable
     outLoop: -1,
+    
+    // Inner Loop index variable
     inLoop: -1,
 
-    boundingPoly: [],
-
+    // This variable stores the polylines that will be drawn showing all of the points/vertices closest pairs on the map.
     highlightPoly: [],
 
+    // This variable stores a reference to the polyline we are drawing between the two current vertices being visited.
     currentPoly: null,
 
+    // This variable stores a reference to the polyline representing the closest pair of vertices found so far during each iteration of the outer loop.
     leaderPoly: null,
 
-    //leaderExists: false,
+    // This variable stores the string used for displaying vertex pairs discovered thus far and uses it to update on of the AV Control Entries on the control panel.
+    discoveredPairs: null,
 
 
     avActions: [
@@ -68,7 +67,12 @@ var hdxAPClosestPtsAV = {
                 thisAV.d = 0;
                 thisAV.dClosest = Number.MAX_SAFE_INTEGER;
 
+                thisAV.discoveredPairs = null;
+
                 thisAV.leaderExists = false;
+
+                thisAV.discoveredPairs = '<table class="pathTable"><thead><tr><th>From</th><th>To</th><th>Distance</th></tr></thead><tbody>';
+                updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
                 hdxAV.iterationDone = true;
                 
             },
@@ -176,11 +180,12 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 // CASE 1: We have found a new leader, go to the setClosest state.
-                if(thisAV.d < thisAV.dClosest) hdxAV.nextAction = "setClosest";
+                if(thisAV.d < thisAV.dClosest) {
+                    thisAV.dClosest = thisAV.d;
+                    hdxAV.nextAction = "setClosest";
                 
                 // CASE 2: The current vertex we are checking shouldn't become the new leader, discard it as a candidate for leader.
-                else 
-                {
+                } else {
                     // Removes the current Polyline between vert1 and vert2 from the map
                     thisAV.currentPoly.remove();
                     
@@ -273,7 +278,11 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.discovered)
                 thisAV.closestVertices[thisAV.outLoop] = thisAV.vClosest;
-                //updateAVControlEntry("closestPairs", "")
+                
+                thisAV.discoveredPairs += '<tr><td>V<sub>1</sub>: ' + thisAV.outLoop + '</td><td>V<sub>2</sub>: ' +
+                 thisAV.vClosest + '</td><td>' + thisAV.dClosest.toFixed(3) + '</td>';
+                
+                updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
                 for(var i = 0; i < waypoints.length; i++)
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
@@ -375,23 +384,14 @@ setupUI() {
     addEntryToAVControlPanel("closeLeader", visualSettings.leader);
     addEntryToAVControlPanel("closestPairs", visualSettings.discovered);
 
-    // ORIGINALS
-    // addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
-    // addEntryToAVControlPanel("v2visiting", this.visualSettings.v2);
-    // addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
-    // addEntryToAVControlPanel("closeLeader", visualSettings.leader);
-   
+    
 },
 
 cleanupUI() {
-    //remove all the polylines made by the bounding box and the quadtree
-    for (var i = 0; i < this.boundingPoly.length; i++) {
-        this.boundingPoly[i].remove();
-    }
+    //remove all the polylines made
     for(var i = 0; i < this.highlightPoly.length; i++){
         this.highlightPoly[i].remove();
     }
-    this.boundingPoly = [];
     this.highlightPoly = [];
 },
 
