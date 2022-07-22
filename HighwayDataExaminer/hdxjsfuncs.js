@@ -286,7 +286,8 @@ function HDXReadSelectedGraphFromServer(event) {
     }
 }
 
-// read a data file from the "graphdata" directory on the server
+// read a data file from the "graphdata" directory or an archive
+// directory under "grapharchives" on the server
 function HDXReadFileFromWebServer(graphName) {
 
     // set up and make the AJAX request
@@ -318,6 +319,10 @@ function HDXReadFileFromWebServer(graphName) {
     hdxGlobals.loadingFile = graphName;
     // check what we're loading, to find the right location
     let urlPath = "https://courses.teresco.org/metal/graphdata/";
+    if (hdxGlobals.graphSet != "current") {
+	urlPath = "https://courses.teresco.org/metal/grapharchives/" +
+	    hdxGlobals.graphSet + "/";
+    }
     if (graphName == "tm-master.nmp") {
 	urlPath = "https://courses.teresco.org/metal/tmlogs/";
     }

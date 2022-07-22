@@ -47,6 +47,17 @@ function HDXInit() {
 	distanceUnits = getTMCookie("units");
 	if (distanceUnits == "") distanceUnits = "miles";
     }
+
+    // if the gv= QS parameter is present, its value is the name of
+    // a graph archive set that should be used for searching and
+    // loading from the METAL graph set
+    if (HDXQSIsSpecified("gv")) {
+	hdxGlobals.graphSet= HDXQSValue("gv");
+	// should check here if valid!
+    }
+    else {
+	hdxGlobals.graphSet = "current";
+    }
     
     // if the load= QS parameter is present, try to load the file
     // from the graphdata on the server
