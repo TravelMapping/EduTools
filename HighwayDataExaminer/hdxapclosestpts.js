@@ -71,7 +71,9 @@ var hdxAPClosestPtsAV = {
 
                 thisAV.leaderExists = false;
 
-                thisAV.discoveredPairs = '<table class="pathTable"><thead><tr><th>From</th><th>To</th><th>Distance</th></tr></thead><tbody>';
+                thisAV.discoveredPairs = '<table class="pathTable">' + 
+                '<thead><tr style="text-align:center" id="pathHeaders">' +
+                '<th>From</th><th>To</th><th>Distance</th></tr></thead><tbody>';
                 updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
                 hdxAV.iterationDone = true;
                 
@@ -88,6 +90,7 @@ var hdxAPClosestPtsAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.outLoop++;
                 updateAVControlEntry("v1Visiting", "V<sub>1</sub>: " + thisAV.outLoop);
+                
                 if(thisAV.outLoop < waypoints.length) hdxAV.nextAction = "resetClosest";
                 else hdxAV.nextAction = "cleanup"
                 thisAV.inLoop = -1;
@@ -119,9 +122,9 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.inLoop++;
+                
                 updateAVControlEntry("v2Visiting", "V<sub>2</sub>: " + thisAV.inLoop);
-                console.log(thisAV.inLoop);
-                //console.log();
+                
                 if(thisAV.inLoop < waypoints.length) {
                     thisAV.v = thisAV.inLoop
                     thisAV.vert1 = waypoints[thisAV.outLoop];
@@ -184,12 +187,9 @@ var hdxAPClosestPtsAV = {
                 
                 // CASE 2: The current vertex we are checking shouldn't become the new leader, discard it as a candidate for leader.
                 } else {
-                    // Removes the current Polyline between vert1 and vert2 from the map
                     thisAV.currentPoly.remove();
                     
-                    // Updates the icon for vert2 to discarded status.
                     updateMarkerAndTable(thisAV.v, visualSettings.discarded, 5, false);
-                    //updateMarkerAndTable(thisAV.d, visualSettings.discarded, 5, false);
                     hdxAV.nextAction = "v2ForLoopTop";
                     hdxAV.iterationDone = true;
                 }
@@ -205,11 +205,9 @@ var hdxAPClosestPtsAV = {
             "and set the closest distance found so far to the distance between vertex outLoop and inLoop",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                // CASE 1: We do not have a leader yet in terms of a vertex that is closest to vertex #thisAV.outLoop
+                // CASE 1: We do not have a leader yet in terms of a vertex that is closest to vertex # thisAV.outLoop
                 if(thisAV.vClosest == -1) {
-                    // This removes the polyline between the vertices we're currently visiting
                     thisAV.currentPoly.remove();
-                    //updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
 
                     // This passes a reference to the Polyline to the leaderPoly variable, and sets the style to "leader" style.
                     thisAV.leaderPoly = thisAV.currentPoly;
@@ -217,8 +215,7 @@ var hdxAPClosestPtsAV = {
                         color: visualSettings.leader.color,
                         opacity: 0.6,
                         weight: 4
-                    });
-                    // Adds the leader polyline to the map 
+                    }); 
                     thisAV.leaderPoly.addTo(map);
                     thisAV.currentPoly = null;
                     updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
@@ -226,18 +223,13 @@ var hdxAPClosestPtsAV = {
                     
                 // CASE 2: We already have a leader, however, we have found a new leader in the previous state "ifClosest"    
                 } else {
-                    // Sets the old leading vertex's icon to a hollow green circle rather than a big red one.
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
 
-                    // Sets the current leading vertex icon to a orange circle (leader style)
                     updateMarkerAndTable(thisAV.v, visualSettings.leader, 5, false);
 
-                    // Remove the current and old(er) leader Polyline(s) from the map.
                     thisAV.currentPoly.remove();
                     thisAV.leaderPoly.remove();
 
-                    // Pass the reference to the current existing Polyline object to the leaderPoly variable,
-                    // and set the Polyline object's style attributes to the leader attributes.
                     thisAV.leaderPoly = thisAV.currentPoly;
                     thisAV.leaderPoly.setStyle({
                         color: visualSettings.leader.color,
@@ -245,18 +237,14 @@ var hdxAPClosestPtsAV = {
                         weight: 4
                     })
 
-                    // Add the newly leader-styled Polyline to the map screen and set the currentPoly reference to null.
                     thisAV.leaderPoly.addTo(map);
                     thisAV.currentPoly = null;
 
-                    // Update the map icons such that the old leader waypoint icon is hollow and green,
-                    // and set the new leader icon to the orange leader style settings.
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
                     
                     updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
                     + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
-                    //thisAV.LeaderPoly = thisAV.currentPoly;
                 }
                 thisAV.vClosest = thisAV.inLoop;
                 thisAV.closestVertices[thisAV.outLoop] = thisAV.inLoop;
@@ -300,11 +288,6 @@ var hdxAPClosestPtsAV = {
             label: "cleanup",
             comment: "cleanup and updates at the end of the visualization",
             code: function (thisAV) {
-                for(var i = 0; i < thisAV.closestVertices.length; i++)
-                {
-                    //thisAV.highlightPoly.push(L.polyline([[waypoints[i].lat, waypoints[i].lon], [waypoints[thisAV.closestVertices[i]].lat,
-                    //waypoints[thisAV.closestVertices[i]].lon]],visualSettings.undiscovered));
-                }
                 
                 for(var i = 0; i < thisAV.highlightPoly.length; i++){
                     updateMarkerAndTable(i, visualSettings.leader, 0, false);
@@ -326,7 +309,7 @@ var hdxAPClosestPtsAV = {
     prepToStart() {
         hdxAV.algStat.innerHTML = "Initializing";
         
-        //we want only vertices for this algorithm
+        // we want only vertices for this algorithm
         initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
         
@@ -368,14 +351,6 @@ setupUI() {
     hdxAV.logMessageArr = [];
     hdxAV.logMessageArr.push("Setting up");
 
-
-    //let newAO = 'Refinement Threshold <input type="number" id="refinement" min="2" max="' 
-    //+ (waypoints.length) + '" value="3">';
-
-    //newAO += `<br /><input id="squareBB" type="checkbox" name="Square Bounding Box"/>&nbsp;
-    //Square Bounding Box<br />`;
-
-    //hdxAV.algOptions.innerHTML = newAO;
     addEntryToAVControlPanel("v1Visiting", visualSettings.v1);
     addEntryToAVControlPanel("v2Visiting", visualSettings.v2);
     addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
@@ -398,7 +373,6 @@ idOfAction(action) {
     return action.label;
 },
 
-//this was copied directly over from hdxorderingav.js with some slight modifications
 
 setConditionalBreakpoints(name) {
     let max = waypoints.length-1;
