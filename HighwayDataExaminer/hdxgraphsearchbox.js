@@ -21,33 +21,33 @@ function HDXGraphSearchCleanup() {
     HDXGraphDescriptions = ['Choose A Graph'];
     var HDXGraphs = {};
 }
+
 // initialization code for HDX Graph search box
 function HDXGraphSearchInit() {
 
-    // first ajax request to get all of the values for the descriptions
-    var xmlhttp = new XMLHttpRequest();
-    var descr;
-    var i =0;
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            descr = Array.from(JSON.parse(this.responseText));
-            for (i=0; i < descr.length; i++) {
-                HDXGraphDescriptions.push(descr[i]);
-            }
-        }
+    // pass in the current graph archive set to use in the search
+    var params = {
+	graphSet:hdxGlobals.graphSet
     };
-    xmlhttp.open("GET", "jsdataLoadDescr.php", true);
-    xmlhttp.send();
-
-    // And now the graphs
-    var xmlhttp2 = new XMLHttpRequest();
-    xmlhttp2.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            HDXGraphs = JSON.parse(this.responseText);
-        }
-    };
-    xmlhttp2.open("GET", "jsLoadDataGraphs.php", true);
-    xmlhttp2.send();
+    var jsonParams = JSON.stringify(params);
+    $.ajax({
+	type: "POST",
+	url: "./generateSimpleGraphList.php",
+	datatype: "json",
+	data: {"params":jsonParams},
+	success: function(data) {
+	    console.log(data);
+	    // we get back the graph names and descriptions
+            var opts = $.parseJSON(data);
+            var filenames = opts['filenames'];
+	    var descriptions = opts['descriptions'];
+	    // copy into our arrays used by the search box
+            for (var i = 0; i < filenames.length; i++) {
+                HDXGraphs[descriptions[i]] = filenames[i];
+		HDXGraphDescriptions.push(descriptions[i]);
+	    }
+	}
+    });
 }
 
 // adapted from the example provided by
@@ -83,7 +83,7 @@ var noGraphCounter = 0;
 
 //jQuery asking if the DOM is in a ready state for our changes to commence
 $(document).ready(function() {
-    $('#the-basics .typeahead').typeahead(
+    $('#basicgraphsearch .typeahead').typeahead(
         {
             hint: true,
             highlight: true,
@@ -116,14 +116,16 @@ $(document).ready(function() {
           noGraph.innerHTML = "Graph Not Found: " + input;
           noGraph.style.color = 'rgb(255, 107, 107';
           noGraph.id = 'noGraphFound';
-          document.getElementById('the-basics').appendChild(noGraph);
+          document.getElementById('basicgraphsearch').appendChild(noGraph);
           noGraphCounter += 1;
 	         }
         }
     });
 })};
 
-function nextPressed() {
+// in the basic search, the "Next" button has been pressed, so we
+// try to load that graph
+function HDXGraphSearchNextPressed() {
     
     let input = document.getElementById("searchBox").value;
     if (HDXGraphs.hasOwnProperty(input)) {
@@ -139,7 +141,7 @@ function nextPressed() {
         noGraph.innerHTML = "Graph Not Found: " + input;
         noGraph.style.color = 'rgb(255, 107, 107)';
         noGraph.id = 'noGraphFound';
-        document.getElementById('the-basics').appendChild(noGraph);
+        document.getElementById('basicgraphsearch').appendChild(noGraph);
         
     }
 }

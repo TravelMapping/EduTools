@@ -6,7 +6,7 @@
 // Primary Author: Spencer Moon
 // Edits by Jim Teresco
 
-function basicMenu() {
+function HDXCreateBasicGraphSelectionMenu() {
     
     // Calls the Functions for the Graph Search box to Initiate
     HDXGraphSearchInit();
@@ -54,7 +54,7 @@ function basicMenu() {
     
     // Container for the input element
     var basic = document.createElement("div");
-    basic.setAttribute("id", "the-basics");
+    basic.setAttribute("id", "basicgraphsearch");
     basic.appendChild(box);
     
     // puts the basic variable with the child box into the dataPanel
@@ -64,7 +64,7 @@ function basicMenu() {
     var next = document.createElement("button");
     next.setAttribute("id", "next");
     next.innerHTML = "Next";
-    next.addEventListener("click", nextPressed);
+    next.addEventListener("click", HDXGraphSearchNextPressed);
     dataPanel.appendChild(next);
     
 }
@@ -268,7 +268,7 @@ function newGraphMenu() {
     
     mainbox.appendChild(basicSearch);
     
-    basicSearch.addEventListener("click", basicMenu);
+    basicSearch.addEventListener("click", HDXCreateBasicGraphSelectionMenu);
     
     var advanced = document.createElement("button");
     advanced.setAttribute("class", "opt");
@@ -340,7 +340,7 @@ function defaultMenu() {
     
     mainbox.appendChild(basicSearch);
     
-    basicSearch.addEventListener("click", basicMenu);
+    basicSearch.addEventListener("click", HDXCreateBasicGraphSelectionMenu);
     
     var advanced = document.createElement("button");
     advanced.setAttribute("class", "opt");
