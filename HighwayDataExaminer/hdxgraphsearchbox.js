@@ -36,7 +36,6 @@ function HDXGraphSearchInit() {
 	datatype: "json",
 	data: {"params":jsonParams},
 	success: function(data) {
-	    console.log(data);
 	    // we get back the graph names and descriptions
             var opts = $.parseJSON(data);
             var filenames = opts['filenames'];
