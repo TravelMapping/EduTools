@@ -1,10 +1,11 @@
-The Highway Data Examiner (HDX) can be installed on any web server.  In addition to installing the files here, it requires access to the Travel Mapping "lib" directory to find common code and images.  A copy of TravelMapping/Web can be installed for this purpose.  In the HDX installation directory, "tmlib" needs to be a copy of TravelMapping/Web/lib or be a link to one.
+The Highway Data Examiner (HDX) can be installed on any web server.  In addition to installing the files here, it requires access to the Travel Mapping "lib" directory to find common code and images.  A copy of `TravelMapping/Web` can be installed for this purpose.  In the HDX installation directory, "tmlib" needs to be a copy of `TravelMapping/Web/lib` or be a link to one.
 
 The main index page `index.php` takes optional query string parameters to control what happens at startup.
 
 * `load=tmgfilename` will attempt to load a `.tmg` file from the TM/METAL graph data repository.
 * `noav` bypasses the AV selection panel after a file is loaded.
 * `av` specifies the AV to set up inititally.
+* `gv` specifies that the given graph archive set should be used for graph loading.
 
 The JS code for HDX is split among several files for easier management.
 
