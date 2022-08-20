@@ -50,13 +50,17 @@ function HDXInit() {
 
     // if the gv= QS parameter is present, its value is the name of
     // a graph archive set that should be used for searching and
-    // loading from the METAL graph set
+    // loading from the METAL graph set, default is "current", which
+    // means to use the latest graphs
+    hdxGlobals.graphSet = "current";
     if (HDXQSIsSpecified("gv")) {
-	hdxGlobals.graphSet= HDXQSValue("gv");
-	// should check here if valid!
-    }
-    else {
-	hdxGlobals.graphSet = "current";
+	for (let i = 0; i < hdxGlobals.graphArchiveSets.length; i++) {
+	    if (HDXQSValue("gv") == hdxGlobals.graphArchiveSets[i].setName) {
+		hdxGlobals.graphSet = HDXQSValue("gv");
+		break
+	    }
+	}
+	console.log("Could not find graph archive set " + HDXQSValue("gv"));
     }
     
     // if the load= QS parameter is present, try to load the file

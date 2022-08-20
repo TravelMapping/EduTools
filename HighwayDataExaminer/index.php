@@ -98,16 +98,27 @@
 <link rel="stylesheet" type="text/css" href="hdx.css" />
 
 <script type="text/javascript">
-<?php
-  // get list of graph types for advanced graph search
-  $result = tmdb_query("SELECT * FROM graphTypes");
+  hdxGlobals.graphArchiveSets = [];
+  <?php
+    // get list of graph types for advanced graph search
+    $result = tmdb_query("SELECT * FROM graphTypes");
+    
+    while ($row = $result->fetch_array()) {
+      echo 'graphCategories.push("'.$row['category'].'");';
+      echo 'graphCategoryLabels.push("'.$row['descr'].'");';
+      echo "\n";
+    }
+    $result->free();
+  
+    // get the list of graph archive sets
+    $result = tmdb_query("SELECT * from graphArchiveSets");
 
-  while ($row = $result->fetch_array()) {
-	 echo 'graphCategories.push("'.$row['category'].'");';
-	 echo 'graphCategoryLabels.push("'.$row['descr'].'");';
-  }
-  $result->free();
-?>
+    while ($row = $result->fetch_array()) {
+      echo "hdxGlobals.graphArchiveSets.push({ setName:'".$row['setName']."', descr:'".$row['descr']."', dateStamp:'".$row['dateStamp']."'});";
+      echo "\n";
+    }
+    $result->free();
+  ?>
 </script>
 
 </head>
