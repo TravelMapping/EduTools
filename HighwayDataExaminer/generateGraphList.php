@@ -11,14 +11,20 @@ ob_end_clean();
 // DB connection made, now make our request
 $response = array('text'=>array(), 'values'=>array(), 'vertices'=>array(), 'edges'=>array());
 
+$orderBy = "vertices DESC"; // when $params['order'] == "large"
+
 if ($params['order'] == "alpha") {
-    $result = tmdb_query("SELECT * FROM graphs ORDER BY descr ASC");
+    $orderBy = "descr ASC";
 }
 else if ($params['order'] == "small") {
-    $result = tmdb_query("SELECT * FROM graphs ORDER BY vertices ASC");
+    $orderBy = "vertices ASC";
 }
-else {  // $params['order'] == "large"
-    $result = tmdb_query("SELECT * FROM graphs ORDER BY vertices DESC");
+
+if ($params['graphSet'] == "current") {
+    $result = tmdb_query("SELECT * FROM graphs ORDER BY ".$orderBy);
+}
+else { // must be some other graphSet
+    $result = tmdb_query("SELECT * FROM graphArchives WHERE setName='".$params['graphSet']."' ORDER BY ".$orderBy);
 }
 
 while ($row = $result->fetch_array()) {

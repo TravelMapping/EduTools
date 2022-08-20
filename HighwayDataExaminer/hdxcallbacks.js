@@ -543,6 +543,7 @@ function HDXFillGraphList(e) {
     mapSel.appendChild(loadingEntry);
     sels.appendChild(mapSel);
     var params = {
+        graphSet:hdxGlobals.graphSet,
         order:orderSel,
         restrict:resSel,
         category:cateSel,
