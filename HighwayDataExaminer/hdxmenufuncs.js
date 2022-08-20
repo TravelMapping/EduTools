@@ -69,6 +69,11 @@ function HDXCreateBasicGraphSelectionMenu() {
     
 }
 
+/* these will be filled in by some PHP when the main index is loaded */
+var graphCategories = [];
+var graphCategoryLabels = [];
+
+/* build the advanced graph selection menu */
 function advancedMenu() {
     
     var dataPanel = document.getElementById("loadDataPanel");
@@ -159,18 +164,23 @@ function advancedMenu() {
     categoryP.innerHTML = "Category";
     container.appendChild(categoryP);
     container.innerHTML += "<br>";
-    
+
+    // selection for graph categories
     var select3 = document.createElement("select");
     select3.setAttribute("id", "categoryOptions");
-    
+
+    // first and default option is for all graphs
     var optAll = document.createElement("option");
     optAll.setAttribute("value", "all");
     optAll.innerHTML = "All Graphs";
     select3.appendChild(optAll);
-    
-    for (let i = 0; i < labels.length; i++) {
+
+    // other graph categories were put into the graphCategories and
+    // graphCategoryLabels arrays on loading of the main index
+    for (let i = 0; i < graphCategoryLabels.length; i++) {
 	let category = document.createElement("option");
-	category.innerHTML = labels[i];
+	category.innerHTML = graphCategoryLabels[i];
+	category.setAttribute("value", graphCategories[i]);
 	select3.appendChild(category);
     }
     

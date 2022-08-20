@@ -48,22 +48,6 @@
 
 ?>
 
-<?php
-$result = tmdb_query("SELECT * FROM graphTypes");
-
-  echo '<script type="text/javascript">
-  		var categoryOptions = [];
-		var labels = [];
-		';
-  while ($row = $result->fetch_array()) {
-	 echo 'categoryOptions.push("'.$row['category'].'");';
-	 echo 'labels.push("'.$row['descr'].'");';
-  }
-  echo '</script>';
-
-  $result->free();
-?>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
 <script src="tmlib/tmjsfuncs.js" type="text/javascript"></script>
 <script src="hdxjsfuncs.js" type="text/javascript"></script>
@@ -112,6 +96,20 @@ $result = tmdb_query("SELECT * FROM graphTypes");
 <link rel="stylesheet" type="text/css" href="https://travelmapping.net/css/travelMapping.css"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="hdx.css" />
+
+<script type="text/javascript">
+<?php
+  // get list of graph types for advanced graph search
+  $result = tmdb_query("SELECT * FROM graphTypes");
+
+  while ($row = $result->fetch_array()) {
+	 echo 'graphCategories.push("'.$row['category'].'");';
+	 echo 'graphCategoryLabels.push("'.$row['descr'].'");';
+  }
+  $result->free();
+?>
+</script>
+
 </head>
 
 <body onload="HDXInit();" ondragover="allowdrop(event)" ondrop="drop(event)" style="background-color: rgb(47, 47, 47)" id="theBody">
