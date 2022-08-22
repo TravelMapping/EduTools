@@ -102,7 +102,39 @@ function advancedMenu() {
     else {
 	back.addEventListener("click", newGraphMenu);
     }
+
+    // graph archive set selection
+    var archiveSetP = document.createElement("p");
+    archiveSetP.innerHTML = "Graph Set";
+    container.appendChild(archiveSetP);
+    container.innerHTML += "<br>";
+
+    var selectArchive = document.createElement("select");
+    selectArchive.setAttribute("id", "graphArchive");
     
+    // first and default option is for current graphs
+    var optCurrent = document.createElement("option");
+    optCurrent.setAttribute("value", "current");
+    optCurrent.innerHTML = "Most Recent Graphs";
+    if (hdxGlobals.graphSet == "current") {
+	optCurrent.setAttribute("selected", "selected");
+    }
+    selectArchive.appendChild(optCurrent);
+
+    // get remaining archive sets and populate
+    for (let i = 0; i < hdxGlobals.graphArchiveSets.length; i++) {
+	let category = document.createElement("option");
+	category.innerHTML = hdxGlobals.graphArchiveSets[i].descr;
+	category.setAttribute("value", hdxGlobals.graphArchiveSets[i].setName);
+	if (hdxGlobals.graphSet == hdxGlobals.graphArchiveSets[i].setName) {
+	    category.setAttribute("selected", "selected");
+	}
+	selectArchive.appendChild(category);
+    }
+    
+    container.appendChild(selectArchive);
+    container.innerHTML += "<br>";
+
     var sortP = document.createElement("p");
     sortP.innerHTML = "Sort by";
     container.appendChild(sortP);
@@ -215,7 +247,7 @@ function advancedMenu() {
     container.appendChild(max);
     container.innerHTML += "<br>";
     
-    
+    // back button
     var back = document.createElement("button");
     back.setAttribute("id", "back2");
     back.innerHTML = "Back";

@@ -518,7 +518,8 @@ function hideAVStatusPanel() {
 // and other criteria in the Advanced Graph Data Search panel.  Called when
 // the "Get Graph List" button is pressed.
 function HDXFillGraphList(e) {
-    
+
+    hdxGlobals.graphSet = document.getElementById("graphArchive").value;
     var sels = document.getElementById("selects");
     var orderSel = document.getElementById("orderOptions").value;
     var resSel = document.getElementById("restrictOptions").value;
