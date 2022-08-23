@@ -1113,6 +1113,63 @@ var hdxTraversalsSpanningAVCommon = {
         updateAVControlEntry("found", foundEntry);
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
+
+	// check for and honor QS parameters setting AV parameters
+	// start point
+	if (HDXQSIsSpecified("startPoint")) {
+	    let vNum = parseInt(HDXQSValue("startPoint"));
+	    if (isNaN(vNum)) {
+		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
+	    }
+	    else if (vNum < 0 || vNum >= waypoints.length) {
+		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
+	    }
+	    else {
+		document.getElementById("startPoint").value = vNum;
+	    }
+	}
+
+	// end point
+	if (HDXQSIsSpecified("endPoint")) {
+	    let vNum = parseInt(HDXQSValue("endPoint"));
+	    if (isNaN(vNum)) {
+		console.error("Invalid QS parameter endPoint=" + HDXQSValue("endPoint") + ", ignoring");
+	    }
+	    else if (vNum < 0 || vNum >= waypoints.length) {
+		console.error("QS parameter endPoint=" + HDXQSValue("endPoint") + " out of range, ignoring");
+	    }
+	    else {
+		document.getElementById("endPoint").value = vNum;
+	    }
+	}
+
+	// stopping condition
+	if (HDXQSIsSpecified("stoppingCondition")) {
+	    let stopVal = HDXQSValue("stoppingCondition");
+	    if (stopVal == "StopAtEnd" ||
+		stopVal == "FindReachable" ||
+		(this.supportFindAllComponents && stopVal == "FindAll")) {
+		this.stoppingCondition = stopVal;
+		document.getElementById("stoppingCondition").value = stopVal;
+	    }
+	    else {
+		console.error("QS parameter stoppingCondition=" + stopVal + " is invalid, ignoring");
+	    }
+	}
+
+	// traversal discipline (applies to traversals only, not Dijkstra's
+	// or Prim's algorithms
+	if (HDXQSIsSpecified("traversalDiscipline") &&
+	    document.getElementById("traversalDiscipline") != null) {
+	    let travVal = HDXQSValue("traversalDiscipline");
+	    if (travVal == "BFS" || travVal == "DFS" || travVal == "RFS") {
+		this.traversalDiscipline = travVal;
+		document.getElementById("traversalDiscipline").value = travVal;
+	    }
+	    else {
+		console.error("QS parameter traversalDiscipline=" + travVal + " is invalid, ignoring");
+	    }
+	}
     },
 
     // clean up common UI components
