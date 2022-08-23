@@ -991,48 +991,62 @@ Show Extremes Bounding Box<br />
 &nbsp;Show Average Coordinate<br />
 </div>
 `;
-       //QS parameters
-       //checking/setting the checkbox for bounding box
-       if(HDXQSIsSpecified("box")) {
-              if(HDXQSValue("box") == "true" || HDXQSValue("box") == "false") {
-                  document.getElementById("boundingBox").checked=(HDXQSValue("box")=="true");
-               }
-               else { console.error("The input given for the bounding box is invalid."); }
+	// check for and honor QS parameters setting AV parameters
+	//checking/setting the checkbox for bounding box
+	if (HDXQSIsSpecified("box")) {
+	    var boxVal = HDXQSValue("box");
+            if (boxVal == "true" || boxVal == "false") {
+                document.getElementById("boundingBox").checked =
+		    boxVal =="true";
+            }
+            else {
+		console.error("Invalid QS parameter box=" + boxVal + ", ignoring");
+	    }
         }
-        //checking/setting the type of tie handling
-       if(HDXQSIsSpecified("ties")) {
-              if(HDXQSValue("ties") == "all" || HDXQSValue("ties") == "first") {
-                  document.getElementById("tieHandling").value=HDXQSValue("ties");
-               }
-               else { console.error("Tie handling method given is invalid."); }
+        // checking/setting the type of tie handling
+	if (HDXQSIsSpecified("ties")) {
+	    let tiesVal = HDXQSValue("ties");
+            if (tiesVal == "all" || tiesVal == "first") {
+                document.getElementById("tieHandling").value = tiesVal;
+            }
+            else {
+		console.error("Invalid QS parameter ties=" + tiesVal + ", ignoring");
+	    }
         }
-        //checking/setting the checkbox for label lengths
-       if(HDXQSIsSpecified("label")) {
-              if(HDXQSValue("label") == "true" || HDXQSValue("label") == "false") {
-                  document.getElementById("longshort").checked=(HDXQSValue("label")=="true");
+        // checking/setting the checkbox for label lengths
+	if (HDXQSIsSpecified("labelLength")) {
+	    let labLenVal = HDXQSValue("labelLength");
+            if(labLenVal == "true" || labLenVal == "false") {
+                document.getElementById("longshort").checked =
+		    labLenVal =="true";
                }
-               else { console.error("The input given for the label lengths is invalid."); }
+            else {
+		console.error("Invalid QS parameter labelLength=" + labLenVal + ", ignoring");
+	    }
         }
-        //checking/setting the checkbox for Alphabetical labels
-       if(HDXQSIsSpecified("alphabet")) {
-              if(HDXQSValue("alphabet") == "true" || HDXQSValue("alphabet") == "false") {
-                  document.getElementById("firstlast").checked=(HDXQSValue("alphabet")=="true");
-               }
-               else { console.error("The input given for the labels in Alphabetical ordering is invalid."); }
-        }
-        //checking/setting the checkbox for Average Coords
-       if(HDXQSIsSpecified("avgcoords")) {
-              if(HDXQSValue("avgcoords") == "true" || HDXQSValue("avgcoords") == "false") {
-                  document.getElementById("showavgcoord").checked=(HDXQSValue("avgcoords")=="true");
-               }
-               else { console.error("The input given for the average Coordinates is invalid."); }
-        }
-
-
-
-    
+        // checking/setting the checkbox for Alphabetical labels
+	if (HDXQSIsSpecified("alpha")) {
+	    let alphaVal = HDXQSValue("alpha");
+            if(alphaVal == "true" || alphaVal == "false") {
+                document.getElementById("firstlast").checked =
+		    alphaVal =="true";
+            }
+            else {
+		console.error("Invalid QS parameter alpha=" + alphaVal + ", ignoring");
+	    }
+	}
+        // checking/setting the checkbox for Average Coords
+	if (HDXQSIsSpecified("avgcoords")) {
+	    let avgVal = HDXQSValue("avgcoords");
+            if (avgVal == "true" || avgVal == "false") {
+                document.getElementById("showavgcoord").checked =
+		    avgVal == "true";
+            }
+            else {
+		console.error("Invalid QS parameter avgcoords=" + avgVal + ", ignoring");
+	    }
+	}
     },
-        
         
     // remove UI modifications made for vertex extremes search
     cleanupUI() {
