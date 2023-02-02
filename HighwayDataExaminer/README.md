@@ -48,8 +48,8 @@ The JS code for HDX is split among several files for easier management.
 * `hdxvertexextremesav.js` contains the implementation of the vertex-based extremes search AV.
   * `box` toggles the bounding box.
   * `ties` contains how to handle ties.
-  * `label` toggles the longest and shortest label.
-  * `alphabet` toggles the alphabetical labels.
+  * `labelLength` toggles the longest and shortest label.
+  * `alpha` toggles the alphabetical labels.
   * `avgcoords` toggles avgerage coordinates.
 * `hdxvertexselector.js` contains the implemenation of the vertex selector objects, which allow the selection of a vertex as an AV parameter by entering its number, clicking on it on the map, or clicking on it in the data table.
 * `hdxvisualsettings.js` contains the object that defines visual settings (colors, sizes, opacities) that are used consistently across multiple AVs.
