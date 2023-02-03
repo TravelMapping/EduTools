@@ -323,7 +323,7 @@ var hdxVertexExtremesSearchAV = {
 		    thisAV.avgMarker.addTo(map);
 		}
 		
-                updateAVControlEntry("undiscovered", waypoints.length + " vertices not yet visited");
+                updateAVControlEntry("undiscovered", (waypoints.length-1) + " vertices not yet visited");
                 updateAVControlEntry("visiting",
 				     "Visiting #0 " +  waypoints[0].label +
 				     " (initial leader in each category)");
@@ -370,7 +370,13 @@ var hdxVertexExtremesSearchAV = {
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.visiting,
                                          30, false);
                     updateAVControlEntry("undiscovered", (waypoints.length - thisAV.nextToCheck) + " vertices not yet visited");
-                    updateAVControlEntry("visiting", "Visiting: #" + thisAV.nextToCheck + " " + waypoints[thisAV.nextToCheck].label);
+                    updateAVControlEntry("visiting", "Visiting: #" +
+					 thisAV.nextToCheck + ' (' +
+					 waypoints[thisAV.nextToCheck].lat +
+					 ',' +
+					 waypoints[thisAV.nextToCheck].lon +
+					 ') ' +
+					 waypoints[thisAV.nextToCheck].label);
                 }
                 hdxAV.iterationDone = true;
             },
