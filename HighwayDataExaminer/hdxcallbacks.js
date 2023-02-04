@@ -49,7 +49,7 @@ function labelClickHDX(i) {
     // standard map center/infowindow display
 
    //build HTML string for popup
-    markers[i].bindPopup('<p style="line-height:160%;"><span style="font-size:24pt;color:black;">' + waypoints[i].label + '</span><br><b>Vertex Number:' + i + '<\/b><br><b><a target="_blank" href="http://www.openstreetmap.org/?lat='+waypoints[i].lat+'&lon='+waypoints[i].lon+'">Coords.:<\a><\/b> ' +
+    markers[i].bindPopup('<p style="line-height:160%;"><span style="font-size:24pt;color:black;">' + waypoints[i].label + '</span><br><b>Vertex Number: ' + i + '<\/b><br><b><a target="_blank" href="http://www.openstreetmap.org/?lat='+waypoints[i].lat+'&lon='+waypoints[i].lon+'">Coords.:<\a><\/b> ' +
  waypoints[i].lat + '&deg;, ' + waypoints[i].lon + '&deg;<\/p><div id="intersections' + i + '"><\/div>');
 
     map.panTo([waypoints[i].lat, waypoints[i].lon]);
