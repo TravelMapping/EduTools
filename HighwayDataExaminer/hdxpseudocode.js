@@ -72,8 +72,8 @@ function unhighlightPseudocode() {
 function pcEntry(indent, code, id) {
 
     let entry;
-    if (entry != "") {
-        entry = '<tr class="codeRow"><td id="' + id + '">';
+    if (id != "") {
+        entry = '<tr class="codeRow" custom-title="0 executions"><td id="' + id + '">';
     }
     else {
         entry = '<tr class="codeRow"><td>';
