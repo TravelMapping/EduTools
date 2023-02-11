@@ -30,8 +30,13 @@ function highlightPseudocode(id, vs) {
             hdxAV.execCountRecolor = true;
         }
 
-        codeChunk.setAttribute("custom-title",
-			       hdxAV.execCounts[id] + " executions"); 
+	if (hdxAV.execCounts[id] == 1) {
+            codeChunk.setAttribute("custom-title", "1 execution");
+	}
+	else {
+            codeChunk.setAttribute("custom-title",
+				   hdxAV.execCounts[id] + " executions");
+	}
     }
 }
 
