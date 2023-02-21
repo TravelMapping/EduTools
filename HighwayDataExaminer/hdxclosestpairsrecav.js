@@ -11,7 +11,7 @@ var hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "closestpairs-rec",
-    name: "Vertex Closest Pairs Recursive",
+    name: "Divide and Conquer Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer." +
     "<br />NOTE: This algorithm visualization has known bugs. Refresh webpage for consistent results.",
     
@@ -719,7 +719,7 @@ var hdxClosestPairsRecAV = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
-        let newAO = 'Number of points to stop on <input type="number" id="minPoints" min="3" max="' 
+        let newAO = 'Recursive base case size <input type="number" id="minPoints" min="3" max="' 
         + (waypoints.length - 1)/2 + '" value="3">';
         hdxAV.algOptions.innerHTML = newAO;
         addEntryToAVControlPanel("closeLeader", visualSettings.leader);
