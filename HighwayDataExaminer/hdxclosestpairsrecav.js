@@ -65,9 +65,7 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 updateAVControlEntry("closeLeader", "no leader yet, dclosest = &infin;");
                 updateAVControlEntry("totalChecked", "no checks done yet");
-                //thisAV.minPoints =
-                  //  document.getElementById("minPoints").value;
-                  thisAV.lineCount = 0;
+                thisAV.lineCount = 0;
 
                 thisAV.WtoE = waypoints;
                 let presort = new HDXPresort();
@@ -84,11 +82,7 @@ var hdxClosestPairsRecAV = {
                 thisAV.lineStack = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");    
 
-                //this.StoN = new Array(waypoints);
-                //thisAV.Stack = [];
-                //thisAV.savedArray = new Array();
                 thisAV.startIndex = 0;
-                //thisAV.rec_level_arr= [];
                 thisAV.rec_levelL = 0;
                 thisAV.rec_levelR= 0;
                 thisAV.endIndex = waypoints.length ;
@@ -132,7 +126,6 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                //thisAV.Stack.add([thisAV.startIndex, thisAV.endIndex]);
                 hdxAV.nextAction = "checkBaseCase"
             },
             logMessage: function(thisAV) {
@@ -194,8 +187,8 @@ var hdxClosestPairsRecAV = {
                     if (minDistTest < thisAV.minDist[0]) {
                         thisAV.minDist = [minDistTest, thisAV.WtoE[thisAV.startIndex], thisAV.WtoE[thisAV.endIndex]];
                         updateAVControlEntry("closeLeader", "Closest: [" + 
-					     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
-					     + "], d: " + length_in_current_units(thisAV.minDist[0]));
+					     thisAV.minDist[1] + "," + thisAV.minDist[2]
+					     + "], d: " + thisAV.minDist[0].toFixed(3));
                     }
                 }
                 else {
@@ -206,8 +199,8 @@ var hdxClosestPairsRecAV = {
                             if (minDistTest < thisAV.minDist[0]) {
                                 thisAV.minDist = [minDistTest, thisAV.WtoE[i], thisAV.WtoE[j]];
                                 updateAVControlEntry("closeLeader", "Closest: [" + 
-						     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
-						     + "], d: " + length_in_current_units(thisAV.minDist[0]));
+						     thisAV.minDist[1] + "," + thisAV.minDist[2]
+						     + "], d: " + thisAV.minDist[0].toFixed(3));
                             }
                         }
                     }
@@ -612,7 +605,6 @@ var hdxClosestPairsRecAV = {
 		weight: 4
             });
 	}
-        //thisAV.lineStack.add(this.lineVisiting);
         this.lineVisiting.addTo(map);  
         this.lineCount ++; 
         return this.lineVisiting;
@@ -676,20 +668,9 @@ var hdxClosestPairsRecAV = {
         hdxAV.algStat.innerHTML = "Initializing";
         this.lineCount = 0;
 
-        //reorder waypoints
-        let presort = new HDXPresort();
-        this.originalWaypoints = waypoints.slice();
-        this.waypoints = presort.sortedWaypoints;
-        hdxClosestPairsRecAV.WtoE = this.waypoints;
-        //updateMap();
-
         // show waypoints, hide connections
         initWaypointsAndConnections(true, false,
                                     visualSettings.undiscovered);
-
-        this.Stack = new HDXLinear(hdxLinearTypes.STACK,
-            "Stack");this.Stack = new HDXLinear(hdxLinearTypes.STACK,
-            "Stack");
 
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">WtoE[] &larr; vertices sorted by longitude</td></tr>';
         this.code += pcEntry(0,'ClosestPair(WtoE) //length = n',"recursiveCallTop");
