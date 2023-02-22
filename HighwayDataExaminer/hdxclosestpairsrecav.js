@@ -6,19 +6,20 @@
 // Primary Author: Jim Teresco, Alissa Ronca, Zac Goodsell
 //
 
-/* closest/farthest pairs of vertices, just brute force for now */
+/* closest pairs of vertices, using a divide and conquer recursive approach
+   as described in Levitin.
+*/
 var hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "closestpairs-rec",
     name: "Divide and Conquer Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer." +
-    "<br />NOTE: This algorithm visualization has known bugs. Refresh webpage for consistent results.",
+	"<br />NOTE: This AV is a work in progress, and has known problems.",
     
     // state variables for closest pairs search
     minPoints: 3,
     recursiveIndex: 0,
-   // Stack: null,
     startIndex: 0,
     endIndex: 0,
     minLeft: 0,
@@ -31,28 +32,28 @@ var hdxClosestPairsRecAV = {
     returnValue: 0,
     lineCount: 0,
 
+    // save a copy of the original waypoints array to restore
+    // if we switch AVs
     originalWaypoints: waypoints.slice(),
-    //vertices sorted by longitude
+    
+    // vertices sorted by longitude
     WtoE: null,
-    //vertices sorted by latitude
+    // vertices sorted by latitude
     NtoS: [],
     
-    //used for shading
+    // used for shading
     northBound: 0,
     southBound: 0,
 
     // computed distance between v1 and v2
     d_this: 0,
 
-    // leader info
+    // closest leader info
     closest: [-1, -1],
     d_closest: Number.MAX_VALUE,
-    farthest: [-1, -1],
-    d_farthest: 0,
 
-    // polylines for leaders and visiting
+    // polylines for leader and visiting
     lineClosest: null,
-    lineFarthest: null,
     lineVisiting: null,
     lineStack: null,
     
@@ -63,16 +64,15 @@ var hdxClosestPairsRecAV = {
             comment: "Initialize closest pair variables",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                updateAVControlEntry("closeLeader", "no leader yet, dclosest = &infin;");
-                updateAVControlEntry("totalChecked", "no checks done yet");
+                updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
+                updateAVControlEntry("totalChecked", "0");
                 thisAV.lineCount = 0;
 
                 thisAV.WtoE = waypoints;
                 let presort = new HDXPresort();
                 thisAV.WtoE = presort.sortedWaypoints;
 
-                thisAV.Stack = new HDXLinear(hdxLinearTypes.STACK,
-                    "Stack");
+                thisAV.Stack = new HDXLinear(hdxLinearTypes.STACK, "Stack");
 
                 thisAV.savedArray = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");
@@ -84,7 +84,7 @@ var hdxClosestPairsRecAV = {
 
                 thisAV.startIndex = 0;
                 thisAV.rec_levelL = 0;
-                thisAV.rec_levelR= 0;
+                thisAV.rec_levelR = 0;
                 thisAV.endIndex = waypoints.length ;
                 thisAV.minLeft = 0;
                 thisAV.minRight = 0;
@@ -187,7 +187,7 @@ var hdxClosestPairsRecAV = {
                     if (minDistTest < thisAV.minDist[0]) {
                         thisAV.minDist = [minDistTest, thisAV.WtoE[thisAV.startIndex], thisAV.WtoE[thisAV.endIndex]];
                         updateAVControlEntry("closeLeader", "Closest: [" + 
-					     thisAV.minDist[1] + "," + thisAV.minDist[2]
+					     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
 					     + "], d: " + thisAV.minDist[0].toFixed(3));
                     }
                 }
@@ -640,29 +640,9 @@ var hdxClosestPairsRecAV = {
             this.lineClosest.setLatLngs(closestLine);
         }
     },
-    updateLineFarthest() {
-
-        let farthestLine = [];
-        farthestLine[0] = [waypoints[this.farthest[0]].lat,
-			   waypoints[this.farthest[0]].lon];
-        farthestLine[1] = [waypoints[this.farthest[1]].lat,
-			   waypoints[this.farthest[1]].lon];
-
-        if (this.lineFarthest == null) {
-            this.lineFarthest = L.polyline(farthestLine, {
-                color: visualSettings.leader2.color,
-                opacity: 0.6,
-                weight: 4
-            });
-            this.lineFarthest.addTo(map);       
-        }
-        else {
-            this.lineFarthest.setLatLngs(farthestLine);
-        }
-    },
 
     // required prepToStart function
-    // initialize a vertex closest/farthest pairs search
+    // initialize a vertex closest pairs divide and conquer search
     prepToStart() {
 
         hdxAV.algStat.innerHTML = "Initializing";
@@ -691,7 +671,7 @@ var hdxClosestPairsRecAV = {
         this.code += pcEntry(2,'return sqrt(minSq)',"return");
     },
 
-    // set up UI entries for closest/farthest pairs
+    // set up UI entries for closest pairs divide and conquer
     setupUI() {
         var algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
@@ -719,9 +699,6 @@ var hdxClosestPairsRecAV = {
 	}
 	if (this.lineClosest != null) {
 	    this.lineClosest.remove();
-	}
-	if (this.lineFarthest != null) {
-	    this.lineFarthest.remove();
 	}
 	while (this.lineStack != null && !this.lineStack.isEmpty()) {
 	    // remove from stack, returned result remove from map
