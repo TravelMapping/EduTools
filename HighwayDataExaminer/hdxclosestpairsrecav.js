@@ -45,9 +45,6 @@ var hdxClosestPairsRecAV = {
     northBound: 0,
     southBound: 0,
 
-    // computed distance between v1 and v2
-    d_this: 0,
-
     // closest leader info
     closest: [-1, -1],
     d_closest: Number.MAX_VALUE,
@@ -183,25 +180,40 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 		
                 if (thisAV.endIndex - thisAV.startIndex == 1) {
-                    let minDistTest = thisAV.computeDistance(thisAV.WtoE[thisAV.startIndex], thisAV.WtoE[thisAV.endIndex]);
-		    
+		    let v1 = thisAV.WtoE[thisAV.startIndex];
+		    let v2 = thisAV.WtoE[thisAV.endIndex];
+                    let minDistTest = convertToCurrentUnits(
+			distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
                     if (minDistTest < thisAV.minDist[0]) {
-                        thisAV.minDist = [minDistTest, thisAV.WtoE[thisAV.startIndex], thisAV.WtoE[thisAV.endIndex]];
+                        thisAV.minDist = [minDistTest,
+					  thisAV.WtoE[thisAV.startIndex],
+					  thisAV.WtoE[thisAV.endIndex]];
                         updateAVControlEntry("closeLeader", "Closest: [" + 
-					     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
-					     + "], d: " + thisAV.minDist[0].toFixed(3));
+					     thisAV.minDist[1].label + "," +
+					     thisAV.minDist[2].label
+					     + "], d: " +
+					     thisAV.minDist[0].toFixed(3));
                     }
                 }
                 else {
                     for (let i = thisAV.startIndex; i < thisAV.endIndex - 1; i++) {
                         for (let j = i + 1; j < thisAV.endIndex; j++) {
-                            let minDistTest = thisAV.computeDistance(thisAV.WtoE[i], thisAV.WtoE[j]);
+			    let v1 = thisAV.WtoE[i];
+			    let v2 = thisAV.WtoE[j];
+			    let minDistTest = convertToCurrentUnits(
+				distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
 			    
                             if (minDistTest < thisAV.minDist[0]) {
-                                thisAV.minDist = [minDistTest, thisAV.WtoE[i], thisAV.WtoE[j]];
-                                updateAVControlEntry("closeLeader", "Closest: [" + 
-						     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
-						     + "], d: " + thisAV.minDist[0].toFixed(3));
+                                thisAV.minDist = [minDistTest,
+						  thisAV.WtoE[i],
+						  thisAV.WtoE[j]];
+                                updateAVControlEntry("closeLeader",
+						     "Closest: [" + 
+						     thisAV.minDist[1].label +
+						     "," +
+						     thisAV.minDist[2].label
+						     + "], d: " +
+						     thisAV.minDist[0].toFixed(3));
                             }
                         }
                     }
@@ -588,10 +600,6 @@ var hdxClosestPairsRecAV = {
         this.lineVisiting.addTo(map);  
         this.lineCount ++; 
         return this.lineVisiting;
-    },
-    
-    computeDistance(v1, v2) {
-        return Math.sqrt(Math.pow(v1.lat - v2.lat, 2) + Math.pow(v1.lon - v2.lon, 2));
     },
     
     // function to remove the visiting polyline
