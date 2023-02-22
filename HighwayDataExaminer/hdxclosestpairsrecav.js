@@ -19,6 +19,7 @@ var hdxClosestPairsRecAV = {
     
     // state variables for closest pairs search
     minPoints: 3,
+    maxRec: 0,
     recursiveIndex: 0,
     startIndex: 0,
     endIndex: 0,
@@ -160,8 +161,12 @@ var hdxClosestPairsRecAV = {
                         visualSettings.discovered,
                         40, false);
                 }
-                if (thisAV.endIndex - thisAV.startIndex <= 3 ||
-		    thisAV.rec_levelL == thisAV.minPoints) {
+
+		// check for recursive stopping condition of either the
+		// smallest subproblem (based on minPoints) or
+		// current recursive level (based on maxRec)
+                if ((thisAV.endIndex - thisAV.startIndex <= thisAV.minPoints) ||
+		    (thisAV.maxRec > 0 && thisAV.rec_levelL == thisAV.maxRec)) {
 
                         hdxAV.nextAction = "returnBruteForceSolution";
                     }
@@ -170,7 +175,7 @@ var hdxClosestPairsRecAV = {
                 }
             },
             logMessage: function(thisAV) {
-                return "Check whether minimum number of points has been reached";
+                return "Check whether minimum problem size or recursive limit has been reached";
             }
         },
         {
@@ -642,10 +647,18 @@ var hdxClosestPairsRecAV = {
         initWaypointsAndConnections(true, false,
                                     visualSettings.undiscovered);
 
-        this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">WtoE[] &larr; vertices sorted by longitude</td></tr>';
+	this.minPoints = document.getElementById("minPoints").value;
+	this.maxRec = document.getElementById("maxRec").value;
+		 
+	this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">WtoE[] &larr; points sorted &uarr; by longitude</td></tr>';
         this.code += pcEntry(0,'ClosestPair(WtoE) //length = n',"recursiveCallTop");
-        this.code += pcEntry(1,'if (WtoE.length <= 3 || recursiveDepth == userLimit)',"checkBaseCase");
-        this.code += pcEntry(2,'return brute force min distance',"returnBruteForceSolution");
+	let recLimitCode = "";
+	if (this.maxRec > 0) {
+	    recLimitCode = " or recDepth > " + this.maxRec;
+	}
+        this.code += pcEntry(1,'if (n <= ' + this.minPoints + recLimitCode
+			     + ')',"checkBaseCase");
+        this.code += pcEntry(2,'return(brute force min distance)',"returnBruteForceSolution");
         this.code += pcEntry(1,'else',"");
         this.code += pcEntry(2,'min<sub>left</sub> &larr; ClosestPair(WtoE[0, (n/2)-1])',"callRecursionLeft");
         this.code += pcEntry(2,'min<sub>right</sub> &larr; ClosestPair(WtoE[n/2, n-1])',"callRecursionRight");
@@ -670,9 +683,12 @@ var hdxClosestPairsRecAV = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
-        let newAO = 'Recursive base case size ' +
+        let newAO = 'Brute force problem size limit ' +
 	    '<input type="number" id="minPoints" min="3" max="' +
-	    (waypoints.length - 1)/2 + '" value="3">';
+	    (waypoints.length - 1)/2 + '" value="3"><br />';
+        newAO += 'Recursion level limit (0 for none)' +
+	    '<input type="number" id="maxRec" min="0" max="' +
+	    (waypoints.length - 1)/2 + '" value="0"><br />';
         hdxAV.algOptions.innerHTML = newAO;
         addEntryToAVControlPanel("closeLeader", visualSettings.leader);
         addEntryToAVControlPanel("totalChecked", visualSettings.visiting);
