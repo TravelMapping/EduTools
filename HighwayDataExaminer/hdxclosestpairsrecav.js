@@ -12,7 +12,7 @@
 var hdxClosestPairsRecAV = {
 
     // entries for list of AVs
-    value: "closestpairs-rec",
+    value: "dc-closestpairs",
     name: "Divide and Conquer Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer." +
 	"<br />NOTE: This AV is a work in progress, and has known problems.",
@@ -98,8 +98,6 @@ var hdxClosestPairsRecAV = {
                 thisAV.minSq = 0;
                 thisAV.setMin = false;
                 thisAV.currentLine;
-                setMiddlePoint.southBound = waypoints[0].lat;
-                thisAV.northBound = waypoints[0].lat;
                 thisAV.Stack.add("cleanup");
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
@@ -107,13 +105,16 @@ var hdxClosestPairsRecAV = {
                 thisAV.oldRightStart = waypoints.length;
                 thisAV.bounds = null;
 
+                // find latitudes of the northernmost and southernmost points
+                thisAV.southBound = waypoints[0].lat;
+                thisAV.northBound = waypoints[0].lat;
                 for (let i = 1; i < waypoints.length; i++) {
-                    // keep track of northmost and southmost points
-                    thisAV.southBound = Math.min(waypoints[i].lat, thisAV.southBound);
-                    thisAV.northBound = Math.max(waypoints[i].lat, thisAV.northBound);
+                    thisAV.southBound = Math.min(waypoints[i].lat,
+						 thisAV.southBound);
+                    thisAV.northBound = Math.max(waypoints[i].lat,
+						 thisAV.northBound);
                 }
 
-                
                 hdxAV.nextAction = "recursiveCallTop"
             },
             logMessage: function(thisAV) {
@@ -199,7 +200,7 @@ var hdxClosestPairsRecAV = {
                             if (minDistTest < thisAV.minDist[0]) {
                                 thisAV.minDist = [minDistTest, thisAV.WtoE[i], thisAV.WtoE[j]];
                                 updateAVControlEntry("closeLeader", "Closest: [" + 
-						     thisAV.minDist[1] + "," + thisAV.minDist[2]
+						     thisAV.minDist[1].label + "," + thisAV.minDist[2].label
 						     + "], d: " + thisAV.minDist[0].toFixed(3));
                             }
                         }
@@ -535,27 +536,6 @@ var hdxClosestPairsRecAV = {
             }
         },
         {
-            label: "computeDistance",
-            comment: "compute distance of current candidate pair",
-            code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);       
-                thisAV.d_this = convertToCurrentUnits(
-		    distanceInMiles(waypoints[thisAV.v1].lat,
-                                    waypoints[thisAV.v1].lon,
-                                    waypoints[thisAV.v2].lat,
-                                    waypoints[thisAV.v2].lon));
-                updateAVControlEntry("checkingDistance", "Distance: " +
-				     length_in_current_units(thisAV.d_this));
-                hdxAV.nextAction = "checkCloseLeader";
-
-            },
-            logMessage: function(thisAV) {
-                return "Compute distance " + thisAV.d_this.toFixed(3) +
-		    " between v<sub>1</sub>=" + thisAV.v1 + " and v<sub>2</sub>=" +
-		    thisAV.v2;
-            }
-        },
-        {
             label: "cleanup",
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
@@ -625,8 +605,10 @@ var hdxClosestPairsRecAV = {
     updateLineClosest() {
 
         let closestLine = [];
-        closestLine[0] = [waypoints[this.closest[0]].lat, waypoints[this.closest[0]].lon];
-        closestLine[1] = [waypoints[this.closest[1]].lat, waypoints[this.closest[1]].lon];
+        closestLine[0] = [waypoints[this.closest[0]].lat,
+			  waypoints[this.closest[0]].lon];
+        closestLine[1] = [waypoints[this.closest[1]].lat,
+			  waypoints[this.closest[1]].lon];
 
         if (this.lineClosest == null) {
             this.lineClosest = L.polyline(closestLine, {
@@ -680,8 +662,9 @@ var hdxClosestPairsRecAV = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
-        let newAO = 'Recursive base case size <input type="number" id="minPoints" min="3" max="' 
-        + (waypoints.length - 1)/2 + '" value="3">';
+        let newAO = 'Recursive base case size ' +
+	    '<input type="number" id="minPoints" min="3" max="' +
+	    (waypoints.length - 1)/2 + '" value="3">';
         hdxAV.algOptions.innerHTML = newAO;
         addEntryToAVControlPanel("closeLeader", visualSettings.leader);
         addEntryToAVControlPanel("totalChecked", visualSettings.visiting);
