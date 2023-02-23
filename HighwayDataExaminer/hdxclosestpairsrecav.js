@@ -54,6 +54,16 @@ var hdxClosestPairsRecAV = {
     lineClosest: null,
     lineVisiting: null,
     lineStack: null,
+
+    visualSettings: {
+        recursiveCall: {
+            color: "green",
+            textColor: "white",
+            scale: 6,
+            name: "recursiveCall",
+            value: 0
+        }
+    },
     
     // the actions that make up this algorithm
     avActions: [
@@ -62,6 +72,7 @@ var hdxClosestPairsRecAV = {
             comment: "Initialize closest pair variables",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+                updateAVControlEntry("currentCall", "No calls yet");
                 updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
                 updateAVControlEntry("totalChecked", "0");
                 thisAV.lineCount = 0;
@@ -75,15 +86,14 @@ var hdxClosestPairsRecAV = {
                 thisAV.savedArray = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");
 
-                thisAV.rec_level_arr = new HDXLinear(hdxLinearTypes.STACK,
+                thisAV.recLevelArr = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");
                 thisAV.lineStack = new HDXLinear(hdxLinearTypes.STACK,
                     "Stack");    
 
                 thisAV.startIndex = 0;
-                thisAV.rec_levelL = 0;
-                thisAV.rec_levelR = 0;
-                thisAV.endIndex = waypoints.length ;
+                thisAV.recLevel = 0;
+                thisAV.endIndex = waypoints.length;
                 thisAV.minLeft = 0;
                 thisAV.minRight = 0;
                 thisAV.midLineLong = 0;
@@ -96,7 +106,12 @@ var hdxClosestPairsRecAV = {
                 thisAV.minSq = 0;
                 thisAV.setMin = false;
                 thisAV.currentLine;
+
+		// after the initial call to ClosestPair (via the execution
+		// of the recursiveCallTop action) completes, the AV
+		// should proceed to the cleanup state.
                 thisAV.Stack.add("cleanup");
+		
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
                 thisAV.finalDraw = false;
@@ -116,24 +131,29 @@ var hdxClosestPairsRecAV = {
                 hdxAV.nextAction = "recursiveCallTop"
             },
             logMessage: function(thisAV) {
-                return "Initializing closest pair variables";
+                return "Initializing";
             }
         },
         {
             label: "recursiveCallTop",
-            comment: "Call recursion",
+            comment: "Recursive function call",
             code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
-
-                hdxAV.nextAction = "checkBaseCase"
+                highlightPseudocode(this.label,
+				    thisAV.visualSettings.recursiveCall);
+		updateAVControlEntry("currentCall",
+				     "Recursive Level " + thisAV.recLevel +
+				     ": [" + thisAV.startIndex + "," +
+				     thisAV.endIndex + "]");
+                hdxAV.nextAction = "checkBaseCase";
             },
             logMessage: function(thisAV) {
-                return "Call recursion";
+                return "Recursive function call: Level " + thisAV.recLevel +
+		    ": [" + thisAV.startIndex + "," + thisAV.endIndex + "]";
             }
         },
         {
             label: "checkBaseCase",
-            comment: "Check if base case is reached",
+            comment: "Check recursive stopping conditions",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
@@ -166,7 +186,7 @@ var hdxClosestPairsRecAV = {
 		// smallest subproblem (based on minPoints) or
 		// current recursive level (based on maxRec)
                 if ((thisAV.endIndex - thisAV.startIndex <= thisAV.minPoints) ||
-		    (thisAV.maxRec > 0 && thisAV.rec_levelL == thisAV.maxRec)) {
+		    (thisAV.maxRec > 0 && thisAV.recLevel == thisAV.maxRec)) {
 
                         hdxAV.nextAction = "returnBruteForceSolution";
                     }
@@ -175,7 +195,12 @@ var hdxClosestPairsRecAV = {
                 }
             },
             logMessage: function(thisAV) {
-                return "Check whether minimum problem size or recursive limit has been reached";
+		if (thisAV.maxRec > 0) {
+                    return "Check whether minimum problem size or recursive limit has been reached";
+		}
+		else {
+                    return "Check whether minimum problem size has been reached";
+		}
             }
         },
         {
@@ -247,8 +272,8 @@ var hdxClosestPairsRecAV = {
 
                 thisAV.endIndex = Math.ceil(thisAV.startIndex + ((thisAV.endIndex-thisAV.startIndex)/2));
 
-                thisAV.rec_levelL++;
-                thisAV.rec_level_arr.add(thisAV.rec_levelL);
+                thisAV.recLevel++;
+                thisAV.recLevelArr.add(thisAV.recLevel);
                 hdxAV.nextAction = "recursiveCallTop"
             },
             logMessage: function(thisAV) {
@@ -261,9 +286,13 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 nums = thisAV.savedArray.remove();
-                thisAV.rec_levelL = thisAV.rec_level_arr.remove();
+                thisAV.recLevel = thisAV.recLevelArr.remove();
                 thisAV.startIndex = nums[0];
                 thisAV.endIndex = nums[1];
+		updateAVControlEntry("currentCall",
+				     "Recursive Level " + thisAV.recLevel +
+				     ": [" + thisAV.startIndex + "," +
+				     thisAV.endIndex + "]");
                 thisAV.Stack.add("setMinOfHalves");
                 hdxAV.nextAction = "recursiveCallTop"
             },
@@ -650,28 +679,30 @@ var hdxClosestPairsRecAV = {
 	this.minPoints = document.getElementById("minPoints").value;
 	this.maxRec = document.getElementById("maxRec").value;
 		 
-	this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">WtoE[] &larr; points sorted &uarr; by longitude</td></tr>';
-        this.code += pcEntry(0,'ClosestPair(WtoE) //length = n',"recursiveCallTop");
+	this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">call CPRec with points sorted &uarr; by longitude</td></tr>';
+        this.code += pcEntry(0,'CPRec(WtoE)',"recursiveCallTop");
 	let recLimitCode = "";
 	if (this.maxRec > 0) {
 	    recLimitCode = " or recDepth > " + this.maxRec;
 	}
-        this.code += pcEntry(1,'if (n <= ' + this.minPoints + recLimitCode
-			     + ')',"checkBaseCase");
-        this.code += pcEntry(2,'return(brute force min distance)',"returnBruteForceSolution");
+        this.code += pcEntry(1,'n &larr; WtoE.length<br />&nbsp;&nbsp;if (n <= ' +
+			     this.minPoints + recLimitCode + ')',
+			     "checkBaseCase");
+        this.code += pcEntry(2,'return(brute force min distance)',
+			     "returnBruteForceSolution");
         this.code += pcEntry(1,'else',"");
-        this.code += pcEntry(2,'min<sub>left</sub> &larr; ClosestPair(WtoE[0, (n/2)-1])',"callRecursionLeft");
-        this.code += pcEntry(2,'min<sub>right</sub> &larr; ClosestPair(WtoE[n/2, n-1])',"callRecursionRight");
-        this.code += pcEntry(2,'min<sub>halves</sub> &larr; min(min<sub>left</sub>, min<sub>right</sub>)',"setMinOfHalves");
-        this.code += pcEntry(2,'mid &larr; WtoE[n/2].long',"setMiddlePoint");
-        this.code += pcEntry(2,'closeToCenter[] &larr; all points which |longitude − mid| < min<sub>halves</sub>',"setPointsToCheck");
-        this.code += pcEntry(2,'minSq &larr; min<sub>halves</sub><sup>2</sup>',"squareMinOfHalves");
-        this.code += pcEntry(2,'for i &larr; 0 to closeToCenter.length - 2 do',"forLoopTop");
+        this.code += pcEntry(2,'cp<sub>left</sub> &larr; CPRec(WtoE[0, (n/2)-1])',"callRecursionLeft");
+        this.code += pcEntry(2,'cp<sub>right</sub> &larr; CPRec(WtoE[n/2, n-1])',"callRecursionRight");
+        this.code += pcEntry(2,'cp<sub>lr</sub> &larr; min_d(cp<sub>left</sub>, cp<sub>right</sub>)',"setMinOfHalves");
+        this.code += pcEntry(2,'mid &larr; WtoE[n/2].lon',"setMiddlePoint");
+        this.code += pcEntry(2,'nearMid[] &larr; all pts with |lon − mid| < cp<sub>lr</sub>',"setPointsToCheck");
+        this.code += pcEntry(2,'cpDistSq &larr; cp<sub>lr</sub>.d<sup>2</sup>',"squareMinOfHalves");
+        this.code += pcEntry(2,'for i &larr; 0 to nearMid.length - 2 do',"forLoopTop");
         this.code += pcEntry(3,'k &larr; i + 1',"updateWhileLoopIndex");
-        this.code += pcEntry(3,'while (k <= closeToCenter.length - 1 and (closeToCenter[k].lat - closeToCenter[i].lat)<sup>2</sup> < minSq)',"whileLoopTop");
-        this.code += pcEntry(4,'minSq &larr; min((closeToCenter[k].long - closeToCenter[i].long)<sup>2</sup> + (closeToCenter[k].lat - closeToCenter[i].lat)<sup>2</sup>, minSq)',"updateMinPairFound");
+        this.code += pcEntry(3,'while (k <= nearMid.length - 1 and (nearMid[k].lat - nearMid[i].lat)<sup>2</sup> < cpDistSq)',"whileLoopTop");
+        this.code += pcEntry(4,'cpDistSq &larr; min(distSq(nearMid[k],nearMid[i], cpDistSq)',"updateMinPairFound");
         this.code += pcEntry(4,'k &larr; k + 1',"incrementWhileLoopIndex");
-        this.code += pcEntry(2,'return sqrt(minSq)',"return");
+        this.code += pcEntry(2,'return sqrt(cpDistSq)',"return");
     },
 
     // set up UI entries for closest pairs divide and conquer
@@ -690,6 +721,7 @@ var hdxClosestPairsRecAV = {
 	    '<input type="number" id="maxRec" min="0" max="' +
 	    (waypoints.length - 1)/2 + '" value="0"><br />';
         hdxAV.algOptions.innerHTML = newAO;
+        addEntryToAVControlPanel("currentCall", this.visualSettings.recursiveCall);
         addEntryToAVControlPanel("closeLeader", visualSettings.leader);
         addEntryToAVControlPanel("totalChecked", visualSettings.visiting);
         addEntryToAVControlPanel("savedCheck", visualSettings.undiscovered);
