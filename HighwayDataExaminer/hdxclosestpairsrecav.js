@@ -140,10 +140,7 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label,
 				    thisAV.visualSettings.recursiveCall);
-		updateAVControlEntry("currentCall",
-				     "Recursive Level " + thisAV.recLevel +
-				     ": [" + thisAV.startIndex + "," +
-				     thisAV.endIndex + "]");
+		thisAV.updateCurrentCall();
                 hdxAV.nextAction = "checkBaseCase";
             },
             logMessage: function(thisAV) {
@@ -289,10 +286,7 @@ var hdxClosestPairsRecAV = {
                 thisAV.recLevel = thisAV.recLevelArr.remove();
                 thisAV.startIndex = nums[0];
                 thisAV.endIndex = nums[1];
-		updateAVControlEntry("currentCall",
-				     "Recursive Level " + thisAV.recLevel +
-				     ": [" + thisAV.startIndex + "," +
-				     thisAV.endIndex + "]");
+		thisAV.updateCurrentCall();
                 thisAV.Stack.add("setMinOfHalves");
                 hdxAV.nextAction = "recursiveCallTop"
             },
@@ -665,6 +659,14 @@ var hdxClosestPairsRecAV = {
         }
     },
 
+    updateCurrentCall() {
+	updateAVControlEntry("currentCall",
+			     "Recursive Level " + this.recLevel +
+			     ", " + (this.endIndex - this.startIndex + 1) +
+			     " points, range: [" + this.startIndex + "," +
+			     this.endIndex + "]");
+    },
+    
     // required prepToStart function
     // initialize a vertex closest pairs divide and conquer search
     prepToStart() {
