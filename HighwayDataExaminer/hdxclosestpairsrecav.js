@@ -20,17 +20,12 @@ var hdxClosestPairsRecAV = {
     // state variables for closest pairs search
     minPoints: 3,
     maxRec: 0,
-    recursiveIndex: 0,
     startIndex: 0,
     endIndex: 0,
-    minLeft: 0,
-    minRight: 0,
-    midLineLong: 0,
     closeToCenter: null,
     minHalvesSquared: 0,
     forLoopIndex: 0,
     whileLoopIndex: 0,
-    returnValue: 0,
     lineCount: 0,
 
     // save a copy of the original waypoints array to restore
@@ -94,14 +89,10 @@ var hdxClosestPairsRecAV = {
                 thisAV.startIndex = 0;
                 thisAV.recLevel = 0;
                 thisAV.endIndex = waypoints.length;
-                thisAV.minLeft = 0;
-                thisAV.minRight = 0;
-                thisAV.midLineLong = 0;
                 thisAV.closeToCenter = [];
                 thisAV.minHalvesSquared = 0;
                 thisAV.forLoopIndex = 0;
                 thisAV.whileLoopIndex = 0;
-                thisAV.returnValue = 0;
                 thisAV.minDist = [9999,0,0]
                 thisAV.minSq = 0;
                 thisAV.setMin = false;
