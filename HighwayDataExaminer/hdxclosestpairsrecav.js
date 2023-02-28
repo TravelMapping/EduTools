@@ -9,29 +9,42 @@
 /* closest pairs of vertices, using a divide and conquer recursive approach
    as described in Levitin.
 */
+
+// construct an object to be placed on the recursive stack to store
+// parameters and variables related to the current recursive call
+function HDXCPRecCallFrame(startIndex, endIndex, recLevel, nextAction) {
+    
+    this.startIndex = startIndex;
+    this.endIndex = endIndex;
+    this.recLevel = recLevel;
+    this.nextAction = nextAction;
+    return this;    
+}
+
 var hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "dc-closestpairs",
     name: "Divide and Conquer Closest Pairs",
-    description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer." +
-	"<br />NOTE: This AV is a work in progress, and has known problems.",
+    description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer, following the algorithm in Levitin.",
     
-    // state variables for closest pairs search
+    // global state variables for closest pairs search
     minPoints: 3,
     maxRec: 0,
-    startIndex: 0,
-    endIndex: 0,
+
+    // many other variables will end up on the recursive stack, which
+    // will contain instances of objects constructed by the CallFrame
+    // constructor below
+    recStack: null,
+    // the frame at the top of the stack at any given time
+    fp: null,
+    // the frame most recently popped from the stack for
+    // caller to get result and other info
+    retval: null,
+
     closeToCenter: null,
-    minHalvesSquared: 0,
-    forLoopIndex: 0,
-    whileLoopIndex: 0,
     lineCount: 0,
 
-    // save a copy of the original waypoints array to restore
-    // if we switch AVs
-    originalWaypoints: waypoints.slice(),
-    
     // vertices sorted by longitude
     WtoE: null,
     // vertices sorted by latitude
@@ -41,16 +54,15 @@ var hdxClosestPairsRecAV = {
     northBound: 0,
     southBound: 0,
 
-    // closest leader info
-    closest: [-1, -1],
-    d_closest: Number.MAX_VALUE,
-
-    // polylines for leader and visiting
-    lineClosest: null,
-    lineVisiting: null,
-    lineStack: null,
-
+    // AV-specific visual settings
     visualSettings: {
+        bruteForce: {
+            color: "red",
+            textColor: "white",
+            scale: 6,
+            name: "bruteForce",
+            value: 0
+        },
         recursiveCall: {
             color: "green",
             textColor: "white",
@@ -64,45 +76,33 @@ var hdxClosestPairsRecAV = {
     avActions: [
         {
             label: "START",
-            comment: "Initialize closest pair variables",
+            comment: "Set up initial recursive call on the entire set of points",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+
+		// create the recursive call stack
+		thisAV.recStack = [];
+
+		// sort the waypoints array west to east
+		let sorter = new HDXWaypointsSorter();
+		thisAV.WtoE = sorter.sortWaypoints();
+		
                 updateAVControlEntry("currentCall", "No calls yet");
                 updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
                 updateAVControlEntry("totalChecked", "0");
                 thisAV.lineCount = 0;
 
-                thisAV.WtoE = waypoints;
-                let presort = new HDXPresort();
-                thisAV.WtoE = presort.sortedWaypoints;
+		thisAV.fp = new HDXCPRecCallFrame(
+		    0, // start index
+		    waypoints.length, // end index
+		    1, // level 1 of recursion
+		    "cleanup" // action to continue after call complete3
+		);
+		console.log("Pushing fp with cleanup");
+		thisAV.recStack.push(thisAV.fp);
 
-                thisAV.Stack = new HDXLinear(hdxLinearTypes.STACK, "Stack");
-
-                thisAV.savedArray = new HDXLinear(hdxLinearTypes.STACK,
-                    "Stack");
-
-                thisAV.recLevelArr = new HDXLinear(hdxLinearTypes.STACK,
-                    "Stack");
-                thisAV.lineStack = new HDXLinear(hdxLinearTypes.STACK,
-                    "Stack");    
-
-                thisAV.startIndex = 0;
-                thisAV.recLevel = 0;
-                thisAV.endIndex = waypoints.length;
                 thisAV.closeToCenter = [];
                 thisAV.minHalvesSquared = 0;
-                thisAV.forLoopIndex = 0;
-                thisAV.whileLoopIndex = 0;
-                thisAV.minDist = [9999,0,0]
-                thisAV.minSq = 0;
-                thisAV.setMin = false;
-                thisAV.currentLine;
-
-		// after the initial call to ClosestPair (via the execution
-		// of the recursiveCallTop action) completes, the AV
-		// should proceed to the cleanup state.
-                thisAV.Stack.add("cleanup");
-		
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
                 thisAV.finalDraw = false;
@@ -119,7 +119,7 @@ var hdxClosestPairsRecAV = {
 						 thisAV.northBound);
                 }
 
-                hdxAV.nextAction = "recursiveCallTop"
+                hdxAV.nextAction = "recursiveCallTop";
             },
             logMessage: function(thisAV) {
                 return "Initializing";
@@ -131,12 +131,18 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label,
 				    thisAV.visualSettings.recursiveCall);
+
 		thisAV.updateCurrentCall();
+		thisAV.colorWtoERange(thisAV.fp.startIndex,
+				      thisAV.fp.endIndex,
+				      visualSettings.visiting);
+
                 hdxAV.nextAction = "checkBaseCase";
             },
             logMessage: function(thisAV) {
-                return "Recursive function call: Level " + thisAV.recLevel +
-		    ": [" + thisAV.startIndex + "," + thisAV.endIndex + "]";
+                return "Recursive function call: Level " + thisAV.fp.recLevel +
+		    ": [" + thisAV.fp.startIndex + "," +
+		    thisAV.fp.endIndex + "]";
             }
         },
         {
@@ -145,39 +151,16 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                for (let i = 0  ; i < thisAV.WtoE.length; i++) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                        visualSettings.discarded,
-                        40, false);
-                }
-                for (let i = thisAV.startIndex  ; i < thisAV.WtoE.length; i++) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                        visualSettings.spanningTree,
-                        40, false);
-                }
-                for (let i = thisAV.startIndex; i < thisAV.endIndex; i++) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                        visualSettings.visiting,
-                        40, false);
-                }
-
-                if (thisAV.setMin) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[1]),
-                        visualSettings.discovered,
-                        40, false);
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[2]),
-                        visualSettings.discovered,
-                        40, false);
-                }
-
 		// check for recursive stopping condition of either the
 		// smallest subproblem (based on minPoints) or
 		// current recursive level (based on maxRec)
-                if ((thisAV.endIndex - thisAV.startIndex <= thisAV.minPoints) ||
-		    (thisAV.maxRec > 0 && thisAV.recLevel == thisAV.maxRec)) {
-
-                        hdxAV.nextAction = "returnBruteForceSolution";
-                    }
+                if ((thisAV.fp.endIndex - thisAV.fp.startIndex <= thisAV.minPoints) ||
+		    (thisAV.maxRec > 0 && thisAV.fp.recLevel == thisAV.maxRec)) {
+		    thisAV.colorWtoERange(thisAV.fp.startIndex,
+					  thisAV.fp.endIndex,
+					  thisAV.visualSettings.bruteForce);
+                    hdxAV.nextAction = "returnBruteForceSolution";
+                }
                 else {
                     hdxAV.nextAction = "callRecursionLeft";
                 }
@@ -193,96 +176,121 @@ var hdxClosestPairsRecAV = {
         },
         {
             label: "returnBruteForceSolution",
-            comment: "Return brute force Solution",
+            comment: "Compute and return base case solution",
             code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
-		
-                if (thisAV.endIndex - thisAV.startIndex == 1) {
-		    let v1 = thisAV.WtoE[thisAV.startIndex];
-		    let v2 = thisAV.WtoE[thisAV.endIndex];
-                    let minDistTest = convertToCurrentUnits(
-			distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
-                    if (minDistTest < thisAV.minDist[0]) {
-                        thisAV.minDist = [minDistTest,
-					  thisAV.WtoE[thisAV.startIndex],
-					  thisAV.WtoE[thisAV.endIndex]];
-                        updateAVControlEntry("closeLeader", "Closest: [" + 
-					     thisAV.minDist[1].label + "," +
-					     thisAV.minDist[2].label
-					     + "], d: " +
-					     thisAV.minDist[0].toFixed(3));
-                    }
-                }
-                else {
-                    for (let i = thisAV.startIndex; i < thisAV.endIndex - 1; i++) {
-                        for (let j = i + 1; j < thisAV.endIndex; j++) {
-			    let v1 = thisAV.WtoE[i];
-			    let v2 = thisAV.WtoE[j];
-			    let minDistTest = convertToCurrentUnits(
-				distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
-			    
-                            if (minDistTest < thisAV.minDist[0]) {
-                                thisAV.minDist = [minDistTest,
-						  thisAV.WtoE[i],
-						  thisAV.WtoE[j]];
-                                updateAVControlEntry("closeLeader",
-						     "Closest: [" + 
-						     thisAV.minDist[1].label +
-						     "," +
-						     thisAV.minDist[2].label
-						     + "], d: " +
-						     thisAV.minDist[0].toFixed(3));
-                            }
+                highlightPseudocode(this.label,
+				    thisAV.visualSettings.bruteForce);
+
+		// brute force search among all pairs in this subrange
+		thisAV.fp.minDist = Number.MAX_VALUE;
+                for (let i = thisAV.fp.startIndex;
+		     i <= thisAV.fp.endIndex - 1; i++) {
+                    for (let j = i + 1; j < thisAV.fp.endIndex; j++) {
+			let v1 = thisAV.WtoE[i];
+			let v2 = thisAV.WtoE[j];
+			let minDistTest = convertToCurrentUnits(
+			    distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
+			
+                        if (minDistTest < thisAV.fp.minDist) {
+                            thisAV.fp.minDist = minDistTest;
+			    thisAV.fp.minv1 = thisAV.WtoE[i];
+			    thisAV.fp.minv2 = thisAV.WtoE[j];
                         }
                     }
-                }
+		}
+
+		// update range to discarded status
+		thisAV.colorWtoERange(thisAV.fp.startIndex,
+				      thisAV.fp.endIndex,
+				      visualSettings.discarded);
 		
-                hdxAV.nextAction = thisAV.Stack.remove();
+		// update winner on map and table
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv1),
+				     visualSettings.leader, 40, false);
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv2),
+				     visualSettings.leader, 40, false);
+
+		// TODO: draw connecting line?
+
+                updateAVControlEntry("closeLeader", "Closest: [" + 
+				     thisAV.fp.minv1.label + "," +
+				     thisAV.fp.minv2.label
+				     + "], d: " +
+				     thisAV.fp.minDist.toFixed(3));
+
+		// prep to go back to where this recursive call returns
+                hdxAV.nextAction = thisAV.fp.nextAction;
+
+		// pop the call stack
+		thisAV.retval = thisAV.recStack.pop();
+		if (thisAV.recStack.length > 0) {
+		    thisAV.fp = thisAV.recStack[thisAV.recStack.length - 1];
+		}
+		else {
+		    thisAV.fp = null;
+		}
             },
             logMessage: function(thisAV) {
-                return "Return brute force solution for this section";
+                return "Base case solution for this section: [" + 
+		    thisAV.retval.minv1.label + "," +
+		    thisAV.retval.minv2.label + "], d: " +
+		    thisAV.retval.minDist.toFixed(3);
             }
         },
         {
             label: "callRecursionLeft",
-            comment: "Call recursion on left half of points",
+            comment: "Recursive call on left half of points",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                              
-               
-                thisAV.oldRightStart = thisAV.startIndex + 
-                        ((thisAV.endIndex-thisAV.startIndex)/2);
-                thisAV.Stack.add("callRecursionRight");
-                thisAV.savedArray.add([Math.ceil(thisAV.startIndex +
-                    ((thisAV.endIndex-thisAV.startIndex)/2)) ,thisAV.endIndex]);
-                                  
-                thisAV.WtoE = thisAV.WtoE.slice(0,thisAV.WtoE.length);
 
-                thisAV.endIndex = Math.ceil(thisAV.startIndex + ((thisAV.endIndex-thisAV.startIndex)/2));
+		// set up call frame for the left half recursive call
+		let newfp = new HDXCPRecCallFrame(
+		    thisAV.fp.startIndex,
+		    Math.ceil(thisAV.fp.startIndex + 
+                              ((thisAV.fp.endIndex-thisAV.fp.startIndex)/2)),
+		    thisAV.fp.recLevel + 1,
+		    "callRecursionRight"
+		);
+		console.log("Pushing fp with callRecursionRight");
+		thisAV.recStack.push(newfp);
+		thisAV.fp = newfp;
 
-                thisAV.recLevel++;
-                thisAV.recLevelArr.add(thisAV.recLevel);
-                hdxAV.nextAction = "recursiveCallTop"
+		// continue at the start of the recursive function
+                hdxAV.nextAction = "recursiveCallTop";
             },
             logMessage: function(thisAV) {
-                return "Call recursion on left half of points";
+                return "Recursive call on left half of points";
             }
         },
         {
             label: "callRecursionRight",
-            comment: "Call recursion on right half of points",
+            comment: "Recursive call on right half of points",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                nums = thisAV.savedArray.remove();
-                thisAV.recLevel = thisAV.recLevelArr.remove();
-                thisAV.startIndex = nums[0];
-                thisAV.endIndex = nums[1];
+
+		// we have just returned from a recursive call on the left
+		// and results are in the call frame pointed at by
+		// thisAV.retval, save this in our own "leftResult"
+		thisAV.fp.leftResult = thisAV.retval;
+
+		// set up call frame for the right half recursive call
+		let newfp = new HDXCPRecCallFrame(
+		    Math.ceil(thisAV.fp.startIndex + 
+                              ((thisAV.fp.endIndex-thisAV.fp.startIndex)/2)) + 1,
+		    thisAV.fp.endIndex,
+		    thisAV.fp.recLevel + 1,
+		    "setMinOfHalves"
+		);
+		console.log("Pushing fp with setMinOfHalves");
+		thisAV.recStack.push(newfp);
+		thisAV.fp = newfp;
+		
 		thisAV.updateCurrentCall();
-                thisAV.Stack.add("setMinOfHalves");
-                hdxAV.nextAction = "recursiveCallTop"
+
+                hdxAV.nextAction = "recursiveCallTop";
             },
             logMessage: function(thisAV) {
-                return "Call recursion on right half of points";
+                return "Recursive call on right half of points";
             }
         },
         {
@@ -291,223 +299,181 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                
-                if (thisAV.finalDraw) {
-                    thisAV.skipExtra = true;                
-                    thisAV.startIndex = Math.ceil(thisAV.WtoE.length/2);
-                }
-                if (thisAV.WtoE.length - thisAV.startIndex <= 3) {
-                    thisAV.finalDraw = true;
-                }
-                for (let i = 0  ; i < thisAV.endIndex; i++) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                        visualSettings.discarded,
-                        40, false);
-                }
+		// we have just returned from a recursive call on the left
+		// and results are in the call frame pointed at by
+		// thisAV.retval, save this in our own "leftresult"
+		thisAV.fp.rightResult = thisAV.retval;
 
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[1]),
-                        visualSettings.discovered,
-                        40, false);
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[2]),
-                        visualSettings.discovered,
-                        40, false);
-                
-                thisAV.setMin = true;
-                
-                thisAV.currentLine = thisAV.drawLineMap(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex - 1])].lon,
-                waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex])].lon);
+		// which was smaller?
+		if (thisAV.fp.leftResult.minDist <
+		    thisAV.fp.rightResult.minDist) {
+		    thisAV.fp.minDist = thisAV.fp.leftResult.minDist;
+		    thisAV.fp.minv1 = thisAV.fp.leftResult.minv1;
+		    thisAV.fp.minv2 = thisAV.fp.leftResult.minv2;
+		}
+		else {
+		    thisAV.fp.minDist = thisAV.fp.rightResult.minDist;
+		    thisAV.fp.minv1 = thisAV.fp.rightResult.minv1;
+		    thisAV.fp.minv2 = thisAV.fp.rightResult.minv2;
+		}
+
+		// update winner on map and table
+		// TODO: draw connecting line?
+                updateAVControlEntry("closeLeader", "Closest: [" + 
+				     thisAV.fp.minv1.label + "," +
+				     thisAV.fp.minv2.label
+				     + "], d: " +
+				     thisAV.fp.minDist.toFixed(3));
+		
+                //thisAV.currentLine = thisAV.drawLineMap(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex - 1])].lon,
+                //waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex])].lon);
 
                 //DRAW YELLOW LINE
-                thisAV.lineStack.add(thisAV.currentLine);
+                //thisAV.lineStack.add(thisAV.currentLine);
 
-                // hdxAV.nextAction = "recursiveCallTop";
-                hdxAV.nextAction = "setMiddlePoint"
+                hdxAV.nextAction = "findOverlapCandidates";
             },
             logMessage: function(thisAV) {
                 return "Find smaller of minimum distances from the two halves";
             }
         },
-        {
-            label: "setMiddlePoint",
-            comment: "Find longitude of middle point",
-            code: function(thisAV) {
+	{
+	    label: "findOverlapCandidates",
+	    comment: "Find candidate overlap points",
+	    code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                thisAV.currentLine = thisAV.lineStack.remove();
-                thisAV.removeLineVisiting(thisAV.currentLine);
-                
-                thisAV.leftDot = 0;
-                thisAV.rightDot = 0;
-                thisAV.leftDot = ((parseFloat(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex - 1])].lon) +
-                parseFloat(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex])].lon))/2) 
-                + parseFloat(thisAV.minDist);
-                thisAV.currentLine = thisAV.drawLineMap(thisAV.leftDot,thisAV.leftDot);
-                thisAV.lineStack.add(thisAV.currentLine);
-                thisAV.rightDot = thisAV.leftDot - (2 * parseFloat(thisAV.minDist));
-                thisAV.currentLine = thisAV.drawLineMap(thisAV.rightDot,thisAV.rightDot);
-                thisAV.lineStack.add(thisAV.currentLine);
+		let midIndex = Math.ceil(
+		    thisAV.fp.startIndex + 
+			(thisAV.fp.endIndex-thisAV.fp.startIndex)/2);
+		let midLon = thisAV.WtoE[midIndex].lon;
+		let minLon = midLon - thisAV.fp.minDist;
+		let maxLon = midLon + thisAV.fp.minDist;
 
-                hdxAV.nextAction = "setPointsToCheck"
-            },
-            logMessage: function(thisAV) {
-                return "Get longitude of middle point that divides map in half";
-            }
-        },
-        {
-            label: "setPointsToCheck",
-            comment: "Find points closer to middle line than min distance",
-            code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
-
-                //sort by latitude
+		// build the list of points within the strip
+		// that will be considered as possible closest
+		// pairs that overlap the two halves
                 thisAV.NtoS = [];
-                for (i = 0; i < thisAV.WtoE.length-1; i++) {
-                    if ((parseFloat(thisAV.WtoE[i].lon) > thisAV.rightDot) &&
-			parseFloat(thisAV.WtoE[i].lon) < thisAV.leftDot) {
-                        thisAV.NtoS.push(thisAV.WtoE[i]);
-                    }
-                    updateAVControlEntry("totalChecked", "Total Points in Area - " +
-					 thisAV.NtoS.length +
-					 ", Total Points Checked - 0");
-                    thisAV.checkedCounter = 0;
-                    for (let i = 0; i < thisAV.NtoS.length - 1; i++) {
-                        updateMarkerAndTable(waypoints.indexOf(thisAV.NtoS[i]),
-                            visualSettings.visiting,
-                            40, false);
-                    }
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[1]),
-                        visualSettings.discovered,
-                        40, false);
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[2]),
-                        visualSettings.discovered,
-                        40, false);
-                }
-                hdxAV.nextAction = "squareMinOfHalves"
-            },
+		for (let i = thisAV.fp.startIndex;
+		     i < thisAV.fp.endIndex; i++) {
+		    if (thisAV.WtoE[i].lon > minLon &&
+			thisAV.WtoE[i].lon < maxLon) {
+			thisAV.NtoS.push(thisAV.WtoE[i]);
+		    }
+		}
+		// sort them by latitude
+                thisAV.NtoS.sort((a,b) => (a.lat > b.lat) ? -1: 1);
+
+		// TODO: highlight the candidate points
+
+		// set up the loop index for the for loop
+		thisAV.globali = 0;
+		
+                hdxAV.nextAction = "forLoopTop";
+	    },
             logMessage: function(thisAV) {
-                return "Find points closer to middle line than min distance";
+                return "Find candidate overlap points";
             }
-        },
-        {
-            label: "squareMinOfHalves",
-            comment: "Square min of halves",
-            code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
-                thisAV.minSq = thisAV.minDist[0] * thisAV.minDist[0];
-                hdxAV.nextAction = "forLoopTop"
-                thisAV.globali = 0;
-            },
-            logMessage: function(thisAV) {
-                return "Square min found from halves";
-            }
-        },
+	},
         {
             label: "forLoopTop",
-            comment: "Loop through vertices in closeToCenter",
+            comment: "Next candidate point in the overlap region",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                thisAV.NtoS.sort((a,b) => (a.lat > b.lat) ? -1: 1);
+
+		// TODO: highlight current point at globali?
                 if (thisAV.globali <= thisAV.NtoS.length - 2) {
-                    hdxAV.nextAction = "updateWhileLoopIndex"
-                    if (thisAV.bounds != null) {
-			thisAV.drawRec.remove();
-			thisAV.bounds = null; 
-                    }
-                    thisAV.bounds = [[thisAV.NtoS[thisAV.globali].lat,thisAV.leftDot],
-				     [thisAV.NtoS[thisAV.globali].lat - thisAV.minDist[0],thisAV.rightDot]]
-                    
-                    thisAV.drawRec = L.rectangle(thisAV.bounds, {color: "red", weight: 5}).addTo(map);
+                    hdxAV.nextAction = "updateWhileLoopIndex";
 		}
                 else {
                     hdxAV.nextAction = "return";
                 }
             },
             logMessage: function(thisAV) {
-                return "Loop through vertices in closeToCenter";
+                return "Next candidate point in the overlap region";
             }
         },
         {
             label: "updateWhileLoopIndex",
-            comment: "Set index for while loop",
+            comment: "Set initial index for while loop",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+
                 thisAV.globalk = thisAV.globali + 1;
-                thisAV.currentLine = null;
-                hdxAV.nextAction = "whileLoopTop"
+
+                hdxAV.nextAction = "whileLoopTop";
             },
             logMessage: function(thisAV) {
-                return "Set index for while loop";
+                return "Set initial index for while loop";
             }
         },
         {
             label: "whileLoopTop",
-            comment: "Loop through points to check if closer than min distance",
+            comment: "Check while loop stopping conditions",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                //add checking for too far
-                if (thisAV.currentLine != null) {
-                    thisAV.removeLineVisiting(thisAV.currentLine);
-                    thisAV.currentLine = null;
-                }
-                thisAV.checkedCounter++;
-                updateAVControlEntry("totalChecked", "Points in Area - " +
-				     thisAV.NtoS.length + ", Points Checked - " +
-				     thisAV.checkedCounter);
 
-                if (thisAV.globalk < thisAV.NtoS.length-1 && 
-                    (Math.pow(thisAV.NtoS[thisAV.globalk].lat -
-			      thisAV.NtoS[thisAV.globali].lat, 2) < thisAV.minSq)) {
-		    hdxAV.nextAction = "updateMinPairFound"
-		    thisAV.currentLine = thisAV.drawLineVisiting(thisAV.NtoS[thisAV.globali], thisAV.NtoS[thisAV.globalk]);
-                }
-                else {
-                    hdxAV.nextAction = "forLoopTop"
-                    thisAV.globali += 1;
-                }
+		// check while loop conditions
+		if (thisAV.globalK == thisAV.NtoS.length) {
+		    // we are beyond the last k for this i
+		    // so increment i and go back to the top
+		    // of the for loop
+		    thisAV.globali += 1;
+		    hdxAV.nextAction = "forLoopTop";
+		}
+		else {
+		    // save these points in the call frame to simplify
+		    // code here and in subsequent actions
+		    thisAV.fp.vi = thisAV.NtoS[thisAV.globali];
+		    thisAV.fp.vk = thisAV.NtoS[thisAV.globalk];
+		    if ((thisAV.fp.vk.lat -thisAV.fp.vi.lat)
+			>= thisAV.fp.minDist) {
+			// large change in latitude, no need to keep checking
+			thisAV.globali += 1;
+			hdxAV.nextAction = "forLoopTop";
+		    }
+		    else {
+			// we do need to check this pair
+			hdxAV.nextAction = "checkNextPair";
+		    }
+		}
             },
             logMessage: function(thisAV) {
-                return "Loop through points to check if closer than min distance";
+                return "Check while loop stopping conditions";
+            }
+	},
+        {
+            label: "checkNextPair",
+            comment: "Check if this pair in overlap is a new closest pair",
+            code: function(thisAV) {
+                highlightPseudocode(this.label, visualSettings.visiting);
+
+		let newdsq = Math.pow(thisAV.fp.vi.lat - thisAV.fp.vk.lat, 2) +
+		    Math.pow(thisAV.fp.vi.lon - thisAV.fp.vk.lon, 2);
+                if (newdsq < thisAV.fp.minDist) {
+		    hdxAV.nextAction = "updateMinPairFound";
+		}
+		else {
+                    hdxAV.nextAction = "incrementWhileLoopIndex";
+		}
+            },
+            logMessage: function(thisAV) {
+                return "Check if this pair in overlap is a new closest pair";
             }
         },
         {
             label: "updateMinPairFound",
-            comment: "Update new minimum distance found",
+            comment: "Save new minimum distance found",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                if ((Math.pow(thisAV.NtoS[thisAV.globali].lat -
-			      thisAV.NtoS[thisAV.globalk].lat, 2) +
-		     Math.pow(thisAV.NtoS[thisAV.globali].lon -
-			      thisAV.NtoS[thisAV.globalk].lon, 2)) < thisAV.minSq ) {
-                    thisAV.minSq = Math.pow(thisAV.NtoS[thisAV.globali].lat -
-					    thisAV.NtoS[thisAV.globalk].lat, 2) +
-			Math.pow(thisAV.NtoS[thisAV.globali].lon -
-				 thisAV.NtoS[thisAV.globalk].lon, 2); 
-                    thisAV.minDist = [Math.sqrt(thisAV.minSq),
-				      thisAV.NtoS[thisAV.globali],
-				      thisAV.NtoS[thisAV.globalk] ];
-                    updateAVControlEntry("closeLeader", "Closest: [" + 
-					 thisAV.minDist[1].label + "," +
-					 thisAV.minDist[2].label
-					 + "], d: " +
-					 length_in_current_units(thisAV.minDist[0]));
-                    for (let i = 0; i < thisAV.WtoE.length; i++) {
-                        updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                            visualSettings.discarded,
-                            40, false);
-                    }
-                    for (let i = 0; i < thisAV.NtoS.length - 1; i++) {
-                        updateMarkerAndTable(waypoints.indexOf(thisAV.NtoS[i]),
-					     visualSettings.visiting,
-					     40, false);
-                    }
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[1]),
-					 visualSettings.discovered,
-					 40, false);
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[2]),
-					 visualSettings.discovered,
-					 40, false);
-                }
-                hdxAV.nextAction = "incrementWhileLoopIndex"
+		thisAV.fp.minDist = Math.sqrt(
+		    Math.pow(thisAV.fp.vi.lat - thisAV.fp.vk.lat, 2) +
+			Math.pow(thisAV.fp.vi.lon - thisAV.fp.vk.lon, 2));
+		thisAV.fp.minv1 = thisAV.fp.vi;
+		thisAV.fp.minv2 = thisAV.fp.vk;
+
+                hdxAV.nextAction = "incrementWhileLoopIndex";
             },
             logMessage: function(thisAV) {
                 return "Update new minimum distance found between points";
@@ -519,7 +485,7 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.globalk += 1;
-                hdxAV.nextAction = "whileLoopTop"
+                hdxAV.nextAction = "whileLoopTop";
             },
             logMessage: function(thisAV) {
                 return "Increment while loop index";
@@ -527,43 +493,27 @@ var hdxClosestPairsRecAV = {
         },
         {
             label: "return",
-            comment: "Return min distance between points",
+            comment: "Return closest pair for this recursive call",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                thisAV.currentLine = thisAV.lineStack.remove();
-                thisAV.removeLineVisiting(thisAV.currentLine);
-                thisAV.currentLine = thisAV.lineStack.remove();
-                thisAV.removeLineVisiting(thisAV.currentLine);
-                updateAVControlEntry("savedCheck", "Total Checks Saved: " +
-				     (thisAV.NtoS.length*thisAV.NtoS.length) +
-				     "(Brute Force) - " + thisAV.checkedCounter + " = " +
-				     ((thisAV.NtoS.length*thisAV.NtoS.length) -
-				      thisAV.checkedCounter));
-                for (let i = 0; i < thisAV.WtoE.length; i++) {
-                    updateMarkerAndTable(waypoints.indexOf(thisAV.WtoE[i]),
-                        visualSettings.discarded,
-                        40, false);
-                }
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[1]),
-				     visualSettings.discovered,
-				     40, false);
-                updateMarkerAndTable(waypoints.indexOf(thisAV.minDist[2]),
-				     visualSettings.discovered,
-				     40, false);
+
+		// TODO: update colors
+
+		// prep to go back to where this recursive call returns
+                hdxAV.nextAction = thisAV.fp.nextAction;
+
+		// pop the call stack
+		thisAV.retval = thisAV.recStack.pop();
+		if (thisAV.recStack.length > 0) {
+		    thisAV.fp = thisAV.recStack[thisAV.recStack.length - 1];
+		}
+		else {
+		    thisAV.fp = null;
+		}
 		
-                if (thisAV.bounds != null) {
-                    thisAV.drawRec.remove();
-                    thisAV.bounds = null; 
-                 }
-                if (thisAV.Stack.length == 0 || thisAV.skipExtra) {
-                    hdxAV.nextAction = "cleanup";
-                }
-                else {
-                    hdxAV.nextAction = thisAV.Stack.remove();
-                }
             },
             logMessage: function(thisAV) {
-                return "Return minimum distance between closest pairs";
+                return "Return closest pair for this recursive call";
             }
         },
         {
@@ -652,12 +602,22 @@ var hdxClosestPairsRecAV = {
 
     updateCurrentCall() {
 	updateAVControlEntry("currentCall",
-			     "Recursive Level " + this.recLevel +
-			     ", " + (this.endIndex - this.startIndex + 1) +
-			     " points, range: [" + this.startIndex + "," +
-			     this.endIndex + "]");
+			     "Recursive Level " + this.fp.recLevel + ", " +
+			     (this.fp.endIndex - this.fp.startIndex + 1) +
+			     " points, range: [" + this.fp.startIndex + "," +
+			     this.fp.endIndex + "]");
     },
-    
+
+    // update the colors of waypoints in the given range of the WtoE array,
+    // based on the given visualSettings
+    colorWtoERange(start, end, vs) {
+
+        for (let i = start; i < end; i++) {
+            updateMarkerAndTable(waypoints.indexOf(this.WtoE[i]),
+				 vs, 40, false);
+        }
+    },
+
     // required prepToStart function
     // initialize a vertex closest pairs divide and conquer search
     prepToStart() {
@@ -676,26 +636,28 @@ var hdxClosestPairsRecAV = {
         this.code += pcEntry(0,'CPRec(WtoE)',"recursiveCallTop");
 	let recLimitCode = "";
 	if (this.maxRec > 0) {
-	    recLimitCode = " or recDepth > " + this.maxRec;
+	    recLimitCode = " or recDepth &gt; " + this.maxRec;
 	}
-        this.code += pcEntry(1,'n &larr; WtoE.length<br />&nbsp;&nbsp;if (n <= ' +
-			     this.minPoints + recLimitCode + ')',
+        this.code += pcEntry(1,['n &larr; WtoE.length',
+				'if (n &leq; ' + this.minPoints +
+				recLimitCode + ')'],
 			     "checkBaseCase");
-        this.code += pcEntry(2,'return(brute force min distance)',
+        this.code += pcEntry(2,'return(brute force cp)',
 			     "returnBruteForceSolution");
         this.code += pcEntry(1,'else',"");
         this.code += pcEntry(2,'cp<sub>left</sub> &larr; CPRec(WtoE[0, (n/2)-1])',"callRecursionLeft");
         this.code += pcEntry(2,'cp<sub>right</sub> &larr; CPRec(WtoE[n/2, n-1])',"callRecursionRight");
-        this.code += pcEntry(2,'cp<sub>lr</sub> &larr; min_d(cp<sub>left</sub>, cp<sub>right</sub>)',"setMinOfHalves");
-        this.code += pcEntry(2,'mid &larr; WtoE[n/2].lon',"setMiddlePoint");
-        this.code += pcEntry(2,'nearMid[] &larr; all pts with |lon − mid| < cp<sub>lr</sub>',"setPointsToCheck");
-        this.code += pcEntry(2,'cpDistSq &larr; cp<sub>lr</sub>.d<sup>2</sup>',"squareMinOfHalves");
+        this.code += pcEntry(2,'cp &larr; min_d(cp<sub>left</sub>, cp<sub>right</sub>)',"setMinOfHalves");
+        this.code += pcEntry(2,'mid &larr; WtoE[n/2].lon<br />&nbsp;&nbsp;&nbsp;&nbsp;nearMid[] &larr; all pts with |lon − mid| < cp',"findOverlapCandidates");
         this.code += pcEntry(2,'for i &larr; 0 to nearMid.length - 2 do',"forLoopTop");
         this.code += pcEntry(3,'k &larr; i + 1',"updateWhileLoopIndex");
-        this.code += pcEntry(3,'while (k <= nearMid.length - 1 and (nearMid[k].lat - nearMid[i].lat)<sup>2</sup> < cpDistSq)',"whileLoopTop");
-        this.code += pcEntry(4,'cpDistSq &larr; min(distSq(nearMid[k],nearMid[i], cpDistSq)',"updateMinPairFound");
+        this.code += pcEntry(3,['while (k &leq; nearMid.length - 1 and',
+				'(nearMid[k].lat - nearMid[i].lat) &lt; cp)'],
+			     "whileLoopTop");
+        this.code += pcEntry(4,['d &larr; dist(nearMid[i],nearMid[k])','if d &lt; cp'],"checkNextPair");
+        this.code += pcEntry(5,'cp &larr; d',"updateMinPairFound");
         this.code += pcEntry(4,'k &larr; k + 1',"incrementWhileLoopIndex");
-        this.code += pcEntry(2,'return sqrt(cpDistSq)',"return");
+        this.code += pcEntry(2,'return cp',"return");
     },
 
     // set up UI entries for closest pairs divide and conquer
@@ -722,7 +684,7 @@ var hdxClosestPairsRecAV = {
 
     // remove UI modifications made for vertex closest pairs
     cleanupUI() {
-        waypoints = this.originalWaypoints;
+        //waypoints = this.originalWaypoints;
         //updateMap();
 
 	// clean up any polylines
