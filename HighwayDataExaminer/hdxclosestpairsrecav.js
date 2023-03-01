@@ -115,13 +115,8 @@ var hdxClosestPairsRecAV = {
 		console.log("Pushing fp with cleanup");
 		thisAV.recStack.push(thisAV.fp);
 
-                thisAV.closeToCenter = [];
-                thisAV.minHalvesSquared = 0;
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
-                thisAV.finalDraw = false;
-                thisAV.oldRightStart = waypoints.length;
-                thisAV.bounds = null;
 
                 // find latitudes of the northernmost and southernmost points
                 thisAV.southBound = waypoints[0].lat;
@@ -546,6 +541,9 @@ var hdxClosestPairsRecAV = {
 
 		// TODO: update colors
 
+		// remove the recursive subproblem dividing line from the map
+		thisAV.fp.recLine.remove();
+		
 		// prep to go back to where this recursive call returns
                 hdxAV.nextAction = thisAV.fp.nextAction;
 
