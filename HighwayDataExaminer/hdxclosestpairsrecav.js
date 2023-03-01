@@ -49,6 +49,9 @@ var hdxClosestPairsRecAV = {
     WtoE: null,
     // vertices sorted by latitude
     NtoS: [],
+
+    // count the number of distance comparisons
+    dComps: 0,
     
     // used for shading
     northBound: 0,
@@ -71,7 +74,7 @@ var hdxClosestPairsRecAV = {
             value: 0
         },
         recursiveLeft: {
-            color: "DarkGreen",
+            color: "BlueGreen",
             textColor: "white",
             scale: 6,
             name: "recursiveLeft",
@@ -82,6 +85,13 @@ var hdxClosestPairsRecAV = {
             textColor: "white",
             scale: 6,
             name: "recursiveRight",
+            value: 0
+        },
+        dComps: {
+            color: "purple",
+            textColor: "white",
+            scale: 6,
+            name: "dComps",
             value: 0
         }
     },
@@ -102,8 +112,8 @@ var hdxClosestPairsRecAV = {
 		thisAV.WtoE = sorter.sortWaypoints();
 		
                 updateAVControlEntry("currentCall", "No calls yet");
-                updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
-                updateAVControlEntry("totalChecked", "0");
+                //updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
+                updateAVControlEntry("dComps", "No distance comparisons yet");
                 thisAV.lineCount = 0;
 
 		thisAV.fp = new HDXCPRecCallFrame(
@@ -218,6 +228,7 @@ var hdxClosestPairsRecAV = {
 			let minDistTest = convertToCurrentUnits(
 			    distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
 			
+			thisAV.dComps++;
                         if (minDistTest < thisAV.fp.minDist) {
                             thisAV.fp.minDist = minDistTest;
 			    thisAV.fp.minv1 = thisAV.WtoE[i];
@@ -225,6 +236,8 @@ var hdxClosestPairsRecAV = {
                         }
                     }
 		}
+		updateAVControlEntry("dComps",
+				     "Distance comparisons: " + thisAV.dComps);
 
 		// update range to discarded status
 		thisAV.colorWtoERange(thisAV.fp.startIndex,
@@ -240,11 +253,11 @@ var hdxClosestPairsRecAV = {
 
 		// TODO: draw connecting line?
 
-                updateAVControlEntry("closeLeader", "Closest: [" + 
-				     thisAV.fp.minv1.label + "," +
-				     thisAV.fp.minv2.label
-				     + "], d: " +
-				     thisAV.fp.minDist.toFixed(3));
+                //updateAVControlEntry("closeLeader", "Closest: [" + 
+	//			     thisAV.fp.minv1.label + "," +
+	//			     thisAV.fp.minv2.label
+	//			     + "], d: " +
+	//			     thisAV.fp.minDist.toFixed(3));
 
 		// prep to go back to where this recursive call returns
                 hdxAV.nextAction = thisAV.fp.nextAction;
@@ -355,6 +368,10 @@ var hdxClosestPairsRecAV = {
 		    thisAV.fp.minv1 = thisAV.fp.rightResult.minv1;
 		    thisAV.fp.minv2 = thisAV.fp.rightResult.minv2;
 		}
+
+		thisAV.dComps++;
+		updateAVControlEntry("dComps",
+				     "Distance comparisons: " + thisAV.dComps);
 
 		// update winner on map and table
 		// TODO: draw connecting line?
@@ -759,9 +776,8 @@ var hdxClosestPairsRecAV = {
 	    (waypoints.length - 1)/2 + '" value="0"><br />';
         hdxAV.algOptions.innerHTML = newAO;
         addEntryToAVControlPanel("currentCall", this.visualSettings.recursiveCall);
-        addEntryToAVControlPanel("closeLeader", visualSettings.leader);
-        addEntryToAVControlPanel("totalChecked", visualSettings.visiting);
-        addEntryToAVControlPanel("savedCheck", visualSettings.undiscovered);
+        //addEntryToAVControlPanel("closeLeader", visualSettings.leader);
+        addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
     },
 
     // remove UI modifications made for vertex closest pairs
