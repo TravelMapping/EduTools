@@ -69,6 +69,20 @@ var hdxClosestPairsRecAV = {
             scale: 6,
             name: "recursiveCall",
             value: 0
+        },
+        recursiveLeft: {
+            color: "DarkGreen",
+            textColor: "white",
+            scale: 6,
+            name: "recursiveLeft",
+            value: 0
+        },
+        recursiveRight: {
+            color: "YellowGreen",
+            textColor: "white",
+            scale: 6,
+            name: "recursiveRight",
+            value: 0
         }
     },
     
@@ -94,7 +108,7 @@ var hdxClosestPairsRecAV = {
 
 		thisAV.fp = new HDXCPRecCallFrame(
 		    0, // start index
-		    waypoints.length, // end index
+		    waypoints.length - 1, // end index
 		    1, // level 1 of recursion
 		    "cleanup" // action to continue after call complete3
 		);
@@ -132,10 +146,10 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label,
 				    thisAV.visualSettings.recursiveCall);
 
-		thisAV.updateCurrentCall();
+		thisAV.updateCallStack();
 		thisAV.colorWtoERange(thisAV.fp.startIndex,
 				      thisAV.fp.endIndex,
-				      visualSettings.visiting);
+				      thisAV.visualSettings.recursiveCall);
 
                 hdxAV.nextAction = "checkBaseCase";
             },
@@ -162,6 +176,24 @@ var hdxClosestPairsRecAV = {
                     hdxAV.nextAction = "returnBruteForceSolution";
                 }
                 else {
+		    // we will do recursion, find midpoint index
+		    thisAV.fp.firstRight =
+			Math.ceil(thisAV.fp.startIndex + 
+				  ((thisAV.fp.endIndex-
+				    thisAV.fp.startIndex)/2));
+		    // draw dividing line for this recursive call
+		    let lineCoords = [];
+		    let lineLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
+		    lineCoords[0] = [88, lineLon];
+		    lineCoords[1] = [-88, lineLon];
+		    thisAV.fp.recLine = L.polyline(lineCoords, {
+			color: "green",
+			opacity: 0.5,
+			weight: 3
+		    });
+		    thisAV.fp.recLine.addTo(map);
+
+		    // go to left recursion
                     hdxAV.nextAction = "callRecursionLeft";
                 }
             },
@@ -185,7 +217,7 @@ var hdxClosestPairsRecAV = {
 		thisAV.fp.minDist = Number.MAX_VALUE;
                 for (let i = thisAV.fp.startIndex;
 		     i <= thisAV.fp.endIndex - 1; i++) {
-                    for (let j = i + 1; j < thisAV.fp.endIndex; j++) {
+                    for (let j = i + 1; j <= thisAV.fp.endIndex; j++) {
 			let v1 = thisAV.WtoE[i];
 			let v2 = thisAV.WtoE[j];
 			let minDistTest = convertToCurrentUnits(
@@ -203,7 +235,8 @@ var hdxClosestPairsRecAV = {
 		thisAV.colorWtoERange(thisAV.fp.startIndex,
 				      thisAV.fp.endIndex,
 				      visualSettings.discarded);
-		
+
+		console.log("index of minv1 = " + waypoints.indexOf(thisAV.fp.minv1) + ", index of minv2 = " + waypoints.indexOf(thisAV.fp.minv2));
 		// update winner on map and table
 		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv1),
 				     visualSettings.leader, 40, false);
@@ -241,15 +274,18 @@ var hdxClosestPairsRecAV = {
             label: "callRecursionLeft",
             comment: "Recursive call on left half of points",
             code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
+                highlightPseudocode(this.label,
+				    thisAV.visualSettings.recursiveLeft);
 
+		// color for the left half
+		thisAV.colorWtoERange(thisAV.fp.startIndex,
+				      thisAV.fp.firstRight - 1,
+				      thisAV.visualSettings.recursiveLeft);
+		
 		// set up call frame for the left half recursive call
 		let newfp = new HDXCPRecCallFrame(
-		    thisAV.fp.startIndex,
-		    Math.ceil(thisAV.fp.startIndex + 
-                              ((thisAV.fp.endIndex-thisAV.fp.startIndex)/2)),
-		    thisAV.fp.recLevel + 1,
-		    "callRecursionRight"
+		    thisAV.fp.startIndex, thisAV.fp.firstRight - 1,
+		    thisAV.fp.recLevel + 1, "callRecursionRight"
 		);
 		console.log("Pushing fp with callRecursionRight");
 		thisAV.recStack.push(newfp);
@@ -266,26 +302,33 @@ var hdxClosestPairsRecAV = {
             label: "callRecursionRight",
             comment: "Recursive call on right half of points",
             code: function(thisAV) {
-                highlightPseudocode(this.label, visualSettings.visiting);
+                highlightPseudocode(this.label,
+				    thisAV.visualSettings.recursiveRight);
 
 		// we have just returned from a recursive call on the left
 		// and results are in the call frame pointed at by
 		// thisAV.retval, save this in our own "leftResult"
 		thisAV.fp.leftResult = thisAV.retval;
 
+		let rightStart = Math.ceil(thisAV.fp.startIndex + 
+					((thisAV.fp.endIndex-
+					  thisAV.fp.startIndex)/2)) + 1;
+		let rightEnd = thisAV.fp.endIndex;
+		
+		// color for the right half
+		thisAV.colorWtoERange(thisAV.fp.firstRight, thisAV.fp.endIndex,
+				      thisAV.visualSettings.recursiveRight);
+		
 		// set up call frame for the right half recursive call
 		let newfp = new HDXCPRecCallFrame(
-		    Math.ceil(thisAV.fp.startIndex + 
-                              ((thisAV.fp.endIndex-thisAV.fp.startIndex)/2)) + 1,
-		    thisAV.fp.endIndex,
-		    thisAV.fp.recLevel + 1,
-		    "setMinOfHalves"
+		    thisAV.fp.firstRight, thisAV.fp.endIndex,
+		    thisAV.fp.recLevel + 1, "setMinOfHalves"
 		);
 		console.log("Pushing fp with setMinOfHalves");
 		thisAV.recStack.push(newfp);
 		thisAV.fp = newfp;
 		
-		thisAV.updateCurrentCall();
+		thisAV.updateCallStack();
 
                 hdxAV.nextAction = "recursiveCallTop";
             },
@@ -528,7 +571,7 @@ var hdxClosestPairsRecAV = {
             }
         }
     ],
-
+    
     // function to draw the polyline connecting the current 
     // candidate pair of vertices
     drawLineVisiting(v1, v2) {
@@ -608,11 +651,33 @@ var hdxClosestPairsRecAV = {
 			     this.fp.endIndex + "]");
     },
 
+    // update description of the call stack in the currentCall AVCP entry
+    updateCallStack() {
+	let t = "";
+	for (let i = 0; i < this.recStack.length; i++) {
+	    let f = this.recStack[i];
+	    let entry = "Level " + f.recLevel;
+	    if (i == 0) {
+		entry += " (initial)";
+	    }
+	    else if (this.recStack[i-1].hasOwnProperty("leftResult")) {
+		entry += " (right)";
+	    }
+	    else {
+		entry += " (left)";
+	    }
+	    entry += " " + (f.endIndex - f.startIndex + 1) +
+		" points, range: [" + f.startIndex + "," + f.endIndex + "]";
+	    t = entry + "<br />" + t;
+	}
+	updateAVControlEntry("currentCall", t);
+    },
+
     // update the colors of waypoints in the given range of the WtoE array,
     // based on the given visualSettings
     colorWtoERange(start, end, vs) {
 
-        for (let i = start; i < end; i++) {
+        for (let i = start; i <= end; i++) {
             updateMarkerAndTable(waypoints.indexOf(this.WtoE[i]),
 				 vs, 40, false);
         }
