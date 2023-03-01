@@ -251,7 +251,14 @@ var hdxClosestPairsRecAV = {
 		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv2),
 				     visualSettings.leader, 40, false);
 
-		// TODO: draw connecting line?
+		// draw connecting line
+		thisAV.fp.minLine = L.polyline(
+		    [thisAV.fp.minv1, thisAV.fp.minv2], {
+			color: visualSettings.leader.color,
+			opacity: 0.6,
+			weight: 4
+		    });
+		thisAV.fp.minLine.addTo(map);
 
                 //updateAVControlEntry("closeLeader", "Closest: [" + 
 	//			     thisAV.fp.minv1.label + "," +
@@ -362,11 +369,29 @@ var hdxClosestPairsRecAV = {
 		    thisAV.fp.minDist = thisAV.fp.leftResult.minDist;
 		    thisAV.fp.minv1 = thisAV.fp.leftResult.minv1;
 		    thisAV.fp.minv2 = thisAV.fp.leftResult.minv2;
+		    // save closer min, remove other
+		    thisAV.fp.minLine = thisAV.fp.leftResult.minLine;
+		    thisAV.fp.rightResult.minLine.remove();
+		    updateMarkerAndTable(
+			waypoints.indexOf(thisAV.fp.rightResult.minv1),
+			visualSettings.discarded, 40, false);
+		    updateMarkerAndTable(
+			waypoints.indexOf(thisAV.fp.rightResult.minv2),
+			visualSettings.discarded, 40, false);
 		}
 		else {
 		    thisAV.fp.minDist = thisAV.fp.rightResult.minDist;
 		    thisAV.fp.minv1 = thisAV.fp.rightResult.minv1;
 		    thisAV.fp.minv2 = thisAV.fp.rightResult.minv2;
+		    // save closer min, remove other
+		    thisAV.fp.minLine = thisAV.fp.rightResult.minLine;
+		    thisAV.fp.leftResult.minLine.remove();
+		    updateMarkerAndTable(
+			waypoints.indexOf(thisAV.fp.leftResult.minv1),
+			visualSettings.discarded, 40, false);
+		    updateMarkerAndTable(
+			waypoints.indexOf(thisAV.fp.leftResult.minv2),
+			visualSettings.discarded, 40, false);
 		}
 
 		thisAV.dComps++;
