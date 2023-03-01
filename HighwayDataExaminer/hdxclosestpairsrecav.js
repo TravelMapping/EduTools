@@ -262,6 +262,7 @@ var hdxClosestPairsRecAV = {
 		else {
 		    thisAV.fp = null;
 		}
+		thisAV.updateCallStack();
             },
             logMessage: function(thisAV) {
                 return "Base case solution for this section: [" + 
@@ -362,11 +363,14 @@ var hdxClosestPairsRecAV = {
 
 		// update winner on map and table
 		// TODO: draw connecting line?
-                updateAVControlEntry("closeLeader", "Closest: [" + 
-				     thisAV.fp.minv1.label + "," +
-				     thisAV.fp.minv2.label
-				     + "], d: " +
-				     thisAV.fp.minDist.toFixed(3));
+
+		thisAV.updateCallStack();
+
+                //updateAVControlEntry("closeLeader", "Closest: [" + 
+		//		     thisAV.fp.minv1.label + "," +
+		//		     thisAV.fp.minv2.label
+		//		     + "], d: " +
+		//		     thisAV.fp.minDist.toFixed(3));
 		
                 //thisAV.currentLine = thisAV.drawLineMap(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex - 1])].lon,
                 //waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex])].lon);
@@ -668,6 +672,21 @@ var hdxClosestPairsRecAV = {
 	    }
 	    entry += " " + (f.endIndex - f.startIndex + 1) +
 		" points, range: [" + f.startIndex + "," + f.endIndex + "]";
+
+	    if (f.hasOwnProperty("leftResult")) {
+		entry += "<br />&nbsp;&nbsp;Left Closest: [" + 
+		    f.leftResult.minv1.label + "," +
+		    f.leftResult.minv2.label + "], d: " +
+		    f.leftResult.minDist.toFixed(3);
+	    }
+	    
+	    if (f.hasOwnProperty("rightResult")) {
+		entry += "<br />&nbsp;&nbsp;Right Closest: [" + 
+		    f.rightResult.minv1.label + "," +
+		    f.rightResult.minv2.label + "], d: " +
+		    f.rightResult.minDist.toFixed(3);
+	    }
+	    
 	    t = entry + "<br />" + t;
 	}
 	updateAVControlEntry("currentCall", t);
