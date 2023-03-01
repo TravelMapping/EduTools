@@ -137,7 +137,7 @@ var hdxClosestPairsRecAV = {
                     thisAV.northBound = Math.max(waypoints[i].lat,
 						 thisAV.northBound);
                 }
-
+		
                 hdxAV.nextAction = "recursiveCallTop";
             },
             logMessage: function(thisAV) {
@@ -259,12 +259,6 @@ var hdxClosestPairsRecAV = {
 			weight: 4
 		    });
 		thisAV.fp.minLine.addTo(map);
-
-                //updateAVControlEntry("closeLeader", "Closest: [" + 
-	//			     thisAV.fp.minv1.label + "," +
-	//			     thisAV.fp.minv2.label
-	//			     + "], d: " +
-	//			     thisAV.fp.minDist.toFixed(3));
 
 		// prep to go back to where this recursive call returns
                 hdxAV.nextAction = thisAV.fp.nextAction;
@@ -394,31 +388,20 @@ var hdxClosestPairsRecAV = {
 			visualSettings.discarded, 40, false);
 		}
 
+		// count this distance comparison
 		thisAV.dComps++;
 		updateAVControlEntry("dComps",
 				     "Distance comparisons: " + thisAV.dComps);
 
-		// update winner on map and table
-		// TODO: draw connecting line?
-
 		thisAV.updateCallStack();
-
-                //updateAVControlEntry("closeLeader", "Closest: [" + 
-		//		     thisAV.fp.minv1.label + "," +
-		//		     thisAV.fp.minv2.label
-		//		     + "], d: " +
-		//		     thisAV.fp.minDist.toFixed(3));
-		
-                //thisAV.currentLine = thisAV.drawLineMap(waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex - 1])].lon,
-                //waypoints[waypoints.indexOf(thisAV.WtoE[thisAV.startIndex])].lon);
-
-                //DRAW YELLOW LINE
-                //thisAV.lineStack.add(thisAV.currentLine);
 
                 hdxAV.nextAction = "findOverlapCandidates";
             },
             logMessage: function(thisAV) {
-                return "Find smaller of minimum distances from the two halves";
+                return "Closer pair of two subproblems: [" + 
+		    thisAV.fp.minv1.label + "," +
+		    thisAV.fp.minv2.label + "], d: " +
+		    thisAV.fp.minDist.toFixed(3);
             }
         },
 	{
@@ -427,12 +410,17 @@ var hdxClosestPairsRecAV = {
 	    code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		let midIndex = Math.ceil(
-		    thisAV.fp.startIndex + 
-			(thisAV.fp.endIndex-thisAV.fp.startIndex)/2);
-		let midLon = thisAV.WtoE[midIndex].lon;
-		let minLon = midLon - thisAV.fp.minDist;
-		let maxLon = midLon + thisAV.fp.minDist;
+		let midLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
+		// note: degrees are not miles, so in order to find
+		// (actually approximate based on the latitude of
+		// the firstRight point) how much longitude west and
+		// east of this for which points should be considered
+		let degRange =
+		    changeInLongitude(thisAV.WtoE[thisAV.fp.firstRight].lon,
+				      thisAV.fp.minDist);
+		let minLon = midLon - degRange;
+		let maxLon = midLon + degRange;
+		console.log("midLon: " + midLon + ", minLon: " + minLon + ", maxLon: " + maxLon);
 
 		// build the list of points within the strip
 		// that will be considered as possible closest
@@ -456,7 +444,8 @@ var hdxClosestPairsRecAV = {
                 hdxAV.nextAction = "forLoopTop";
 	    },
             logMessage: function(thisAV) {
-                return "Find candidate overlap points";
+                return "Found " + thisAV.NtoS.length +
+		    " candidate overlap points";
             }
 	},
         {
@@ -713,18 +702,28 @@ var hdxClosestPairsRecAV = {
 	    entry += " " + (f.endIndex - f.startIndex + 1) +
 		" points, range: [" + f.startIndex + "," + f.endIndex + "]";
 
-	    if (f.hasOwnProperty("leftResult")) {
-		entry += "<br />&nbsp;&nbsp;Left Closest: [" + 
-		    f.leftResult.minv1.label + "," +
-		    f.leftResult.minv2.label + "], d: " +
-		    f.leftResult.minDist.toFixed(3);
+	    // if we have a min so far, use it
+	    if (f.hasOwnProperty("minv1")) {
+		entry += "<br />&nbsp;&nbsp;Closest: [" + 
+		    f.minv1.label + "," +
+		    f.minv2.label + "], d: " +
+		    f.minDist.toFixed(3);
 	    }
-	    
-	    if (f.hasOwnProperty("rightResult")) {
-		entry += "<br />&nbsp;&nbsp;Right Closest: [" + 
-		    f.rightResult.minv1.label + "," +
-		    f.rightResult.minv2.label + "], d: " +
-		    f.rightResult.minDist.toFixed(3);
+	    else {
+		// maybe we have subproblem results
+		if (f.hasOwnProperty("leftResult")) {
+		    entry += "<br />&nbsp;&nbsp;Left Closest: [" + 
+			f.leftResult.minv1.label + "," +
+			f.leftResult.minv2.label + "], d: " +
+			f.leftResult.minDist.toFixed(3);
+		}
+		
+		if (f.hasOwnProperty("rightResult")) {
+		    entry += "<br />&nbsp;&nbsp;Right Closest: [" + 
+			f.rightResult.minv1.label + "," +
+			f.rightResult.minv2.label + "], d: " +
+			f.rightResult.minDist.toFixed(3);
+		}
 	    }
 	    
 	    t = entry + "<br />" + t;

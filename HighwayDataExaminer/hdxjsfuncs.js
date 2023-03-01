@@ -1150,3 +1150,16 @@ function squaredDistance(o1, o2) {
     return dx * dx + dy * dy;
 }
 
+// these are based on some code by John D. Cook at
+// https://www.johndcook.com/blog/2009/04/27/converting-miles-to-degrees-longitude-or-latitude/
+// given a distance north, return the change in latitude
+function changeInLatitude(miles) {
+    return miles / 3963.0 * 180.0 / Math.PI;
+}
+
+// given a latitude and a distance west, return the change in longitude
+function changeInLongitude(latitude, miles) {
+
+    let r = 3963.0 * Math.cos(latitude * Math.PI / 180.0);
+    return (miles/r)*180/Math.PI;
+}
