@@ -42,9 +42,6 @@ var hdxClosestPairsRecAV = {
     // caller to get result and other info
     retval: null,
 
-    closeToCenter: null,
-    lineCount: 0,
-
     // vertices sorted by longitude
     WtoE: null,
     // vertices sorted by latitude
@@ -53,10 +50,6 @@ var hdxClosestPairsRecAV = {
     // count the number of distance comparisons
     dComps: 0,
     
-    // used for shading
-    northBound: 0,
-    southBound: 0,
-
     // AV-specific visual settings
     visualSettings: {
         bruteForce: {
@@ -93,6 +86,13 @@ var hdxClosestPairsRecAV = {
             scale: 6,
             name: "dComps",
             value: 0
+        },
+        overlapPoints: {
+            color: "darkRed",
+            textColor: "white",
+            scale: 6,
+            name: "overlapPoints",
+            value: 0
         }
     },
     
@@ -122,22 +122,11 @@ var hdxClosestPairsRecAV = {
 		    1, // level 1 of recursion
 		    "cleanup" // action to continue after call complete3
 		);
-		console.log("Pushing fp with cleanup");
 		thisAV.recStack.push(thisAV.fp);
 
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
 
-                // find latitudes of the northernmost and southernmost points
-                thisAV.southBound = waypoints[0].lat;
-                thisAV.northBound = waypoints[0].lat;
-                for (let i = 1; i < waypoints.length; i++) {
-                    thisAV.southBound = Math.min(waypoints[i].lat,
-						 thisAV.southBound);
-                    thisAV.northBound = Math.max(waypoints[i].lat,
-						 thisAV.northBound);
-                }
-		
                 hdxAV.nextAction = "recursiveCallTop";
             },
             logMessage: function(thisAV) {
@@ -244,7 +233,6 @@ var hdxClosestPairsRecAV = {
 				      thisAV.fp.endIndex,
 				      visualSettings.discarded);
 
-		console.log("index of minv1 = " + waypoints.indexOf(thisAV.fp.minv1) + ", index of minv2 = " + waypoints.indexOf(thisAV.fp.minv2));
 		// update winner on map and table
 		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv1),
 				     visualSettings.leader, 40, false);
@@ -297,7 +285,6 @@ var hdxClosestPairsRecAV = {
 		    thisAV.fp.startIndex, thisAV.fp.firstRight - 1,
 		    thisAV.fp.recLevel + 1, "callRecursionRight"
 		);
-		console.log("Pushing fp with callRecursionRight");
 		thisAV.recStack.push(newfp);
 		thisAV.fp = newfp;
 
@@ -334,7 +321,6 @@ var hdxClosestPairsRecAV = {
 		    thisAV.fp.firstRight, thisAV.fp.endIndex,
 		    thisAV.fp.recLevel + 1, "setMinOfHalves"
 		);
-		console.log("Pushing fp with setMinOfHalves");
 		thisAV.recStack.push(newfp);
 		thisAV.fp = newfp;
 		
@@ -416,11 +402,10 @@ var hdxClosestPairsRecAV = {
 		// the firstRight point) how much longitude west and
 		// east of this for which points should be considered
 		let degRange =
-		    changeInLongitude(thisAV.WtoE[thisAV.fp.firstRight].lon,
+		    changeInLongitude(thisAV.WtoE[thisAV.fp.firstRight].lat,
 				      thisAV.fp.minDist);
 		let minLon = midLon - degRange;
 		let maxLon = midLon + degRange;
-		console.log("midLon: " + midLon + ", minLon: " + minLon + ", maxLon: " + maxLon);
 
 		// build the list of points within the strip
 		// that will be considered as possible closest
@@ -436,7 +421,32 @@ var hdxClosestPairsRecAV = {
 		// sort them by latitude
                 thisAV.NtoS.sort((a,b) => (a.lat > b.lat) ? -1: 1);
 
-		// TODO: highlight the candidate points
+		// highlight the candidate points
+		for (let i = 0; i < thisAV.NtoS.length; i++) {
+		    updateMarkerAndTable(waypoints.indexOf(thisAV.NtoS[i]),
+					 thisAV.visualSettings.overlapPoints,
+					 40, false);
+		}
+
+		// draw the west and east bounds
+		let westCoords = [];
+		westCoords[0] = [88, minLon];
+		westCoords[1] = [-88, minLon];
+		thisAV.fp.westLine = L.polyline(westCoords, {
+		    color: thisAV.visualSettings.overlapPoints.color,
+		    opacity: 0.5,
+		    weight: 3
+		});
+		thisAV.fp.westLine.addTo(map);
+		let eastCoords = [];
+		eastCoords[0] = [88, maxLon];
+		eastCoords[1] = [-88, maxLon];
+		thisAV.fp.eastLine = L.polyline(eastCoords, {
+		    color: thisAV.visualSettings.overlapPoints.color,
+		    opacity: 0.5,
+		    weight: 3
+		});
+		thisAV.fp.eastLine.addTo(map);
 
 		// set up the loop index for the for loop
 		thisAV.globali = 0;
@@ -454,8 +464,12 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		// TODO: highlight current point at globali?
                 if (thisAV.globali <= thisAV.NtoS.length - 2) {
+		    // highlight current point at globali
+		    updateMarkerAndTable(
+			waypoints.indexOf(thisAV.NtoS[thisAV.globali]),
+			visualSettings.startVertex, 40, false);
+		    
                     hdxAV.nextAction = "updateWhileLoopIndex";
 		}
                 else {
@@ -487,11 +501,15 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
 		// check while loop conditions
-		if (thisAV.globalK == thisAV.NtoS.length) {
+		if (thisAV.globalk == thisAV.NtoS.length) {
 		    // we are beyond the last k for this i
 		    // so increment i and go back to the top
 		    // of the for loop
 		    thisAV.globali += 1;
+		    // unhighlight vi
+		    updateMarkerAndTable(waypoints.indexOf(thisAV.fp.vi),
+					 thisAV.visualSettings.overlapPoints,
+					 40, false);
 		    hdxAV.nextAction = "forLoopTop";
 		}
 		else {
@@ -500,13 +518,20 @@ var hdxClosestPairsRecAV = {
 		    thisAV.fp.vi = thisAV.NtoS[thisAV.globali];
 		    thisAV.fp.vk = thisAV.NtoS[thisAV.globalk];
 		    if ((thisAV.fp.vk.lat -thisAV.fp.vi.lat)
-			>= thisAV.fp.minDist) {
+			>= changeInLatitude(thisAV.fp.minDist)) {
 			// large change in latitude, no need to keep checking
 			thisAV.globali += 1;
+			// unhighlight vi
+			updateMarkerAndTable(
+			    waypoints.indexOf(thisAV.fp.vi),
+			    thisAV.visualSettings.overlapPoints, 40, false);
 			hdxAV.nextAction = "forLoopTop";
 		    }
 		    else {
 			// we do need to check this pair
+			// highlight current point at globalk
+			updateMarkerAndTable(waypoints.indexOf(thisAV.fp.vk),
+			    visualSettings.endVertex, 40, false);
 			hdxAV.nextAction = "checkNextPair";
 		    }
 		}
@@ -521,9 +546,15 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		let newdsq = Math.pow(thisAV.fp.vi.lat - thisAV.fp.vk.lat, 2) +
-		    Math.pow(thisAV.fp.vi.lon - thisAV.fp.vk.lon, 2);
-                if (newdsq < thisAV.fp.minDist) {
+		let newd = convertToCurrentUnits(
+		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
+				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
+
+		thisAV.dComps++;
+		updateAVControlEntry("dComps",
+				     "Distance comparisons: " + thisAV.dComps);
+
+                if (newd < thisAV.fp.minDist) {
 		    hdxAV.nextAction = "updateMinPairFound";
 		}
 		else {
@@ -540,12 +571,35 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		thisAV.fp.minDist = Math.sqrt(
-		    Math.pow(thisAV.fp.vi.lat - thisAV.fp.vk.lat, 2) +
-			Math.pow(thisAV.fp.vi.lon - thisAV.fp.vk.lon, 2));
+		// discard old pair
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv1),
+				     visualSettings.discarded,
+				     40, false);
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv2),
+				     visualSettings.discarded,
+				     40, false);
+		
+		thisAV.fp.minDist = convertToCurrentUnits(
+		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
+				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
 		thisAV.fp.minv1 = thisAV.fp.vi;
 		thisAV.fp.minv2 = thisAV.fp.vk;
 
+		// highlight new closest pair
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv1),
+				     visualSettings.leader,
+				     40, false);
+		updateMarkerAndTable(waypoints.indexOf(thisAV.fp.minv2),
+				     visualSettings.leader,
+				     40, false);
+		// update connecting line between
+		let array = []
+		array[0] = [thisAV.fp.vi.lat, thisAV.fp.vi.lon];
+		array[1] = [thisAV.fp.vk.lat, thisAV.fp.vk.lon];
+		thisAV.fp.minLine.setLatLngs(array);
+
+		// display updated closest pair on the call stack
+		thisAV.updateCallStack();
                 hdxAV.nextAction = "incrementWhileLoopIndex";
             },
             logMessage: function(thisAV) {
@@ -557,6 +611,12 @@ var hdxClosestPairsRecAV = {
             comment: "Increment while loop index",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
+
+		// unhighlight vi
+		updateMarkerAndTable(
+		    waypoints.indexOf(thisAV.fp.vk),
+		    thisAV.visualSettings.overlapPoints, 40, false);
+		
                 thisAV.globalk += 1;
                 hdxAV.nextAction = "whileLoopTop";
             },
@@ -570,10 +630,30 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		// TODO: update colors
-
+		// update colors
+		// everything in the range is discarded except the
+		// final subproblem closest pair, and the connecting
+		// line segment should already be set correctly
+		for (let i = thisAV.fp.startIndex;
+		     i <= thisAV.fp.endIndex; i++) {
+		    if ((thisAV.WtoE[i] != thisAV.fp.minv1) &&
+			(thisAV.WtoE[i] != thisAV.fp.minv2)) {
+			updateMarkerAndTable(
+			    waypoints.indexOf(thisAV.WtoE[i]),
+			    visualSettings.discarded, 40, false);
+		    }
+		    else {
+			updateMarkerAndTable(
+			    waypoints.indexOf(thisAV.WtoE[i]),
+			    visualSettings.leader, 40, false);
+		    }
+		}
+		
 		// remove the recursive subproblem dividing line from the map
+		// and west and east bound lines
 		thisAV.fp.recLine.remove();
+		thisAV.fp.westLine.remove();
+		thisAV.fp.eastLine.remove();
 		
 		// prep to go back to where this recursive call returns
                 hdxAV.nextAction = thisAV.fp.nextAction;
@@ -605,85 +685,6 @@ var hdxClosestPairsRecAV = {
         }
     ],
     
-    // function to draw the polyline connecting the current 
-    // candidate pair of vertices
-    drawLineVisiting(v1, v2) {
-
-        let visitingLine = [];
-        visitingLine[0] = [v1.lat, v1.lon];
-        visitingLine[1] = [v2.lat, v2.lon];
-        this.lineVisiting = L.polyline(visitingLine, {
-            color: "gold",
-            opacity: 0.6,
-            weight: 4
-        });
-        this.lineVisiting.addTo(map);   
-        return this.lineVisiting
-    },
-    
-    drawLineMap(v1,v2) {
-	
-        let visitingLine = [];
-        let lonLine = (parseFloat(v2.lon) + parseFloat(v1.lon)) / 2;
-        visitingLine[0] = [90, v1];
-        visitingLine[1] = [-90, v2];
-	
-        if (this.lineCount % 3 == 0) {
-            this.lineVisiting = L.polyline(visitingLine, {
-		color: visualSettings.visiting.color,
-		opacity: 0.6,
-		weight: 4
-            });
-	}
-	else {
-            this.lineVisiting = L.polyline(visitingLine, {
-		color: visualSettings.discovered.color,
-		opacity: 0.6,
-		weight: 4
-            });
-	}
-        this.lineVisiting.addTo(map);  
-        this.lineCount ++; 
-        return this.lineVisiting;
-    },
-    
-    // function to remove the visiting polyline
-    removeLineVisiting(l1) {
-
-        l1.remove();
-    },
-
-    // functions to draw or update the polylines connecting the
-    // current closest and furthest pairs
-    updateLineClosest() {
-
-        let closestLine = [];
-        closestLine[0] = [waypoints[this.closest[0]].lat,
-			  waypoints[this.closest[0]].lon];
-        closestLine[1] = [waypoints[this.closest[1]].lat,
-			  waypoints[this.closest[1]].lon];
-
-        if (this.lineClosest == null) {
-            this.lineClosest = L.polyline(closestLine, {
-                color: visualSettings.leader.color,
-                opacity: 0.6,
-                weight: 4
-            });
-            this.lineClosest.addTo(map);        
-        }
-        else {
-            this.lineClosest.setLatLngs(closestLine);
-        }
-    },
-
-    updateCurrentCall() {
-	updateAVControlEntry("currentCall",
-			     "Recursive Level " + this.fp.recLevel + ", " +
-			     (this.fp.endIndex - this.fp.startIndex + 1) +
-			     " points, range: [" + this.fp.startIndex + "," +
-			     this.fp.endIndex + "]");
-    },
-
     // update description of the call stack in the currentCall AVCP entry
     updateCallStack() {
 	let t = "";
@@ -806,20 +807,9 @@ var hdxClosestPairsRecAV = {
 
     // remove UI modifications made for vertex closest pairs
     cleanupUI() {
-        //waypoints = this.originalWaypoints;
-        //updateMap();
 
-	// clean up any polylines
-	if (this.lineVisiting != null) {
-	    this.lineVisiting.remove();
-	}
-	if (this.lineClosest != null) {
-	    this.lineClosest.remove();
-	}
-	while (this.lineStack != null && !this.lineStack.isEmpty()) {
-	    // remove from stack, returned result remove from map
-	    this.lineStack.remove().remove();
-	}
+	// TODO: clean up ultimate closest pair polyline
+	console.log("clean up last polyline!");
     },
     
     idOfAction(action) {
