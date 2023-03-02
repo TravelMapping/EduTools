@@ -517,8 +517,10 @@ var hdxClosestPairsRecAV = {
 		    // code here and in subsequent actions
 		    thisAV.fp.vi = thisAV.NtoS[thisAV.globali];
 		    thisAV.fp.vk = thisAV.NtoS[thisAV.globalk];
-		    if ((thisAV.fp.vk.lat -thisAV.fp.vi.lat)
-			>= changeInLatitude(thisAV.fp.minDist)) {
+		    // also save the search window latitude size
+		    thisAV.fp.latDiff = changeInLatitude(thisAV.fp.minDist);
+		    if (Math.abs(thisAV.fp.vi.lat - thisAV.fp.vk.lat)
+			>= thisAV.fp.latDiff) {
 			// large change in latitude, no need to keep checking
 			thisAV.globali += 1;
 			// unhighlight vi
