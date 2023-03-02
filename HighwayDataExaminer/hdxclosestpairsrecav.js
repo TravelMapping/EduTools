@@ -464,12 +464,15 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+		// save the search window latitude size for boxes
+		thisAV.fp.latDiff = changeInLatitude(thisAV.fp.minDist);
+
                 if (thisAV.globali <= thisAV.NtoS.length - 2) {
 		    // highlight current point at globali
 		    updateMarkerAndTable(
 			waypoints.indexOf(thisAV.NtoS[thisAV.globali]),
 			visualSettings.startVertex, 40, false);
-		    
+
                     hdxAV.nextAction = "updateWhileLoopIndex";
 		}
                 else {
@@ -517,8 +520,6 @@ var hdxClosestPairsRecAV = {
 		    // code here and in subsequent actions
 		    thisAV.fp.vi = thisAV.NtoS[thisAV.globali];
 		    thisAV.fp.vk = thisAV.NtoS[thisAV.globalk];
-		    // also save the search window latitude size
-		    thisAV.fp.latDiff = changeInLatitude(thisAV.fp.minDist);
 		    if (Math.abs(thisAV.fp.vi.lat - thisAV.fp.vk.lat)
 			>= thisAV.fp.latDiff) {
 			// large change in latitude, no need to keep checking
