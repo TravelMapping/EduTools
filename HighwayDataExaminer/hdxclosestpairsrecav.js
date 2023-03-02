@@ -404,8 +404,10 @@ var hdxClosestPairsRecAV = {
 		let degRange =
 		    changeInLongitude(thisAV.WtoE[thisAV.fp.firstRight].lat,
 				      thisAV.fp.minDist);
-		let minLon = midLon - degRange;
-		let maxLon = midLon + degRange;
+		// save these for use below and again on bounding box
+		// for candidate overlap points that need to be considered
+		thisAV.fp.minLon = midLon - degRange;
+		thisAV.fp.maxLon = midLon + degRange;
 
 		// build the list of points within the strip
 		// that will be considered as possible closest
@@ -413,8 +415,8 @@ var hdxClosestPairsRecAV = {
                 thisAV.NtoS = [];
 		for (let i = thisAV.fp.startIndex;
 		     i < thisAV.fp.endIndex; i++) {
-		    if (thisAV.WtoE[i].lon > minLon &&
-			thisAV.WtoE[i].lon < maxLon) {
+		    if (thisAV.WtoE[i].lon > thisAV.fp.minLon &&
+			thisAV.WtoE[i].lon < thisAV.fp.maxLon) {
 			thisAV.NtoS.push(thisAV.WtoE[i]);
 		    }
 		}
@@ -430,8 +432,8 @@ var hdxClosestPairsRecAV = {
 
 		// draw the west and east bounds
 		let westCoords = [];
-		westCoords[0] = [88, minLon];
-		westCoords[1] = [-88, minLon];
+		westCoords[0] = [88, thisAV.fp.minLon];
+		westCoords[1] = [-88, thisAV.fp.minLon];
 		thisAV.fp.westLine = L.polyline(westCoords, {
 		    color: thisAV.visualSettings.overlapPoints.color,
 		    opacity: 0.5,
@@ -439,8 +441,8 @@ var hdxClosestPairsRecAV = {
 		});
 		thisAV.fp.westLine.addTo(map);
 		let eastCoords = [];
-		eastCoords[0] = [88, maxLon];
-		eastCoords[1] = [-88, maxLon];
+		eastCoords[0] = [88, thisAV.fp.maxLon];
+		eastCoords[1] = [-88, thisAV.fp.maxLon];
 		thisAV.fp.eastLine = L.polyline(eastCoords, {
 		    color: thisAV.visualSettings.overlapPoints.color,
 		    opacity: 0.5,
@@ -473,6 +475,29 @@ var hdxClosestPairsRecAV = {
 			waypoints.indexOf(thisAV.NtoS[thisAV.globali]),
 			visualSettings.startVertex, 40, false);
 
+		    // bounding box for the points that need to
+		    // considered for this iteration
+		    let bounds = [
+			[thisAV.NtoS[thisAV.globali].lat, thisAV.fp.minLon],
+			[thisAV.NtoS[thisAV.globali].lat, thisAV.fp.maxLon],
+			[thisAV.NtoS[thisAV.globali].lat - thisAV.fp.latDiff,
+			 thisAV.fp.maxLon],
+			[thisAV.NtoS[thisAV.globali].lat - thisAV.fp.latDiff,
+			 thisAV.fp.minLon]
+		    ];
+		    if (thisAV.fp.hasOwnProperty("candidateBox")) {
+			thisAV.fp.candidateBox.setBounds(bounds);
+		    }
+		    else {
+			thisAV.fp.candidateBox = L.rectangle(
+			    bounds,
+			    {
+				color: "red",
+				weight: 0.5,
+				scale: 4
+			    });
+			thisAV.fp.candidateBox.addTo(map);
+		    }
                     hdxAV.nextAction = "updateWhileLoopIndex";
 		}
                 else {
@@ -633,6 +658,9 @@ var hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+		if (thisAV.fp.hasOwnProperty("candidateBox")) {
+		    thisAV.fp.candidateBox.remove();
+		}
 		// update colors
 		// everything in the range is discarded except the
 		// final subproblem closest pair, and the connecting
