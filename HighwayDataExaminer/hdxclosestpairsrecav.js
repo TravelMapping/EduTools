@@ -120,7 +120,6 @@ var hdxClosestPairsRecAV = {
                 updateAVControlEntry("currentCall", "No calls yet");
                 //updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
                 updateAVControlEntry("dComps", "No distance comparisons yet");
-                thisAV.lineCount = 0;
 
 		thisAV.fp = new HDXCPRecCallFrame(
 		    0, // start index
@@ -130,8 +129,16 @@ var hdxClosestPairsRecAV = {
 		);
 		thisAV.recStack.push(thisAV.fp);
 
+		// variable initializations
                 thisAV.globali = 0;
                 thisAV.globalk = 0;
+		thisAV.recCallCount = 0;
+		thisAV.bfCases = 0;
+		thisAV.bfDComps = 0;
+		thisAV.halvesDComps = 0;
+		thisAV.overlapDComps = 0;
+		thisAV.overlapTotalPoints = 0;
+		thisAV.overlapLeaders = 0;
 
                 hdxAV.nextAction = "recursiveCallTop";
             },
@@ -146,6 +153,8 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label,
 				    thisAV.visualSettings.recursiveCall);
 
+		thisAV.recCallCount++;
+		
 		thisAV.updateCallStack();
 		thisAV.colorWtoERange(thisAV.fp.startIndex,
 				      thisAV.fp.endIndex,
@@ -213,6 +222,8 @@ var hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label,
 				    thisAV.visualSettings.bruteForce);
 
+		thisAV.bfCases++;
+		
 		// brute force search among all pairs in this subrange
 		thisAV.fp.minDist = Number.MAX_VALUE;
                 for (let i = thisAV.fp.startIndex;
@@ -723,7 +734,8 @@ var hdxClosestPairsRecAV = {
     
     // update description of the call stack in the currentCall AVCP entry
     updateCallStack() {
-	let t = "";
+	let t = "Total recursive calls: " + this.recCallCount +
+	    ", " + this.bfCases + " base cases<br />";
 	for (let i = 0; i < this.recStack.length; i++) {
 	    let f = this.recStack[i];
 	    let entry = "Level " + f.recLevel;
@@ -794,7 +806,6 @@ var hdxClosestPairsRecAV = {
     prepToStart() {
 
         hdxAV.algStat.innerHTML = "Initializing";
-        this.lineCount = 0;
 
         // show waypoints, hide connections
         initWaypointsAndConnections(true, false,
