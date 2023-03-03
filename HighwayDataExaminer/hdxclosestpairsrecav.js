@@ -340,7 +340,7 @@ var hdxClosestPairsRecAV = {
                
 		// we have just returned from a recursive call on the left
 		// and results are in the call frame pointed at by
-		// thisAV.retval, save this in our own "leftresult"
+		// thisAV.retval, save this in our own "rightresult"
 		thisAV.fp.rightResult = thisAV.retval;
 
 		// which was smaller?
@@ -839,8 +839,31 @@ var hdxClosestPairsRecAV = {
     // remove UI modifications made for vertex closest pairs
     cleanupUI() {
 
-	// TODO: clean up ultimate closest pair polyline
-	console.log("clean up last polyline!");
+	// clean up any rectangles and polylines still in existence
+	
+	// properties to check
+	let overlays = [ "westLine", "eastLine", "recLine", "minLine",
+			 "candidateBox" ];
+
+	// if there is anything on the recursive stack, look for and
+	// remove the map objects
+	for (let i = 0; i < this.recStack.length; i++) {
+	    let fp = this.recStack[i];
+	    for (let j = 0; j < overlays.length; j++) {
+		if (fp.hasOwnProperty(overlays[j])) {
+		    fp[overlays[j]].remove();
+		}
+	    }
+	}
+
+	// if we ran to completion, or stopped between when a call frame
+	// was popped and it was finished being processed, there could
+	// be others in the retval call frame
+	for (let j = 0; j < overlays.length; j++) {
+	    if (this.retval.hasOwnProperty(overlays[j])) {
+		this.retval[overlays[j]].remove();
+	    }
+	}
     },
     
     idOfAction(action) {
