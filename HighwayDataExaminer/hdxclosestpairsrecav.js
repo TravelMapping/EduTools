@@ -657,7 +657,10 @@ var hdxClosestPairsRecAV = {
                 hdxAV.nextAction = "incrementWhileLoopIndex";
             },
             logMessage: function(thisAV) {
-                return "Update new minimum distance found between points";
+                return "New closest pair in overlap: [" + 
+		    thisAV.fp.minv1.label + "," +
+		    thisAV.fp.minv2.label + "], d: " +
+		    thisAV.fp.minDist.toFixed(3);
             }
         },
         {
@@ -726,7 +729,10 @@ var hdxClosestPairsRecAV = {
 		
             },
             logMessage: function(thisAV) {
-                return "Return closest pair for this recursive call";
+                return "Closest pair for this recursive call: [" + 
+		    thisAV.retval.minv1.label + "," +
+		    thisAV.retval.minv2.label + "], d: " +
+		    thisAV.retval.minDist.toFixed(3);
             }
         },
         {
