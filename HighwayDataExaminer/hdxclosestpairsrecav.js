@@ -118,8 +118,9 @@ var hdxClosestPairsRecAV = {
 		thisAV.WtoE = sorter.sortWaypoints();
 		
                 updateAVControlEntry("currentCall", "No calls yet");
-                //updateAVControlEntry("closeLeader", "no closest pair yet, dclosest = &infin;");
                 updateAVControlEntry("dComps", "No distance comparisons yet");
+		updateAVControlEntry("overlaps", "No overlap points yet");
+		updateAVControlEntry("overlapLeaders", "No leaders found in overlap points yet");
 
 		thisAV.fp = new HDXCPRecCallFrame(
 		    0, // start index
@@ -467,6 +468,10 @@ var hdxClosestPairsRecAV = {
 		});
 		thisAV.fp.eastLine.addTo(map);
 
+		thisAV.overlapTotalPoints += thisAV.NtoS.length;
+		updateAVControlEntry("overlaps",
+				    "Total overlap points: " + thisAV.overlapTotalPoints);
+		
 		// set up the loop index for the for loop
 		thisAV.globali = 0;
 		
@@ -642,6 +647,11 @@ var hdxClosestPairsRecAV = {
 		array[1] = [thisAV.fp.vk.lat, thisAV.fp.vk.lon];
 		thisAV.fp.minLine.setLatLngs(array);
 
+		thisAV.overlapLeaders++;
+		updateAVControlEntry("overlapLeaders",
+				     thisAV.overlapLeaders +
+				     " leaders found in overlaps");
+		
 		// display updated closest pair on the call stack
 		thisAV.updateCallStack();
                 hdxAV.nextAction = "incrementWhileLoopIndex";
@@ -869,6 +879,10 @@ var hdxClosestPairsRecAV = {
         hdxAV.algOptions.innerHTML = newAO;
 
         addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
+        addEntryToAVControlPanel("overlaps",
+				 this.visualSettings.overlapPoints);
+        addEntryToAVControlPanel("overlapLeaders",
+				 this.visualSettings.overlapPoints);
 
 	// this one grows and shrinks so should be last to avoid
 	// lots of bouncing up and down of others
