@@ -649,8 +649,8 @@ var hdxClosestPairsRecAV = {
 
 		thisAV.overlapLeaders++;
 		updateAVControlEntry("overlapLeaders",
-				     thisAV.overlapLeaders +
-				     " leaders found in overlaps");
+				     "Leaders found among overlaps: " +
+				     thisAV.overlapLeaders);
 		
 		// display updated closest pair on the call stack
 		thisAV.updateCallStack();
@@ -815,7 +815,7 @@ var hdxClosestPairsRecAV = {
 	    (this.bfDComps + this.halvesDComps + this.overlapDComps) +
 	    "<br />";
 	s += "&nbsp;&nbsp;Base cases: " + this.bfDComps + "</br>";
-	s += "&nbsp;&nbsp;Choose LorR: " + this.halvesDComps + "</br>";
+	s += "&nbsp;&nbsp;Compare left/right leaders: " + this.halvesDComps + "</br>";
 	s += "&nbsp;&nbsp;Overlap regions: " + this.overlapDComps + "</br>";
 	updateAVControlEntry("dComps", s);
     },
