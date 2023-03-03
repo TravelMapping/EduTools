@@ -47,8 +47,14 @@ var hdxClosestPairsRecAV = {
     // vertices sorted by latitude
     NtoS: [],
 
-    // count the number of distance comparisons
-    dComps: 0,
+    // various stats ("dcomps" are distance comparisons in various cases)
+    recCallCount: 0,
+    bfCases: 0,
+    bfDComps: 0,
+    halvesDComps: 0,
+    overlapDComps: 0,
+    overlapTotalPoints: 0,
+    overlapLeaders: 0,
     
     // AV-specific visual settings
     visualSettings: {
@@ -217,7 +223,7 @@ var hdxClosestPairsRecAV = {
 			let minDistTest = convertToCurrentUnits(
 			    distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
 			
-			thisAV.dComps++;
+			thisAV.bfDComps++;
                         if (minDistTest < thisAV.fp.minDist) {
                             thisAV.fp.minDist = minDistTest;
 			    thisAV.fp.minv1 = thisAV.WtoE[i];
@@ -225,9 +231,10 @@ var hdxClosestPairsRecAV = {
                         }
                     }
 		}
-		updateAVControlEntry("dComps",
-				     "Distance comparisons: " + thisAV.dComps);
 
+		// update display of distance comparisons
+		thisAV.updateDComps();
+		
 		// update range to discarded status
 		thisAV.colorWtoERange(thisAV.fp.startIndex,
 				      thisAV.fp.endIndex,
@@ -375,9 +382,8 @@ var hdxClosestPairsRecAV = {
 		}
 
 		// count this distance comparison
-		thisAV.dComps++;
-		updateAVControlEntry("dComps",
-				     "Distance comparisons: " + thisAV.dComps);
+		thisAV.halvesDComps++;
+		thisAV.updateDComps();
 
 		thisAV.updateCallStack();
 
@@ -578,9 +584,8 @@ var hdxClosestPairsRecAV = {
 		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
 				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
 
-		thisAV.dComps++;
-		updateAVControlEntry("dComps",
-				     "Distance comparisons: " + thisAV.dComps);
+		thisAV.overlapDComps++;
+		thisAV.updateDComps();
 
                 if (newd < thisAV.fp.minDist) {
 		    hdxAV.nextAction = "updateMinPairFound";
@@ -773,6 +778,17 @@ var hdxClosestPairsRecAV = {
         }
     },
 
+    // update the distance comparisons counts in their "dComps" AVCP entry
+    updateDComps() {
+	let s = "Distance comparisons: " +
+	    (this.bfDComps + this.halvesDComps + this.overlapDComps) +
+	    "<br />";
+	s += "&nbsp;&nbsp;Base cases: " + this.bfDComps + "</br>";
+	s += "&nbsp;&nbsp;Choose LorR: " + this.halvesDComps + "</br>";
+	s += "&nbsp;&nbsp;Overlap regions: " + this.overlapDComps + "</br>";
+	updateAVControlEntry("dComps", s);
+    },
+    
     // required prepToStart function
     // initialize a vertex closest pairs divide and conquer search
     prepToStart() {
