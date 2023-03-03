@@ -847,9 +847,12 @@ var hdxClosestPairsRecAV = {
 	    '<input type="number" id="maxRec" min="0" max="' +
 	    (waypoints.length - 1)/2 + '" value="0"><br />';
         hdxAV.algOptions.innerHTML = newAO;
-        addEntryToAVControlPanel("currentCall", this.visualSettings.recursiveCall);
-        //addEntryToAVControlPanel("closeLeader", visualSettings.leader);
+
         addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
+
+	// this one grows and shrinks so should be last to avoid
+	// lots of bouncing up and down of others
+        addEntryToAVControlPanel("currentCall", this.visualSettings.recursiveCall);
     },
 
     // remove UI modifications made for vertex closest pairs
