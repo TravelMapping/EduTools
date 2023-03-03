@@ -470,7 +470,9 @@ var hdxClosestPairsRecAV = {
 
 		thisAV.overlapTotalPoints += thisAV.NtoS.length;
 		updateAVControlEntry("overlaps",
-				    "Total overlap points: " + thisAV.overlapTotalPoints);
+				     "Overlap points, total: " +
+				     thisAV.overlapTotalPoints +
+				     ", current: " + thisAV.NtoS.length);
 		
 		// set up the loop index for the for loop
 		thisAV.globali = 0;
@@ -690,6 +692,13 @@ var hdxClosestPairsRecAV = {
 		if (thisAV.fp.hasOwnProperty("candidateBox")) {
 		    thisAV.fp.candidateBox.remove();
 		}
+
+		// update overlaps AVCP entry to remove the current
+		// overlap count
+		updateAVControlEntry("overlaps",
+				     "Overlap points, total: " +
+				     thisAV.overlapTotalPoints);
+
 		// update colors
 		// everything in the range is discarded except the
 		// final subproblem closest pair, and the connecting
