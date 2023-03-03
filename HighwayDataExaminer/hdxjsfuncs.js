@@ -1163,3 +1163,11 @@ function changeInLongitude(latitude, miles) {
     let r = 3963.0 * Math.cos(Math.abs(latitude) * Math.PI / 180.0);
     return (miles/r)*180.0/Math.PI;
 }
+
+// given a chunk of text and a visualSettings object, return a span
+// tag that uses colors from that object
+function spanWithVS(text, vs) {
+
+    return "<span style='background-color:" + vs.color +
+	"; color:" + vs.textColor + "'>" + text + "</span>";
+}

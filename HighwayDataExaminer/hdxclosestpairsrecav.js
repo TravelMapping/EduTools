@@ -753,25 +753,34 @@ var hdxClosestPairsRecAV = {
 
 	    // if we have a min so far, use it
 	    if (f.hasOwnProperty("minv1")) {
-		entry += "<br />&nbsp;&nbsp;Closest: [" + 
-		    f.minv1.label + "," +
-		    f.minv2.label + "], d: " +
-		    f.minDist.toFixed(3);
+		entry += "<br />&nbsp;&nbsp;" +
+		    spanWithVS(
+			"Closest: [" + 
+			    f.minv1.label + "," +
+			    f.minv2.label + "], d: " +
+			    f.minDist.toFixed(3),
+			visualSettings.leader);
 	    }
 	    else {
 		// maybe we have subproblem results
 		if (f.hasOwnProperty("leftResult")) {
-		    entry += "<br />&nbsp;&nbsp;Left Closest: [" + 
-			f.leftResult.minv1.label + "," +
-			f.leftResult.minv2.label + "], d: " +
-			f.leftResult.minDist.toFixed(3);
+		    entry += "<br />&nbsp;&nbsp;" +
+			spanWithVS(
+			    "Left Closest: [" + 
+				f.leftResult.minv1.label + "," +
+				f.leftResult.minv2.label + "], d: " +
+				f.leftResult.minDist.toFixed(3),
+			    visualSettings.leader);
 		}
 		
 		if (f.hasOwnProperty("rightResult")) {
-		    entry += "<br />&nbsp;&nbsp;Right Closest: [" + 
-			f.rightResult.minv1.label + "," +
-			f.rightResult.minv2.label + "], d: " +
-			f.rightResult.minDist.toFixed(3);
+		    entry += "<br />&nbsp;&nbsp;" +
+			spanWithVS(
+			    "Right Closest: [" + 
+				f.rightResult.minv1.label + "," +
+				f.rightResult.minv2.label + "], d: " +
+				f.rightResult.minDist.toFixed(3),
+			    visualSettings.leader);
 		}
 	    }
 	    
