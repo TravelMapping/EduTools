@@ -17,6 +17,9 @@ The JS code for HDX is split among several files for easier management.
 * `hdxbreakpoints.js` contains conditional breakpoint support.
 * `hdxcallbacks.js` contains implementation of UI callback functions.
 * `hdxclosestpairsrecav.js` contains the recursive implementation of the vertex closest pairs AV.
+  * `minPoints`  Specify the minimum number of points before a brute-force base case search is performed
+  * `maxRec`  Specify the maximum number of levels of recursion
+  * `overlays`  Specify whether to draw overlays to illustrate recursive levels
 * `hdxcustomtitles.js` contains the implementation of custom 'title' attributes (larger text)
 * `hdxdegreeav.js` contains the implementation of the vertex degree extremes search AV.
 * `hdxdfsrecav.hs` contains the implementation of the recursive depth-first traversal AV.
