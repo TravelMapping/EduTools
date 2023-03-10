@@ -66,22 +66,22 @@ var hdxClosestPairsRecAV = {
             value: 0
         },
         recursiveCall: {
-            color: "green",
+            color: "darkgreen",
             textColor: "white",
             scale: 6,
             name: "recursiveCall",
             value: 0
         },
         recursiveLeft: {
-            color: "BlueGreen",
-            textColor: "white",
+            color: "pink",
+            textColor: "black",
             scale: 6,
             name: "recursiveLeft",
             value: 0
         },
         recursiveRight: {
-            color: "YellowGreen",
-            textColor: "white",
+            color: "pink",
+            textColor: "black",
             scale: 6,
             name: "recursiveRight",
             value: 0
