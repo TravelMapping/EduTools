@@ -31,6 +31,7 @@ var hdxClosestPairsRecAV = {
     // global state variables for closest pairs search
     minPoints: 3,
     maxRec: 0,
+    overlays: false,
 
     // many other variables will end up on the recursive stack, which
     // will contain instances of objects constructed by the CallFrame
@@ -169,20 +170,23 @@ var hdxClosestPairsRecAV = {
 				      thisAV.fp.endIndex,
 				      thisAV.visualSettings.recursiveCall);
 
-		// rectangles to obscure parts of the world not involved
-		// in this recursive call
-		let westLon = thisAV.WtoE[thisAV.fp.startIndex].lon;
-		let eastLon = thisAV.WtoE[thisAV.fp.endIndex].lon;
-		thisAV.fp.westBox = L.rectangle(
-		    [[-88, -179], [88, westLon]],
-		    thisAV.visualSettings.obscure
-		);
-		thisAV.fp.eastBox = L.rectangle(
-		    [[-88, 179], [88, eastLon]],
-		    thisAV.visualSettings.obscure
-		);
-		thisAV.fp.westBox.addTo(map);
-		thisAV.fp.eastBox.addTo(map);
+		if (thisAV.overlays) {
+		    // rectangles to obscure parts of the world not involved
+		    // in this recursive call
+		    let westLon = thisAV.WtoE[thisAV.fp.startIndex].lon;
+		    let eastLon = thisAV.WtoE[thisAV.fp.endIndex].lon;
+		    thisAV.fp.westBox = L.rectangle(
+			[[-88, -179], [88, westLon]],
+			thisAV.visualSettings.obscure
+		    );
+		    thisAV.fp.eastBox = L.rectangle(
+			[[-88, 179], [88, eastLon]],
+			thisAV.visualSettings.obscure
+		    );
+		    thisAV.fp.westBox.addTo(map);
+		    thisAV.fp.eastBox.addTo(map);
+		}
+		
                 hdxAV.nextAction = "checkBaseCase";
             },
             logMessage: function(thisAV) {
@@ -348,9 +352,11 @@ var hdxClosestPairsRecAV = {
 		// thisAV.retval, save this in our own "leftResult"
 		thisAV.fp.leftResult = thisAV.retval;
 
-		// remove the overlays from the returned call
-		thisAV.retval.eastBox.remove();
-		thisAV.retval.westBox.remove();
+		if (thisAV.overlays) {
+		    // remove the overlays from the returned call
+		    thisAV.retval.eastBox.remove();
+		    thisAV.retval.westBox.remove();
+		}
 
 		let rightStart = Math.ceil(thisAV.fp.startIndex + 
 					((thisAV.fp.endIndex-
@@ -388,9 +394,11 @@ var hdxClosestPairsRecAV = {
 		// thisAV.retval, save this in our own "rightresult"
 		thisAV.fp.rightResult = thisAV.retval;
 
-		// remove the overlays from the returned call
-		thisAV.retval.eastBox.remove();
-		thisAV.retval.westBox.remove();
+		if (thisAV.overlays) {
+		    // remove the overlays from the returned call
+		    thisAV.retval.eastBox.remove();
+		    thisAV.retval.westBox.remove();
+		}
 
 		// which was smaller?
 		if (thisAV.fp.leftResult.minDist <
@@ -778,9 +786,12 @@ var hdxClosestPairsRecAV = {
             label: "cleanup",
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
-		// remove the overlays from the returned call
-		thisAV.retval.eastBox.remove();
-		thisAV.retval.westBox.remove();
+
+		if (thisAV.overlays) {
+		    // remove the overlays from the returned call
+		    thisAV.retval.eastBox.remove();
+		    thisAV.retval.westBox.remove();
+		}
 
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
@@ -881,6 +892,7 @@ var hdxClosestPairsRecAV = {
 
 	this.minPoints = document.getElementById("minPoints").value;
 	this.maxRec = document.getElementById("maxRec").value;
+	this.overlays = document.getElementById("overlays").checked;
 		 
 	this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">call CPRec with points sorted &uarr; by longitude</td></tr>';
         this.code += pcEntry(0,'CPRec(WtoE)',"recursiveCallTop");
@@ -925,6 +937,7 @@ var hdxClosestPairsRecAV = {
         newAO += 'Recursion level limit (0 for none)' +
 	    '<input type="number" id="maxRec" min="0" max="' +
 	    (waypoints.length - 1)/2 + '" value="0"><br />';
+	newAO += '<input id="overlays" type="checkbox" checked /> Show recursion level overlays'
         hdxAV.algOptions.innerHTML = newAO;
 
         addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
