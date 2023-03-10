@@ -99,7 +99,15 @@ var hdxClosestPairsRecAV = {
             scale: 6,
             name: "overlapPoints",
             value: 0
-        }
+        },
+	obscure: {
+            color: "black",
+            scale: 4,
+            weight: 0.5,
+	    fillOpacity: 0.1,
+            name: "obscure",
+            value: 0
+	}
     },
     
     // the actions that make up this algorithm
@@ -161,6 +169,20 @@ var hdxClosestPairsRecAV = {
 				      thisAV.fp.endIndex,
 				      thisAV.visualSettings.recursiveCall);
 
+		// rectangles to obscure parts of the world not involved
+		// in this recursive call
+		let westLon = thisAV.WtoE[thisAV.fp.startIndex].lon;
+		let eastLon = thisAV.WtoE[thisAV.fp.endIndex].lon;
+		thisAV.fp.westBox = L.rectangle(
+		    [[-88, -179], [88, westLon]],
+		    thisAV.visualSettings.obscure
+		);
+		thisAV.fp.eastBox = L.rectangle(
+		    [[-88, 179], [88, eastLon]],
+		    thisAV.visualSettings.obscure
+		);
+		thisAV.fp.westBox.addTo(map);
+		thisAV.fp.eastBox.addTo(map);
                 hdxAV.nextAction = "checkBaseCase";
             },
             logMessage: function(thisAV) {
@@ -326,6 +348,10 @@ var hdxClosestPairsRecAV = {
 		// thisAV.retval, save this in our own "leftResult"
 		thisAV.fp.leftResult = thisAV.retval;
 
+		// remove the overlays from the returned call
+		thisAV.retval.eastBox.remove();
+		thisAV.retval.westBox.remove();
+
 		let rightStart = Math.ceil(thisAV.fp.startIndex + 
 					((thisAV.fp.endIndex-
 					  thisAV.fp.startIndex)/2)) + 1;
@@ -361,6 +387,10 @@ var hdxClosestPairsRecAV = {
 		// and results are in the call frame pointed at by
 		// thisAV.retval, save this in our own "rightresult"
 		thisAV.fp.rightResult = thisAV.retval;
+
+		// remove the overlays from the returned call
+		thisAV.retval.eastBox.remove();
+		thisAV.retval.westBox.remove();
 
 		// which was smaller?
 		if (thisAV.fp.leftResult.minDist <
@@ -748,6 +778,10 @@ var hdxClosestPairsRecAV = {
             label: "cleanup",
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
+		// remove the overlays from the returned call
+		thisAV.retval.eastBox.remove();
+		thisAV.retval.westBox.remove();
+
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -911,7 +945,7 @@ var hdxClosestPairsRecAV = {
 	
 	// properties to check
 	let overlays = [ "westLine", "eastLine", "recLine", "minLine",
-			 "candidateBox" ];
+			 "candidateBox", "eastBox", "westBox" ];
 
 	// if there is anything on the recursive stack, look for and
 	// remove the map objects
