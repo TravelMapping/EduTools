@@ -940,6 +940,44 @@ var hdxClosestPairsRecAV = {
 	newAO += '<input id="overlays" type="checkbox" checked /> Show recursion level overlays'
         hdxAV.algOptions.innerHTML = newAO;
 
+	// honor QS parameters
+	if (HDXQSIsSpecified("minPoints")) {
+	    let minPoints = parseFloat(HDXQSValue("minPoints"));
+	    if ((minPoints >= 3) && (minPoints <= (waypoints.length - 1)/2)) {
+		document.getElementById("minPoints").value = minPoints;
+	    }
+	    else {
+		console.log("minPoints QS parameter " +
+			    HDXQSValue("minPoints") + " invalid");
+	    }
+	}
+
+	if (HDXQSIsSpecified("maxRec")) {
+	    let maxRec = parseFloat(HDXQSValue("maxRec"));
+	    if ((maxRec >= 0) && (maxRec <= (waypoints.length - 1)/2)) {
+		document.getElementById("maxRec").value = maxRec;
+	    }
+	    else {
+		console.log("maxRec QS parameter " +
+			    HDXQSValue("maxRec") + " invalid");
+	    }
+	}
+
+	if (HDXQSIsSpecified("overlays")) {
+	    let overlays = HDXQSValue("overlays");
+	    if (overlays == "true") {
+		document.getElementById("overlays").checked = true;
+	    }
+	    else if (overlays == "false") {
+		document.getElementById("overlays").checked = false;
+	    }
+	    else {
+		console.log("overlays QS parameter " +
+			    HDXQSValue("overlays") + " invalid");
+	    }
+	}
+
+	// AV control panel entries
         addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
         addEntryToAVControlPanel("overlaps",
 				 this.visualSettings.overlapPoints);
