@@ -28,6 +28,7 @@ The JS code for HDX is split among several files for easier management.
 * `hdxedgeextremesav.js` contains the implementation of the edge-based extremes search AV.
 * `hdxextremepairsav.js` contains the implementation of the extreme pairs (closest and/or furthest pairs) AV.
   * `closeAndOrFar` Specify to compute the `closest`, `farthest`, or `both`
+  * `keepLines` toggles whether to keep distance line segments on the map
 * `hdxgraphcoloringav.js` contains the implementation of the Welsh-Powell graph coloring algorithm visualization.
 * `hdxgraphsearchbox.js` contains the functionality related to the "Option 1" search box for loading graph data.
 * `hdxhover.js` contains the implementation of "hover over" highlighting of graph vertices and edges.
