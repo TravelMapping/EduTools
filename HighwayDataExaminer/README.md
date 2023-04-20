@@ -7,6 +7,8 @@ The main index page `index.php` takes optional query string parameters to contro
 * `av` specifies the AV to set up inititally.
 * `gv` specifies that the given graph archive set should be used for graph loading.
 
+In the list of files below, the indented bullet items are the additional QS parameters accepted by each AV to set AV parameters.
+
 The JS code for HDX is split among several files for easier management.
 
 * `hdxapclosestpts.js` contains the implementation for the brute force All Points Closest Pairs AV.
