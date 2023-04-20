@@ -33,6 +33,7 @@ var hdxExtremePairsAV = {
     lineFarthest: null,
     lineVisiting: null,
     keepAllLines: false,
+    v1Lines: [],
     allLines: [],
 
     // what are we computing?
@@ -400,6 +401,11 @@ var hdxExtremePairsAV = {
                                          thisAV.visualSettings.discardedv2,
                                          15, false);
                 }
+		// if we are keeping all lines, they get thinner and more
+		// transparent when a v1 loop ends
+		if (thisAV.keepAllLines) {
+		    thisAV.movev1Lines();
+		}
                 hdxAV.nextAction = "v1forLoopTop";
             },
             logMessage: function(thisAV) {
@@ -447,7 +453,7 @@ var hdxExtremePairsAV = {
         });
         this.lineVisiting.addTo(map);
 	if (this.keepAllLines) {
-	    this.allLines.push(this.lineVisiting);
+	    this.v1Lines.push(this.lineVisiting);
 	}
 	
     },
@@ -457,8 +463,8 @@ var hdxExtremePairsAV = {
 
 	if (this.keepAllLines) {
 	    this.lineVisiting.setStyle( {
-		color: visualSettings.discarded.color,
-		opacity: 0.1,
+		//color: visualSettings.discarded.color,
+		opacity: 0.2,
 		weight: 2
 	    });
 	}
@@ -467,6 +473,21 @@ var hdxExtremePairsAV = {
 	}	
     },
 
+    // we are done with a v1, make its lines thinner and more
+    // transparent, and move them into the allLines list
+    movev1Lines() {
+
+	while (this.v1Lines.length > 0) {
+	    let line = this.v1Lines.pop();
+	    line.setStyle( {
+		color: visualSettings.discarded.color,
+		opacity: 0.1,
+		weight: 2
+	    });
+	    this.allLines.push(line);
+	}
+    },
+    
     // functions to draw or update the polylines connecting the
     // current closest and furthest pairs
     updateLineClosest() {
@@ -608,6 +629,9 @@ Compute: <select id="closeAndOrFar">
             this.lineFarthest.remove();
         }
 
+	for (let i = 0; i < this.v1Lines.length; i++) {
+	    this.v1Lines[i].remove();
+	}
 	for (let i = 0; i < this.allLines.length; i++) {
 	    this.allLines[i].remove();
 	}
