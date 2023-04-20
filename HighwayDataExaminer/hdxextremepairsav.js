@@ -32,6 +32,8 @@ var hdxExtremePairsAV = {
     lineClosest: null,
     lineFarthest: null,
     lineVisiting: null,
+    keepAllLines: false,
+    allLines: [],
 
     // what are we computing?
     findClosest: true,
@@ -443,13 +445,26 @@ var hdxExtremePairsAV = {
             opacity: 0.6,
             weight: 4
         });
-        this.lineVisiting.addTo(map);   
+        this.lineVisiting.addTo(map);
+	if (this.keepAllLines) {
+	    this.allLines.push(this.lineVisiting);
+	}
+	
     },
     
     // function to remove the visiting polyline
     removeLineVisiting() {
 
-        this.lineVisiting.remove();
+	if (this.keepAllLines) {
+	    this.lineVisiting.setStyle( {
+		color: visualSettings.discarded.color,
+		opacity: 0.1,
+		weight: 2
+	    });
+	}
+	else {
+            this.lineVisiting.remove();
+	}	
     },
 
     // functions to draw or update the polylines connecting the
@@ -502,6 +517,8 @@ var hdxExtremePairsAV = {
 	this.findClosest = (opt == "closest" || opt == "both");
 	this.findFarthest = (opt == "farthest" || opt == "both");
 
+	this.keepAllLines = document.getElementById("keepLines").checked;
+	
         // show waypoints, hide connections
         initWaypointsAndConnections(true, false,
                                     visualSettings.undiscovered);
@@ -544,6 +561,8 @@ Compute: <select id="closeAndOrFar">
 <option value="farthest">Farthest Pair Only</option>
 <option value="both">Both Closest and Farthest Pair</option>
 </select>
+<br />
+<input id="keepLines" type="checkbox" /> Keep all distance lines
 `;
 
 	// check for QS parameter for close and/or far
@@ -554,6 +573,20 @@ Compute: <select id="closeAndOrFar">
 	    }
 	    else {
 		console.log("QS parameter closeAndOrFar=" + opt + " is invalid, ignoring");
+	    }
+	}
+
+	// check for QS parameter for keeping lines
+	if (HDXQSIsSpecified("keepLines")) {
+	    let opt = HDXQSValue("keepLines");
+	    if (opt == "true") {
+		document.getElementById("keepLines").checked = true;
+	    }
+	    else if (opt == "false") {
+		document.getElementById("keepLines").checked = false;
+	    }
+	    else {
+		console.log("QS parameter keepLines=" + opt + " is invalid, ignoring");
 	    }
 	}
 	
@@ -574,6 +607,10 @@ Compute: <select id="closeAndOrFar">
         if (this.lineFarthest != null) {
             this.lineFarthest.remove();
         }
+
+	for (let i = 0; i < this.allLines.length; i++) {
+	    this.allLines[i].remove();
+	}
     },
     
     idOfAction(action) {
