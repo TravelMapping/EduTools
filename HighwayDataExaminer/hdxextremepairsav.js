@@ -12,7 +12,7 @@ var hdxExtremePairsAV = {
     // entries for list of AVs
     value: "closestpairs",
     name: "Vertex Closest/Farthest Pairs",
-    description: "Search for the closest and farthest pair of vertices (waypoints).",
+    description: "Search for the closest and/or farthest pair of vertices (waypoints).",
     
     // state variables for closest pairs search
     // loop indices
@@ -33,6 +33,10 @@ var hdxExtremePairsAV = {
     lineFarthest: null,
     lineVisiting: null,
 
+    // what are we computing?
+    findClosest: true,
+    findFurthest: false,
+    
     // visual settings specific to closest/farthest pairs
     // NOTE: these match BFCH and should probably be given
     // common names and moved to hdxAV.visualSettings
@@ -67,10 +71,20 @@ var hdxExtremePairsAV = {
             comment: "initialize closest pair variables",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                
-                updateAVControlEntry("closeLeader", "no leader yet, d<sub>closest</sub> = &infin;");
-                updateAVControlEntry("farLeader", "no leader yet, d<sub>farthest</sub> = 0");
 
+		if (thisAV.findClosest) {
+                    updateAVControlEntry("closeLeader", "no leader yet, d<sub>closest</sub> = &infin;");
+		}
+		else {
+		    updateAVControlEntry("closeLeader", "");
+		}
+
+		if (thisAV.findFarthest) {
+                    updateAVControlEntry("farLeader", "no leader yet, d<sub>farthest</sub> = 0");
+		}
+		else {
+		    updateAVControlEntry("farLeader", "");
+		}
 
                 hdxAV.iterationDone = true;
                 thisAV.v1 = -1;  // will increment to 0
@@ -153,8 +167,12 @@ var hdxExtremePairsAV = {
                                     waypoints[thisAV.v2].lat,
                                     waypoints[thisAV.v2].lon));
                 updateAVControlEntry("checkingDistance", "Distance: " + thisAV.d_this.toFixed(3));
-                hdxAV.nextAction = "checkCloseLeader";
-
+		if (thisAV.findClosest) {
+                    hdxAV.nextAction = "checkCloseLeader";
+		}
+		else {
+		    hdxAV.nextAction = "checkFarLeader";
+		}
             },
             logMessage: function(thisAV) {
                 return "Compute distance " + thisAV.d_this.toFixed(3) + " between v<sub>1</sub>=" + thisAV.v1 + " and v<sub>2</sub>=" + thisAV.v2;
@@ -169,7 +187,12 @@ var hdxExtremePairsAV = {
                     hdxAV.nextAction = "newCloseLeader";
                 }
                 else {
-                    hdxAV.nextAction = "checkFarLeader";
+		    if (thisAV.findFarthest) {
+			hdxAV.nextAction = "checkFarLeader";
+		    }
+		    else {
+			hdxAV.nextAction = "v2forLoopBottom";
+		    }
                 }
             },
             logMessage: function(thisAV) {
@@ -218,7 +241,12 @@ var hdxExtremePairsAV = {
                 updateMarkerAndTable(thisAV.v2, visualSettings.leader,
                                      40, false);
                 thisAV.updateLineClosest();
-                hdxAV.nextAction = "checkFarLeader";
+		if (thisAV.findFarthest) {
+                    hdxAV.nextAction = "checkFarLeader";
+		}
+		else {
+		    hdxAV.nextAction = "v2forLoopBottom";
+		}
             },
             logMessage: function(thisAV) {
                 return "[" + thisAV.v1 + "," + thisAV.v2 + "] new closest pair with d<sub>closest</sub>=" + thisAV.d_closest.toFixed(3);
@@ -325,14 +353,21 @@ var hdxExtremePairsAV = {
                     return "Done processing v<sub>2</sub>=" + thisAV.v2;
                 }
                 let leaderOrNot;
-                // would be nice to differentiate between which leader
-                // or indicate both
-                if (thisAV.closest[0] == thisAV.v1 &&
-                    thisAV.closest[1] == thisAV.v2 ||
-                    thisAV.farthest[0] == thisAV.v1 &&
-                    thisAV.farthest[1] == thisAV.v2) {
-                    leaderOrNot = "New leader";
+		let isNewClose = thisAV.closest[0] == thisAV.v1 &&
+                    thisAV.closest[1] == thisAV.v2;
+		let isNewFar = thisAV.farthest[0] == thisAV.v1 &&
+                    thisAV.farthest[1] == thisAV.v2;
+                if (isNewClose) {
+		    if (isNewFar) {
+			leaderOrNot = "New closest and farthest leader";
+		    }
+		    else {
+			leaderOrNot = "New closest leader";
+		    }
                 }
+		else if (isNewFar) {
+		    leaderOrNot = "New farthest leader";
+		}
                 else {
                     leaderOrNot = "Discarding";
                 }
@@ -462,17 +497,36 @@ var hdxExtremePairsAV = {
 
         hdxAV.algStat.innerHTML = "Initializing";
 
+	// determine what we are computing
+	let opt = document.getElementById("closeAndOrFar").value;
+	this.findClosest = (opt == "closest" || opt == "both");
+	this.findFarthest = (opt == "farthest" || opt == "both");
+
         // show waypoints, hide connections
         initWaypointsAndConnections(true, false,
                                     visualSettings.undiscovered);
-        this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">closest &larr; null<br />d<sub>closest</sub> &larr; &infin;<br />farthest &larr; null<br />d<sub>farthest</sub> &larr; 0</td></tr>';
+        this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
+	if (this.findClosest) {
+	    this.code += 'closest &larr; null<br />d<sub>closest</sub> &larr; &infin;';
+	}
+	if (this.findClosest && this.findFarthest) {
+	    this.code += '<br />';
+	}
+	if (this.findFarthest) {
+	    this.code += 'farthest &larr; null<br />d<sub>farthest</sub> &larr; 0';
+	}
+	this.code += '</td></tr>';
         this.code += pcEntry(0,'for (v<sub>1</sub> &larr; 0 to |V|-2)',"v1forLoopTop");
         this.code += pcEntry(1, 'for (v<sub>2</sub> &larr; v1+1 to |V|-1)', "v2forLoopTop");
         this.code += pcEntry(2, 'd &larr; dist(v<sub>1</sub>,v<sub>2</sub>)', "computeDistance");
-        this.code += pcEntry(2, 'if (d < d<sub>closest</sub>)', "checkCloseLeader");
-        this.code += pcEntry(3, 'closest &larr; [v<sub>1</sub>,v<sub>2</sub>]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d<sub>closest</sub> &larr; d', "newCloseLeader");
-        this.code += pcEntry(2, 'if (d > d<sub>farthest</sub>)', "checkFarLeader");
-        this.code += pcEntry(3, 'farthest &larr; [v<sub>1</sub>,v<sub>2</sub>]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d<sub>farthest</sub> &larr; d', "newFarLeader");
+	if (this.findClosest) {
+            this.code += pcEntry(2, 'if (d < d<sub>closest</sub>)', "checkCloseLeader");
+            this.code += pcEntry(3, 'closest &larr; [v<sub>1</sub>,v<sub>2</sub>]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d<sub>closest</sub> &larr; d', "newCloseLeader");
+	}
+	if (this.findFarthest) {
+            this.code += pcEntry(2, 'if (d > d<sub>farthest</sub>)', "checkFarLeader");
+            this.code += pcEntry(3, 'farthest &larr; [v<sub>1</sub>,v<sub>2</sub>]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d<sub>farthest</sub> &larr; d', "newFarLeader");
+	}
     },
 
     // set up UI entries for closest/farthest pairs
@@ -484,8 +538,25 @@ var hdxExtremePairsAV = {
         hdxAV.algStat.innerHTML = "Setting up";
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
-        hdxAV.algOptions.innerHTML = '';
+        hdxAV.algOptions.innerHTML = `
+Compute: <select id="closeAndOrFar">
+<option value="closest" selected>Closest Pair Only</option>
+<option value="farthest">Farthest Pair Only</option>
+<option value="both">Both Closest and Farthest Pair</option>
+</select>
+`;
 
+	// check for QS parameter for close and/or far
+	if (HDXQSIsSpecified("closeAndOrFar")) {
+	    let opt = HDXQSValue("closeAndOrFar");
+	    if (opt == "closest" || opt == "farthest" || opt == "both") {
+		document.getElementById("closeAndOrFar").value = opt;
+	    }
+	    else {
+		console.log("QS parameter closeAndOrFar=" + opt + " is invalid, ignoring");
+	    }
+	}
+	
         addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
         addEntryToAVControlPanel("v2visiting", this.visualSettings.v2);
         addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
