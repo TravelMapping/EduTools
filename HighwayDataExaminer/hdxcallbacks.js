@@ -16,7 +16,8 @@ function speedChanged() {
 
     // for run options, set update time, should match the values
     // set in the speedChanged when created in index.php
-    if (hdxAV.delay == 0) {
+    if (hdxAV.delay < -1) {
+	hdxAV.delay = 0;
 	if (hdxAV.speedName == "1 Update/sec") {
 	    hdxAV.updateTime = 1000;
 	}

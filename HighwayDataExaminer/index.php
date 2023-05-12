@@ -148,9 +148,13 @@ will display
 	      <optgroup label="Run Options">
 		<!-- entries in this group must match conditional in
 		     speedChanged -->
-		<option value="0">1 Update/sec</option>
-		<option value="0">15 Updates/sec</option>
-		<option value="0">60 Updates/sec</option>
+		<!-- changes here should also be reflected in the QS
+		     parameter parsing code in HDXInit and care should
+		     be taken not to break old saved URLs that use
+		     the avspeed QS parameter -->
+		<option value="-2">1 Update/sec</option>
+		<option value="-3">15 Updates/sec</option>
+		<option value="-4">60 Updates/sec</option>
 	      </optgroup>
 	      <optgroup label="Step-By-Step Options">
 		<option value="1">Max Step-by-Step Speed</option>		
