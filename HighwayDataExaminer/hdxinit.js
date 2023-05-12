@@ -89,6 +89,8 @@ function HDXInit() {
 
     // if the avspeed= QS parameter is present, try to set the default
     // AV speed
+    // Note: entries here match those in the construction of the speed
+    // dropdown in index.php and in the speedChanged function
     if (HDXQSIsSpecified("avspeed")) {
 	let value = HDXQSValue("avspeed");
 	let setVal = "NOTFOUND";
@@ -138,6 +140,8 @@ function HDXInit() {
 	    console.log("Invalid avspeed " + value);	    
 	}
 	else {
+	    // Note: this triggers a speedChanged callback so we do not
+	    // need to call it explicitly
 	    document.getElementById("speedChanger").value = setVal;
 	}
     }
