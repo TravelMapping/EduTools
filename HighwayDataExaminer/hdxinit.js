@@ -70,17 +70,17 @@ function HDXInit() {
 	HDXReadFileFromWebServer(HDXQSValue("load"));
     }
 
-    //if the av= QS parameter is present, try to set the current AV
-    if(HDXQSIsSpecified("av")) {
+    // if the av= QS parameter is present, try to set the current AV
+    if (HDXQSIsSpecified("av")) {
         let value=HDXQSValue("av");
-       for (let i = 0; i < hdxAV.avList.length; i++) {
-        if ( value== hdxAV.avList[i].value) {
-            hdxAV.currentAV = hdxAV.avList[i];
-            document.getElementById("AlgorithmSelection").selectedIndex=i;
-            break;
-        }
-    }
-    document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
+	for (let i = 0; i < hdxAV.avList.length; i++) {
+            if ( value== hdxAV.avList[i].value) {
+		hdxAV.currentAV = hdxAV.avList[i];
+		document.getElementById("AlgorithmSelection").selectedIndex=i;
+		break;
+            }
+	}
+	document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
     }
     map.on('baselayerchange', newMapTileSelected);
     newMapTileSelected();
