@@ -54,13 +54,17 @@ function HDXInit() {
     // means to use the latest graphs
     hdxGlobals.graphSet = "current";
     if (HDXQSIsSpecified("gv")) {
+	let found = false;
 	for (let i = 0; i < hdxGlobals.graphArchiveSets.length; i++) {
 	    if (HDXQSValue("gv") == hdxGlobals.graphArchiveSets[i].setName) {
 		hdxGlobals.graphSet = HDXQSValue("gv");
+		found = true;
 		break;
 	    }
 	}
-	console.log("Could not find graph archive set " + HDXQSValue("gv"));
+	if (!found) {
+	    console.log("Could not find graph archive set " + HDXQSValue("gv"));
+	}
     }
     
     // if the load= QS parameter is present, try to load the file
