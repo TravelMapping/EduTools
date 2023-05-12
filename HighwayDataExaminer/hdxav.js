@@ -27,14 +27,14 @@ var hdxAV = {
     // for setTimeout calls
     delay: 75,
 
-    // when in a run mode (indicated by delay == 0), the amount of time
+    // when in a run mode (indicated by delay < -1), the amount of time
     // between screen updates, will be set by speedChanged if such a mode
     // is chosen
     updateTime: 0,
 
     // list of available AVs
     avList: [],
-    
+
     // remember the currently-selected AV
     currentAV: null,
     

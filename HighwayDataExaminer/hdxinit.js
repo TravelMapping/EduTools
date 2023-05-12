@@ -57,7 +57,7 @@ function HDXInit() {
 	for (let i = 0; i < hdxGlobals.graphArchiveSets.length; i++) {
 	    if (HDXQSValue("gv") == hdxGlobals.graphArchiveSets[i].setName) {
 		hdxGlobals.graphSet = HDXQSValue("gv");
-		break
+		break;
 	    }
 	}
 	console.log("Could not find graph archive set " + HDXQSValue("gv"));
@@ -72,9 +72,9 @@ function HDXInit() {
 
     // if the av= QS parameter is present, try to set the current AV
     if (HDXQSIsSpecified("av")) {
-        let value=HDXQSValue("av");
+        let value = HDXQSValue("av");
 	for (let i = 0; i < hdxAV.avList.length; i++) {
-            if ( value== hdxAV.avList[i].value) {
+            if ( value == hdxAV.avList[i].value) {
 		hdxAV.currentAV = hdxAV.avList[i];
 		document.getElementById("AlgorithmSelection").selectedIndex=i;
 		break;
@@ -82,6 +82,62 @@ function HDXInit() {
 	}
 	document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
     }
+
+    // if the avspeed= QS parameter is present, try to set the default
+    // AV speed
+    if (HDXQSIsSpecified("avspeed")) {
+	let value = HDXQSValue("avspeed");
+	let setVal = "NOTFOUND";
+	switch (value) {
+	case "-2":
+	case "1persec":
+	    setVal = "-2";
+	    break;
+	case "-3":
+	case "15persec":
+	    setVal = "-3";
+	    break;
+	case "-4":
+	case "60persec":
+	    setVal = "-4";
+	    break;
+	case "1":
+	case "max":
+	    setVal = "1";
+	    break;
+	case "40":
+	case "veryfast":
+	    setVal = "40";
+	    break;
+	case "75":
+	case "fast":
+	    setVal = "75";
+	    break;
+	case "225":
+	case "medium":
+	    setVal = "225";
+	    break;
+	case "675":
+	case "slow":
+	    setVal = "675";
+	    break;
+	case "2000":
+	case "veryslow":
+	    setVal = "2000";
+	    break;
+	case "-1":
+	case "step":
+	    setVal = "-1";
+	    break;
+	}
+	if (setVal == "NOTFOUND") {
+	    console.log("Invalid avspeed " + value);	    
+	}
+	else {
+	    document.getElementById("speedChanger").value = setVal;
+	}
+    }
+    
     map.on('baselayerchange', newMapTileSelected);
     newMapTileSelected();
 
