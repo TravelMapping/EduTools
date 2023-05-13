@@ -18,38 +18,49 @@ var hdxQuadtreeAV = {
     w: 0,
     s: 0,
     
-    //currentQuadtree is used to track which child of the quadtree we are adding the waypoint to
+    // currentQuadtree is used to track which child of the quadtree we
+    // are adding the waypoint to
     currentQuadtree: null,
 
-    //baseQuadtree is used to return back to the original universe-wide quadtree after we are fis
+    // baseQuadtree is used to return back to the original
+    // universe-wide quadtree after we are fis
     baseQuadtree: null,
 
-    //used to keep track of which point is being added, which is important because points can be added 
-    //into either, leaves without refinement, leaves from refinement, or a parent
+    // used to keep track of which point is being added, which is
+    // important because points can be added into either, leaves
+    // without refinement, leaves from refinement, or a parent
     currentVertex: null,
 
-    //this is used to return to the specific location in the pseudocode/state machine for recursive calls, notably add
-    //as such there is no special function mechanism that allows this to happen. All we are doing is pushing
-    //the state we are going to next after a call is made
+    // this is used to return to the specific location in the
+    // pseudocode/state machine for recursive calls, notably add as
+    // such there is no special function mechanism that allows this to
+    // happen. All we are doing is pushing the state we are going to
+    // next after a call is made
     callStack: [],
 
-    //used to track the parents of quadtrees, primarily used alongside the childThatContains calls
+    // used to track the parents of quadtrees, primarily used
+    // alongside the childThatContains calls
     qtStack: [],
 
-    //loop variable that tracks which point is currently being added to the base quadtree
+    // loop variable that tracks which point is currently being added
+    // to the base quadtree
     nextToCheck: -1,
-    //# leaf quadrants so far
+    // # leaf quadrants so far
     numLeaves: 1,
-    //depth of the quadtree
+    // depth of the quadtree
     maxDepth: 0,
-    //default refinement threshold for the quadtree, deterimined with an i/o box before the av runs
+    // default refinement threshold for the quadtree, deterimined with an i/o box before the av runs
     refinement: 3,
-    //index for the refinement loop
-    //the reason why this does not have to be saved on a stack is because when we are adding points
-    //we do not care about previous add calls other than to get us into the correct quadtree
-    //as such, the only time we need to reset this variable is when children are created
+    // index for the refinement loop
+
+    // the reason why this does not have to be saved on a stack is
+    // because when we are adding points we do not care about previous
+    // add calls other than to get us into the correct quadtree as
+    // such, the only time we need to reset this variable is when
+    // children are created
     refI: -1,
-    //remaining waypoints to be added to the tree
+    
+    // remaining waypoints to be added to the tree
     numVUndiscovered: waypoints.length,
 
     // list of polylines showing the universe bounds
@@ -57,37 +68,33 @@ var hdxQuadtreeAV = {
     // directionalBoundingBox and addNewPolylines functions below
     boundingPoly: [],
 
-    //list of polyline used to represent the universe of the current quadtree, which is reset and changed whenever
-    //the current quadtree is changed
+    // list of polyline used to represent the universe of the current
+    // quadtree, which is reset and changed whenever the current
+    // quadtree is changed
     highlightPoly: [],
 
     avActions: [
         {
             label: "START",
             comment: "creates bounding box and initializes fields",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                //this gets the specific value for the refinement threshold for the quadtree
-                //from the user in the window before they press visualize
+                // this gets the specific value for the refinement
+                // threshold for the quadtree from the user in the
+                // window before they press visualize
                 thisAV.refinement = document.getElementById("refinement").value;
-
                 thisAV.nextToCheck = -1;
-
                 thisAV.numLeaves = 1;
-
                 thisAV.maxDepth = 0;
-
                 thisAV.callStack = [];
-
                 thisAV.qtStack = [];
-
                 thisAV.refI = -1; 
 
                 thisAV.numVUndiscovered = waypoints.length;
                 updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
 
-
-                //other stuff needs to go here but at least the boundingBox should be generated from here
+                // other stuff needs to go here but at least the
+                // boundingBox should be generated from here
                 thisAV.boundingPoly = [];
                 thisAV.generateBoundingBox();
 
@@ -98,7 +105,7 @@ var hdxQuadtreeAV = {
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topForLoop";
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Creating bounding box that contains all waypoints";
             }
 
@@ -107,231 +114,234 @@ var hdxQuadtreeAV = {
         {
             label: "topForLoop",
             comment: "main for loop that iterates over all waypoints to add each to the quadtree",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-              
                 thisAV.currentQuadtree = thisAV.baseQuadtree;
                 thisAV.qtStack = [];
                 thisAV.nextToCheck++;
                 
-                if(thisAV.nextToCheck < waypoints.length){
+                if (thisAV.nextToCheck < waypoints.length) {
                     waypoints[thisAV.nextToCheck].num = thisAV.nextToCheck;
                     thisAV.currentVertex = waypoints[thisAV.nextToCheck];
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.visiting,
-                        30, false);
-                    updateAVControlEntry("visiting","Visiting: #" + thisAV.currentVertex.num + " " + thisAV.currentVertex.label);
+					 30, false);
+                    updateAVControlEntry("visiting","Visiting: #" +
+					 thisAV.currentVertex.num + " " +
+					 thisAV.currentVertex.label);
                     thisAV.numVUndiscovered--;
-                    updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
-                    updateAVControlEntry("numLeaves","Number of leaf quadtrees: " + thisAV.numLeaves);
-                    updateAVControlEntry("maxDepth","Depth of the quadtree: " + thisAV.maxDepth);
+                    updateAVControlEntry("undiscovered",
+					 thisAV.numVUndiscovered +
+					 " vertices not yet visited");
+                    updateAVControlEntry("numLeaves",
+					 "Number of leaf quadtrees: " +
+					 thisAV.numLeaves);
+                    updateAVControlEntry("maxDepth",
+					 "Depth of the quadtree: " +
+					 thisAV.maxDepth);
                     thisAV.qtStack.push(thisAV.currentQuadtree);
                     thisAV.highlightBoundingBox();
                     hdxAV.nextAction = "topAddPoint";
-                } else {
+                }
+		else {
                     hdxAV.nextAction = "cleanup";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Top of main for loop over vertices, check=" + thisAV.nextToCheck;
             }
-
         },
 
         {
             label: "topAddPoint",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.callStack.push("topForLoop");
                 hdxAV.nextAction = "bottomAddPoint";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Adding vertex #" + thisAV.nextToCheck + ": " + waypoints[thisAV.nextToCheck].label + " to quadtree";
             }
-
         },
 
         {
             label: "bottomAddPoint",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.nextAction = "isLeaf";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Calling method that adds vertex #"+ thisAV.nextToCheck + " to quadtree";
             }
-
         },
 
         {
             label: "isLeaf",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                if(thisAV.currentQuadtree.isLeaf()){
+                if (thisAV.currentQuadtree.isLeaf()) {
                     hdxAV.nextAction = "pushPoint";
-                }  else {
+                }
+		else {
                     hdxAV.nextAction = "notLeafFindChild";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Checking if the current quadtree is a leaf";
             },
 
             currentVariable: function(thisAV) {
                 return thisAV.currentQuadtree.isLeaf();
             }
-
         },
 
         {
             label: "pushPoint",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                updateMarkerAndTable(thisAV.currentVertex.num,visualSettings.spanningTree,30,false);
+                updateMarkerAndTable(thisAV.currentVertex.num,
+				     visualSettings.spanningTree,30,false);
 
                 thisAV.currentQuadtree.points.push(thisAV.currentVertex);
                 hdxAV.nextAction = "ifRefine";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Adding vertex #" + thisAV.nextToCheck + " to this quadtree's points array";
             }
-
         },
 
         {
             label: "ifRefine",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(thisAV.currentQuadtree.points.length < thisAV.refinement){
+                if (thisAV.currentQuadtree.points.length < thisAV.refinement) {
                         
                     thisAV.currentQuadtree = thisAV.qtStack.pop();
                     thisAV.highlightBoundingBox();
                         
                     hdxAV.nextAction = thisAV.callStack.pop();
-                } else {
-                    for(var i = 0; i < thisAV.currentQuadtree.points.length; i++){
+                }
+		else {
+                    for (var i = 0; i < thisAV.currentQuadtree.points.length; i++) {
                         updateMarkerAndTable(thisAV.currentQuadtree.points[i].num,visualSettings.discovered,
-                            31,false);
+					     31,false);
                     }
                     hdxAV.nextAction = "makeChildren";
                 }
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Checking if quadtree leaf has more vertices than the refinement";
             }
-
         },
 
         {
             label: "makeChildren",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
                 thisAV.refI = -1;
-                //this calls a function of the quadtree object that creates the quadtree children
+		// this calls a function of the quadtree object that
+		// creates the quadtree children		
                 thisAV.currentQuadtree.makeChildren();
-                //this method call adds new polylines to the map to represent the creation of new quadtree children
-                //and that the refinement process has begun
+
+                // this method call adds new polylines to the map to
+                // represent the creation of new quadtree children and
+                // that the refinement process has begun
                 thisAV.addNewPolylines();
                 thisAV.numLeaves += 3
-                updateAVControlEntry("numLeaves","Number of leaf quadtrees: " + thisAV.numLeaves);
-                if(thisAV.maxDepth < thisAV.qtStack.length){
+                updateAVControlEntry("numLeaves",
+				     "Number of leaf quadtrees: " +
+				     thisAV.numLeaves);
+                if (thisAV.maxDepth < thisAV.qtStack.length) {
                     thisAV.maxDepth = thisAV.qtStack.length;
-                    updateAVControlEntry("maxDepth","Depth of the quadtree: " + thisAV.maxDepth);
+                    updateAVControlEntry("maxDepth","Depth of the quadtree: " +
+					 thisAV.maxDepth);
                 }
 
                 //this will overwrite existing polylines
-                for(let i = 0; i < thisAV.boundingPoly; i++){
+                for (let i = 0; i < thisAV.boundingPoly; i++) {
                     thisAV.boundingPoly[i].addTo(map);
                 }
                 hdxAV.nextAction = "topRefLoop";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Making children for the current quadtree";
             }
-
         },
 
         {
             label: "topRefLoop",
             comment: "",
-            code: function(thisAV){
-                highlightPseudocode(this.label, visualSettings.visiting);
-                
+            code: function(thisAV) {
+                highlightPseudocode(this.label, visualSettings.visiting);       
                 
                 thisAV.refI++;
                 thisAV.currentVertex = thisAV.currentQuadtree.points[thisAV.refI];
 
-                if(thisAV.qtStack.length > 1){
+                if (thisAV.qtStack.length > 1) {
                     thisAV.qtStack.pop();
                 }
 
                 hdxAV.iterationDone = true;
-                if(thisAV.refI < thisAV.refinement){
+                if (thisAV.refI < thisAV.refinement) {
                     hdxAV.nextAction = "loopFindChild";
                     updateMarkerAndTable(thisAV.currentVertex.num,visualSettings.visiting,30,false);
                     updateAVControlEntry("visiting","Visiting: #" + thisAV.currentVertex.num + " " + thisAV.currentVertex.label);
-                } else {
+                }
+		else {
                     hdxAV.nextAction = "pointsNull";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Top of for loop over points array in the current quadtree";
             }
-
         },
 
         {
             label: "loopFindChild",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.callStack.push("loopChildAdd");
                 
                 hdxAV.nextAction = "bottomFindChild";
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Finding the which child vertex #" + thisAV.currentVertex.num + " belongs to";
             }
-
         },
 
         {
             label: "loopChildAdd",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.callStack.push("topRefLoop");
                 hdxAV.nextAction = "bottomAddPoint";
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Adding vertex #" + thisAV.currentVertex.num + " to new child quadtree";
             }
-
         },
 
         {
             label: "pointsNull",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.refI = -1;
@@ -339,145 +349,129 @@ var hdxQuadtreeAV = {
 
                 hdxAV.nextAction = "topForLoop";
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Setting the points array of the parent quadtree to null";
             }
-
         },
 
         {
             label: "notLeafFindChild",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.callStack.push("notLeafChildAdd");
                 hdxAV.nextAction = "bottomFindChild";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Finding the which child vertex #" + thisAV.currentVertex.num + " belongs to";
             }
-
         },
 
         {
             label: "notLeafChildAdd",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.callStack.push("topForLoop");
-
                 hdxAV.nextAction = "bottomAddPoint";
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Finding the which child vertex #" + thisAV.currentVertex.num + " belongs to";
             }
-
         },
 
         {
             label: "bottomFindChild",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 hdxAV.nextAction = "findChildLat";
 
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Adding vertex #" + thisAV.currentVertex.num + " to child quadtree";;
             }
-
         },
 
         {
             label: "findChildLat",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(thisAV.currentVertex.lat < thisAV.currentQuadtree.midLat){
-
+                if (thisAV.currentVertex.lat < thisAV.currentQuadtree.midLat) {
                     hdxAV.nextAction = "topFindChildLng";
-                } else {
-                    
+                }
+		else {
                     hdxAV.nextAction = "bottomFindChildLng";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Checking if vertex #" + thisAV.currentVertex.num + " is in the north or south of the quadtree"
             }
-
         },
 
         {
             label: "topFindChildLng",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                if(thisAV.currentVertex.lon < thisAV.currentQuadtree.midLng){
-
+                if (thisAV.currentVertex.lon < thisAV.currentQuadtree.midLng) {
                     hdxAV.nextAction = "returnSW";
-                } else {
-
+                }
+		else {
                     hdxAV.nextAction = "returnSE";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Checking if vertex #" + thisAV.currentVertex.num + " is in the southwest or southeast of the quadtree";
             }
-
         },
 
         {
             label: "bottomFindChildLng",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                if(thisAV.currentVertex.lon < thisAV.currentQuadtree.midLng){
-
+                if (thisAV.currentVertex.lon < thisAV.currentQuadtree.midLng) {
                     hdxAV.nextAction = "returnNW";
-                } else {
-
+                }
+		else {
                     hdxAV.nextAction = "returnNE";
                 }
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Checking if vertex #" + thisAV.currentVertex.num + " is in the northwest or northeast of the quadtree";
             }
-
         },
 
         {
             label: "returnSW",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.qtStack.push(thisAV.currentQuadtree);
-                //children should be made by this point, if not there is a big problem
+                // children should be made by this point, if not there
+                // is a big problem
                 thisAV.currentQuadtree = thisAV.currentQuadtree.sw;
                 thisAV.highlightBoundingBox();
                
-          
                 hdxAV.nextAction = thisAV.callStack.pop();
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Returning that vertex #" + thisAV.currentVertex.num +  " is in the southwest of the quadtree";
             }
-
         },
 
         {
             label: "returnSE",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.qtStack.push(thisAV.currentQuadtree);
@@ -486,18 +480,16 @@ var hdxQuadtreeAV = {
                 thisAV.highlightBoundingBox();
 
                 hdxAV.nextAction = thisAV.callStack.pop();
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Returning that vertex #" + thisAV.currentVertex.num +  " is in the southeast of the quadtree";;
             }
-
         },
 
         {
             label: "returnNW",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.qtStack.push(thisAV.currentQuadtree);
@@ -506,18 +498,16 @@ var hdxQuadtreeAV = {
                 thisAV.highlightBoundingBox();
                
                 hdxAV.nextAction = thisAV.callStack.pop();
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Returning that vertex #" + thisAV.currentVertex.num +  " is in the northwest of the quadtree";
             }
-
         },
 
         {
             label: "returnNE",
             comment: "",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 thisAV.qtStack.push(thisAV.currentQuadtree);
@@ -526,12 +516,10 @@ var hdxQuadtreeAV = {
                 thisAV.highlightBoundingBox();
               
                 hdxAV.nextAction = thisAV.callStack.pop();
-
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Returning that vertex #" + thisAV.currentVertex.num +  " is in the northeast of the quadtree";
             }
-
         },
 
         {
@@ -546,7 +534,6 @@ var hdxQuadtreeAV = {
                 for (var i = 0; i < thisAV.highlightPoly.length; i++) {
                     thisAV.highlightPoly[i].remove();
                 }
-                
             },
             logMessage: function(thisAV) {
                 return "Cleanup and finalize visualization";
@@ -558,19 +545,19 @@ var hdxQuadtreeAV = {
         hdxAV.algStat.innerHTML = "Initializing";
         initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
-        //pseudocode for the start state    
+        // pseudocode for the start state    
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `qt &larr; new Quadtree(minLat,maxLat,minLng,maxLng,refinement)<br />`;
         this.code += `qt.points &larr; []<br />`
         this.code += `qt.nw, qt.ne, qt.sw, qt.se &larr; null<br />`;
 
-        //pseudocode for the top loop
+        // pseudocode for the top loop
         this.code += '</td></tr>' +
             pcEntry(0,'for(check &larr; 0 to |V| - 1)',"topForLoop");
         this.code += '</td></tr>' +
             pcEntry(1,'qt.add(v[check])',"topAddPoint");
 
-        //pseudocode for add function
+        // pseudocode for add function
         this.code += '</td></tr>' +
             pcEntry(0,'add(vertex)',"bottomAddPoint");
         this.code += '</td></tr>' +
@@ -601,7 +588,7 @@ var hdxQuadtreeAV = {
         this.code += '</td></tr>' +
             pcEntry(2,'c.add(vertex)',"notLeafChildAdd");
 
-        //pseudocode for childThatContains
+        // pseudocode for childThatContains
         this.code += '</td></tr>' +
             pcEntry(0,'childThatContains(vertex)',"bottomFindChild");
         this.code += '</td></tr>' +
@@ -634,7 +621,6 @@ var hdxQuadtreeAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-
         let newAO = 'Refinement Threshold <input type="number" id="refinement" min="2" max="' 
         + (waypoints.length) + '" value="3">';
 
@@ -645,16 +631,14 @@ var hdxQuadtreeAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting)
         addEntryToAVControlPanel("numLeaves",visualSettings.discovered);
-        addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);
-       
-    },
+        addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);      },
 
     cleanupUI() {
-        //remove all the polylines made by the bounding box and the quadtree
+        // remove all the polylines made by the bounding box and the quadtree
         for (var i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].remove();
         }
-        for(var i = 0; i < this.highlightPoly.length; i++){
+        for (var i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
         this.boundingPoly = [];
@@ -665,126 +649,128 @@ var hdxQuadtreeAV = {
 	
         return action.label;
     },
-    //this function generates the bounding box that represents the universe of the quadtree
-    generateBoundingBox(){
+    // this function generates the bounding box that represents the
+    // universe of the quadtree
+    generateBoundingBox() {
         this.n = parseFloat(waypoints[0].lat);
         this.s = parseFloat(waypoints[0].lat);
         this.e = parseFloat(waypoints[0].lon);
         this.w = parseFloat(waypoints[0].lon);
-        for(var i = 1; i < waypoints.length; i++){
+        for (var i = 1; i < waypoints.length; i++) {
 
-            if(waypoints[i].lat > this.n){
+            if (waypoints[i].lat > this.n) {
                 this.n = parseFloat(waypoints[i].lat);
-            } else if (waypoints[i].lat < this.s){
+            }
+	    else if (waypoints[i].lat < this.s) {
                 this.s = parseFloat(waypoints[i].lat);
             }
-            if(waypoints[i].lon > this.e){
+            if (waypoints[i].lon > this.e) {
                 this.e = parseFloat(waypoints[i].lon);
-            } else if (waypoints[i].lon < this.w){
+            }
+	    else if (waypoints[i].lon < this.w) {
                 this.w = parseFloat(waypoints[i].lon);
             }
         }
 
-        //creating the polylines for the bounding box
+        // creating the polylines for the bounding box
         
-        //if square bounding box is not selected, then the quadtree will be split as a rectangle
+        // if square bounding box is not selected, then the quadtree
+        // will be split as a rectangle
         let nEnds = [[this.n,this.w],[this.n,this.e]];
         let sEnds = [[this.s,this.w],[this.s,this.e]];
         let eEnds = [[this.n,this.e],[this.s,this.e]];
         let wEnds = [[this.n,this.w],[this.s,this.w]];
         
-        if(document.getElementById("squareBB").checked){
+        if (document.getElementById("squareBB").checked) {
             let EW = distanceInMiles(nEnds[0][0],nEnds[0][1],nEnds[1][0],nEnds[1][1]);
             let NS = distanceInMiles(eEnds[0][0],eEnds[0][1],eEnds[1][0],eEnds[1][1]);
             let difference;
             //check if the difference between the east west is longer than the north south
-            if(EW > NS){
+            if (EW > NS) {
                 difference = (EW - NS) / 69;
                 this.n += difference / 2;
                 this.s -= difference / 2;
 
-            } else {
+            }
+	    else {
                 difference = (NS - EW) / (Math.cos(Math.abs(this.n - this.s) / 2) * 69);
                 this.e += difference / 2;
                 this.w -= difference / 2;
             }
-        
 
             nEnds = [[this.n,this.w],[this.n,this.e]];
             sEnds = [[this.s,this.w],[this.s,this.e]];
             eEnds = [[this.n,this.e],[this.s,this.e]];
             wEnds = [[this.n,this.w],[this.s,this.w]];
         }
-        
-
-            this.boundingPoly.push(
-                L.polyline(nEnds, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                })
-            );
-            this.boundingPoly.push(
-                L.polyline(sEnds, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                })
-            );
-            this.boundingPoly.push(
-                L.polyline(eEnds, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                })
-            );
-            this.boundingPoly.push(
-                L.polyline(wEnds, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                }) 
-            );
-
-            for (var i = 0; i < 4; i++) {
-                this.boundingPoly[i].addTo(map);
-            }
-    },
-
-    addNewPolylines(){
-        let nsEdge = this.currentQuadtree.makeNSedge();
-        let ewEdge = this.currentQuadtree.makeEWedge();
-                
-            this.boundingPoly.push(
-                L.polyline(nsEdge, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                })
-            );
-            this.boundingPoly.push(
-                L.polyline(ewEdge, {
-                    color: visualSettings.undiscovered.color,
-                    opacity: 0.7,
-                    weight: 3
-                })
-            );
-        for(var i = 0; i < this.boundingPoly.length; i++){
+        this.boundingPoly.push(
+            L.polyline(nEnds, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            })
+        );
+        this.boundingPoly.push(
+            L.polyline(sEnds, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            })
+        );
+        this.boundingPoly.push(
+            L.polyline(eEnds, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            })
+        );
+        this.boundingPoly.push(
+            L.polyline(wEnds, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            }) 
+        );
+	
+        for (var i = 0; i < 4; i++) {
             this.boundingPoly[i].addTo(map);
         }
     },
-
-    highlightBoundingBox(){
+    
+    addNewPolylines() {
+        let nsEdge = this.currentQuadtree.makeNSedge();
+        let ewEdge = this.currentQuadtree.makeEWedge();
+                
+        this.boundingPoly.push(
+            L.polyline(nsEdge, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            })
+        );
+        this.boundingPoly.push(
+            L.polyline(ewEdge, {
+                color: visualSettings.undiscovered.color,
+                opacity: 0.7,
+                weight: 3
+            })
+        );
+        for(var i = 0; i < this.boundingPoly.length; i++) {
+            this.boundingPoly[i].addTo(map);
+        }
+    },
+    
+    highlightBoundingBox() {
         for (var i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
         this.highlightPoly = [];
-       
+	
         let n = this.currentQuadtree.maxLat;
         let s = this.currentQuadtree.minLat;
         let e = this.currentQuadtree.maxLng;
         let w = this.currentQuadtree.minLng;
-
+	
         let nEnds = [[n,w],[n,e]];
         let sEnds = [[s,w],[s,e]];
         let eEnds = [[n,e],[s,e]];
@@ -808,7 +794,8 @@ var hdxQuadtreeAV = {
         }
 
     },
-    //note this is currently not working
+
+    // note this is currently not working
     setConditionalBreakpoints(name) {
         let max = waypoints.length-1;
         let temp = HDXCommonConditionalBreakpoints(name);
@@ -817,16 +804,17 @@ var hdxQuadtreeAV = {
         }
         switch (name) {
             case "isLeaf":
-                html = createInnerHTMLChoice("boolean","isLeaf",
-                                             "current quadtree is a leaf",
-                                             "current quadtree is not a leaf");
-                return html;
-                
-            }
+            html = createInnerHTMLChoice("boolean","isLeaf",
+                                         "current quadtree is a leaf",
+                                         "current quadtree is not a leaf");
+            return html;
+            
+        }
         return "No innerHTML";
     },
-    //note this is currently not working
-    hasConditionalBreakpoints(name){
+
+    // note this is currently not working
+    hasConditionalBreakpoints(name) {
         let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
@@ -837,12 +825,11 @@ var hdxQuadtreeAV = {
         }
         return false;
     }
-
 };
 
 let k = 0;
-//Quadtree object constructor
-function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
+// Quadtree object constructor
+function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
     this.maxLat = maxLat;
     this.maxLng = maxLng;
     this.minLat = minLat;
@@ -853,18 +840,17 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
     this.ne = null;
     this.sw = null;
     this.se = null;    
-    //determines the refinement factor of the quadtree
+    // determines the refinement factor of the quadtree
     this.refinement = refinement;
 
-    //contains waypoint objects
+    // contains waypoint objects
     this.points = [];
 
     this.refineIfNeeded = function() {
-        if (this.points.length == this.refinement){
-
+        if (this.points.length == this.refinement) {
            this.makeChildren();
 
-            for(var i = 0; i < this.points.length; i++){
+            for (var i = 0; i < this.points.length; i++) {
                 this.childThatContains(this.points[i].lat,this.points[i].lon).add(this.points[i]);
             }
             this.points = [];
@@ -876,13 +862,13 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
         this.sw = new Quadtree(this.minLat, this.midLat, this.minLng, this.midLng, this.refinement);
         this.se = new Quadtree(this.minLat, this.midLat, this.midLng, this.maxLng, this.refinement);
     }
-    this.makeNSedge = function(){
+    this.makeNSedge = function() {
         return [[this.minLat,this.midLng],[this.maxLat,this.midLng]];
     }
-    this.makeEWedge = function(){
+    this.makeEWedge = function() {
         return [[this.midLat,this.minLng],[this.midLat,this.maxLng]]
     }
-    this.childThatContains = function(lat,lng){
+    this.childThatContains = function(lat,lng) {
         if (lat < this.midLat) {
             if (lng < this.midLng) {
             return this.sw;
@@ -893,80 +879,82 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
         }
         else {
             if (lng < this.midLng) {
-            return this.nw;
+		return this.nw;
             }
             else {
-            return this.ne;
+		return this.ne;
             }
         }
     }
-    this.get = function(lat,lng){
-        if(this.isLeaf()){
-            for(var i = 0; i < points.length; i++){
-                if(this.points[i].lat == lat && points[i].lon == lng){
+    this.get = function(lat,lng) {
+        if (this.isLeaf()) {
+            for (var i = 0; i < points.length; i++) {
+                if (this.points[i].lat == lat && points[i].lon == lng) {
                     return this.points[i];
                 }
             }
             return null;
         } 
-        //if not a leaf return the quadtree that would contain this point
+        // if not a leaf return the quadtree that would contain this point
         return this.childThatContains(lat,lng).get(lat,lng);
     }
-    this.isLeaf = function(){
+    this.isLeaf = function() {
         return this.se == null;
     }
-    this.add = function(waypoint){
-        if(this.isLeaf()){
+    this.add = function(waypoint) {
+        if (this.isLeaf()) {
             this.points.push(waypoint);
             this.refineIfNeeded();
-        } else {
+        }
+	else {
             this.childThatContains(waypoint.lat,waypoint.lon).add(waypoint);
         }
     }
-    //this version take an array parameter
-    this.mortonOrderPoly = function(boundingPoly){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    // this version takes an array parameter
+    this.mortonOrderPoly = function(boundingPoly) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
-           
-                let nsEdge = this.makeNSedge();
-                let ewEdge = this.makeEWedge();
-                        
-                    boundingPoly.push(
-                        L.polyline(nsEdge, {
-                            color: visualSettings.undiscovered.color,
-                            opacity: 0.7,
-                            weight: 3
-                        })
-                    );
-                    boundingPoly.push(
-                        L.polyline(ewEdge, {
-                            color: visualSettings.undiscovered.color,
-                            opacity: 0.7,
-                            weight: 3
-                        })
-                    )
+        }
+	else {   
+            let nsEdge = this.makeNSedge();
+            let ewEdge = this.makeEWedge();
+            
+            boundingPoly.push(
+                L.polyline(nsEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            );
+            boundingPoly.push(
+                L.polyline(ewEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            )
             this.nw.mortonOrderPoly(boundingPoly);
             this.ne.mortonOrderPoly(boundingPoly);
             this.sw.mortonOrderPoly(boundingPoly);
             this.se.mortonOrderPoly(boundingPoly);
         }
     }
-    //this version does not require an array parameter
-    this.mortonOrder = function(){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    // this version does not require an array parameter
+    this.mortonOrder = function() {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
+        }
+	else {
             this.nw.mortonOrder();
             this.ne.mortonOrder();
             this.sw.mortonOrder();
@@ -974,193 +962,203 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
         }
     }
 
-    this.hilbertOrder = function(orientation){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    this.hilbertOrder = function(orientation) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
-            
-            switch(orientation){
+        }
+	else {
+            switch (orientation) {
                 //case 0 is equivalent to the orientation being a u
-                case 0:
-                    this.nw.hilbertOrder(3);
-                    this.sw.hilbertOrder(0);
-                    this.se.hilbertOrder(0);
-                    this.ne.hilbertOrder(1);
-                    break;
-                //case 1 is equivalent to the orientation being a c
-                case 1:
-                    this.se.hilbertOrder(2);
-                    this.sw.hilbertOrder(1);
-                    this.nw.hilbertOrder(1);
-                    this.ne.hilbertOrder(0);
-                    
-                    break;
-                //case 2 is equivalent to the orientation being ∩
-                case 2:
-                    this.se.hilbertOrder(1);
-                    this.ne.hilbertOrder(2);
-                    this.nw.hilbertOrder(2);
-                    this.sw.hilbertOrder(3);
-                    break;
-                //case 3 is equivalent to the orientation being ɔ
-                case 3:
-                    this.nw.hilbertOrder(0);
-                    this.ne.hilbertOrder(3);
-                    this.se.hilbertOrder(3);
-                    this.sw.hilbertOrder(2);
-                    break;
-                //case 4 is equivalent to the orientaiton being u but the order is inverted
-                case 4:
-                    this.ne.hilbertOrder(5);
-                    this.se.hilbertOrder(4);
-                    this.sw.hilbertOrder(4);
-                    this.nw.hilbertOrder(7);
-                    break;
-                //case 5 is equivalent to the orientation being c but the order is inverted
-                case 5:
-                    this.ne.hilbertOrder(4);
-                    this.nw.hilbertOrder(5);
-                    this.sw.hilbertOrder(5);
-                    this.se.hilbertOrder(6);
-                    break;
-                //case 6 is equivalent to the orientation being ∩ but the order is inverted
-                case 6:
-                    this.sw.hilbertOrder(7);
-                    this.nw.hilbertOrder(6);
-                    this.ne.hilbertOrder(6);
-                    this.se.hilbertOrder(5);
-                    break;
-                //case 7 is equivalent to the orientation being ɔ but the order is inverted
-                case 7:
-                    this.sw.hilbertOrder(6);
-                    this.se.hilbertOrder(7);
-                    this.ne.hilbertOrder(7);
-                    this.nw.hilbertOrder(4);
-                    break;
+            case 0:
+                this.nw.hilbertOrder(3);
+                this.sw.hilbertOrder(0);
+                this.se.hilbertOrder(0);
+                this.ne.hilbertOrder(1);
+                break;
+                // case 1 is equivalent to the orientation being a c
+            case 1:
+                this.se.hilbertOrder(2);
+                this.sw.hilbertOrder(1);
+                this.nw.hilbertOrder(1);
+                this.ne.hilbertOrder(0);
+                
+                break;
+                // case 2 is equivalent to the orientation being ∩
+            case 2:
+                this.se.hilbertOrder(1);
+                this.ne.hilbertOrder(2);
+                this.nw.hilbertOrder(2);
+                this.sw.hilbertOrder(3);
+                break;
+                // case 3 is equivalent to the orientation being ɔ
+            case 3:
+                this.nw.hilbertOrder(0);
+                this.ne.hilbertOrder(3);
+                this.se.hilbertOrder(3);
+                this.sw.hilbertOrder(2);
+                break;
+                // case 4 is equivalent to the orientaiton being u but
+                // the order is inverted
+            case 4:
+                this.ne.hilbertOrder(5);
+                this.se.hilbertOrder(4);
+                this.sw.hilbertOrder(4);
+                this.nw.hilbertOrder(7);
+                break;
+                // case 5 is equivalent to the orientation being c but
+                // the order is inverted
+            case 5:
+                this.ne.hilbertOrder(4);
+                this.nw.hilbertOrder(5);
+                this.sw.hilbertOrder(5);
+                this.se.hilbertOrder(6);
+                break;
+                // case 6 is equivalent to the orientation being ∩ but
+                // the order is inverted
+            case 6:
+                this.sw.hilbertOrder(7);
+                this.nw.hilbertOrder(6);
+                this.ne.hilbertOrder(6);
+                this.se.hilbertOrder(5);
+                break;
+                // case 7 is equivalent to the orientation being ɔ but
+                // the order is inverted
+            case 7:
+                this.sw.hilbertOrder(6);
+                this.se.hilbertOrder(7);
+                this.ne.hilbertOrder(7);
+                this.nw.hilbertOrder(4);
+                break;
             }
         }
     }
-
-    this.hilbertOrderPoly = function(orientation,boundingPoly){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    
+    this.hilbertOrderPoly = function(orientation,boundingPoly) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
+        }
+	else {
             let nsEdge = this.makeNSedge();
             let ewEdge = this.makeEWedge();
-                    
-                boundingPoly.push(
-                    L.polyline(nsEdge, {
-                        color: visualSettings.undiscovered.color,
-                        opacity: 0.7,
-                        weight: 3
-                    })
-                );
-                boundingPoly.push(
-                    L.polyline(ewEdge, {
-                        color: visualSettings.undiscovered.color,
-                        opacity: 0.7,
-                        weight: 3
-                    })
-                )
-            switch(orientation){
-                //case 0 is equivalent to the orientation being a u
-                case 0:
-                    this.nw.hilbertOrderPoly(3,boundingPoly);
-                    this.sw.hilbertOrderPoly(0,boundingPoly);
-                    this.se.hilbertOrderPoly(0,boundingPoly);
-                    this.ne.hilbertOrderPoly(1,boundingPoly);
-                    break;
-                //case 1 is equivalent to the orientation being a c
-                case 1:
-                    this.se.hilbertOrderPoly(2,boundingPoly);
-                    this.sw.hilbertOrderPoly(1,boundingPoly);
-                    this.nw.hilbertOrderPoly(1,boundingPoly);
-                    this.ne.hilbertOrderPoly(0,boundingPoly);
-                    
-                    break;
-                //case 2 is equivalent to the orientation being ∩
-                case 2:
-                    this.se.hilbertOrderPoly(1,boundingPoly);
-                    this.ne.hilbertOrderPoly(2,boundingPoly);
-                    this.nw.hilbertOrderPoly(2,boundingPoly);
-                    this.sw.hilbertOrderPoly(3,boundingPoly);
-                    break;
-                //case 3 is equivalent to the orientation being ɔ
-                case 3:
-                    this.nw.hilbertOrderPoly(0,boundingPoly);
-                    this.ne.hilbertOrderPoly(3,boundingPoly);
-                    this.se.hilbertOrderPoly(3,boundingPoly);
-                    this.sw.hilbertOrderPoly(2,boundingPoly);
-                    break;
-                //case 4 is equivalent to the orientaiton being u but the order is inverted
-                case 4:
-                    this.ne.hilbertOrderPoly(5,boundingPoly);
-                    this.se.hilbertOrderPoly(4,boundingPoly);
-                    this.sw.hilbertOrderPoly(4,boundingPoly);
-                    this.nw.hilbertOrderPoly(7,boundingPoly);
-                    break;
-                //case 5 is equivalent to the orientation being c but the order is inverted
-                case 5:
-                    this.ne.hilbertOrderPoly(4,boundingPoly);
-                    this.nw.hilbertOrderPoly(5,boundingPoly);
-                    this.sw.hilbertOrderPoly(5,boundingPoly);
-                    this.se.hilbertOrderPoly(6,boundingPoly);
-                    break;
-                //case 6 is equivalent to the orientation being ∩ but the order is inverted
-                case 6:
-                    this.sw.hilbertOrderPoly(7,boundingPoly);
-                    this.nw.hilbertOrderPoly(6,boundingPoly);
-                    this.ne.hilbertOrderPoly(6,boundingPoly);
-                    this.se.hilbertOrderPoly(5,boundingPoly);
-                    break;
-                //case 7 is equivalent to the orientation being ɔ but the order is inverted
-                case 7:
-                    this.sw.hilbertOrderPoly(6,boundingPoly);
-                    this.se.hilbertOrderPoly(7,boundingPoly);
-                    this.ne.hilbertOrderPoly(7,boundingPoly);
-                    this.nw.hilbertOrderPoly(4,boundingPoly);
-                    break;
+            
+            boundingPoly.push(
+                L.polyline(nsEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            );
+            boundingPoly.push(
+                L.polyline(ewEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            )
+            switch (orientation) {
+                // case 0 is equivalent to the orientation being a u
+            case 0:
+                this.nw.hilbertOrderPoly(3,boundingPoly);
+                this.sw.hilbertOrderPoly(0,boundingPoly);
+                this.se.hilbertOrderPoly(0,boundingPoly);
+                this.ne.hilbertOrderPoly(1,boundingPoly);
+                break;
+                // case 1 is equivalent to the orientation being a c
+            case 1:
+                this.se.hilbertOrderPoly(2,boundingPoly);
+                this.sw.hilbertOrderPoly(1,boundingPoly);
+                this.nw.hilbertOrderPoly(1,boundingPoly);
+                this.ne.hilbertOrderPoly(0,boundingPoly);
+                
+                break;
+                // case 2 is equivalent to the orientation being ∩
+            case 2:
+                this.se.hilbertOrderPoly(1,boundingPoly);
+                this.ne.hilbertOrderPoly(2,boundingPoly);
+                this.nw.hilbertOrderPoly(2,boundingPoly);
+                this.sw.hilbertOrderPoly(3,boundingPoly);
+                break;
+                // case 3 is equivalent to the orientation being ɔ
+            case 3:
+                this.nw.hilbertOrderPoly(0,boundingPoly);
+                this.ne.hilbertOrderPoly(3,boundingPoly);
+                this.se.hilbertOrderPoly(3,boundingPoly);
+                this.sw.hilbertOrderPoly(2,boundingPoly);
+                break;
+                // case 4 is equivalent to the orientaiton being u but
+                // the order is inverted
+            case 4:
+                this.ne.hilbertOrderPoly(5,boundingPoly);
+                this.se.hilbertOrderPoly(4,boundingPoly);
+                this.sw.hilbertOrderPoly(4,boundingPoly);
+                this.nw.hilbertOrderPoly(7,boundingPoly);
+                break;
+                // case 5 is equivalent to the orientation being c but
+                // the order is inverted
+            case 5:
+                this.ne.hilbertOrderPoly(4,boundingPoly);
+                this.nw.hilbertOrderPoly(5,boundingPoly);
+                this.sw.hilbertOrderPoly(5,boundingPoly);
+                this.se.hilbertOrderPoly(6,boundingPoly);
+                break;
+                // case 6 is equivalent to the orientation being ∩ but
+                // the order is inverted
+            case 6:
+                this.sw.hilbertOrderPoly(7,boundingPoly);
+                this.nw.hilbertOrderPoly(6,boundingPoly);
+                this.ne.hilbertOrderPoly(6,boundingPoly);
+                this.se.hilbertOrderPoly(5,boundingPoly);
+                break;
+                // case 7 is equivalent to the orientation being ɔ but
+                // the order is inverted
+            case 7:
+                this.sw.hilbertOrderPoly(6,boundingPoly);
+                this.se.hilbertOrderPoly(7,boundingPoly);
+                this.ne.hilbertOrderPoly(7,boundingPoly);
+                this.nw.hilbertOrderPoly(4,boundingPoly);
+                break;
             }
         }
     }
-    this.mooreOrder = function(orientation){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    this.mooreOrder = function(orientation) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
+        }
+	else {
             this.nw.hilbertOrder(5);
             this.sw.hilbertOrder(5);
             this.se.hilbertOrder(7);
             this.ne.hilbertOrder(7);
-            
         }
     }
-    this.mooreOrderPoly = function(boundingPoly){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    this.mooreOrderPoly = function(boundingPoly) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
+        }
+	else {
             let nsEdge = this.makeNSedge();
             let ewEdge = this.makeEWedge();
-                    
+            
             boundingPoly.push(
                 L.polyline(nsEdge, {
                     color: visualSettings.undiscovered.color,
@@ -1175,82 +1173,83 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement){
                     weight: 3
                 })
             );
-                this.nw.hilbertOrderPoly(5,boundingPoly);
-                this.sw.hilbertOrderPoly(5,boundingPoly);
-                this.se.hilbertOrderPoly(7,boundingPoly);
-                this.ne.hilbertOrderPoly(7,boundingPoly);
+            this.nw.hilbertOrderPoly(5,boundingPoly);
+            this.sw.hilbertOrderPoly(5,boundingPoly);
+            this.se.hilbertOrderPoly(7,boundingPoly);
+            this.ne.hilbertOrderPoly(7,boundingPoly);
         }
     }
-    this.greyOrder = function(orientation){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    this.greyOrder = function(orientation) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
-            switch(orientation){
-                //case 0 is equivalent to the orientation being a u
-                case 0:
-                    this.nw.greyOrder(0);
-                    this.sw.greyOrder(1);
-                    this.se.greyOrder(1);
-                    this.ne.greyOrder(0);
-                    break;
-                //case 1 is equivalent to the orientation being a ∩
-                case 1:
-                    this.se.greyOrder(1);
-                    this.ne.greyOrder(0);
-                    this.nw.greyOrder(0);
-                    this.sw.greyOrder(1);
-                    break;
+        }
+	else {
+            switch(orientation) {
+                // case 0 is equivalent to the orientation being a u
+            case 0:
+                this.nw.greyOrder(0);
+                this.sw.greyOrder(1);
+                this.se.greyOrder(1);
+                this.ne.greyOrder(0);
+                break;
+                // case 1 is equivalent to the orientation being a ∩
+            case 1:
+                this.se.greyOrder(1);
+                this.ne.greyOrder(0);
+                this.nw.greyOrder(0);
+                this.sw.greyOrder(1);
+                break;
             }
         }
     }
-    this.greyOrderPoly = function(orientation,boundingPoly){
-        if(this.isLeaf()){
-            for(let i = 0; i < this.points.length; i++){
-                if(this.points[i] != null){
+    this.greyOrderPoly = function(orientation,boundingPoly) {
+        if (this.isLeaf()) {
+            for (let i = 0; i < this.points.length; i++) {
+                if (this.points[i] != null) {
                     this.points[i].value = k;
                     k++;
-                 }
+                }
             }
-        } else {
+        }
+	else {
             let nsEdge = this.makeNSedge();
             let ewEdge = this.makeEWedge();
-                    
-                boundingPoly.push(
-                    L.polyline(nsEdge, {
-                        color: visualSettings.undiscovered.color,
-                        opacity: 0.7,
-                        weight: 3
-                    })
-                );
-                boundingPoly.push(
-                    L.polyline(ewEdge, {
-                        color: visualSettings.undiscovered.color,
-                        opacity: 0.7,
-                        weight: 3
-                    })
-                )
-            switch(orientation){
-                //case 0 is equivalent to the orientation being a u
-                case 0:
-                    this.nw.greyOrderPoly(0,boundingPoly);
-                    this.sw.greyOrderPoly(1,boundingPoly);
-                    this.se.greyOrderPoly(1,boundingPoly);
-                    this.ne.greyOrderPoly(0,boundingPoly);
-                    break;
-                //case 1 is equivalent to the orientation being a ∩
-                case 1:
-                    this.se.greyOrderPoly(1,boundingPoly);
-                    this.ne.greyOrderPoly(0,boundingPoly);
-                    this.nw.greyOrderPoly(0,boundingPoly);
-                    this.sw.greyOrderPoly(1,boundingPoly);
-                    break;
+            
+            boundingPoly.push(
+                L.polyline(nsEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            );
+            boundingPoly.push(
+                L.polyline(ewEdge, {
+                    color: visualSettings.undiscovered.color,
+                    opacity: 0.7,
+                    weight: 3
+                })
+            )
+            switch (orientation) {
+                // case 0 is equivalent to the orientation being a u
+            case 0:
+                this.nw.greyOrderPoly(0,boundingPoly);
+                this.sw.greyOrderPoly(1,boundingPoly);
+                this.se.greyOrderPoly(1,boundingPoly);
+                this.ne.greyOrderPoly(0,boundingPoly);
+                break;
+                // case 1 is equivalent to the orientation being a ∩
+            case 1:
+                this.se.greyOrderPoly(1,boundingPoly);
+                this.ne.greyOrderPoly(0,boundingPoly);
+                this.nw.greyOrderPoly(0,boundingPoly);
+                this.sw.greyOrderPoly(1,boundingPoly);
+                break;
             }
         }
     }
-    
 };
