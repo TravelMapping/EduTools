@@ -14,21 +14,30 @@ var hdxAPClosestPtsAV = {
     name: "All Points Closest Pairs",
     description: "Search for the closest pair of vertices (waypoints).",
 
-    // This variable stores the array of corresponding indices for which vertices are closest to which other vertices.  
-    // For example, if the closest vertex to vertex #0 is vertex #10, then closestVertices[0] will be set to "10".
+    // This variable stores the array of corresponding indices for
+    // which vertices are closest to which other vertices.  For
+    // example, if the closest vertex to vertex #0 is vertex #10, then
+    // closestVertices[0] will be set to "10".
     closestVertices: Array(waypoints.length).fill(0),
 
-    // The variable "v" is the index of the vertex we are currently checking in the inner loop.
-    // The variable "vClosest" stores the index of the vertex which is closest to the vertex we are currently checking using the outLoop variable, or the outer loop's index.
+    // The variable "v" is the index of the vertex we are currently
+    // checking in the inner loop.  The variable "vClosest" stores the
+    // index of the vertex which is closest to the vertex we are
+    // currently checking using the outLoop variable, or the outer
+    // loop's index.
     v: 0,
     vClosest: -1,
     
-    // The variable "d" is the current distance between the two vertices we are in the process of checking.
-    // The variable "dClosest" is the distance between the two closest points we have found so far during each traversal through the array of vertices.
+    // The variable "d" is the current distance between the two
+    // vertices we are in the process of checking.  The variable
+    // "dClosest" is the distance between the two closest points we
+    // have found so far during each traversal through the array of
+    // vertices.
     d: 0,
     dClosest: Number.MAX_SAFE_INTEGER,
     
-    // vert1 stores the waypoint object at index outLoop.  vert2 stores the waypoint object at index inLoop.
+    // vert1 stores the waypoint object at index outLoop.  vert2
+    // stores the waypoint object at index inLoop.
     vert1: null,
     vert2: null,
 
@@ -38,18 +47,23 @@ var hdxAPClosestPtsAV = {
     // Inner Loop index variable
     inLoop: -1,
 
-    // This variable stores the polylines that will be drawn showing all of the points/vertices closest pairs on the map.
+    // This variable stores the polylines that will be drawn showing
+    // all of the points/vertices closest pairs on the map.
     highlightPoly: [],
 
-    // This variable stores a reference to the polyline we are drawing between the two current vertices being visited.
+    // This variable stores a reference to the polyline we are drawing
+    // between the two current vertices being visited.
     currentPoly: null,
 
-    // This variable stores a reference to the polyline representing the closest pair of vertices found so far during each iteration of the outer loop.
+    // This variable stores a reference to the polyline representing
+    // the closest pair of vertices found so far during each iteration
+    // of the outer loop.
     leaderPoly: null,
 
-    // This variable stores the string used for displaying vertex pairs discovered thus far and uses it to update on of the AV Control Entries on the control panel.
+    // This variable stores the string used for displaying vertex
+    // pairs discovered thus far and uses it to update on of the AV
+    // Control Entries on the control panel.
     discoveredPairs: null,
-
 
     avActions: [
         {
@@ -125,7 +139,7 @@ var hdxAPClosestPtsAV = {
                 
                 updateAVControlEntry("v2Visiting", "V<sub>2</sub>: " + thisAV.inLoop);
                 
-                if(thisAV.inLoop < waypoints.length) {
+                if (thisAV.inLoop < waypoints.length) {
                     thisAV.v = thisAV.inLoop
                     thisAV.vert1 = waypoints[thisAV.outLoop];
                     thisAV.vert2 = waypoints[thisAV.inLoop];
@@ -141,8 +155,13 @@ var hdxAPClosestPtsAV = {
                     thisAV.currentPoly.addTo(map);
                     
                     hdxAV.nextAction = "checkEquals";
-                } else if (thisAV.inLoop >= waypoints.length) { hdxAV.nextAction = "setPair";
-                } else { hdxAV.nextAction = "setPair"; }
+                }
+		else if (thisAV.inLoop >= waypoints.length) {
+		    hdxAV.nextAction = "setPair";
+		}
+		else {
+		    hdxAV.nextAction = "setPair";
+		}
                 hdxAV.iterationDone = true;
             },
             logMessage: function (thisAV) {
@@ -160,11 +179,13 @@ var hdxAPClosestPtsAV = {
                                            waypoints[thisAV.outLoop].lon,
                                            waypoints[thisAV.inLoop].lat,
                                            waypoints[thisAV.inLoop].lon));
-                if(thisAV.outLoop != thisAV.inLoop) {
+                if (thisAV.outLoop != thisAV.inLoop) {
                     hdxAV.nextAction = "ifClosest";
-                } else if(!thisAV.inLoop < waypoints.length) {
+                }
+		else if (!thisAV.inLoop < waypoints.length) {
                     hdxAV.nextAction = "v2ForLoopTop"
-                } else {
+                }
+		else {
                     hdxAV.nextAction = "v2ForLoopTop";
                 }
                 
@@ -181,12 +202,15 @@ var hdxAPClosestPtsAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 // CASE 1: We have found a new leader, go to the setClosest state.
-                if(thisAV.d < thisAV.dClosest) {
+                if (thisAV.d < thisAV.dClosest) {
                     thisAV.dClosest = thisAV.d;
                     hdxAV.nextAction = "setClosest";
                 
-                // CASE 2: The current vertex we are checking shouldn't become the new leader, discard it as a candidate for leader.
-                } else {
+                // CASE 2: The current vertex we are checking
+                // shouldn't become the new leader, discard it as a
+                // candidate for leader.
+                }
+		else {
                     thisAV.currentPoly.remove();
                     
                     updateMarkerAndTable(thisAV.v, visualSettings.discarded, 5, false);
@@ -205,8 +229,9 @@ var hdxAPClosestPtsAV = {
             "and set the closest distance found so far to the distance between vertex outLoop and inLoop",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                // CASE 1: We do not have a leader yet in terms of a vertex that is closest to vertex # thisAV.outLoop
-                if(thisAV.vClosest == -1) {
+                // CASE 1: We do not have a leader yet in terms of a
+                // vertex that is closest to vertex # thisAV.outLoop
+                if (thisAV.vClosest == -1) {
                     thisAV.currentPoly.remove();
 
                     // This passes a reference to the Polyline to the leaderPoly variable, and sets the style to "leader" style.
@@ -221,10 +246,13 @@ var hdxAPClosestPtsAV = {
                     updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
                     + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
                     
-                // CASE 2: We already have a leader, however, we have found a new leader in the previous state "ifClosest"    
-                } else {
+                // CASE 2: We already have a leader, however, we have
+                // found a new leader in the previous state
+                // "ifClosest"
+                }
+		else {
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
-
+		    
                     updateMarkerAndTable(thisAV.v, visualSettings.leader, 5, false);
 
                     thisAV.currentPoly.remove();
@@ -269,7 +297,7 @@ var hdxAPClosestPtsAV = {
                  thisAV.vClosest + '</td><td>' + thisAV.dClosest.toFixed(3) + '</td>';
                 
                 updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
-                for(var i = 0; i < waypoints.length; i++)
+                for (var i = 0; i < waypoints.length; i++)
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
                 }
@@ -289,7 +317,7 @@ var hdxAPClosestPtsAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function (thisAV) {
                 
-                for(var i = 0; i < thisAV.highlightPoly.length; i++){
+                for (var i = 0; i < thisAV.highlightPoly.length; i++){
                     updateMarkerAndTable(i, visualSettings.leader, 0, false);
                     thisAV.highlightPoly[i].addTo(map);
                 }
@@ -301,9 +329,6 @@ var hdxAPClosestPtsAV = {
                 return "Cleanup and finalize visualization"
             }
         }
-
-
-
     ],
 
     prepToStart() {
@@ -312,14 +337,11 @@ var hdxAPClosestPtsAV = {
         // we want only vertices for this algorithm
         initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
-        
-
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 
         //pseudocode for the start state
         this.code += `closestVertex &larr; []`;
     
-
         //pseudocode for the top of the for loop
         this.code += '</td></tr>' +
             pcEntry(0, 'for (v<sub>1</sub> &larr; 0 to |V| - 1)',"v1ForLoopTop");
@@ -338,49 +360,43 @@ var hdxAPClosestPtsAV = {
             pcIndent(8) + 'd<sub>closest</sub> &larr; d<br />', "setClosest");
         this.code += '</td></tr>' +
             pcEntry(1, 'closestVertex[v<sub>1</sub>] &larr; v<sub>closest</sub', "setPair");
-
-            
-
-},
-
-setupUI() {
-    var algDescription = document.getElementById("algDescription");
-    algDescription.innerHTML = this.description;
-    hdxAV.algStat.style.display = "";
-    hdxAV.algStat.innerHTML = "Setting up";
-    hdxAV.logMessageArr = [];
-    hdxAV.logMessageArr.push("Setting up");
-
-    addEntryToAVControlPanel("v1Visiting", visualSettings.v1);
-    addEntryToAVControlPanel("v2Visiting", visualSettings.v2);
-    addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
-    addEntryToAVControlPanel("closeLeader", visualSettings.leader);
-    addEntryToAVControlPanel("closestPairs", visualSettings.discovered);
-
+    },
     
-},
-
-cleanupUI() {
-    //remove all the polylines made
-    for(var i = 0; i < this.highlightPoly.length; i++){
-        this.highlightPoly[i].remove();
-    }
-    this.highlightPoly = [];
-},
-
-idOfAction(action) {
+    setupUI() {
+	var algDescription = document.getElementById("algDescription");
+	algDescription.innerHTML = this.description;
+	hdxAV.algStat.style.display = "";
+	hdxAV.algStat.innerHTML = "Setting up";
+	hdxAV.logMessageArr = [];
+	hdxAV.logMessageArr.push("Setting up");
 	
-    return action.label;
-},
+	addEntryToAVControlPanel("v1Visiting", visualSettings.v1);
+	addEntryToAVControlPanel("v2Visiting", visualSettings.v2);
+	addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
+	addEntryToAVControlPanel("closeLeader", visualSettings.leader);
+	addEntryToAVControlPanel("closestPairs", visualSettings.discovered);    
+    },
+    
+    cleanupUI() {
+	//remove all the polylines made
+	for (var i = 0; i < this.highlightPoly.length; i++){
+            this.highlightPoly[i].remove();
+	}
+	this.highlightPoly = [];
+    },
 
+    idOfAction(action) {
+	
+	return action.label;
+    },
 
-setConditionalBreakpoints(name) {
-    let max = waypoints.length-1;
-    let temp = HDXCommonConditionalBreakpoints(name);
-    if (temp != "No innerHTML") {
-        return temp;
-    }
-    switch (name) {
+    setConditionalBreakpoints(name) {
+	let max = waypoints.length-1;
+	let temp = HDXCommonConditionalBreakpoints(name);
+	if (temp != "No innerHTML") {
+            return temp;
+	}
+	switch (name) {
         case "isLeaf":
             html = createInnerHTMLChoice("boolean","",
                                          "",
@@ -388,12 +404,18 @@ setConditionalBreakpoints(name) {
             return html;
             
         }
-    return "No innerHTML";
-},
+	return "No innerHTML";
+    },
+    
+    hasConditionalBreakpoints(name) {
+	
+    },
 
-hasConditionalBreakpoints(name) {
+    // no AV parameters here
+    avParamsQS() {
 
-}
+	return "";
+    }
 };
 
 

@@ -1035,6 +1035,13 @@ var hdxClosestPairsRecAV = {
 
 	// same, only has a conditional breakpoint at name if it's a common one
         return HDXHasCommonConditionalBreakpoints(name);
+    },
+
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&minPoints=" + document.getElementById("minPoints").value +
+	    "&maxRec=" + document.getElementById("maxRec").value +
+	    "&overlays=" + document.getElementById("overlays").checked;
     }
 };
-    

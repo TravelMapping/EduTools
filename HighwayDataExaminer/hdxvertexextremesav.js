@@ -1035,7 +1035,7 @@ Show Extremes Bounding Box<br />
 	    let alphaVal = HDXQSValue("alpha");
             if(alphaVal == "true" || alphaVal == "false") {
                 document.getElementById("firstlast").checked =
-		    alphaVal =="true";
+		    alphaVal == "true";
             }
             else {
 		console.error("Invalid QS parameter alpha=" + alphaVal + ", ignoring");
@@ -1150,5 +1150,16 @@ Show Extremes Bounding Box<br />
             }
         }
         return false;
+    },
+
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&box=" + document.getElementById("boundingBox").checked +
+	    "&ties=" + document.getElementById("tieHandling").value +
+	    "&labelLength=" + document.getElementById("longshort").checked +
+	    "&alpha=" + document.getElementById("firstlast").checked +
+	    "&avgcoods=" + document.getElementById("showavgcoord").checked;
     }
+    
 };

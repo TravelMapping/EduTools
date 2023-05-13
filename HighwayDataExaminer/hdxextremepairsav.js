@@ -677,5 +677,13 @@ Compute: <select id="closeAndOrFar">
             }
         }
         return false;
+    },
+    
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&closeAndOrFar=" +
+	    document.getElementById("closeAndOrFar").value +
+	    "&keepLines=" + document.getElementById("keepLines").checked;
     }
 };

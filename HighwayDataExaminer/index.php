@@ -177,6 +177,9 @@ will display
       </tbody>
     </table>
   </div>
+  <div id="copyURLdiv">
+    <button id="copyURL" onclick="copyAVURL();">Copy AV URL</button>
+  </div>
   <div id="title">
     <p id="metalTitle">METAL&nbsp;HDX</p>
   </div>
