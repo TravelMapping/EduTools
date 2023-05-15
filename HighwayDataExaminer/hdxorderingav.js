@@ -382,7 +382,8 @@ var hdxOrderingAV = {
        if (HDXQSIsSpecified("refine")) {
            if (parseFloat(HDXQSValue("refine")) >= 2 &&
 	       parseFloat(HDXQSValue("refine")) <= waypoints.length) {
-               document.getElementById("refinement").value=parseFloat(HDXQSValue("refine"));
+               document.getElementById("refinement").value =
+		   parseFloat(HDXQSValue("refine"));
            }
            else {
 	       console.error("The refinement level given is out of range.");
@@ -393,7 +394,7 @@ var hdxOrderingAV = {
 	if (HDXQSIsSpecified("box")) {
             if (HDXQSValue("box") == "true" || HDXQSValue("box") == "false") {
 		document.getElementById("boundingBox").checked =
-		    (HDXQSValue("box")=="true");
+		    (HDXQSValue("box") == "true");
             }
             else {
 		console.error("The input given for the bounding box is invalid.");
@@ -464,9 +465,20 @@ var hdxOrderingAV = {
 	
         return action.label;
     },
+
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&curve=" + document.getElementById("traversalOrdering").value +
+	    "&refine=" + document.getElementById("refinement").value +
+	    "&box=" + document.getElementById("boundingBox").checked +
+	    "&connect=" + document.getElementById("extraEdge").checked +
+	    "&calcparts=" + document.getElementById("calcparts").checked +
+	    "&numparts=" + document.getElementById("numOfParts").value;
+    },
     
-    //this was copied directly over from hdxextremepairsav with some
-    //slight modifications
+    // this was copied directly over from hdxextremepairsav with some
+    // slight modifications
     drawLineVisiting() {
 
         let visitingLine = [];
