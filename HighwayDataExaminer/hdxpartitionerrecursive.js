@@ -584,7 +584,8 @@ var hdxPartitionerAV = {
             if (parseFloat(HDXQSValue("levels"))>=1 &&
 		parseFloat(HDXQSValue("levels")) <=
 		(Math.trunc(Math.log2(waypoints.length)))) {
-                document.getElementById("parts").value=parseFloat(HDXQSValue("levels"));
+                document.getElementById("parts").value =
+		    parseFloat(HDXQSValue("levels"));
                 this.rcbCallback();
             }
             else {
@@ -595,7 +596,8 @@ var hdxPartitionerAV = {
 	if (HDXQSIsSpecified("overlay")) {
             if (HDXQSValue("overlay") == "Overlays" ||
 		HDXQSValue("overlay") == "Waypoints") {
-                document.getElementById("ColoringMethod").value=HDXQSValue("overlay");
+                document.getElementById("ColoringMethod").value =
+		    HDXQSValue("overlay");
             }
             else {
 		console.error("Coloring method given is not a valid option.");
@@ -714,5 +716,13 @@ var hdxPartitionerAV = {
             return true;
         }
         return false;
+    },
+    
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&levels=" + document.getElementById("parts").value +
+	    "&overlay=" + document.getElementById("ColoringMethod").value +
+	    "&onfly=" + document.getElementById("calcOnFly").checked;
     }
 }
