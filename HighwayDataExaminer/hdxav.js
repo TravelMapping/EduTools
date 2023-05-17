@@ -132,7 +132,7 @@ var hdxAV = {
 	    text: "Vertex-Only Algorithms"
 	});
         this.avList.push(hdxVertexExtremesSearchAV);
-        this.avList.push(hdxExtremePairsAV);
+        this.avList.push(hdxVertexPairsAV);
         this.avList.push(hdxBFConvexHullAV);
         this.avList.push(hdxAPClosestPointAV);
         this.avList.push(hdxClosestPairsRecAV);
