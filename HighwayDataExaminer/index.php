@@ -69,7 +69,7 @@
 <script src="hdxedgeextremesav.js" type="text/javascript"></script>
 <script src="hdxextremepairsav.js" type="text/javascript"></script>
 <script src="hdxtravspanavs.js" type="text/javascript"></script>
-<script src="hdxbfchav.js" type="text/javascript"></script>
+<script src="hdxav-bfch.js" type="text/javascript"></script>
 <script src="hdxlinear.js" type="text/javascript"></script>
 <script src="hdxpresort.js" type="text/javascript"></script>
 <script src="hdxgraphsearchbox.js" type="text/javascript"></script>

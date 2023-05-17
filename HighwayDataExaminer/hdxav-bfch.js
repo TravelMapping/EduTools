@@ -11,7 +11,7 @@
 var hdxBFConvexHullAV = {
 
     // entries for list of AVs
-    value: "bfhull",
+    value: "bfch",
     name: "Brute-Force Convex Hull",
     description: "Compute the convex hull of the vertices (waypoints) using a brute-force algorithm.",
     
