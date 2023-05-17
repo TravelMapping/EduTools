@@ -70,7 +70,9 @@ function buildWaypointSelector2(id,label) {
 // event handler for waypoint selectors
 function waypointSelectorChanged(id) {
 
-    let vNum = document.getElementById(id).value;
-    //let vNum = document.querySelector(id).value;
-    document.getElementById(id + "Label").innerHTML = waypoints[vNum].label;       
+    let label = document.getElementById(id + "Label");
+    if (label != null) {
+	let vNum = document.getElementById(id).value;
+	label.innerHTML = waypoints[vNum].label;
+    }
 }
