@@ -426,6 +426,20 @@ var hdxDFSRecAV = {
         updateAVControlEntry("found", foundEntry);
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
+
+	// check for and honor QS parameter setting start vertex
+	if (HDXQSIsSpecified("startPoint")) {
+	    let vNum = parseInt(HDXQSValue("startPoint"));
+	    if (isNaN(vNum)) {
+		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
+	    }
+	    else if (vNum < 0 || vNum >= waypoints.length) {
+		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
+	    }
+	    else {
+		document.getElementById("startPoint").value = vNum;
+	    }
+	}
     },
 
     cleanupUI() {
@@ -474,7 +488,13 @@ var hdxDFSRecAV = {
             }
         }
         return false;
-    }
+    },
+
+    // our current AV parameters as QS parameter
+    avParamsQS() {
+
+	return "&startPoint=" + document.getElementById("startPoint").value;
+    }        
 };
 
 
