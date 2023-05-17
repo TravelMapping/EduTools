@@ -1230,8 +1230,23 @@ var hdxTraversalsSpanningAVCommon = {
             }
         }
         return false;
-    }
-    
+    },
+
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	let url =
+	    "&startPoint=" + document.getElementById("startPoint").value +
+	    "&endPoint=" + document.getElementById("endPoint").value +
+	    "&stoppingCondition=" +
+	    document.getElementById("stoppingCondition").value;
+	// not all have a traversal discipline
+	let td = document.getElementById("traversalDiscipline");
+	if (td != null) {
+	    url += "&traversalDiscipline=" + td.value;
+	}
+	return url;
+    }    
 };
 
 // event handler when stopping condition option selector changes
