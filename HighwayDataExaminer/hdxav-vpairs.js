@@ -10,7 +10,7 @@
 var hdxExtremePairsAV = {
 
     // entries for list of AVs
-    value: "closestpairs",
+    value: "vpairs",
     name: "Vertex Closest/Farthest Pairs",
     description: "Search for the closest and/or farthest pair of vertices (waypoints).",
     
