@@ -477,7 +477,13 @@ var hdxBFTravelingSalesmanAV = {
             return true;
         }
         return false;
-    }
+    },
+
+    // our current AV parameters as QS parameter
+    avParamsQS() {
+
+	return "&startPoint=" + document.getElementById("startPoint").value;
+    }    
 }
 
 // Permutation generator, such that every time permute.next() is

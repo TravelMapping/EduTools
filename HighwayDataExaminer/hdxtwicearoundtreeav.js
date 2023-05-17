@@ -428,6 +428,12 @@ var hdxTwiceAroundTreeAV = {
             return true;
         }
         return false;
+    },
+
+    // our current AV parameters as QS parameter
+    avParamsQS() {
+
+	return "&startPoint=" + document.getElementById("startPoint").value;
     }
 }
 
