@@ -1,4 +1,4 @@
-g//
+//
 // HDX Welsh-Powell Graph Coloring Algorithm AV
 //
 // METAL Project
