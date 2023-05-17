@@ -507,5 +507,11 @@ var hdxKruskalAV = {
             return true;
         }
         return false;
+    },
+
+    // no QS parameters here
+    avParamsQS() {
+
+	return "";
     }
 };
