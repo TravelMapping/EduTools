@@ -34,5 +34,12 @@ var hdxNoAV = {
         algDescription.innerHTML = this.description;
     },
 
-    cleanupUI() {}
+    cleanupUI() {},
+
+    // no QS parameters here
+    avParamsQS() {
+
+	return "";
+    }
+    
 };
