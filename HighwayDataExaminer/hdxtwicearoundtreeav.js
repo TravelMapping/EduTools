@@ -359,7 +359,20 @@ var hdxTwiceAroundTreeAV = {
         addEntryToAVControlPanel('v2',visualSettings.v2);
         addEntryToAVControlPanel("currSum",visualSettings.discovered);
         addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
-       
+
+	// check for and honor QS parameter setting start vertex
+	if (HDXQSIsSpecified("startVertex")) {
+	    let vNum = parseInt(HDXQSValue("startVertex"));
+	    if (isNaN(vNum)) {
+		console.error("Invalid QS parameter startVertex=" + HDXQSValue("startVertex") + ", ignoring");
+	    }
+	    else if (vNum < 0 || vNum >= waypoints.length) {
+		console.error("QS parameter startVertex=" + HDXQSValue("startVertex") + " out of range, ignoring");
+	    }
+	    else {
+		document.getElementById("startVertex").value = vNum;
+	    }
+	}
     },
 
     cleanupUI() {
