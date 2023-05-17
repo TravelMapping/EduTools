@@ -8,11 +8,11 @@
 //
 //
 
-var hdxAPClosestPtsAV = {
+var hdxAPClosestPointAV = {
     // entries for list of AVs
     value: "apcp",
-    name: "All Points Closest Pairs",
-    description: "Search for the closest pair of vertices (waypoints).",
+    name: "All Points Closest Point",
+    description: "Search for the closest other vertex (waypoint) to each vertex.",
 
     // This variable stores the array of corresponding indices for
     // which vertices are closest to which other vertices.  For
@@ -48,7 +48,7 @@ var hdxAPClosestPtsAV = {
     inLoop: -1,
 
     // This variable stores the polylines that will be drawn showing
-    // all of the points/vertices closest pairs on the map.
+    // all of the points/vertices closest point on the map.
     highlightPoly: [],
 
     // This variable stores a reference to the polyline we are drawing
@@ -68,7 +68,7 @@ var hdxAPClosestPtsAV = {
     avActions: [
         {
             label: "START",
-            comment: "Initialize all points closest pairs variables",
+            comment: "Initialize all points closest point variables",
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 hdxAV.nextAction = "v1ForLoopTop";
