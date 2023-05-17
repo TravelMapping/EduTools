@@ -631,7 +631,35 @@ var hdxQuadtreeAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting)
         addEntryToAVControlPanel("numLeaves",visualSettings.discovered);
-        addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);      },
+        addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);
+
+	// check for and honor QS parameters setting AV params
+	// refinement threshold
+	if (HDXQSIsSpecified("refinement")) {
+	    let ref = parseInt(HDXQSValue("refinement"));
+	    if (isNaN(ref)) {
+		console.error("Invalid QS parameter refinement=" + HDXQSValue("refinement") + ", ignoring");
+	    }
+	    else if (ref < 2 || ref >= waypoints.length) {
+		console.error("QS parameter refinement=" + HDXQSValue("refinement") + " out of range, ignoring");
+	    }
+	    else {
+		document.getElementById("refinement").value = ref;
+	    }
+	}
+
+	// bounding box
+	if (HDXQSIsSpecified("box")) {
+	    var boxVal = HDXQSValue("box");
+            if (boxVal == "true" || boxVal == "false") {
+                document.getElementById("squareBB").checked =
+		    boxVal == "true";
+            }
+            else {
+		console.error("Invalid QS parameter box=" + boxVal + ", ignoring");
+	    }
+        }
+    },
 
     cleanupUI() {
         // remove all the polylines made by the bounding box and the quadtree
@@ -824,7 +852,14 @@ var hdxQuadtreeAV = {
                 return true;
         }
         return false;
-    }
+    },
+
+    // our current AV parameters as QS parameters
+    avParamsQS() {
+
+	return "&refinement=" + document.getElementById("refinement").value +
+	    "&box=" + document.getElementById("squareBB").checked;
+    }    
 };
 
 let k = 0;

@@ -608,15 +608,15 @@ var hdxPartitionerAV = {
             if (HDXQSValue("onfly") == "true" ||
 		HDXQSValue("onfly") == "false") {
                 document.getElementById("calcOnFly").checked =
-		    (HDXQSValue("onfly")=="true");
+		    (HDXQSValue("onfly") == "true");
             }
             else {
 		console.error("The input given for the on the fly Partition stats is invalid.");
 	    }
         }
         
-        addEntryToAVControlPanel ("undiscovered", visualSettings.undiscovered);        addEntryToAVControlPanel ("visiting",visualSettings.visiting)
-       
+        addEntryToAVControlPanel ("undiscovered", visualSettings.undiscovered);
+        addEntryToAVControlPanel ("visiting",visualSettings.visiting);
     },
 
     // cleans up lines and overlays

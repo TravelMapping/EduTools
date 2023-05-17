@@ -1003,7 +1003,7 @@ Show Extremes Bounding Box<br />
 	    var boxVal = HDXQSValue("box");
             if (boxVal == "true" || boxVal == "false") {
                 document.getElementById("boundingBox").checked =
-		    boxVal =="true";
+		    boxVal == "true";
             }
             else {
 		console.error("Invalid QS parameter box=" + boxVal + ", ignoring");
@@ -1024,7 +1024,7 @@ Show Extremes Bounding Box<br />
 	    let labLenVal = HDXQSValue("labelLength");
             if(labLenVal == "true" || labLenVal == "false") {
                 document.getElementById("longshort").checked =
-		    labLenVal =="true";
+		    labLenVal == "true";
                }
             else {
 		console.error("Invalid QS parameter labelLength=" + labLenVal + ", ignoring");
