@@ -387,8 +387,7 @@ var hdxBFTravelingSalesmanAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-        let newAO = 'Start Vertex <input type="number" id="startVertex" min="0" max="' 
-        + (waypoints.length - 1) + '" value="0">';
+        let newAO = buildWaypointSelector("startVertex", "Start Vertex", 0);
 
         hdxAV.algOptions.innerHTML = newAO;
 
