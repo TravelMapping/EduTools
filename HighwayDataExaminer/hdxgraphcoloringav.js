@@ -346,6 +346,12 @@ var hdxGraphColoringAV = {
         return false;
     },
     
+    // no QS parameters here
+    avParamsQS() {
+
+	return "";
+    },
+
     // comparator for the sorting function to sort waypoints by degree
     compareDegree(a,b) {
         return waypoints[b].edgeList.length - waypoints[a].edgeList.length;
