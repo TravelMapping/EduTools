@@ -6,8 +6,8 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxGraphColoringAV = {
-    value: "coloring",
+var hdxWPGraphColoringAV = {
+    value: "wpgc",
     
     name: "Welsh-Powell Graph Coloring",
     
