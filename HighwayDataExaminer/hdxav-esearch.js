@@ -29,7 +29,7 @@ function edgeLengthLeaderString(label, edgeNum) {
 var hdxEdgeExtremesSearchAV = {
 
     // entries for list of AVs
-    value: "edge",
+    value: "esearch",
     name: "Edge Extremes Search",
     description: "Search for extreme values based on edge (connection) lengths and labels.",
     

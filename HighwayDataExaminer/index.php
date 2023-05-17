@@ -66,7 +66,7 @@
 <script src="hdxpseudocode.js" type="text/javascript"></script>
 <script src="hdxnoav.js" type="text/javascript"></script>
 <script src="hdxvertexextremesav.js" type="text/javascript"></script>
-<script src="hdxedgeextremesav.js" type="text/javascript"></script>
+<script src="hdxav-esearch.js" type="text/javascript"></script>
 <script src="hdxextremepairsav.js" type="text/javascript"></script>
 <script src="hdxtravspanavs.js" type="text/javascript"></script>
 <script src="hdxav-bfch.js" type="text/javascript"></script>
