@@ -24,8 +24,10 @@ function HDXCPRecCallFrame(startIndex, endIndex, recLevel, nextAction) {
 var hdxClosestPairsRecAV = {
 
     // entries for list of AVs
-    value: "dc-closestpairs",
+    value: "dccp",
+    
     name: "Divide and Conquer Closest Pairs",
+    
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer, following the algorithm in Levitin.",
     
     // global state variables for closest pairs search
