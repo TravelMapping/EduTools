@@ -177,9 +177,6 @@ will display
       </tbody>
     </table>
   </div>
-  <div id="copyURLdiv">
-    <button id="copyURL" onclick="copyAVURL();">Copy AV URL</button>
-  </div>
   <div id="title">
     <p id="metalTitle">METAL&nbsp;HDX</p>
   </div>
@@ -221,6 +218,11 @@ will display
       <tr>
 	<td>
 	  <input type="button" value="Visualize" id="algOptionsDone" onClick="algOptionsDonePressed(); createVariableSelector();">
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <input type="button" value="Copy AV URL" id="copyURL" onClick="copyAVURL();">
 	</td>
       </tr>
     </tbody>
