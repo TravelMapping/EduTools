@@ -42,7 +42,7 @@ var hdxBFTravelingSalesmanAV = {
 		
                 // we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startPoint,
-				     visualSettings.startPoint, 30, false);
+				     visualSettings.startVertex, 30, false);
 
                 thisAV.pathCount = -1;
 
