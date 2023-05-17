@@ -38,11 +38,11 @@ var hdxBFTravelingSalesmanAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 		
                 // gets the staring vertex selected by the user as an integer
-                thisAV.startVertex = Number(document.getElementById("startVertex").value);
+                thisAV.startPoint = Number(document.getElementById("startPoint").value);
 		
                 // we want to highlight the starting vertex
-                updateMarkerAndTable(thisAV.startVertex,
-				     visualSettings.startVertex, 30, false);
+                updateMarkerAndTable(thisAV.startPoint,
+				     visualSettings.startPoint, 30, false);
 
                 thisAV.pathCount = -1;
 
@@ -68,7 +68,7 @@ var hdxBFTravelingSalesmanAV = {
                 // permutations/paths
                 thisAV.permutation = [];
                 for (let i = 0; i < waypoints.length;i++) {
-                    if (i != thisAV.startVertex) thisAV.permutation.push(i);
+                    if (i != thisAV.startPoint) thisAV.permutation.push(i);
                 }
 
                 // constructing our permutation generator/iterator
@@ -106,8 +106,8 @@ var hdxBFTravelingSalesmanAV = {
                     // add the start vertex to the start and end of
                     // the current permutation as we start and end at
                     // the same place
-                    thisAV.currPath.value.push(thisAV.startVertex);
-                    thisAV.currPath.value.splice(0,0,thisAV.startVertex);
+                    thisAV.currPath.value.push(thisAV.startPoint);
+                    thisAV.currPath.value.splice(0,0,thisAV.startPoint);
 
                     updateAVControlEntry("undiscovered",
 					 thisAV.pathsRemaining +
@@ -387,7 +387,7 @@ var hdxBFTravelingSalesmanAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-        let newAO = buildWaypointSelector("startVertex", "Start Vertex", 0);
+        let newAO = buildWaypointSelector("startPoint", "Start Vertex", 0);
 
         hdxAV.algOptions.innerHTML = newAO;
 
@@ -398,16 +398,16 @@ var hdxBFTravelingSalesmanAV = {
         addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
 
 	// check for and honor QS parameter setting start vertex
-	if (HDXQSIsSpecified("startVertex")) {
-	    let vNum = parseInt(HDXQSValue("startVertex"));
+	if (HDXQSIsSpecified("startPoint")) {
+	    let vNum = parseInt(HDXQSValue("startPoint"));
 	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter startVertex=" + HDXQSValue("startVertex") + ", ignoring");
+		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
 	    }
 	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter startVertex=" + HDXQSValue("startVertex") + " out of range, ignoring");
+		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
 	    }
 	    else {
-		document.getElementById("startVertex").value = vNum;
+		document.getElementById("startPoint").value = vNum;
 	    }
 	}
     },

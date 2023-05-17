@@ -20,7 +20,7 @@ var hdxTwiceAroundTreeAV = {
 
     // index of the waypoint that is selected by the user to be the
     // start of every path
-    startVertex: 0,
+    startPoint: 0,
 
     // adjacency matrix for all vertices, for example graph[0][1] will
     // give you the distance from vertex 0 to 1
@@ -48,7 +48,7 @@ var hdxTwiceAroundTreeAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                thisAV.startVertex = Number(document.getElementById("startVertex").value);
+                thisAV.startPoint = Number(document.getElementById("startPoint").value);
                 thisAV.nextToCheck = -1;
 
                 thisAV.currSum = 0;
@@ -118,7 +118,7 @@ var hdxTwiceAroundTreeAV = {
                 // Perform Prim's algorithm on our complete graph so
                 // that we can perform our approximation on the
                 // computed minimum spanning tree
-                thisAV.graph.prims(true,thisAV.startVertex);
+                thisAV.graph.prims(true,thisAV.startPoint);
                 for (let i = 0; i < thisAV.graph.v.length; i++) {
                     for (let j = i + 1; j < thisAV.graph.v.length; j++) {
                         if (!thisAV.graph.validEdge[i][j]) {
@@ -155,11 +155,11 @@ var hdxTwiceAroundTreeAV = {
                 // get our initial path.  Currently there is nothing
                 // that visualizes this, but that can be changed in
                 // the future
-                thisAV.graph.dft(thisAV.startVertex, thisAV.graph.visited);
+                thisAV.graph.dft(thisAV.startPoint, thisAV.graph.visited);
 
-                // Add the startVertex to the end in order to complete
+                // Add the startPoint to the end in order to complete
                 // the path
-                thisAV.graph.path.push(thisAV.startVertex);
+                thisAV.graph.path.push(thisAV.startPoint);
                 hdxAV.iterationDone = true;
 
                 thisAV.finalPath = thisAV.graph.path;
@@ -171,7 +171,7 @@ var hdxTwiceAroundTreeAV = {
                     '<tr style="text-align:center"><th>#</th><th>Label</th><th>Distance</th></tr></thead><tbody>';
             },
             logMessage: function(thisAV) {
-                return "Performing a depth-first traversal on minimum spanning tree starting from waypoint #" + thisAV.startVertex;
+                return "Performing a depth-first traversal on minimum spanning tree starting from waypoint #" + thisAV.startPoint;
             }
         },
 
@@ -350,7 +350,7 @@ var hdxTwiceAroundTreeAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
 
-        let newAO = buildWaypointSelector("startVertex", "Start Vertex", 0);
+        let newAO = buildWaypointSelector("startPoint", "Start Vertex", 0);
 
         hdxAV.algOptions.innerHTML = newAO;
 
@@ -361,16 +361,16 @@ var hdxTwiceAroundTreeAV = {
         addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
 
 	// check for and honor QS parameter setting start vertex
-	if (HDXQSIsSpecified("startVertex")) {
-	    let vNum = parseInt(HDXQSValue("startVertex"));
+	if (HDXQSIsSpecified("startPoint")) {
+	    let vNum = parseInt(HDXQSValue("startPoint"));
 	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter startVertex=" + HDXQSValue("startVertex") + ", ignoring");
+		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
 	    }
 	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter startVertex=" + HDXQSValue("startVertex") + " out of range, ignoring");
+		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
 	    }
 	    else {
-		document.getElementById("startVertex").value = vNum;
+		document.getElementById("startPoint").value = vNum;
 	    }
 	}
     },
@@ -455,15 +455,15 @@ function completeGraph(vertices) {
         }
     }
 
-    // startVertex is a number, visited is an array of booleans, path
+    // startPoint is a number, visited is an array of booleans, path
     // is an array holding the sequence
-    this.dft = function(startVertex) {
-        this.path.push(startVertex);
-        this.visited[startVertex] = true;
+    this.dft = function(startPoint) {
+        this.path.push(startPoint);
+        this.visited[startPoint] = true;
         for (let i = 0; i < this.v.length; i++) {
             if ((!this.visited[i]) &&
-		(this.e[startVertex][i] > 1E-14 &&
-		 this.e[startVertex][i] < Number.MAX_SAFE_INTEGER)) {
+		(this.e[startPoint][i] > 1E-14 &&
+		 this.e[startPoint][i] < Number.MAX_SAFE_INTEGER)) {
                 this.dft(i);
             }
         }
@@ -471,18 +471,18 @@ function completeGraph(vertices) {
     
     // if prune is true, then remove non-valid edges from adjacency
     // matrix
-    this.prims = function(prune,startVertex) {
+    this.prims = function(prune,startPoint) {
         for (let i = 0; i < this.inMST.length; i++) {
             this.inMST[i] = false;
         }
 
-        this.inMST[startVertex] = true;
+        this.inMST[startPoint] = true;
         let edgeCount = -1;
         let minCost = 0;
         let a;
         let b;
         let min;
-        while(edgeCount < this.v.length - 2) {
+        while (edgeCount < this.v.length - 2) {
             min = Number.MAX_SAFE_INTEGER;
             
             for (let i = 0; i < this.v.length; i++) {
