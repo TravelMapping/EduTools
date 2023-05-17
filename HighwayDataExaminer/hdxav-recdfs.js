@@ -9,7 +9,7 @@
 var hdxDFSRecAV = {
 
     // entries for list of AVs
-    value: "dfs-recursive",
+    value: "recdfs",
     name: "Recursive Depth First Search",
     description: "Depth-first graph traversal by recursive depth-first searches from each vertex (waypoint).",
     
@@ -416,7 +416,7 @@ var hdxDFSRecAV = {
         addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
         addEntryToAVControlPanel("found", visualSettings.spanningTree);
         let foundEntry = '<span id="foundEntriesCount">0</span>' +
-            ' <span id="foundTableLabel">Edges in Minimum Spanning Tree</span>' +
+            ' <span id="foundTableLabel">Edges in Spanning Tree</span>' +
             '<br /><table class="pathTable"><thead>' +
             '<tr style="text-align:center"><th>Place</th>' +
             '<th>Hops</th>' +
