@@ -9,7 +9,7 @@
 
 var hdxOrderingAV = {
     value: "ordering",
-    name: "Space-Filling Curve Traversals",
+    name: "Traversal Orderings",
     description: "Visualize various 1D orderings of vertices (waypoints) in 2D space.",
 
     // used to track the num of the two verticies we are drawing an

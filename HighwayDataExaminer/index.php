@@ -80,7 +80,7 @@
 <script src="hdxav-dccp.js" type="text/javascript"></script>
 <script src="hdxquadtreeav.js" type="text/javascript"></script>
 <script src="rainbowvis.js" type="text/javascript"></script>
-<script src="hdxorderingav.js" type="text/javascript"></script>
+<script src="hdxav-ordering.js" type="text/javascript"></script>
 <script src="hdxav-bftsp.js" type="text/javascript"></script>
 <script src="hdxtwicearoundtreeav.js" type="text/javascript"></script>
 <script src="hdxpartitionerrecursive.js" type="text/javascript"></script>
