@@ -391,25 +391,17 @@ var hdxBFTravelingSalesmanAV = {
 
         hdxAV.algOptions.innerHTML = newAO;
 
+	// QS parameter
+	HDXQSClear(this);
+	HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0,
+				  waypoints.length - 1);
+
+	// AVCP entries
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("visiting",visualSettings.visiting);
         addEntryToAVControlPanel("currSum",visualSettings.discovered);
         addEntryToAVControlPanel("minSum",visualSettings.spanningTree);
         addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
-
-	// check for and honor QS parameter setting start vertex
-	if (HDXQSIsSpecified("startPoint")) {
-	    let vNum = parseInt(HDXQSValue("startPoint"));
-	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
-	    }
-	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
-	    }
-	    else {
-		document.getElementById("startPoint").value = vNum;
-	    }
-	}
     },
 
     cleanupUI() {
@@ -477,12 +469,6 @@ var hdxBFTravelingSalesmanAV = {
             return true;
         }
         return false;
-    },
-
-    // our current AV parameters as QS parameter
-    avParamsQS() {
-
-	return "&startPoint=" + document.getElementById("startPoint").value;
     }    
 }
 

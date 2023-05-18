@@ -411,16 +411,9 @@ var hdxAPClosestPointAV = {
 	
     },
 
-    // no AV parameters here
-    avParamsQS() {
-
-	return "";
-    }
 };
 
-
-
 function ClosestToAll() {
-    this.closest = points.length;
 
+    this.closest = points.length;
 }

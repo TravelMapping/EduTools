@@ -578,43 +578,14 @@ var hdxPartitionerAV = {
         newAO += `<br/>`+hdxPart.colorHtml();
         hdxAV.algOptions.innerHTML = newAO;
          
-	//QS parameters
-	//checking/setting the number of recurvise levels
-	if (HDXQSIsSpecified("levels")) {
-            if (parseFloat(HDXQSValue("levels"))>=1 &&
-		parseFloat(HDXQSValue("levels")) <=
-		(Math.trunc(Math.log2(waypoints.length)))) {
-                document.getElementById("parts").value =
-		    parseFloat(HDXQSValue("levels"));
-                this.rcbCallback();
-            }
-            else {
-		console.error("Number of recursive levels given is out of range.");
-	    }
-	}
-	// checking/setting the type of coloring Method
-	if (HDXQSIsSpecified("overlay")) {
-            if (HDXQSValue("overlay") == "Overlays" ||
-		HDXQSValue("overlay") == "Waypoints") {
-                document.getElementById("ColoringMethod").value =
-		    HDXQSValue("overlay");
-            }
-            else {
-		console.error("Coloring method given is not a valid option.");
-	    }
-        }
-	// checking/setting the checkbox for calcing partition data on the fly
-	if (HDXQSIsSpecified("onfly")) {
-            if (HDXQSValue("onfly") == "true" ||
-		HDXQSValue("onfly") == "false") {
-                document.getElementById("calcOnFly").checked =
-		    (HDXQSValue("onfly") == "true");
-            }
-            else {
-		console.error("The input given for the on the fly Partition stats is invalid.");
-	    }
-        }
-        
+	// QS parameters
+	HDXQSClear(this);
+	HDXQSRegisterAndSetNumber(this, "levels", "parts", 1,
+				  Math.trunc(Math.log2(waypoints.length)));
+	HDXQSRegisterAndSetSelectList(this, "overlay", "ColoringMethod");
+	HDXQSRegisterAndSetCheckbox(this, "onfly", "calcOnFly");
+
+        // AVCP entries
         addEntryToAVControlPanel ("undiscovered", visualSettings.undiscovered);
         addEntryToAVControlPanel ("visiting",visualSettings.visiting);
     },
@@ -716,13 +687,5 @@ var hdxPartitionerAV = {
             return true;
         }
         return false;
-    },
-    
-    // our current AV parameters as QS parameters
-    avParamsQS() {
-
-	return "&levels=" + document.getElementById("parts").value +
-	    "&overlay=" + document.getElementById("ColoringMethod").value +
-	    "&onfly=" + document.getElementById("calcOnFly").checked;
     }
 }

@@ -354,25 +354,17 @@ var hdxTwiceAroundTreeAV = {
 
         hdxAV.algOptions.innerHTML = newAO;
 
+	// QS parameter
+	HDXQSClear(this);
+	HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0,
+				  waypoints.length - 1);
+
+	// AVCP entries
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("v1",visualSettings.v1);
         addEntryToAVControlPanel('v2',visualSettings.v2);
         addEntryToAVControlPanel("currSum",visualSettings.discovered);
         addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
-
-	// check for and honor QS parameter setting start vertex
-	if (HDXQSIsSpecified("startPoint")) {
-	    let vNum = parseInt(HDXQSValue("startPoint"));
-	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
-	    }
-	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
-	    }
-	    else {
-		document.getElementById("startPoint").value = vNum;
-	    }
-	}
     },
 
     cleanupUI() {
@@ -428,12 +420,6 @@ var hdxTwiceAroundTreeAV = {
             return true;
         }
         return false;
-    },
-
-    // our current AV parameters as QS parameter
-    avParamsQS() {
-
-	return "&startPoint=" + document.getElementById("startPoint").value;
     }
 }
 

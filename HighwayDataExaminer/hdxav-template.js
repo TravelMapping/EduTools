@@ -180,13 +180,6 @@ var hdxTemplateAV = {
             return true;
         }
         return false;
-    },
-
-    // all AVs should provide a method to return a QS parameter string
-    // for its current AV parameters
-    avParamsQS() {
-
-	return "";
     }
     
     //here add any additional functions you may need to access in your AV

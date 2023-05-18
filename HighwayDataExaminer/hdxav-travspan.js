@@ -1114,62 +1114,17 @@ var hdxTraversalsSpanningAVCommon = {
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
 
-	// check for and honor QS parameters setting AV parameters
-	// start point
-	if (HDXQSIsSpecified("startPoint")) {
-	    let vNum = parseInt(HDXQSValue("startPoint"));
-	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter startPoint=" + HDXQSValue("startPoint") + ", ignoring");
-	    }
-	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter startPoint=" + HDXQSValue("startPoint") + " out of range, ignoring");
-	    }
-	    else {
-		document.getElementById("startPoint").value = vNum;
-	    }
-	}
-
-	// end point
-	if (HDXQSIsSpecified("endPoint")) {
-	    let vNum = parseInt(HDXQSValue("endPoint"));
-	    if (isNaN(vNum)) {
-		console.error("Invalid QS parameter endPoint=" + HDXQSValue("endPoint") + ", ignoring");
-	    }
-	    else if (vNum < 0 || vNum >= waypoints.length) {
-		console.error("QS parameter endPoint=" + HDXQSValue("endPoint") + " out of range, ignoring");
-	    }
-	    else {
-		document.getElementById("endPoint").value = vNum;
-	    }
-	}
-
-	// stopping condition
-	if (HDXQSIsSpecified("stoppingCondition")) {
-	    let stopVal = HDXQSValue("stoppingCondition");
-	    if (stopVal == "StopAtEnd" ||
-		stopVal == "FindReachable" ||
-		(this.supportFindAllComponents && stopVal == "FindAll")) {
-		this.stoppingCondition = stopVal;
-		document.getElementById("stoppingCondition").value = stopVal;
-	    }
-	    else {
-		console.error("QS parameter stoppingCondition=" + stopVal + " is invalid, ignoring");
-	    }
-	}
-
-	// traversal discipline (applies to traversals only, not Dijkstra's
-	// or Prim's algorithms
-	if (HDXQSIsSpecified("traversalDiscipline") &&
-	    document.getElementById("traversalDiscipline") != null) {
-	    let travVal = HDXQSValue("traversalDiscipline");
-	    if (travVal == "BFS" || travVal == "DFS" || travVal == "RFS") {
-		this.traversalDiscipline = travVal;
-		document.getElementById("traversalDiscipline").value = travVal;
-	    }
-	    else {
-		console.error("QS parameter traversalDiscipline=" + travVal + " is invalid, ignoring");
-	    }
-	}
+	// QS parameters
+	HDXQSClear(this);
+	HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0,
+				  waypoints.length - 1);
+	HDXQSRegisterAndSetNumber(this, "endPoint", "endPoint", 0,
+				  waypoints.length - 1);
+	HDXQSRegisterAndSetSelectList(this, "stoppingCondition",
+				      "stoppingCondition");
+	// note: traversal discipline will be specified only for
+	// graph traversals and will be added in this call
+	this.extraQSSetup();
     },
 
     // clean up common UI components
@@ -1232,21 +1187,10 @@ var hdxTraversalsSpanningAVCommon = {
         return false;
     },
 
-    // our current AV parameters as QS parameters
-    avParamsQS() {
-
-	let url =
-	    "&startPoint=" + document.getElementById("startPoint").value +
-	    "&endPoint=" + document.getElementById("endPoint").value +
-	    "&stoppingCondition=" +
-	    document.getElementById("stoppingCondition").value;
-	// not all have a traversal discipline
-	let td = document.getElementById("traversalDiscipline");
-	if (td != null) {
-	    url += "&traversalDiscipline=" + td.value;
-	}
-	return url;
-    }    
+    // overridden by graph traversals which have an extra QS parameter
+    extraQSSetup() {
+	
+    }
 };
 
 // event handler when stopping condition option selector changes
@@ -1275,6 +1219,13 @@ Order: <select id="traversalDiscipline">
 <option value="DFS">Depth First</option>
 <option value="RFS">Random</option>
 </select>`;
+
+// extra QS for graph traversals
+hdxGraphTraversalsAV.extraQSSetup = function() {
+
+    HDXQSRegisterAndSetSelectList(hdxGraphTraversalsAV, "traversalDiscipline",
+				  "traversalDiscipline");
+};
 
 hdxGraphTraversalsAV.distEntry = "Hops";
 

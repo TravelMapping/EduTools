@@ -363,8 +363,6 @@ var hdxOrderingAV = {
 	// QS parameters
 	HDXQSClear(this);
 	HDXQSRegisterAndSetSelectList(this, "curve", "traversalOrdering");
-	HDXQSRegisterAndSetNumber(this, "refine", "refinement", 2,
-				  waypoints.length);
 	HDXQSRegisterAndSetCheckbox(this, "box", "boundingBox");
 	HDXQSRegisterAndSetCheckbox(this, "connect", "extraEdge");
 	HDXQSRegisterAndSetCheckbox(this, "calcparts", "calcparts");

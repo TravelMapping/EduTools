@@ -514,10 +514,4 @@ var hdxDegreeAV = {
         }
         return false;
     },
-
-    // no QS parameters for this one at this time
-    avParamsQS() {
-
-	return "";
-    }    
 };

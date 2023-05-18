@@ -586,31 +586,12 @@ Compute: <select id="closeAndOrFar">
 <input id="keepLines" type="checkbox" /> Keep all distance lines
 `;
 
-	// check for QS parameter for close and/or far
-	if (HDXQSIsSpecified("closeAndOrFar")) {
-	    let opt = HDXQSValue("closeAndOrFar");
-	    if (opt == "closest" || opt == "farthest" || opt == "both") {
-		document.getElementById("closeAndOrFar").value = opt;
-	    }
-	    else {
-		console.log("QS parameter closeAndOrFar=" + opt + " is invalid, ignoring");
-	    }
-	}
+	// QS parameters
+	HDXQSClear(this);
+	HDXQSRegisterAndSetSelectList(this, "closeAndOrFar", "closeAndOrFar");
+	HDXQSRegisterAndSetCheckbox(this, "keepLines", "keepLines");
 
-	// check for QS parameter for keeping lines
-	if (HDXQSIsSpecified("keepLines")) {
-	    let opt = HDXQSValue("keepLines");
-	    if (opt == "true") {
-		document.getElementById("keepLines").checked = true;
-	    }
-	    else if (opt == "false") {
-		document.getElementById("keepLines").checked = false;
-	    }
-	    else {
-		console.log("QS parameter keepLines=" + opt + " is invalid, ignoring");
-	    }
-	}
-	
+	// AVCP entries
         addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
         addEntryToAVControlPanel("v2visiting", this.visualSettings.v2);
         addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
@@ -677,13 +658,5 @@ Compute: <select id="closeAndOrFar">
             }
         }
         return false;
-    },
-    
-    // our current AV parameters as QS parameters
-    avParamsQS() {
-
-	return "&closeAndOrFar=" +
-	    document.getElementById("closeAndOrFar").value +
-	    "&keepLines=" + document.getElementById("keepLines").checked;
     }
 };

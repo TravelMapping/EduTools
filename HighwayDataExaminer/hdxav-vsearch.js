@@ -997,61 +997,15 @@ Show Extremes Bounding Box<br />
 &nbsp;Show Average Coordinate<br />
 </div>
 `;
-	// check for and honor QS parameters setting AV parameters
-	//checking/setting the checkbox for bounding box
-	if (HDXQSIsSpecified("box")) {
-	    var boxVal = HDXQSValue("box");
-            if (boxVal == "true" || boxVal == "false") {
-                document.getElementById("boundingBox").checked =
-		    boxVal == "true";
-            }
-            else {
-		console.error("Invalid QS parameter box=" + boxVal + ", ignoring");
-	    }
-        }
-        // checking/setting the type of tie handling
-	if (HDXQSIsSpecified("ties")) {
-	    let tiesVal = HDXQSValue("ties");
-            if (tiesVal == "all" || tiesVal == "first") {
-                document.getElementById("tieHandling").value = tiesVal;
-            }
-            else {
-		console.error("Invalid QS parameter ties=" + tiesVal + ", ignoring");
-	    }
-        }
-        // checking/setting the checkbox for label lengths
-	if (HDXQSIsSpecified("labelLength")) {
-	    let labLenVal = HDXQSValue("labelLength");
-            if(labLenVal == "true" || labLenVal == "false") {
-                document.getElementById("longshort").checked =
-		    labLenVal == "true";
-               }
-            else {
-		console.error("Invalid QS parameter labelLength=" + labLenVal + ", ignoring");
-	    }
-        }
-        // checking/setting the checkbox for Alphabetical labels
-	if (HDXQSIsSpecified("alpha")) {
-	    let alphaVal = HDXQSValue("alpha");
-            if(alphaVal == "true" || alphaVal == "false") {
-                document.getElementById("firstlast").checked =
-		    alphaVal == "true";
-            }
-            else {
-		console.error("Invalid QS parameter alpha=" + alphaVal + ", ignoring");
-	    }
-	}
-        // checking/setting the checkbox for Average Coords
-	if (HDXQSIsSpecified("avgcoords")) {
-	    let avgVal = HDXQSValue("avgcoords");
-            if (avgVal == "true" || avgVal == "false") {
-                document.getElementById("showavgcoord").checked =
-		    avgVal == "true";
-            }
-            else {
-		console.error("Invalid QS parameter avgcoords=" + avgVal + ", ignoring");
-	    }
-	}
+
+	// QS parameters
+	HDXQSClear(this);
+	HDXQSRegisterAndSetCheckbox(this, "box", "boundingBox");
+	HDXQSRegisterAndSetSelectList(this, "ties", "tieHandling");
+	HDXQSRegisterAndSetCheckbox(this, "labelLength", "longshort");
+	HDXQSRegisterAndSetCheckbox(this, "alpha", "firstlast");
+	HDXQSRegisterAndSetCheckbox(this, "avgcoords", "showavgcoord");
+
     },
         
     // remove UI modifications made for vertex extremes search
@@ -1150,16 +1104,5 @@ Show Extremes Bounding Box<br />
             }
         }
         return false;
-    },
-
-    // our current AV parameters as QS parameters
-    avParamsQS() {
-
-	return "&box=" + document.getElementById("boundingBox").checked +
-	    "&ties=" + document.getElementById("tieHandling").value +
-	    "&labelLength=" + document.getElementById("longshort").checked +
-	    "&alpha=" + document.getElementById("firstlast").checked +
-	    "&avgcoods=" + document.getElementById("showavgcoord").checked;
     }
-    
 };

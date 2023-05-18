@@ -370,12 +370,6 @@ var hdxTarjanAV = {
         return false;
     },
 
-    // no QS parameters here
-    avParamsQS() {
-
-	return "";
-    },
-
     // DFT algorithm, index of the start vertex is the parameter
     depthFirstTraversal(i) {
 

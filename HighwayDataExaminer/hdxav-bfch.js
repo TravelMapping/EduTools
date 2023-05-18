@@ -763,12 +763,6 @@ var hdxBFConvexHullAV = {
             }
         }
         return false;
-    },
-
-    // no AV parameters here
-    avParamsQS() {
-
-	return "";
     }    
 };
 
