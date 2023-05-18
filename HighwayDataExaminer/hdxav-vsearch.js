@@ -56,7 +56,7 @@ function vertexLabelLeaderString(category) {
 var hdxVertexExtremesSearchAV = {
 
     // entries for list of AVs
-    value: "vertex",
+    value: "vsearch",
     name: "Vertex Extremes Search",
     description: "Search for extreme values based on vertex (waypoint) locations and labels.",
 
