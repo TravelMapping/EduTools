@@ -265,8 +265,9 @@ var hdxOrderingAV = {
             logMessage: function(thisAV) {
                 return "Adding edge between vertex #" + waypoints[thisAV.nextToCheck].num + " and vertex #"
                     + waypoints[thisAV.nextToCheck + 1].num;
+            
             }
-        },
+	},	    
         {
             label: "cleanup",
             description: "",
@@ -344,100 +345,33 @@ var hdxOrderingAV = {
 
         <!--<option value="fixedGrey">Fixed Grey Curve</option>-->
         </select>`;
-
+	
         newAO += '<br />Refinement Threshold<input type="number" id="refinement" min="2" max="' 
-        + (waypoints.length) + '" value="2">';
-
+            + (waypoints.length) + '" value="2">';
+	
         newAO += `<br /><input id="boundingBox" type="checkbox" name="Show Bounding Box"/>&nbsp;
         Show Bounding Box<br />`
-
+	
         newAO +=
-        `<br /><input id="extraEdge" type="checkbox" name="Draw Edge from Last to First"/>&nbsp;
+            `<br /><input id="extraEdge" type="checkbox" name="Draw Edge from Last to First"/>&nbsp;
         Draw Edge from Last to First<br />`
-
+	
         // partitioning
         newAO += hdxPart.partHtml();
         hdxAV.algOptions.innerHTML = newAO;
+	
+	// QS parameters
+	HDXQSClear(this);
+	HDXQSRegisterAndSetSelectList(this, "curve", "traversalOrdering");
+	HDXQSRegisterAndSetNumber(this, "refine", "refinement", 2,
+				  waypoints.length);
+	HDXQSRegisterAndSetCheckbox(this, "box", "boundingBox");
+	HDXQSRegisterAndSetCheckbox(this, "connect", "extraEdge");
+	HDXQSRegisterAndSetCheckbox(this, "calcparts", "calcparts");
+	HDXQSRegisterAndSetNumber(this, "numparts", "numOfParts", 1,
+				  waypoints.length);
 
-       // QS parameters
-       // Checking/setting the type of curve
-       if (HDXQSIsSpecified("curve")) {
-            var options = document.getElementById("traversalOrdering").options;
-            var size = document.getElementById("traversalOrdering").length;
-            var valid = false;
-            for (var i = 0; i<size; i++) {
-                if (options[i].value == HDXQSValue("curve")) {
-                      document.getElementById("traversalOrdering").value = HDXQSValue("curve");
-                    refinementChanged();
-                    valid = true;
-                    break;
-                }
-            }
-           if (!valid) {
-	       console.error("Type of curve given is not valid.");
-	   }
-       }
-
-       // Checking/setting the refinement
-       if (HDXQSIsSpecified("refine")) {
-           if (parseFloat(HDXQSValue("refine")) >= 2 &&
-	       parseFloat(HDXQSValue("refine")) <= waypoints.length) {
-               document.getElementById("refinement").value =
-		   parseFloat(HDXQSValue("refine"));
-           }
-           else {
-	       console.error("The refinement level given is out of range.");
-	   }
-       }
-	
-	// checking/setting the checkbox for bounding box
-	if (HDXQSIsSpecified("box")) {
-            if (HDXQSValue("box") == "true" || HDXQSValue("box") == "false") {
-		document.getElementById("boundingBox").checked =
-		    (HDXQSValue("box") == "true");
-            }
-            else {
-		console.error("The input given for the bounding box is invalid.");
-	    }
-	}
-	
-	// checking/setting the checkbox for connecting line
-	if (HDXQSIsSpecified("connect")) {
-            if (HDXQSValue("connect") == "true" ||
-		HDXQSValue("connect") == "false") {
-                document.getElementById("extraEdge").checked =
-		    (HDXQSValue("connect") == "true");
-            }
-            else {
-		console.error("The input given for the line connecting last to first is invalid.");
-	    }
-        }
-	
-	// checking/setting the checkbox for Calculating Partitions and
-	// number of Partitions
-	if (HDXQSIsSpecified("calcparts")) {
-            if (HDXQSValue("calcparts") == "true" ||
-		HDXQSValue("calcparts") == "false") {
-		document.getElementById("calcparts").checked =
-		    (HDXQSValue("calcparts") == "true");
-		partCallback();
-		if (HDXQSValue("calcparts") == "true" &&
-		    HDXQSIsSpecified("numparts")) {
-                    if (parseFloat(HDXQSValue("numparts")) >= 1 &&
-			parseFloat(HDXQSValue("numparts")) <= waypoints.length) {
-			document.getElementById("numOfParts").value =
-			    parseFloat(HDXQSValue("numparts"));
-                    }
-                    else {
-			console.error("Invalid number of Partitions.");
-		    }
-		}
-            }
-            else {
-		console.error("The input given for Calculating Partitions is invalid.");
-	    }
-	}
-	
+	// AVCP entries
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
         addEntryToAVControlPanel("v1",visualSettings.v1);
         addEntryToAVControlPanel("v2", visualSettings.v2);
@@ -466,17 +400,6 @@ var hdxOrderingAV = {
         return action.label;
     },
 
-    // our current AV parameters as QS parameters
-    avParamsQS() {
-
-	return "&curve=" + document.getElementById("traversalOrdering").value +
-	    "&refine=" + document.getElementById("refinement").value +
-	    "&box=" + document.getElementById("boundingBox").checked +
-	    "&connect=" + document.getElementById("extraEdge").checked +
-	    "&calcparts=" + document.getElementById("calcparts").checked +
-	    "&numparts=" + document.getElementById("numOfParts").value;
-    },
-    
     // this was copied directly over from hdxextremepairsav with some
     // slight modifications
     drawLineVisiting() {
@@ -613,6 +536,7 @@ var hdxOrderingAV = {
 };
 
 function refinementChanged() {
+
     let selector = document.getElementById("traversalOrdering");
     let refSelector = document.getElementById("refinement");
     switch (selector.options[selector.selectedIndex].value) {

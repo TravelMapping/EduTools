@@ -674,7 +674,8 @@ function copyAVURL() {
     // current AV name
     url += "&av=" + hdxAV.currentAV.value;
 
-    url += hdxAV.currentAV.avParamsQS();
+    // AV parameters
+    url += HDXQSAVParams(hdxAV.currentAV);
 
     navigator.clipboard.writeText(url);
     console.log(url);
