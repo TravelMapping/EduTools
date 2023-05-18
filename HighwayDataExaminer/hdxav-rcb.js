@@ -60,7 +60,7 @@ var hdxPartitionerAV = {
         {
             label: "START",
             comment: "creates bounding box and initializes fields",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 for (let x = 0; x < waypoints.length; x++) {
                        thisAV.waypointParts[x] = x;

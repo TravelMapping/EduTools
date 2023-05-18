@@ -38,7 +38,7 @@ var hdxTemplateAV = {
             //if you want the psuedocode to highlight when 
             label: "START",
             comment: "Initializes fields",
-            code: function(thisAV){
+            code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 //here you establish thisAV.variables that you need access to between states. 
@@ -56,7 +56,7 @@ var hdxTemplateAV = {
                 hdxAV.nextAction = "topForLoop";
             },
             //logMessage is what is printed on top of the pseudocode when running step by step
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Doing some setup stuff";
             }
         },
@@ -174,7 +174,7 @@ var hdxTemplateAV = {
         return "No innerHTML";
     },
     //note this is currently not working
-    hasConditionalBreakpoints(name){
+    hasConditionalBreakpoints(name) {
         let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;

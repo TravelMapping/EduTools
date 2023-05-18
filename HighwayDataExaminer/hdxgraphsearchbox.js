@@ -54,7 +54,7 @@ function HDXGraphSearchInit() {
 // thanks to https://codepen.io/jonvadillo/details/NrGWEX for
 // providing a working example in which to work off of
 // Made this code block a function because the new UI wasn't calling it
-function HDXGraphBoxStart(){
+function HDXGraphBoxStart() {
 var HDXGraphSubstringMatcher = function(strs) {
 
     return function findMatches(q, cb) {
@@ -100,24 +100,24 @@ $(document).ready(function() {
         if (keycode == '13') {
 	    let input = document.getElementById("searchBox").value;
 	    if (HDXGraphs.hasOwnProperty(input)) {
-            loadingMenu();
+		loadingMenu();
 		HDXReadFileFromWebServer(HDXGraphs[input]);
 	    }
 	    else {
-		      //creates text under the graph search box saying that the graph doesn't exist
-          if(noGraphCounter == 1)
-          {
-            noGraphCounter = 0;
-            var deleteP = document.getElementById("noGraphFound");
-            deleteP.remove();
-          }
-          var noGraph = document.createElement('P');
-          noGraph.innerHTML = "Graph Not Found: " + input;
-          noGraph.style.color = 'rgb(255, 107, 107';
-          noGraph.id = 'noGraphFound';
-          document.getElementById('basicgraphsearch').appendChild(noGraph);
-          noGraphCounter += 1;
-	         }
+		//creates text under the graph search box saying that
+		//the graph doesn't exist
+		if (noGraphCounter == 1) {
+		    noGraphCounter = 0;
+		    var deleteP = document.getElementById("noGraphFound");
+		    deleteP.remove();
+		}
+		var noGraph = document.createElement('P');
+		noGraph.innerHTML = "Graph Not Found: " + input;
+		noGraph.style.color = 'rgb(255, 107, 107';
+		noGraph.id = 'noGraphFound';
+		document.getElementById('basicgraphsearch').appendChild(noGraph);
+		noGraphCounter += 1;
+	    }
         }
     });
 })};
@@ -132,8 +132,9 @@ function HDXGraphSearchNextPressed() {
 	HDXReadFileFromWebServer(HDXGraphs[input]);
     }
     else {
-	//creates text under the graph search box saying that the graph doesn't exist
-        if(document.getElementById("noGraphFound") != null) {
+	// creates text under the graph search box saying that the
+	// graph doesn't exist
+        if (document.getElementById("noGraphFound") != null) {
             document.getElementById("noGraphFound").remove();
         }
         var noGraph = document.createElement('P');
@@ -141,6 +142,5 @@ function HDXGraphSearchNextPressed() {
         noGraph.style.color = 'rgb(255, 107, 107)';
         noGraph.id = 'noGraphFound';
         document.getElementById('basicgraphsearch').appendChild(noGraph);
-        
     }
 }

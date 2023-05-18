@@ -105,14 +105,17 @@ var hdxAPClosestPointAV = {
                 thisAV.outLoop++;
                 updateAVControlEntry("v1Visiting", "V<sub>1</sub>: " + thisAV.outLoop);
                 
-                if(thisAV.outLoop < waypoints.length) hdxAV.nextAction = "resetClosest";
-                else hdxAV.nextAction = "cleanup"
+                if (thisAV.outLoop < waypoints.length) {
+		    hdxAV.nextAction = "resetClosest";
+		}
+                else {
+		    hdxAV.nextAction = "cleanup";
+		}
                 thisAV.inLoop = -1;
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.outLoop + " of first for-loop";
             }
-
         },
 
         {
@@ -317,7 +320,7 @@ var hdxAPClosestPointAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function (thisAV) {
                 
-                for (var i = 0; i < thisAV.highlightPoly.length; i++){
+                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
                     updateMarkerAndTable(i, visualSettings.leader, 0, false);
                     thisAV.highlightPoly[i].addTo(map);
                 }
@@ -379,7 +382,7 @@ var hdxAPClosestPointAV = {
     
     cleanupUI() {
 	//remove all the polylines made
-	for (var i = 0; i < this.highlightPoly.length; i++){
+	for (var i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
 	}
 	this.highlightPoly = [];

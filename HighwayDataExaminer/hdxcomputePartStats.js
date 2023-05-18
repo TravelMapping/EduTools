@@ -18,7 +18,7 @@ var hdxComputePartStats = {
         {
             label: "START",
             comment: "Adding stats to page",
-            code: function(thisAV){
+            code: function(thisAV) {
                 // checking that we have partitioned data
                 if (hdxPart.parts == null ||
 		    hdxPart.parts.length == 0 ||
@@ -39,7 +39,7 @@ var hdxComputePartStats = {
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "cleanup";
             },
-            logMessage: function(thisAV){
+            logMessage: function(thisAV) {
                 return "Adding stats to page";
             }
         },
@@ -104,17 +104,11 @@ var hdxComputePartStats = {
         return "No innerHTML";
     },
     // note this is currently not working
-    hasConditionalBreakpoints(name){
+    hasConditionalBreakpoints(name) {
         let answer = HDXHasCommonConditionalBreakpoints(name);
         if (answer) {
             return true;
         }
         return false;
-    },
-
-    // no QS parameters for this one
-    avParamsQS() {
-
-	return "";
     }
 }

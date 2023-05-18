@@ -764,7 +764,7 @@ var hdxQuadtreeAV = {
                 weight: 3
             })
         );
-        for(var i = 0; i < this.boundingPoly.length; i++) {
+        for (var i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].addTo(map);
         }
     },

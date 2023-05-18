@@ -357,11 +357,10 @@ function createInnerHTMLChoice(choice, id, firstText, secondText) {
     }
 }
 
-//returns a string of non breaking spaces
-//please don't pass a negative
-function pcIndent(i){
+// returns a string of i non breaking spaces
+function pcIndent(i) {
     let s = '';
-    for(let k = 0; k < i; k++){
+    for (let k = 0; k < i; k++) {
         s +=  '&nbsp;';
     }
     return s;

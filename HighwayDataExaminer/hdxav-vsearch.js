@@ -679,7 +679,7 @@ var hdxVertexExtremesSearchAV = {
         let wEnds = [[n,w],[s,w]];
         let nsAvg;
         let ewAvg;
-        if(this.showAvgOfCoords){
+        if (this.showAvgOfCoords) {
             nsAvg = [[n,this.avglng],[s,this.avglng]];
             ewAvg = [[this.avglat,e],[this.avglat,w]];
         }
@@ -714,7 +714,7 @@ var hdxVertexExtremesSearchAV = {
                     weight: 3
                 }) 
             );
-            if(this.showAvgOfCoords){
+            if (this.showAvgOfCoords) {
             
                 this.boundingPoly.push(
                     L.polyline(nsAvg, {
@@ -735,7 +735,7 @@ var hdxVertexExtremesSearchAV = {
             for (var i = 0; i < 4; i++) {
                 this.boundingPoly[i].addTo(map);
             }
-            if(this.showAvgOfCoords){
+            if (this.showAvgOfCoords) {
                 this.boundingPoly[4].addTo(map);
                 this.boundingPoly[5].addTo(map);
             }
@@ -745,7 +745,7 @@ var hdxVertexExtremesSearchAV = {
             this.boundingPoly[1].setLatLngs(sEnds);
             this.boundingPoly[2].setLatLngs(eEnds);
             this.boundingPoly[3].setLatLngs(wEnds);
-            if(this.showAvgOfCoords){
+            if (this.showAvgOfCoords) {
                 this.boundingPoly[4].setLatLngs(nsAvg);
                 this.boundingPoly[5].setLatLngs(ewAvg);
             }
@@ -1015,7 +1015,7 @@ Show Extremes Bounding Box<br />
             this.boundingPoly[i].remove();
         }
         this.boundingPoly = [];
-        if(this.showAvgOfCoords){
+        if (this.showAvgOfCoords) {
             this.avgMarker.remove();
         }
     },
