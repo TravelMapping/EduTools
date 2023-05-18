@@ -64,7 +64,7 @@
 <script src="hdxvertexselector.js" type="text/javascript"></script>
 <script src="hdxhover.js" type="text/javascript"></script>
 <script src="hdxpseudocode.js" type="text/javascript"></script>
-<script src="hdxnoav.js" type="text/javascript"></script>
+<script src="hdxav-none.js" type="text/javascript"></script>
 <script src="hdxvertexextremesav.js" type="text/javascript"></script>
 <script src="hdxav-esearch.js" type="text/javascript"></script>
 <script src="hdxav-vpairs.js" type="text/javascript"></script>

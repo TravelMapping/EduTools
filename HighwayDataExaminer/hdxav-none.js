@@ -11,7 +11,7 @@
 var hdxNoAV = {
 
     // entries for list of AVs
-    value: "NONE",
+    value: "none",
     name: "No Algorithm Visualization",
     description: "Visualize Graph Data Only",
 
