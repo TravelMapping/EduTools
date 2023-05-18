@@ -74,7 +74,7 @@
 <script src="hdxpresort.js" type="text/javascript"></script>
 <script src="hdxgraphsearchbox.js" type="text/javascript"></script>
 <script src="hdxav-apcp.js" type="text/javascript"></script>
-<script src="hdxkruskalav.js" type="text/javascript"></script>
+<script src="hdxav-kruskal.js" type="text/javascript"></script>
 <script src="hdxav-degree.js" type="text/javascript"></script>
 <script src="hdxav-recdfs.js" type="text/javascript"></script>
 <script src="hdxav-dccp.js" type="text/javascript"></script>
