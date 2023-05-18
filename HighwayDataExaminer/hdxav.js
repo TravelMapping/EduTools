@@ -157,7 +157,7 @@ var hdxAV = {
         this.avList.push(hdxPrimAV);
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
-        this.avList.push(hdxSimpleBridgeAV);
+        this.avList.push(hdxTarjanAV);
         this.avList.push(hdxWPGraphColoringAV);
         
         // populate the algorithm selection select with options

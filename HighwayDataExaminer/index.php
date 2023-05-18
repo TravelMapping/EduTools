@@ -84,7 +84,7 @@
 <script src="hdxav-bftsp.js" type="text/javascript"></script>
 <script src="hdxtwicearoundtreeav.js" type="text/javascript"></script>
 <script src="hdxpartitionerrecursive.js" type="text/javascript"></script>
-<script src="hdxsimplebridgeav.js" type="text/javascript"></script>
+<script src="hdxav-tarjan.js" type="text/javascript"></script>
 <script src="hdxav-wpgc.js" type="text/javascript"></script>
 <script src="hdxcomputePartStats.js" type="text/javascript"></script>
 

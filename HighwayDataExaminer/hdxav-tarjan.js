@@ -6,12 +6,12 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxSimpleBridgeAV = {
-    value: "bridge",
+var hdxTarjanAV = {
+    value: "tarjan",
 
-    name: "Simple Bridge Detection",
+    name: "Tarjan's Bridge Detection",
 
-    description: "Naïve algorithm that finds all bridges, an edge of a graph whose removal increases the number of connected components in the graph.",
+    description: "Tarjan's algorithm to find all bridges, which are the edges of the graph whose removal increases the number of connected components in the graph.",
 
     // edge is currently checked for being a bridge
     nextToCheck: -1,
