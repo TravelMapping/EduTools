@@ -111,10 +111,10 @@ function addStop() {
             let target = event.target;
             hdxAV.previousBreakpoint = hdxAV.currentBreakpoint;
             hdxAV.currentBreakpoint = target.getAttribute("id");
-	    
-            //if the previous and current breakpoints are the same,
-            //unselect it, and change the colors back Else, deselect
-            //the previous, and highlight current
+
+            // if the previous and current breakpoints are the same,
+            // unselect it, and change the colors back Else, deselect
+            // the previous, and highlight current
             if (hdxAV.previousBreakpoint == hdxAV.currentBreakpoint) {
                 codeRowHighlight();
                 hdxAV.previousBreakpoint = "";

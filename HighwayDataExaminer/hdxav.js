@@ -8,12 +8,11 @@
 
 // group of variables used by many or all algorithm visualizations
 var hdxAV = {
-    //Used to get the name of the current speed
+    // Name of the current execution speed
     speedName: "Fast",
     
-    //Used to determine if it should jump to breakpoint
-    //(pause)
-    jumpToBreakpoint: false,
+    // Have we encountered a breakpoint at which we must stop in nextStep?
+    stopAtBreakpoint: false,
     
     // current state of HDX
     status: hdxStates.NO_DATA,
@@ -202,11 +201,10 @@ var hdxAV = {
         // If we have reached a breakpoint with its conditions met, pause the
 	// AV then return, so we are still on the current action and don't run
 	// an extra action
-        if (hdxAV.jumpToBreakpoint) {
+        if (hdxAV.stopAtBreakpoint) {
             hdxAV.setStatus(hdxStates.AV_PAUSED);
             hdxAV.startPause.innerHTML = "Resume";
-            hdxAV.jumpToBreakpoint = false;
-            startPausePressed();
+            hdxAV.stopAtBreakpoint = false;
             return;
         }
 	
@@ -216,10 +214,10 @@ var hdxAV = {
             return;
         }
 	
-        // run mode (was: run to completion and jump to breakpoint)
+        // run mode
         if (hdxAV.delay == 0) {
 	    let startTime = Date.now();
-            while (hdxAV.nextAction != "DONE" && !hdxAV.jumpToBreakpoint) {
+            while (hdxAV.nextAction != "DONE" && !hdxAV.stopAtBreakpoint) {
 		// After hdxAV.updateTime ms have passed, yield so the UI can
 		// refresh and button presses can be processed, allowing
 		// feedback to the user that progress is being made
@@ -272,7 +270,7 @@ var hdxAV = {
         hdxAV.iterationDone = false;
         while (!hdxAV.iterationDone) {
             //console.log("oneIteration() calling oneAction(), nextAction=" + this.nextAction);
-            if (hdxAV.jumpToBreakpoint) {
+            if (hdxAV.stopAtBreakpoint) {
                 hdxAV.iterationDone = true;
                 return;
             }
@@ -301,11 +299,13 @@ var hdxAV = {
         // useVariableForBreakpoint = true compare the special break
         // instance to determine if you have to pause else just pause
         if (thisAV.idOfAction(currentAction) == hdxAV.currentBreakpoint) {
+
             // If more than one element is chosen, put them 
             // into an array - chosenPoints
             let chosenPoints; 
             let methodPicker = [];
             if (hdxAV.useVariableForBreakpoint) {
+		// conditional breakpoint
                 let variable = "";
                 let counter = 0;
                 let length = document.getElementsByName("quantity").length;
@@ -390,9 +390,8 @@ var hdxAV = {
                 }
             }
             else {
-                hdxAV.setStatus(hdxStates.AV_PAUSED);
-                hdxAV.startPause.innerHTML = "Resume";
-		hdxAV.jumpToBreakpoint = true;
+		// unconditional breakpoint
+		hdxAV.stopAtBreakpoint = true;
             }
         }
                 
@@ -423,7 +422,7 @@ var hdxAV = {
         }    
         ans += '">' + hdxAV.logMessageArr[hdxAV.logMessageArr.length-1] +
 	    '</span>';
-        hdxAV.algStat.innerHTML =  ans;
+        hdxAV.algStat.innerHTML = ans;
         if (hdxAV.delay != 0) {
             HDXAddCustomTitles();
         }
@@ -462,7 +461,7 @@ var hdxAV = {
         let checker;//current values
         let selection;//your selected value
         let howToDeal = "Number";
-        hdxAV.jumpToBreakpoint = false;
+        hdxAV.stopAtBreakpoint = false;
         //Obtain either a direct relation, or an array of the string deliminated by 
         //a space
         if ((currentPoints.constructor === String) &&
@@ -519,11 +518,7 @@ var hdxAV = {
             try {
                 for (let element of checker) {
                     if (selection == element) {
-                        hdxAV.setStatus(hdxStates.AV_PAUSED);
-                        hdxAV.startPause.innerHTML = "Resume";
-                        if (hdxAV.speedName == "Jump To Breakpoint") {
-                            hdxAV.jumpToBreakpoint = true;
-                        }
+                        hdxAV.stopAtBreakpoint = true;
                     }
                 }
             }
@@ -535,11 +530,7 @@ var hdxAV = {
         else if (howToDeal == "Number") {
             try {
                 if (selection == checker) {
-                    hdxAV.setStatus(hdxStates.AV_PAUSED);
-                    hdxAV.startPause.innerHTML = "Resume";
-                    if (hdxAV.speedName == "Jump To Breakpoint") {
-                        hdxAV.jumpToBreakpoint = true;
-                    }
+                    hdxAV.stopAtBreakpoint = true;
                 }
             }
             catch (error) {
@@ -552,11 +543,7 @@ var hdxAV = {
             try {
                 for (let element of selection) {
                     if (checker == parseInt(element)) {
-                        hdxAV.setStatus(hdxStates.AV_PAUSED);
-                        hdxAV.startPause.innerHTML = "Resume";
-                        if (hdxAV.speedName == "Jump To Breakpoint") {
-                            hdxAV.jumpToBreakpoint = true;
-                        }
+                        hdxAV.stopAtBreakpoint = true;
                     }
                 }
             }
@@ -569,11 +556,7 @@ var hdxAV = {
             try {
                 for (let element of checker) {
                     if (selection == parseInt(element)) {
-                        hdxAV.setStatus(hdxStates.AV_PAUSED);
-                        hdxAV.startPause.innerHTML = "Resume";
-                        if (hdxAV.speedName == "Jump To Breakpoint") {
-                            hdxAV.jumpToBreakpoint = true;
-                        }
+                        hdxAV.stopAtBreakpoint = true;
                     }
                 }
             }
@@ -587,11 +570,7 @@ var hdxAV = {
 		 howToDeal == "StringBoolean") {
             try {
                 if (selection === checker) {
-                    hdxAV.setStatus(hdxStates.AV_PAUSED);
-                    hdxAV.startPause.innerHTML = "Resume";
-                    if (hdxAV.speedName == "Jump To Breakpoint") {
-                        hdxAV.jumpToBreakpoint = true;
-                    }
+                    hdxAV.stopAtBreakpoint = true;
                 }
             }
             catch (error) {
