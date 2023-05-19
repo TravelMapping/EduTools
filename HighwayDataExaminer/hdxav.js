@@ -458,8 +458,8 @@ var hdxAV = {
     // has been met or not. If so, break. This will manipulate strings
     // aka multiple things to be checked against our own variable(s)
     determineBreakOrContinue(selectedStop, currentPoints) {
-        let checker;//current values
-        let selection;//your selected value
+        let checker; // current values
+        let selection; // your selected value
         let howToDeal = "Number";
         hdxAV.stopAtBreakpoint = false;
         //Obtain either a direct relation, or an array of the string deliminated by 
