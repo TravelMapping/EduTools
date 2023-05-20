@@ -660,32 +660,5 @@ var hdxPartitionerAV = {
         for (var i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].addTo(map);
         }
-    },
-
-    // note this is currently not working
-    setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        switch (name) {
-        case "isLeaf":
-            html = createInnerHTMLChoice("boolean","",
-                                         "",
-                                         "");
-            return html;
-            
-        }
-        return "No innerHTML";
-    },
-    
-    // note this is currently not working
-    hasConditionalBreakpoints(name) {
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        return false;
     }
 }
