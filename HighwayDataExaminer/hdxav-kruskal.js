@@ -160,25 +160,6 @@ var hdxKruskalAV = {
             logMessage: function(thisAV) {
                 return "Removed edge #" +
                     thisAV.visiting.connection + " from Priority Queue";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-
-		if (thisAV.visiting == null) {
-		    // haven't got an edge yet
-		    return -1;
-		}
-                if (whatToDo == "getPlaceFromLDVCV1") {
-                    return thisAV.visiting.fromVIndex;
-                }
-                if (whatToDo == "getPlaceFromLDVCV2") {
-                    return thisAV.visiting.vIndex;
-                }
-                if (whatToDo == "getPlaceFromLDVCV3") {
-                    return thisAV.visiting.connection;
-                }
-
-		// other action without a variable
-		return -1;
             }
         },
         {
@@ -200,9 +181,6 @@ var hdxKruskalAV = {
             logMessage: function(thisAV) {
                 return "Checking if edge #" + thisAV.visiting.connection +
                     " creates a cycle";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.isCycle(thisAV.visiting.connection);
             }
         },
         {
@@ -230,9 +208,6 @@ var hdxKruskalAV = {
             logMessage: function(thisAV) {
                 return "Discarding edge #" + 
                     thisAV.visiting.connection + " on removal";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.visiting.connection;
             }
         },
 
@@ -293,14 +268,6 @@ var hdxKruskalAV = {
             },
             logMessage: function(thisAV) {
                 return "Adding edge #" + thisAV.visiting.connection + " to tree";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                if (whatToDo == "isNotCycleCV1") {
-                    return graphEdges[thisAV.visiting.connection].v1;
-                }
-                else { // (whatToDo == "isNotCycleCV2")
-                    return graphEdges[thisAV.visiting.connection].v2;
-                }
             }
         },
 
@@ -452,60 +419,5 @@ var hdxKruskalAV = {
     idOfAction(action) {
 	
         return action.label;
-    },
-    
-    setConditionalBreakpoints(name) {
-	
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch (name) {
-            case "checkCycle":
-                html = createInnerHTMLChoice("boolean", "checkCycleCV", "creates a cycle", "adds an edge");
-                return html;
-            case "isNotCycle":
-                html = buildWaypointSelector2("isNotCycleCV1",
-					      "Please select the vertex of the connection <br \> to stop at: ");
-                html += '<br \>';
-                html += buildWaypointSelector2("isNotCycleCV2",
-					       "Please select the starting vertex <br \> to stop at: ");
-                return html;
-            case "isCycle":
-                html = buildWaypointSelector2("isCycleCV",
-					      "Please select the vertex of the discarded edge<br \> to stop at: ");
-                return html;
-            case "getPlaceFromLDV":
-                html = buildWaypointSelector2("getPlaceFromLDVCV1",
-					      "Please select the starting vertex to stop at: ");
-                html += '<br \>';
-                html += buildWaypointSelector2("getPlaceFromLDVCV2",
-					       "Please select the ending vertex to stop at: ");
-                html += '<br \>';
-                html += buildWaypointSelector2("getPlaceFromLDVCV3",
-					       "Please select the connection to stop at: ");
-                return html;
-            }
-        }
-        return "No innerHTML";
-    },
-
-    hasConditionalBreakpoints(name) {
-    
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        switch (name) {
-        case "checkCycle":
-        case "isNotCycle":
-        case "isCycle":
-        case "getPlaceFromLDV":
-            return true;
-        }
-        return false;
     }
 };
