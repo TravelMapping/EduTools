@@ -125,9 +125,16 @@ var hdxVertexPairsAV = {
             logMessage: function(thisAV) {
                 return "Next v<sub>1</sub>=" + thisAV.v1;
             },
-            currentVariable: function(thisAV, whatToDo) {
-                return (thisAV.v1+1);
-            }
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v1 ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.v1 == val;
+		}		
+	    }
         },
         {
             label: "v2forLoopTop",
@@ -155,8 +162,15 @@ var hdxVertexPairsAV = {
                 return "Checking v<sub>1</sub>=" + thisAV.v1 +
                     "and v<sub>2</sub>=" + thisAV.v2;
             },
-            currentVariable: function(thisAV, whatToDo) {
-                return (thisAV.v2+1);
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v2 ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.v2 == val;
+		}		
             }
         },
         {
@@ -620,43 +634,5 @@ Compute: <select id="closeAndOrFar">
     
     idOfAction(action) {
         return action.label;
-    },
-    
-    setConditionalBreakpoints(name) {
-	
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch (name) {
-            case "checkCloseLeader":
-                html = createInnerHTMLChoice("boolean","checkCloseLeaderCV",
-                                             "distance is the new closest","distnace is not the closest");
-                return html;
-            case "checkFarLeader":
-                html = createInnerHTMLChoice("boolean","checkCloseLeaderCV",
-                                             "distance is the new farthest","distnace is not the farthest");
-                return html;
-            }
-        }
-        return "No innerHTML";
-    },
-
-    hasConditionalBreakpoints(name) {
-	
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        else {
-            switch(name) {
-            case "checkCloseLeader":
-            case "checkFarLeader":
-                return true;
-            }
-        }
-        return false;
     }
 };
