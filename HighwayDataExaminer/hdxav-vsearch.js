@@ -392,10 +392,7 @@ var hdxVertexExtremesSearchAV = {
 		f: function(thisAV, val) {
 		    return thisAV.nextToCheck == val;
 		}		
-	    },
-            currentVariable: function(thisAV, whatToDo) {
-                return (thisAV.nextToCheck+1);
-            }
+	    }
         },
         {
             label: "checkNextCategory",
