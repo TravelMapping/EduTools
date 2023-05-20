@@ -39,7 +39,7 @@ var hdxEdgeExtremesSearchAV = {
     discarded: 0,
     foundNewLeader: false,
     // the categories for which we are finding our extremes,
-    // with names for ids, labe ls to display, indicies of leader,
+    // with names for ids, labels to display, indicies of leader,
     // comparison function to determine if we have a new leader,
     // and visual settings for the display
     categories: [
@@ -365,53 +365,5 @@ var hdxEdgeExtremesSearchAV = {
         else {
 	    return action.label + this.nextCategory;
         }
-    },
-    
-    setConditionalBreakpoints(name) {
-
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch (name) {
-                case "checkNextCategory0":
-                html = createInnerHTMLChoice("boolean","checkNextCategoryCV0",
-                                             "current label is the longest","label is not the longest");
-                return html;
-            case "checkNextCategory1":
-                html = createInnerHTMLChoice("boolean","checkNextCategoryCV1",
-                                             "current label is the shortest","label is not the shortest");
-                return html;
-            case "checkNextCategory2":
-                html = createInnerHTMLChoice("boolean","checkNextCategoryCV2",
-                                             "current edge is the longest","current edge is not the longest");
-                return html;
-            case "checkNextCategory3":
-                html = createInnerHTMLChoice("boolean","checkNextCategoryCV3",
-                                             "current edge is the shortest","current edge is not the shortest");
-                return html;  
-            }
-        }
-        return "No innerHTML";
-    },
-
-    hasConditionalBreakpoints(name) {
-	
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        else {
-            switch(name) {
-            case "checkNextCategory0":
-            case "checkNextCategory1":
-            case "checkNextCategory2":
-            case "checkNextCategory3":  
-                return true;    
-            }
-        }
-        return false;
     }
 };
