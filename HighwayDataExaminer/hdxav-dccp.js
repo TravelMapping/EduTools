@@ -994,19 +994,5 @@ var hdxClosestPairsRecAV = {
     
     idOfAction(action) {
         return action.label;
-    },
-    
-    // set the conditional breakpoints for this AV
-    setConditionalBreakpoints(name) {
-
-	// since this AV has none of its own conditional breakpoints
-	// at this time, we just return the common ones
-        return HDXCommonConditionalBreakpoints(name);
-    },
-
-    hasConditionalBreakpoints(name) {
-
-	// same, only has a conditional breakpoint at name if it's a common one
-        return HDXHasCommonConditionalBreakpoints(name);
     }
 };
