@@ -69,7 +69,7 @@ var hdxAV = {
     // used in hdxpseudocode for breakpoint functionality
     currentBreakpoint: "",
     previousBreakpoint: "",
-    useVariableForBreakpoint: false,  // checkbox checked?
+    useConditionalBreakpoint: false,  // conditional breakpoint selected?
     breakpointVariableHidden: true,   // showing selector for conditional break?
     
     // set the status and do any needed cleanup for that change
@@ -293,8 +293,9 @@ var hdxAV = {
             hdxAV.setStatus(hdxStates.AV_PAUSED);
         }
 
-        // we have an action to execute
-        
+	/*
+	// before executing, see if this is a breakpoint.
+	
         // if the action is the current breakpoint, pause then, if
         // useVariableForBreakpoint = true compare the special break
         // instance to determine if you have to pause else just pause
@@ -394,7 +395,7 @@ var hdxAV = {
 		hdxAV.stopAtBreakpoint = true;
             }
         }
-                
+          */      
         // undo any previous highlighting
         unhighlightPseudocode();
         //console.log("ACTION: " + hdxAV.nextAction);
@@ -426,7 +427,25 @@ var hdxAV = {
         if (hdxAV.delay != 0) {
             HDXAddCustomTitles();
         }
-        
+
+        // finally check if a breakpoint should pause execution following
+	// the just-completed action
+	hdxAV.stopAtBreakpoint = false;
+        if (thisAV.idOfAction(currentAction) == hdxAV.currentBreakpoint) {
+
+	    // does this action have a conditional breakpoint associated and
+	    // is the conditional breakpoint option selected?
+	    if (currentAction.hasOwnProperty("cbp") &&
+		document.getElementById("cbp").value == "on") {
+
+		hdxAV.stopAtBreakpoint = breakpointCheckMatch(currentAction.cbp);
+	    }
+	    else {
+		// it's an unconditional breakpoint
+		hdxAV.stopAtBreakpoint = true;
+	    }
+	}
+	    
         //console.log("ACTION DONE: " + currentAction.logMessage(thisAV));
     },
 
@@ -453,7 +472,8 @@ var hdxAV = {
         let b = 255 - rank;
         return "rgb(" + r + ",210, " + b + ")";
     },
-    
+
+    /*
     // This is what determines whether a conditional breakpoint
     // has been met or not. If so, break. This will manipulate strings
     // aka multiple things to be checked against our own variable(s)
@@ -582,4 +602,5 @@ var hdxAV = {
             console.log("Something went wrong with currentPoints checking!");
         }
     }
+*/
 };

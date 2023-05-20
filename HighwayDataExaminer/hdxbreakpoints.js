@@ -3,8 +3,25 @@
 //
 // METAL Project
 //
-// Primary Author: Tyler Gorman, Modified by Jim Teresco
+// Original Author: Tyler Gorman, Modified/redesigned by Jim Teresco
 //
+
+// types of conditional breakpoints supported
+var hdxCBPTypes = {
+
+    VARIABLE: 1,
+    CONDITION: 2
+};
+
+// types of conditional breakpoint value selectors supported
+var hdxCBPSelectors = {
+
+    VERTEX: 1,
+    EDGE: 2,
+    INTEGER: 3,
+    FLOAT: 4,
+    STRING: 5
+};
 
 // Inserts innerHTML of code lines for conditionals
 function HDXCommonConditionalBreakpoints(name) {

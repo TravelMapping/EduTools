@@ -383,6 +383,16 @@ var hdxVertexExtremesSearchAV = {
             logMessage: function(thisAV) {
                 return "Top of main for loop over vertices, check=" + thisAV.nextToCheck;
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at check ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextToCheck == val;
+		}		
+	    },
             currentVariable: function(thisAV, whatToDo) {
                 return (thisAV.nextToCheck+1);
             }

@@ -62,7 +62,6 @@ function unhighlightPseudocode() {
                 hdxAV.execCountColor(hdxAV.execCounts[key]);
         }
     }
-        
 }
 
 // function to help build the table of pseudocode for highlighting
@@ -105,28 +104,26 @@ function addStop() {
     let elements = document.getElementsByClassName("codeRow");
     for (let element = 0; element < elements.length; element++) {
         let child = elements[element].childNodes[0];
-        child.setAttribute("variableValue", setInnerHTML(child.getAttribute("id")));
+        //child.setAttribute("variableValue", setInnerHTML(child.getAttribute("id")));
+	// this listener sets and displays breakpoints when selected, and
+	// displays conditional breakpoint info for actions that
+	// support them
         elements[element].addEventListener("click", function (event) {
-
+	    
             let target = event.target;
             hdxAV.previousBreakpoint = hdxAV.currentBreakpoint;
             hdxAV.currentBreakpoint = target.getAttribute("id");
 
             // if the previous and current breakpoints are the same,
-            // unselect it, and change the colors back Else, deselect
+            // unselect it, and change the colors back else, deselect
             // the previous, and highlight current
             if (hdxAV.previousBreakpoint == hdxAV.currentBreakpoint) {
                 codeRowHighlight();
                 hdxAV.previousBreakpoint = "";
                 hdxAV.currentBreakpoint = "";
                 breakpointCheckerDisplay();
-                hdxAV.useVariableForBreakpoint = false;
-                //document.getElementById("useBreakpointVariable").checked = false;
             }
             else {
-                hdxAV.useVariableForBreakpoint = true;
-                //if (document.getElementById("breakpointText").innerHTML != "No innerHTML")
-                
                 hdxAV.setStatus(hdxStates.AV_PAUSED);
                 if (hdxAV.delay == -1) {
                     hdxAV.startPause.innerHTML = "Next Step";
@@ -134,15 +131,102 @@ function addStop() {
                 else {
                     hdxAV.startPause.innerHTML = "Resume";
                 }
-                
-                labelInnerHTML(target.getAttribute("variableValue"));
+
+		// check if this action should set up conditional
+		// breakpoint UI elements
+		let breakpointAction = null;
+		for (let i = 0; i < hdxAV.currentAV.avActions.length; i++) {
+		    if (hdxAV.currentBreakpoint ==
+			hdxAV.currentAV.avActions[i].label) {
+			breakpointAction = hdxAV.currentAV.avActions[i];
+			break;
+		    }
+		}
+
+		if (breakpointAction != null &&
+		    breakpointAction.hasOwnProperty("cbp")) {
+		    breakpointShowCBPControls(breakpointAction.cbp);
+		}
+		
+                //labelInnerHTML(target.getAttribute("variableValue"));
                 codeRowHighlight();
                 breakpointHighlight();
                 breakpointCheckerDisplay();
-                checkInnerHTML();
+                //checkInnerHTML();
             }
         }, false);
     }
+}
+
+// show the conditional breakpoint controls associated with an action, given
+// by its cpb field passed in as the parameter
+function breakpointShowCBPControls(cbp) {
+
+    // if cbp is not already an array of objects, make it one so we
+    // don't have to handle multiple controls as special cases below
+    let controls = cbp;
+    if (!Array.isArray(cbp)) {
+	controls = [ cbp ];
+    }
+
+    // build an HTML string that will have our needed inputs for this CBP
+    let html = "";
+    for (control of controls) {
+	// default control id unless one was specified
+	let controlid = "HDXCBPControl";
+	if (control.selector.hasOwnProperty("id")) {
+	    controlid = control.selector.id;
+	}
+
+	// build the HTML for this one
+	switch (control.selector.type) {
+	case hdxCBPSelectors.VERTEX:
+	    html += buildCBPWaypointSelector(controlid, control.selector.label);
+	    break;
+	default:
+	    console.log("UNHANDLED CBP SELECTOR TYPE!");
+	}
+    }
+
+    // add the constructed HTML to the right element
+    document.getElementById("breakpointText").innerHTML = html;
+}
+
+// check the action with a conditional breakpoint for a match that should
+// pause execution
+function breakpointCheckMatch(cbp) {
+
+    // if cbp is not already an array of objects, make it one so we
+    // don't have to handle multiple controls as special cases below
+    let controls = cbp;
+    if (!Array.isArray(cbp)) {
+	controls = [ cbp ];
+    }
+
+    // check each for a match, if any matches, we return true
+    for (control of controls) {
+	// default control id unless one was specified
+	let controlid = "HDXCBPControl";
+	if (control.selector.hasOwnProperty("id")) {
+	    controlid = control.selector.id;
+	}
+
+	let element = document.getElementById(controlid);
+	
+	switch (control.selector.type) {
+	case hdxCBPSelectors.VERTEX:
+	    let rawval = element.value;
+	    if (!isNaN(rawval) &&
+		control.f(hdxAV.currentAV, parseFloat(rawval))) {
+		return true;
+	    }
+	    break;
+	default:
+	    console.log("UNHANDLED CBP SELECTOR TYPE!");
+	}
+    }
+    // we never returned true, no match, so no break
+    return false;
 }
 
 // Highlight the current breakpoint
@@ -207,30 +291,30 @@ function createVariableSelector() {
     
     let divBreakpoint = document.createElement("div");
     let divBreakpoint1 = document.createElement("div");
-    let cbp = document.createElement("p");
-    cbp.innerHTML = "Conditional Breakpoint";
+    let cbp = document.createElement("select");
     cbp.setAttribute("id", "cbp");
-    //let divBreakpoint2 = document.createElement("div");
-    /*let checkbox = document.createElement("input");
-    
-    checkbox.type = "checkbox";
-    checkbox.id = "useBreakpointVariable";
-    checkbox.onclick = function() {
-	hdxAV.useVariableForBreakpoint = !hdxAV.useVariableForBreakpoint;
-    }
-    checkbox.style.backgroundColor = "Red";*/
-    
+    let opton = document.createElement("option");
+    opton.value = "on";
+    opton.innerHTML = "Conditional Breakpoint";
+    opton.selected = true;
+    let optoff = document.createElement("option");
+    optoff.value = "off";
+    optoff.innerHTML = "Unconditional Breakpoint";
+    cbp.appendChild(opton);
+    cbp.appendChild(optoff);
+    cbp.onchange = function() {
+	hdxAV.useConditionalBreakpoint =
+	    document.getElementById("cbp").value == "on";
+    };
+	
     let breakpointID = document.createAttribute("id");
     let breakpoint1ID = document.createAttribute("id");
-    //let breakpoint2ID = document.createAttribute("id");
     
     breakpointID.value = "breakpointVariableSelector";
     breakpoint1ID.value = "breakpointText";
-    //breakpoint2ID.value = "showBreakpointVariable";
     
     divBreakpoint.setAttributeNode(breakpointID);
     divBreakpoint1.setAttributeNode(breakpoint1ID);
-    //divBreakpoint2.setAttributeNode(breakpoint2ID);
     
     let breakpointClass = document.createAttribute("class");
     breakpointClass.value = "border border-primary rounded";
@@ -238,23 +322,19 @@ function createVariableSelector() {
     
     // This is where the variable selector goes
     divBreakpoint1.innerHTML = "This is where the innerHTML goes";
-    //divBreakpoint2.innerHTML = "-->";
-    //divBreakpoint2.style.backgroundColor = "Red";
     
     // append the smaller divs to the bigger one
-    //divBreakpoint.appendChild(checkbox);
     divBreakpoint.appendChild(cbp);
     divBreakpoint.appendChild(divBreakpoint1);
-    //divBreakpoint.appendChild(divBreakpoint2);
     
-    // Set the main div under the document body
+    // Set the main div under the pseudocode
     let pcPanel = document.getElementById("pseudo");
     pcPanel.appendChild(divBreakpoint);
     // Set the default position, add click on/window resize events and hide it
     setDefaultVariableSelectorLocation();
     showHideBreakpointVariableSelector();
     divBreakpoint.style.display = "none";    
-    hdxAV.useVariableForBreakpoint = true;
+    hdxAV.useConditionalBreakpoint = true;
 }
 
 // Sets the popout back to where it should be. Used to avoid 
@@ -277,7 +357,7 @@ function setDefaultVariableSelectorLocation() {
 }
 
 // Based on if a breakpoint is selected or not, display or hide the element.
-// Also reset the posiiton.
+// Also reset the position.
 function breakpointCheckerDisplay() {
     
     let element = document.getElementById("breakpointVariableSelector");
@@ -295,6 +375,7 @@ function breakpointCheckerDisplay() {
     setDefaultVariableSelectorLocation();
 }
 
+/*
 // Sets the innerHTML of the div tag w/ ID: breakpointText to the
 // passed variable
 function labelInnerHTML(text) {
@@ -308,7 +389,7 @@ function labelInnerHTML(text) {
     else {
         //checkbox.style.display = "none";
        // checkbox.checked = false;
-        hdxAV.useVariableForBreakpoint = false;
+        hdxAV.useConditionalBreakpoint = false;
     }
 }
 
@@ -334,12 +415,13 @@ function hasInnerHTML(label) {
 
     return hdxAV.currentAV.hasConditionalBreakpoints(label);
 }
+*/
 
 function deleteVariableSelector() {
     
     let element = document.getElementById("breakpointVariableSelector");
     if (element != null) element.parentNode.removeChild(element);
-    hdxAV.useVariableForBreakpoint = false;
+    hdxAV.useConditionalBreakpoint = false;
 }
 
 function createInnerHTMLChoice(choice, id, firstText, secondText) {
@@ -361,7 +443,7 @@ function createInnerHTMLChoice(choice, id, firstText, secondText) {
 function pcIndent(i) {
     let s = '';
     for (let k = 0; k < i; k++) {
-        s +=  '&nbsp;';
+        s += '&nbsp;';
     }
     return s;
 }
