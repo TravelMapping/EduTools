@@ -162,8 +162,15 @@ var hdxDegreeAV = {
             logMessage: function(thisAV) {
                 return "Top of main for loop over vertices, check=" + thisAV.nextToCheck;
             },
-            currentVariable: function(thisAV, whatToDo) {
-                return (thisAV.nextToCheck+1);
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at check ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextToCheck == val;
+		}		
             }
         },
         {
@@ -472,46 +479,5 @@ var hdxDegreeAV = {
         else {
 	    return action.label + this.nextCategory;
         }
-    },
-    
-    setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        
-        let isThere = name.search(/\d/);
-        name = (isThere != -1) ? name.substring(0,isThere) : name;
-        
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch (name) {
-            case "checkNextCategory":
-            case "checkTieCategory":
-                html = createInnerHTMLChoice("boolean", "checkCategories2","True",
-					     "False");
-                return html;
-            }
-        }
-        return "No innerHTML";
-    },
-
-    hasConditionalBreakpoints(name) {
-        
-        let isThere = name.search(/\d/);
-        name = (isThere != -1) ? name.substring(0,isThere) : name;
-    
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        else {
-            switch (name) {
-            case "checkNextCategory":
-            case "checkTieCategory":
-                return true;
-            }
-        }
-        return false;
     },
 };
