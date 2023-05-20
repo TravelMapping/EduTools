@@ -407,14 +407,6 @@ var hdxTraversalsSpanningAVCommon = {
                 return "Removed " +
                     thisAV.formatLDVEntry(thisAV.visiting) + " from " +
                     thisAV.ldv.displayName;
-            },
-            currentVariable: function(thisAV, whatToDo) {
-		if (thisAV.visiting == null) {
-		    // we haven't yet removed any value from the LDV, so
-		    // it would not be a break
-		    return "-1 -1";
-		}
-                return thisAV.visiting.fromVIndex + " " + thisAV.visiting.vIndex;
             }
         },
         {
@@ -434,9 +426,6 @@ var hdxTraversalsSpanningAVCommon = {
             logMessage: function(thisAV) {
                 return "Checking if #" + thisAV.visiting.vIndex +
                     " was previously added";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.addedV[thisAV.visiting.vIndex];
             }
         },
         {
@@ -559,21 +548,6 @@ var hdxTraversalsSpanningAVCommon = {
             },
             logMessage: function(thisAV) {
                 return "Adding " + thisAV.formatLDVEntry(thisAV.visiting) + " to tree";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                //graphEdges[thisAV.visiting.connection] <- gives edge #
-                //thisAV.visiting.vIndex <- vertex start
-                if (whatToDo == "wasNotAdded1")
-                {
-                    return thisAV.visiting.connection;
-                }
-                else if (whatToDo == "wasNotAdded2") {
-                    return thisAV.visiting.vIndex;
-                }
-                else{
-                    console.log("Error Happened: wasNotAdded.currentVariable()");
-                        return "Error happened";
-                }
             }
         },
         {
@@ -735,9 +709,6 @@ var hdxTraversalsSpanningAVCommon = {
                 return "#" + thisAV.nextNeighbor.to + " via " +
                     graphEdges[thisAV.nextNeighbor.via].label +
                     " added to " + thisAV.ldv.displayName;
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.nextNeighbor.to + " " + thisAV.nextNeighbor.via;
             }
         },
         {
@@ -1135,56 +1106,6 @@ var hdxTraversalsSpanningAVCommon = {
     idOfAction(action) {
 	
         return action.label;
-    },
-    
-    setConditionalBreakpoints(name) {
-	
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch(name) {
-            case "getPlaceFromLDV":
-            case "checkNeighborsLoopIfFalse":
-                html = buildWaypointSelector2("generic3",
-					      "Please select the vertex of the LDV <br \>(either starting or to) to stop at: ");
-                return html;
-            case "wasNotAdded":
-                html = buildWaypointSelector2("wasNotAdded1",
-					      "Please select the vertex of the connection <br \> to stop at: ");
-                html += '<br \>';
-                html += buildWaypointSelector2("wasNotAdded2",
-					       "Please select the starting vertex <br \> to stop at: ");
-                return html;
-            case "checkAdded":
-                html = createInnerHTMLChoice("boolean","checkAddedCV","Tree contains vertex",
-					     "Vertex is missing from tree");
-                return html;
-		
-            }
-        }
-        return "No innerHTML";
-    },
-    
-    hasConditionalBreakpoints(name) {
-
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        else {
-            switch (name) {
-            case "wasNotAdded":    
-            case "getPlaceFromLDV":
-            case "checkNeighborsLoopIfFalse":
-            case "checkNeighborsLoopIf":
-            case "checkAdded":
-                return true;
-            }
-        }
-        return false;
     },
 
     // overridden by graph traversals which have an extra QS parameter
