@@ -122,9 +122,6 @@ var hdxDFSRecAV = {
             },
             logMessage: function(thisAV) {
                 return "Recursive call to dfs on vertex #" + thisAV.visiting;
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.visiting;
             }
         },
         {
@@ -150,9 +147,6 @@ var hdxDFSRecAV = {
             logMessage: function(thisAV) {
                 return "Set vertex #" + thisAV.visiting + "'s hops to " +
                     waypoints[thisAV.visiting].hops + " to mark as discovered";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return waypoints[waypoints[thisAV.visiting].prevVertex].hops + 1;
             }
         },
         {
@@ -191,9 +185,6 @@ var hdxDFSRecAV = {
             },
             logMessage: function(thisAV) {
                 return "Loop through each vertex in V's adjacency list";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.nextVertex;
             }
         },
         {
@@ -224,9 +215,6 @@ var hdxDFSRecAV = {
             logMessage: function(thisAV) {
                 return "Check if vertex #" + thisAV.nextVertex +
                     " has previously been discovered";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return (waypoints[thisAV.nextVertex].hops == -1);
             }
         },
         {
@@ -442,46 +430,6 @@ var hdxDFSRecAV = {
     
     idOfAction(action) {
         return action.label;
-    },
-
-    setConditionalBreakpoints(name) {
-        let temp = HDXCommonConditionalBreakpoints(name);
-        
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        else {
-            switch (name) {
-                case "setHops":
-                html = createInnerHTMLChoice("number", "setHopsCV", "hops is equal to");
-                return html;
-                case "checkUndiscovered":
-                html = createInnerHTMLChoice("boolean", "checkUndiscoveredCV", "call recursion",
-                                             "do not call recursion");
-                return html;
-            case "recursiveCallTop":
-                html = buildWaypointSelector2("recursiveCallTopCV", "Please select the vertex to stop at: ");
-                return html;
-            }
-        }
-        return "No innerHTML";
-    },
-
-    hasConditionalBreakpoints(name) {
-
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        else {
-            switch (name) {
-                case "setHops":
-                case "checkUndiscovered":
-                case "recursiveCallTop":
-                    return true;
-            }
-        }
-        return false;
     }        
 };
 
