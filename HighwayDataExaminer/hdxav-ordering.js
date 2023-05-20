@@ -228,6 +228,16 @@ var hdxOrderingAV = {
             },
             logMessage: function(thisAV) {
                 return "Iterating over the sorted array of vertices";
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at check ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextToCheck == val;
+		}		
             }
         },
 	
@@ -439,14 +449,6 @@ var hdxOrderingAV = {
         }
         let popStdev = Math.sqrt(variance / (this.nextToCheck + 1));
         return popStdev.toFixed(3);
-    },
-    
-    setConditionalBreakpoints(name) {
-        return "No innerHTML";
-    },
-    
-    hasConditionalBreakpoints(name) {
-        return false;
     },
     
     findExtremePoints() {
