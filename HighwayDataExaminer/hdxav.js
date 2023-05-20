@@ -293,109 +293,10 @@ var hdxAV = {
             hdxAV.setStatus(hdxStates.AV_PAUSED);
         }
 
-	/*
-	// before executing, see if this is a breakpoint.
-	
-        // if the action is the current breakpoint, pause then, if
-        // useVariableForBreakpoint = true compare the special break
-        // instance to determine if you have to pause else just pause
-        if (thisAV.idOfAction(currentAction) == hdxAV.currentBreakpoint) {
+	// save the idOfAction in case we're in a case where it might
+	// change with the execution of the action
+	let idOfCurrentAction = thisAV.idOfAction(currentAction);
 
-            // If more than one element is chosen, put them 
-            // into an array - chosenPoints
-            let chosenPoints; 
-            let methodPicker = [];
-            if (hdxAV.useVariableForBreakpoint) {
-		// conditional breakpoint
-                let variable = "";
-                let counter = 0;
-                let length = document.getElementsByName("quantity").length;
-                
-                // Run through the elements with name quantity
-                // If anything does have that, take its value
-                // and seperate them with a space
-                while (counter <= length) {
-                    try {
-                        if (variable == "") {
-                            variable = document.getElementsByName("quantity")[counter].value;
-                            // If it has an ID, push it onto the
-                            // stack. Used for the method
-                            // currentVariable to determine what to
-                            // send back
-                            if (document.getElementsByName("quantity")[counter].hasAttribute("id")) {
-                                methodPicker.push(document.getElementsByName("quantity")[counter].id);
-                            }  
-                            counter++;
-                        }
-                        else {
-                            variable += " " + document.getElementsByName("quantity")[counter].value;
-                            if (document.getElementsByName("quantity")[counter].hasAttribute("id")) {
-                                methodPicker.push(document.getElementsByName("quantity")[counter].id);
-                            }
-                            counter++;
-                        }
-                    }
-                    // null value means to still continue, just add on
-                    // to the counter, don't take that value
-                    catch (error) {
-                        counter++;
-                    }
-                }
-
-                // If the value of your variable is null, set it to
-                // -1, essentially ignoring it. If it doesn't include a
-                // space, parse it as an Int(only if it has a number).
-                // If it does include a space, any on the end should
-                // be thrown away and now split the string by spaces
-                if (variable == "") {
-                    variable = -1;
-                }
-                else {
-                    if (!variable.includes(" ")) {
-                        let isThere2 = variable.search(/\d/);
-                        variable = (isThere2 != -1) ? parseInt(variable) : variable;
-                    }
-                    else {
-                        if (variable.substr(variable.length-1) == " ") {
-                            variable = variable.substr(0,variable.length-1);
-                        }
-                        chosenPoints = variable.split(" ");
-                    }
-                }
-		
-                // Checks if the set variable has been met if the
-                // array is null, just the variable, that is parsed,
-                // else run through the entire array and parse any
-                // numbers.  Use all of the indexs as values
-
-		// ALL NUMBERS ARE PARSED CORRECTLY BEFORE GOING INTO
-		// determineBreakOrContinue
-                if (chosenPoints == null) {
-                    hdxAV.determineBreakOrContinue(
-			variable,
-			currentAction.currentVariable(thisAV,
-						      methodPicker.shift())
-		    );
-                }
-                else {
-                    for (let temp of chosenPoints) {
-                        let temp2 = temp;
-                        let isThere = temp2.search(/\d/);
-                        temp2 = (isThere != -1) ? parseInt(temp2) : temp2;
-                        hdxAV.determineBreakOrContinue(
-			    temp2,
-			    currentAction.currentVariable(thisAV,
-							  methodPicker.shift())
-			);
-                    }
-                }
-            }
-            else {
-		// unconditional breakpoint
-		hdxAV.stopAtBreakpoint = true;
-            }
-        }
-          */      
         // undo any previous highlighting
         unhighlightPseudocode();
         //console.log("ACTION: " + hdxAV.nextAction);
@@ -431,7 +332,7 @@ var hdxAV = {
         // finally check if a breakpoint should pause execution following
 	// the just-completed action
 	hdxAV.stopAtBreakpoint = false;
-        if (thisAV.idOfAction(currentAction) == hdxAV.currentBreakpoint) {
+        if (idOfCurrentAction == hdxAV.currentBreakpoint) {
 
 	    // does this action have a conditional breakpoint associated and
 	    // is the conditional breakpoint option selected?

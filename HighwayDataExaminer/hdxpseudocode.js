@@ -114,6 +114,9 @@ function addStop() {
             hdxAV.previousBreakpoint = hdxAV.currentBreakpoint;
             hdxAV.currentBreakpoint = target.getAttribute("id");
 
+	    // clear any conditional breakpoint controls
+	    breakpointClearCBPControls();	    
+
             // if the previous and current breakpoints are the same,
             // unselect it, and change the colors back else, deselect
             // the previous, and highlight current
@@ -121,7 +124,6 @@ function addStop() {
                 codeRowHighlight();
                 hdxAV.previousBreakpoint = "";
                 hdxAV.currentBreakpoint = "";
-                breakpointCheckerDisplay();
             }
             else {
                 hdxAV.setStatus(hdxStates.AV_PAUSED);
@@ -151,11 +153,17 @@ function addStop() {
                 //labelInnerHTML(target.getAttribute("variableValue"));
                 codeRowHighlight();
                 breakpointHighlight();
-                breakpointCheckerDisplay();
                 //checkInnerHTML();
             }
         }, false);
     }
+}
+
+// clear the conditional breakpoint controls
+function breakpointClearCBPControls() {
+
+    document.getElementById("breakpointText").innerHTML = "";
+    document.getElementById("breakpointVariableSelector").style.display = "none";
 }
 
 // show the conditional breakpoint controls associated with an action, given
@@ -190,6 +198,7 @@ function breakpointShowCBPControls(cbp) {
 
     // add the constructed HTML to the right element
     document.getElementById("breakpointText").innerHTML = html;
+    document.getElementById("breakpointVariableSelector").style.display = "block";
 }
 
 // check the action with a conditional breakpoint for a match that should
@@ -262,29 +271,6 @@ function cleanupBreakpoints() {
     hdxAV.previousBreakpoint = "";
 }
 
-//Enables the clickable function and window resize change for the selector
-function showHideBreakpointVariableSelector() {
-
-    /*let element = document.getElementById("showBreakpointVariable");
-    element.addEventListener("click", function(event) {
-        let target = event.target;
-        let avPanel = document.getElementById("avStatusPanel");
-        let parentContainer = target.parentElement;
-        let rect = parentContainer.getBoundingClientRect();
-        let rect2 = avPanel.getBoundingClientRect();
-        
-        if (hdxAV.breakpointVariableHidden) {
-            parentContainer.style.left = rect2.right + "px";
-            hdxAV.breakpointVariableHidden = false;
-        }
-        else {
-            setDefaultVariableSelectorLocation();
-            hdxAV.breakpointVariableHidden = true;
-        }
-    }, false);
-    window.addEventListener("resize", setDefaultVariableSelectorLocation, false);*/
-}
-
 // JS implementation to create the html for the selector. This allows for
 // the html to be dynamically created after the avPanel is shown.
 function createVariableSelector() {
@@ -332,7 +318,6 @@ function createVariableSelector() {
     pcPanel.appendChild(divBreakpoint);
     // Set the default position, add click on/window resize events and hide it
     setDefaultVariableSelectorLocation();
-    showHideBreakpointVariableSelector();
     divBreakpoint.style.display = "none";    
     hdxAV.useConditionalBreakpoint = true;
 }
@@ -354,25 +339,6 @@ function setDefaultVariableSelectorLocation() {
     let trueDifference = difference2 - difference + 25;
     element.style.left = trueDifference + "px";
     hdxAV.breakpointVariableHidden = true;
-}
-
-// Based on if a breakpoint is selected or not, display or hide the element.
-// Also reset the position.
-function breakpointCheckerDisplay() {
-    
-    let element = document.getElementById("breakpointVariableSelector");
-    //let checkbox = document.getElementById("useBreakpointVariable");
-    if (hdxAV.currentBreakpoint == "") {
-        element.style.display = "none";
-        //checkbox.checked = false;
-        //checkbox.style.display = "none";
-    }
-    else {
-        element.style.display = "block";
-        //checkbox.checked = false;
-        //checkbox.style.display = "none";
-    }
-    setDefaultVariableSelectorLocation();
 }
 
 /*
