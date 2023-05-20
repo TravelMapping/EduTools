@@ -237,9 +237,18 @@ var hdxTwiceAroundTreeAV = {
             },
             logMessage: function(thisAV) {
                 return "Iterating over the sorted array of vertices produced by depth-first traversal";
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.finalPath[thisAV.nextToCheck] == val;
+		}		
             }
         },
-
         {
             label: "addToPath",
             comment: "if vertex is not contained in final path, add it",
@@ -394,32 +403,6 @@ var hdxTwiceAroundTreeAV = {
 	    this.finalPath[this.nextToCheck + 1] + '</td><td>' +
 	    waypoints[this.finalPath[this.nextToCheck]].label +
             '</td><td>' + this.currDistance.toFixed(3) + '</td></tr>';
-    },
-    
-     // note this is currently not working
-     setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        switch (name) {
-            case "isLeaf":
-                html = createInnerHTMLChoice("boolean","",
-                                             "",
-                                             "");
-                return html;
-                
-            }
-        return "No innerHTML";
-    },
-    // note this is currently not working
-    hasConditionalBreakpoints(name) {
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        return false;
     }
 }
 
