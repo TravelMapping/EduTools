@@ -149,6 +149,16 @@ var hdxQuadtreeAV = {
             },
             logMessage: function(thisAV) {
                 return "Top of main for loop over vertices, check=" + thisAV.nextToCheck;
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at check ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextToCheck == val;
+		}		
             }
         },
 
@@ -195,10 +205,6 @@ var hdxQuadtreeAV = {
             },
             logMessage: function(thisAV) {
                 return "Checking if the current quadtree is a leaf";
-            },
-
-            currentVariable: function(thisAV) {
-                return thisAV.currentQuadtree.isLeaf();
             }
         },
 
@@ -801,38 +807,6 @@ var hdxQuadtreeAV = {
         for (var i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].addTo(map);
         }
-
-    },
-
-    // note this is currently not working
-    setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        switch (name) {
-            case "isLeaf":
-            html = createInnerHTMLChoice("boolean","isLeaf",
-                                         "current quadtree is a leaf",
-                                         "current quadtree is not a leaf");
-            return html;
-            
-        }
-        return "No innerHTML";
-    },
-
-    // note this is currently not working
-    hasConditionalBreakpoints(name) {
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        switch (name) {
-            case "isLeaf":
-                return true;
-        }
-        return false;
     }    
 };
 
