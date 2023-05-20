@@ -103,7 +103,7 @@ var hdxAPClosestPointAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.outLoop++;
-                updateAVControlEntry("v1Visiting", "V<sub>1</sub>: " + thisAV.outLoop);
+                updateAVControlEntry("v1Visiting", "v<sub>1</sub>: " + thisAV.outLoop);
                 
                 if (thisAV.outLoop < waypoints.length) {
 		    hdxAV.nextAction = "resetClosest";
@@ -115,6 +115,16 @@ var hdxAPClosestPointAV = {
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.outLoop + " of first for-loop";
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v<sub>1</sub> ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.outLoop == val;
+		}		
             }
         },
 
@@ -140,7 +150,7 @@ var hdxAPClosestPointAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.inLoop++;
                 
-                updateAVControlEntry("v2Visiting", "V<sub>2</sub>: " + thisAV.inLoop);
+                updateAVControlEntry("v2Visiting", "v<sub>2</sub>: " + thisAV.inLoop);
                 
                 if (thisAV.inLoop < waypoints.length) {
                     thisAV.v = thisAV.inLoop
@@ -169,6 +179,16 @@ var hdxAPClosestPointAV = {
             },
             logMessage: function (thisAV) {
                 return "Start of iteration #" + thisAV.inLoop + " of second for-loop";
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v<sub>2</sub> ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.inLoop == val;
+		}		
             }
         },
 
@@ -296,7 +316,7 @@ var hdxAPClosestPointAV = {
                 highlightPseudocode(this.label, visualSettings.discovered)
                 thisAV.closestVertices[thisAV.outLoop] = thisAV.vClosest;
                 
-                thisAV.discoveredPairs += '<tr><td>V<sub>1</sub>: ' + thisAV.outLoop + '</td><td>V<sub>2</sub>: ' +
+                thisAV.discoveredPairs += '<tr><td>v<sub>1</sub>: ' + thisAV.outLoop + '</td><td>v<sub>2</sub>: ' +
                  thisAV.vClosest + '</td><td>' + thisAV.dClosest.toFixed(3) + '</td>';
                 
                 updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
@@ -391,32 +411,5 @@ var hdxAPClosestPointAV = {
     idOfAction(action) {
 	
 	return action.label;
-    },
-
-    setConditionalBreakpoints(name) {
-	let max = waypoints.length-1;
-	let temp = HDXCommonConditionalBreakpoints(name);
-	if (temp != "No innerHTML") {
-            return temp;
-	}
-	switch (name) {
-        case "isLeaf":
-            html = createInnerHTMLChoice("boolean","",
-                                         "",
-                                         "");
-            return html;
-            
-        }
-	return "No innerHTML";
-    },
-    
-    hasConditionalBreakpoints(name) {
-	
-    },
-
+    }
 };
-
-function ClosestToAll() {
-
-    this.closest = points.length;
-}
