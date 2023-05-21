@@ -277,20 +277,29 @@ function createVariableSelector() {
     
     let divBreakpoint = document.createElement("div");
     let divBreakpoint1 = document.createElement("div");
+    let bp = document.createElement("span");
+    bp.innerHTML = "Breakpoint: ";
     let cbp = document.createElement("select");
     cbp.setAttribute("id", "cbp");
     let opton = document.createElement("option");
     opton.value = "on";
-    opton.innerHTML = "Conditional Breakpoint";
+    opton.innerHTML = "Conditional";
     opton.selected = true;
     let optoff = document.createElement("option");
     optoff.value = "off";
-    optoff.innerHTML = "Unconditional Breakpoint";
+    optoff.innerHTML = "Unconditional";
     cbp.appendChild(opton);
     cbp.appendChild(optoff);
     cbp.onchange = function() {
 	hdxAV.useConditionalBreakpoint =
 	    document.getElementById("cbp").value == "on";
+	if (hdxAV.useConditionalBreakpoint) {
+	    document.getElementById("breakpointText").style.display = "block";
+	}
+	else {
+	    document.getElementById("breakpointText").style.display = "none";
+	}
+	    
     };
 	
     let breakpointID = document.createAttribute("id");
@@ -307,9 +316,10 @@ function createVariableSelector() {
     divBreakpoint.setAttributeNode(breakpointClass);
     
     // This is where the variable selector goes
-    divBreakpoint1.innerHTML = "This is where the innerHTML goes";
+    divBreakpoint1.innerHTML = "Replace with selector controls";
     
     // append the smaller divs to the bigger one
+    divBreakpoint.appendChild(bp);
     divBreakpoint.appendChild(cbp);
     divBreakpoint.appendChild(divBreakpoint1);
     
