@@ -341,48 +341,6 @@ function setDefaultVariableSelectorLocation() {
     hdxAV.breakpointVariableHidden = true;
 }
 
-/*
-// Sets the innerHTML of the div tag w/ ID: breakpointText to the
-// passed variable
-function labelInnerHTML(text) {
-
-    let element = document.getElementById("breakpointText");
-    element.innerHTML = text;
-    //let checkbox = document.getElementById("useBreakpointVariable");
-    if (hasInnerHTML(hdxAV.currentBreakpoint)) {
-       // checkbox.style.display = "block";
-    }
-    else {
-        //checkbox.style.display = "none";
-       // checkbox.checked = false;
-        hdxAV.useConditionalBreakpoint = false;
-    }
-}
-
-// Used to hide the breakpointVariableSelector if
-// it doesnt have innerHTML that is useful
-function checkInnerHTML() {
-    
-    let element = document.getElementById("breakpointText").innerHTML;
-    if (element == "No innerHTML") {
-        document.getElementById("breakpointVariableSelector").style.display = "none";
-    }
-}
-
-// sets the custom attribute variableValue of each codeRow class
-// This is so they can be used for setting the inner html
-function setInnerHTML(label) {
-
-    return hdxAV.currentAV.setConditionalBreakpoints(label);
-}
-
-// Does a label have a setInnerHTML with a return other than "No innerHTML"
-function hasInnerHTML(label) {
-
-    return hdxAV.currentAV.hasConditionalBreakpoints(label);
-}
-*/
-
 function deleteVariableSelector() {
     
     let element = document.getElementById("breakpointVariableSelector");
@@ -390,6 +348,7 @@ function deleteVariableSelector() {
     hdxAV.useConditionalBreakpoint = false;
 }
 
+/* keeping commented out for now in case new CBP code needs something similar
 function createInnerHTMLChoice(choice, id, firstText, secondText) {
 
     switch (choice) {
@@ -404,6 +363,7 @@ function createInnerHTMLChoice(choice, id, firstText, secondText) {
         return html;
     }
 }
+*/
 
 // returns a string of i non breaking spaces
 function pcIndent(i) {
