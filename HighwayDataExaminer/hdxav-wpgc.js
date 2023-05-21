@@ -328,24 +328,6 @@ var hdxWPGraphColoringAV = {
         return action.label;
     },
     
-    // note this is currently not working
-    setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        return "No innerHTML";
-    },
-    // note this is currently not working
-    hasConditionalBreakpoints(name) {
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        return false;
-    },
-    
     // comparator for the sorting function to sort waypoints by degree
     compareDegree(a,b) {
         return waypoints[b].edgeList.length - waypoints[a].edgeList.length;
