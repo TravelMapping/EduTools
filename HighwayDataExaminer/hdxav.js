@@ -70,7 +70,6 @@ var hdxAV = {
     currentBreakpoint: "",
     previousBreakpoint: "",
     useConditionalBreakpoint: false,  // conditional breakpoint selected?
-    breakpointVariableHidden: true,   // showing selector for conditional break?
     
     // set the status and do any needed cleanup for that change
     setStatus(newStatus) {
@@ -337,7 +336,7 @@ var hdxAV = {
 	    // does this action have a conditional breakpoint associated and
 	    // is the conditional breakpoint option selected?
 	    if (currentAction.hasOwnProperty("cbp") &&
-		document.getElementById("cbp").value == "on") {
+		hdxAV.useConditionalBreakpoint) {
 
 		hdxAV.stopAtBreakpoint = breakpointCheckMatch(currentAction.cbp);
 	    }

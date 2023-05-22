@@ -419,7 +419,7 @@ https://stackoverflow.com/questions/19343331/how-do-i-center-an-absolutely-posit
     overflow-y: scroll;
 }
 
-#breakpointVariableSelector {
+#CBPWhole {
     z-index: 9999;
     top: 100px;
     left: 191px;
@@ -428,14 +428,14 @@ https://stackoverflow.com/questions/19343331/how-do-i-center-an-absolutely-posit
     text-align: center;
 }
 
-#showBreakpointVariable {
+#CBPConditions {
     position: relative;
     width: 10%;
     float: right;
     min-width: 25px;
 }
 
-#breakpointText{
+#CBPConditions {
     width: 100%;
     position: relative;
     float: left;
@@ -446,7 +446,7 @@ https://stackoverflow.com/questions/19343331/how-do-i-center-an-absolutely-posit
     
 }
 
-#breakpointText select
+#CBPConditions select
 {
     border: none;
     border-radius: 10px;
@@ -454,19 +454,12 @@ https://stackoverflow.com/questions/19343331/how-do-i-center-an-absolutely-posit
     margin-top: 1px;
 }
 
-#cbp
+#CBPOnOff
 {
     color: black;
     font-weight: 600;
     text-align: center;
     margin-bottom: 7px;
-}
-
-#useBreakpointVariable{
-    width: 10%;
-    position: relative;
-    float: right;
-    min-width: 25px;
 }
 
 #instructionsHeader{
@@ -1294,14 +1287,3 @@ input.typeahead.tt-input
         display: none!important;
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -118,7 +118,7 @@ function startPausePressed() {
         // action, then do it
         hdxAV.nextAction = "START";
         hdxAV.nextStep(hdxAV.currentAV);
-        addStop();
+        addBreakpointListeners();
         resizePanels();
         hideEntries();
         newMapTileSelected();
@@ -240,7 +240,7 @@ function resetPressed() {
     //hideAVStatusPanel();
     showAlgorithmSelectionPanel();
     document.getElementById("pscode").style.display = "none";
-    deleteVariableSelector();
+    deleteCBPSelector();
     newMapTileSelected();
 }
 
@@ -271,8 +271,6 @@ function loadDataOptionsPressed() {
     // in all cases, we hide the top panel, show the load panel
     hideTopControlPanel();
     showLoadDataPanel();
-    
-    //deleteVariableSelector();
 }
 
 // event handler for "Show Data Tables" checkbox

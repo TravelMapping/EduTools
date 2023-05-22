@@ -217,7 +217,7 @@ will display
       </tr>
       <tr>
 	<td>
-	  <input type="button" value="Visualize" id="algOptionsDone" onClick="algOptionsDonePressed(); createVariableSelector();">
+	  <input type="button" value="Visualize" id="algOptionsDone" onClick="algOptionsDonePressed(); createCBPSelector();">
 	</td>
       </tr>
       <tr>

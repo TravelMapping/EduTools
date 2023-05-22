@@ -366,7 +366,7 @@ function HDXProcessFileContents(fileContents) {
 	// overwritten by the loading
 	cleanupAVControlPanel();
 	hdxAV.currentAV.cleanupUI();
-	deleteVariableSelector();
+	deleteCBPSelector();
 	hdxAV.currentAV = hdxAV.avList[0];
 	document.getElementById("AlgorithmSelection").selectedIndex = 0;
 	document.getElementById("currentAlgorithm").innerHTML =
