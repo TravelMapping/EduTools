@@ -18,7 +18,7 @@
 // Essentially an enum of possible states of the simulation, used to
 // ensure that only things that should be done are permitted in a
 // given state.  Any AV_ state implies that a graph is loaded.  
-var hdxStates = {
+const hdxStates = {
 
     NO_DATA: 1,
     GRAPH_LOADED: 2,
@@ -33,7 +33,7 @@ var hdxStates = {
 };
 
 // object to hold HDX global status info
-var hdxGlobals = new Object();
+const hdxGlobals = new Object();
 
 // function to set the waypoint color, scale, and table entry
 // using an entry passed in from the visualSettings
@@ -41,7 +41,7 @@ var hdxGlobals = new Object();
 function updateMarkerAndTable(waypointNum, vs, zIndex, hideTableLine) {
 
     if (!vs.hasOwnProperty('icon')) {
-        var options = {
+        let options = {
             iconShape: 'circle-dot',
             iconSize: [vs.scale, vs.scale],
             iconAnchor: [vs.scale, vs.scale],
@@ -53,7 +53,7 @@ function updateMarkerAndTable(waypointNum, vs, zIndex, hideTableLine) {
     }
     markers[waypointNum].setIcon(vs.icon);
     markers[waypointNum].setZIndexOffset(2000+zIndex);
-    var row = document.getElementById("waypoint"+waypointNum);
+    let row = document.getElementById("waypoint"+waypointNum);
     row.style.backgroundColor = vs.color;
     row.style.color = vs.textColor;
     if (row.style.backgroundColor == "rgb(60, 60, 60)")
@@ -112,7 +112,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
         }
 
         // ensure individual table rows are shown
-        var pointRows = document.getElementById("waypoints").getElementsByTagName("*");
+        let pointRows = document.getElementById("waypoints").getElementsByTagName("*");
         for (let i = 0; i < pointRows.length; i++) {
             pointRows[i].style.display = "";
         }
@@ -132,7 +132,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
         document.getElementById("connection").style.display = "";
 
         // ensure individual table rows are shown
-        var pointRows = document.getElementById("connection").getElementsByTagName("*");
+        let pointRows = document.getElementById("connection").getElementsByTagName("*");
         for (let i = 0; i < pointRows.length; i++) {
             pointRows[i].style.display = "";
         }
@@ -168,10 +168,10 @@ function shortLabel(label, max) {
 
 // get a list of adjacent vertices by index into waypoints array
 function getAdjacentPoints(pointIndex) {
-    var resultArray = [];
-    var edgeList = waypoints[pointIndex].edgeList;
+    let resultArray = [];
+    let edgeList = waypoints[pointIndex].edgeList;
     for (let i = 0; i < edgeList.length; i++) {
-        var adjacentIndex;
+        let adjacentIndex;
         if (edgeList[i].v1 == pointIndex) {
             adjacentIndex = edgeList[i].v2;
         }
@@ -258,7 +258,7 @@ function HDXStartFileselectorRead(filesel) {
             return;
         }
         // pointboxErrorMsg("Loading... (" + file.size + " bytes)");
-        var reader;
+        let reader;
         try {
             reader = new FileReader();
         }
@@ -455,8 +455,8 @@ function HDXProcessFileContents(fileContents) {
 //
 function parseTMGContents(fileContents) {
     
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
-    var header = lines[0].split(' ');
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let header = lines[0].split(' ');
     if (header[0] != "TMG") {
         return '<table class="table"><thead class = "thead-dark"><tr><th scope="col">Invalid TMG file (missing TMG marker on first line)</th></tr></table>';
     }
@@ -473,21 +473,21 @@ function parseTMGContents(fileContents) {
     hdxGlobals.FileVersion=header[1];
     hdxGlobals.FileType=header[2];
     // normally has vertex and edge count,but may have partition count
-    var counts = lines[1].split(' ');
-    var numV = parseInt(counts[0]);
-    var numE = parseInt(counts[1]);
-    var offset = 2;
-    var numTravelers = 0;
-    var Vcolspan = 3;
-    var Ecolspan = 3;
+    let counts = lines[1].split(' ');
+    let numV = parseInt(counts[0]);
+    let numE = parseInt(counts[1]);
+    let offset = 2;
+    let numTravelers = 0;
+    let Vcolspan = 3;
+    let Ecolspan = 3;
 
     // HTML strings for table
-    var Vstring = '';
-    var Estring = '';
+    let Vstring = '';
+    let Estring = '';
 
     // extra fields for each vertex/edges
-    var Vfields = '';
-    var Efields = '';
+    let Vfields = '';
+    let Efields = '';
     hdxGlobals.keywords = ["color", "scale", "opacity", "partition"];
     if (hdxGlobals.FileVersion=='3.0'&& hdxGlobals.FileType!="partitioned") {
         Vfields = lines[2].split(' ');
@@ -542,10 +542,10 @@ function parseTMGContents(fileContents) {
     
     summaryInfo += ".</th></tr></table>";*/
     
-    var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
+    let vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
     waypoints = new Array(numV);
     for (let i = 0; i < numV; i++) {
-        var vertexInfo = lines[i+offset].split(' ');
+        let vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
         waypoints[i].lat=Number(parseFloat(waypoints[i].lat));
         waypoints[i].lon=Number(parseFloat(waypoints[i].lon));
@@ -556,7 +556,7 @@ function parseTMGContents(fileContents) {
             waypoints[i].color = "rgb(60, 60, 60)";
             waypoints[i].scale = 4;
             waypoints[i].opacity = 0.6;
-            var c = 1;
+            let c = 1;
             if (hdxGlobals.FileType != "partitioned") {
 		for (x of Vfields) {
                     waypoints[i][x] = vertexInfo[2+c];
@@ -574,12 +574,12 @@ function parseTMGContents(fileContents) {
 		}
 	    }
 	}
-        var e = "...";
-        var Vinfo = '';
-        var coord = '<td style ="word-break:break-all;">' +
+        let e = "...";
+        let Vinfo = '';
+        let coord = '<td style ="word-break:break-all;">' +
 	    parseFloat(vertexInfo[1]).toFixed(3) + ',' +
 	    parseFloat(vertexInfo[2]).toFixed(3) +'</td>';
-        var Vlabel = '';
+        let Vlabel = '';
         if (((waypoints[i]).label).length > 10) {
             Vlabel = '<td style ="word-break:break-all;">' +
 		(waypoints[i].label).substring(0,10) + e + '</td>';
@@ -596,7 +596,7 @@ function parseTMGContents(fileContents) {
 		}
             }
         }
-        var vsubstrL = parseFloat(vertexInfo[1]).toFixed(3) + ',' +
+        let vsubstrL = parseFloat(vertexInfo[1]).toFixed(3) + ',' +
             parseFloat(vertexInfo[2]).toFixed(3) 
             + waypoints[i].label;
         
@@ -607,12 +607,12 @@ function parseTMGContents(fileContents) {
 
     vTable += '</tbody></table>';
 
-    var Einfo='';
-    var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
+    let Einfo='';
+    let eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
     graphEdges = new Array(numE);
     for (let i = 0; i < numE; i++) {
-        var edgeInfo = lines[i+numV+offset].split(' ');
-        var newEdge;
+        let edgeInfo = lines[i+numV+offset].split(' ');
+        let newEdge;
         if (haveTravelers) {
             if (edgeInfo.length > 4) {
                 newEdge = new GraphEdge(edgeInfo[0], edgeInfo[1],
@@ -639,7 +639,7 @@ function parseTMGContents(fileContents) {
             }
             if (hdxGlobals.FileVersion == '3.0' &&
 		hdxGlobals.FileType == "custom") {
-		var c = 1;
+		let c = 1;
 		// setting default to be the same as undiscovered from
 		// visual settings
 		newEdge.color = "rgb(60, 60, 60)";
@@ -652,15 +652,15 @@ function parseTMGContents(fileContents) {
 		}
             }
         }
-        var firstNode = Math.min(parseInt(newEdge.v1), parseInt(newEdge.v2));
-        var secondNode = Math.max(parseInt(newEdge.v1), parseInt(newEdge.v2));
+        let firstNode = Math.min(parseInt(newEdge.v1), parseInt(newEdge.v2));
+        let secondNode = Math.max(parseInt(newEdge.v1), parseInt(newEdge.v2));
         // add this new edge to my endpoint vertex adjacency lists
         waypoints[newEdge.v1].edgeList.push(newEdge);
         waypoints[newEdge.v2].edgeList.push(newEdge);
-        var EhoverText = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
+        let EhoverText = edgeInfo[0] + ':&nbsp;' + waypoints[newEdge.v1].label +
             ' &harr; ' + edgeInfo[1] + ':&nbsp;'
             + waypoints[newEdge.v2].label;
-        var subst = '<td style ="word-break:break-all;">'
+        let subst = '<td style ="word-break:break-all;">'
             + edgeInfo[0] + '&nbsp;'  +
             ' &harr;&nbsp; ' + edgeInfo[1] + '&nbsp;'
              + '</td>';
@@ -676,7 +676,7 @@ function parseTMGContents(fileContents) {
 		}
             }
         }
-        var subst3 = '<td style ="word-break:break-all;">' +
+        let subst3 = '<td style ="word-break:break-all;">' +
             edgeInfo[2] + subst + Einfo;
         eTable += subst3;
         
@@ -708,17 +708,17 @@ function parseTMGContents(fileContents) {
 // highway names that connect those points
 function parseGRAContents(fileContents) {
 
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
-    var counts = lines[0].split(' ');
-    var numV = parseInt(counts[0]);
-    var numE = parseInt(counts[1]);
-    var sideInfo = '<table  class="gratable"><thead><tr><th>' + numV + " waypoints, " + numE + " connections.</th></tr></table>";
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let counts = lines[0].split(' ');
+    let numV = parseInt(counts[0]);
+    let numE = parseInt(counts[1]);
+    let sideInfo = '<table  class="gratable"><thead><tr><th>' + numV + " waypoints, " + numE + " connections.</th></tr></table>";
 
-    var vTable = '<table class="gratable"><thead><tr><th colspan="3">Waypoints</th></tr><tr><th>#</th><th>Coordinates</th><th>Waypoint Name</th></tr></thead><tbody>';
+    let vTable = '<table class="gratable"><thead><tr><th colspan="3">Waypoints</th></tr><tr><th>#</th><th>Coordinates</th><th>Waypoint Name</th></tr></thead><tbody>';
 
     waypoints = new Array(numV);
     for (let i = 0; i < numV; i++) {
-        var vertexInfo = lines[i+1].split(' ');
+        let vertexInfo = lines[i+1].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", "");
         vTable += '<tr><td>' + i +
             '</td><td>(' + parseFloat(vertexInfo[1]).toFixed(3) + ',' +
@@ -728,10 +728,10 @@ function parseGRAContents(fileContents) {
     }
     vTable += '</tbody></table>';
 
-    var eTable = '<table class="gratable"><thead><tr><th colspan="3">Connections</th></tr><tr><th>#</th><th>Route Name(s)</th><th>Endpoints</th></tr></thead><tbody>';
+    let eTable = '<table class="gratable"><thead><tr><th colspan="3">Connections</th></tr><tr><th>#</th><th>Route Name(s)</th><th>Endpoints</th></tr></thead><tbody>';
     graphEdges = new Array(numE);
     for (let i = 0; i < numE; i++) {
-        var edgeInfo = lines[i+numV+1].split(' ');
+        let edgeInfo = lines[i+numV+1].split(' ');
         graphEdges[i] = new GraphEdge(edgeInfo[0], edgeInfo[1], edgeInfo[2], null);
         eTable += '<tr><td>' + i + '</td><td>' + edgeInfo[2] + '</td><td>'
             + edgeInfo[0] + ':&nbsp;' + waypoints[graphEdges[i].v1].label +
@@ -760,7 +760,7 @@ MilCanRd http://www.openstreetmap.org/?lat=60.697199&lon=-135.047250
 */
 function parseWPTContents(fileContents) {
 
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     graphEdges = new Array();
     waypoints = new Array();
     for (let i = 0; i < lines.length; i++) {
@@ -802,24 +802,24 @@ YT1,YT2 YT1/YT2@CenSt 60.759893 -135.141191
 */
 function parsePTHContents(fileContents) {
 
-    var table = '<table class="pthtable"><thead><tr><th>Route</th><th>To Point</th><th>Seg.<br>' + distanceUnits + '</th><th>Cumul.<br>' + distanceUnits + '</th></tr></thead><tbody>';
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let table = '<table class="pthtable"><thead><tr><th>Route</th><th>To Point</th><th>Seg.<br>' + distanceUnits + '</th><th>Cumul.<br>' + distanceUnits + '</th></tr></thead><tbody>';
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     graphEdges = new Array();
     waypoints = new Array();
-    var totalMiles = 0.0;
-    var segmentMiles = 0.0;
-    var previousWaypoint = null;
+    let totalMiles = 0.0;
+    let segmentMiles = 0.0;
+    let previousWaypoint = null;
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             // standardize first
-            var line = standardizePTHLine(lines[i]);
-            var info = PTHLineInfo(line, previousWaypoint);
+            let line = standardizePTHLine(lines[i]);
+            let info = PTHLineInfo(line, previousWaypoint);
             waypoints[waypoints.length] = info.waypoint;
             totalMiles += info.mileage;
             // this will display as a graph, so create and assign the
             // graph edges
             if (previousWaypoint != null) {
-                var newEdge = new GraphEdge(i-1, i, info.waypoint.elabel,
+                let newEdge = new GraphEdge(i-1, i, info.waypoint.elabel,
                                             null, info.via);
                 previousWaypoint.edgeList[previousWaypoint.edgeList.length] = newEdge;
                 info.waypoint.edgeList[0] = newEdge;
@@ -858,9 +858,9 @@ function parseNMPContents(fileContents) {
     const unmarkedColor = "crimson";
     const fpColor = "#00a000";
     const liColor = "gold";
-    var table = '<table class="nmptable"><thead /><tbody>';
+    let table = '<table class="nmptable"><thead /><tbody>';
     // all lines describe waypoints
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     waypoints = new Array();
     waypointColors = new Array();
     
@@ -869,7 +869,7 @@ function parseNMPContents(fileContents) {
     let liCount = 0;
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
-            var xline = lines[i].split(' ');
+            let xline = lines[i].split(' ');
             if (xline.length == 3 || xline.length == 4) {
                 waypoints[waypoints.length] = new Waypoint(xline[0], xline[1], xline[2], "", "");
                 if (xline.length == 3) {
@@ -890,17 +890,17 @@ function parseNMPContents(fileContents) {
         }
     }
     // graph edges between pairs, will be drawn as connections
-    var numE = waypoints.length/2;
+    let numE = waypoints.length/2;
     graphEdges = new Array(numE);
     for (let i = 0; i < numE; i++) {
         // add the edge
         graphEdges[i] = new GraphEdge(2*i, 2*i+1, "", null, null);
 
         // add an entry to the table to be drawn in the pointbox
-        var miles = distanceInMiles(waypoints[2*i].lat, waypoints[2*i].lon,
+        let miles = distanceInMiles(waypoints[2*i].lat, waypoints[2*i].lon,
                                     waypoints[2*i+1].lat,
                                     waypoints[2*i+1].lon).toFixed(4);
-        var feet = distanceInFeet(waypoints[2*i].lat, waypoints[2*i].lon,
+        let feet = distanceInFeet(waypoints[2*i].lat, waypoints[2*i].lon,
                                   waypoints[2*i+1].lat,
                                   waypoints[2*i+1].lon).toFixed(2);
         table += "<tr style=\"background-color:" + waypointColors[2*i] +
@@ -942,16 +942,16 @@ function parseNMPContents(fileContents) {
 //
 function parseWPLContents(fileContents) {
 
-    var vTable = '<table class="gratable"><thead><tr><th colspan="2">Waypoints</th></tr><tr><th>Coordinates</th><th>Waypoint Name</th></tr></thead><tbody>';
+    let vTable = '<table class="gratable"><thead><tr><th colspan="2">Waypoints</th></tr><tr><th>Coordinates</th><th>Waypoint Name</th></tr></thead><tbody>';
 
     // all lines describe waypoints
-    var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
+    let lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     waypoints = new Array();
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
-            var vertexInfo = lines[i].split(' ');
+            let vertexInfo = lines[i].split(' ');
             if (vertexInfo.length == 3) {
-                var w = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", "");
+                let w = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", "");
                 waypoints[waypoints.length] = w;
                 vTable += '<tr><td>(' + parseFloat(vertexInfo[1]).toFixed(3) + ',' +
                     parseFloat(vertexInfo[2]).toFixed(3) + ')</td><td>'
@@ -965,7 +965,7 @@ function parseWPLContents(fileContents) {
     graphEdges = new Array();
     genEdges = false;
     usingAdjacencyLists = true;
-    var summaryInfo = '<table class="gratable"><thead><tr><th>' + waypoints.length + " waypoints.</th></tr></table>";
+    let summaryInfo = '<table class="gratable"><thead><tr><th>' + waypoints.length + " waypoints.</th></tr></table>";
     let graphInfo = document.getElementById("graphInfo");
     graphInfo.style.display = "block";
     graphInfo.innerHTML = waypoints.length + " points";
@@ -981,26 +981,26 @@ function WPTLine2Waypoint(line) {
     line = line.replace('  ', ' ');
     line = line.replace('  ', ' ');
 
-    var xline = line.split(' ');
+    let xline = line.split(' ');
     if (xline.length < 2) {
         return Waypoint('bad-line', 0, 0);
     }
-    var label = xline[0];
-    var url = xline[xline.length-1];
-    var latlon = Url2LatLon(url);
+    let label = xline[0];
+    let url = xline[xline.length-1];
+    let latlon = Url2LatLon(url);
     return new Waypoint(label, latlon[0], latlon[1], 0, "");
 }
 
 // convert an openstreetmap URL to a latitude/longitude
 function Url2LatLon(url) {
 
-    var latlon = new Array(0., 0.);
-    var floatpattern = '([-+]?[0-9]*\.?[0-9]+)';
-    var latpattern = 'lat=' + floatpattern;
-    var lonpattern = 'lon=' + floatpattern;
+    let latlon = new Array(0., 0.);
+    let floatpattern = '([-+]?[0-9]*\.?[0-9]+)';
+    let latpattern = 'lat=' + floatpattern;
+    let lonpattern = 'lon=' + floatpattern;
 
     //search for lat
-    var matches = url.match(latpattern);
+    let matches = url.match(latpattern);
     if (matches != null) {
         latlon[0] = parseFloat(matches[1]).toFixed(6);
     }
@@ -1019,7 +1019,7 @@ function Url2LatLon(url) {
 function standardizePTHLine(line) {
 
     // remove extraneous spaces
-    var newline = line;
+    let newline = line;
     do {
         line = newline;
         newline = line.replace('  ',' ');
@@ -1033,10 +1033,10 @@ function standardizePTHLine(line) {
 
     // this ends in a paren, so we convert each "(lat,lng)" group to
     // simply "lat lng"
-    var xline = line.split(' ');
+    let xline = line.split(' ');
     line = xline[0];
     for (let pos = 1; pos < xline.length; pos++) {
-        var newlatlng = xline[pos];
+        let newlatlng = xline[pos];
         if ((xline[pos].charAt(0) == '(') &&
             (xline[pos].indexOf(',') > 0) &&
             (xline[pos].charAt(xline[pos].length-1) == ')')) {
@@ -1053,7 +1053,7 @@ function standardizePTHLine(line) {
 // for intermediate points along a segment
 function PTHLine2Waypoint(line) {
 
-    var xline = line.split(' ');
+    let xline = line.split(' ');
     if (xline.length < 4) {
         return Waypoint('bad-line', 0, 0);
     }
@@ -1065,20 +1065,20 @@ function PTHLine2Waypoint(line) {
 // to include
 function mileageWithPTHLine(from, to, line) {
 
-    var xline = line.split(' ');
+    let xline = line.split(' ');
     if (xline.length == 4) {
         // no intermediate points, so just compute mileage
         return distanceInMiles(from.lat, from.lon, to.lat, to.lon);
     }
 
     // we have more points, compute sum of segments
-    var total = 0.0;
-    var last_lat = from.lat;
-    var last_lon = from.lon;
-    var num_points = (xline.length - 4) / 2;
+    let total = 0.0;
+    let last_lat = from.lat;
+    let last_lon = from.lon;
+    let num_points = (xline.length - 4) / 2;
     for (let i = 0; i < num_points; i++) {
-        var this_lat = parseFloat(xline[2*i+1]).toFixed(6);
-        var this_lon = parseFloat(xline[2*i+2]).toFixed(6);
+        let this_lat = parseFloat(xline[2*i+1]).toFixed(6);
+        let this_lon = parseFloat(xline[2*i+2]).toFixed(6);
         total += distanceInMiles(last_lat, last_lon, this_lat, this_lon);
         last_lat = this_lat;
         last_lon = this_lon;
@@ -1095,14 +1095,14 @@ function mileageWithPTHLine(from, to, line) {
 // extra parameter is the previous waypoint for mileage computation
 function PTHLineInfo(line, from) {
 
-    var xline = line.split(' ');
+    let xline = line.split(' ');
     if (xline.length < 4) {
         return {
             waypoint: Waypoint('bad-line', 0, 0),
             mileage: 0.0,
             via: null};
     }
-    var result = {
+    let result = {
         waypoint: new Waypoint(xline[xline.length-3], xline[xline.length-2],
                                xline[xline.length-1], xline[0], new Array()),
         mileage: 0.0,
@@ -1122,13 +1122,13 @@ function PTHLineInfo(line, from) {
     else {
         // we have more points, compute sum of segments
         // and remember our list of lat/lng points in via
-        var total = 0.0;
-        var last_lat = from.lat;
-        var last_lon = from.lon;
-        var num_points = (xline.length - 4) / 2;
+        let total = 0.0;
+        let last_lat = from.lat;
+        let last_lon = from.lon;
+        let num_points = (xline.length - 4) / 2;
         for (let i = 0; i < num_points; i++) {
-            var this_lat = parseFloat(xline[2*i+1]).toFixed(6);
-            var this_lon = parseFloat(xline[2*i+2]).toFixed(6);
+            let this_lat = parseFloat(xline[2*i+1]).toFixed(6);
+            let this_lon = parseFloat(xline[2*i+2]).toFixed(6);
             total += distanceInMiles(last_lat, last_lon, this_lat, this_lon);
             last_lat = this_lat;
             last_lon = this_lon;
@@ -1157,7 +1157,7 @@ function listToVIndexString(items) {
         return "[]";
     }
     else {
-        var line = `[`;
+        let line = `[`;
         for (let i = 0; i < items.length; i++) {
             if (i == items.length - 1) {
                 line += items[i].vIndex;
@@ -1172,7 +1172,7 @@ function listToVIndexString(items) {
 
 // Compute Squared Distance 
 function squaredDistance(o1, o2) {
-    var dx, dy;
+    let dx, dy;
     dx = o1.lon - o2.lon;
     dy = o1.lat - o2.lat;
     return dx * dx + dy * dy;
