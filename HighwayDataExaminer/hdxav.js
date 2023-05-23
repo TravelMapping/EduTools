@@ -7,7 +7,7 @@
 //
 
 // group of variables used by many or all algorithm visualizations
-var hdxAV = {
+const hdxAV = {
     // Name of the current execution speed
     speedName: "Fast",
     
@@ -160,11 +160,11 @@ var hdxAV = {
         
         // populate the algorithm selection select with options
         // from the avList
-        let s = document.getElementById("AlgorithmSelection");
+        const s = document.getElementById("AlgorithmSelection");
         s.innerHTML = "";
 	let nextGroup = 0;
         for (let i = 0; i < this.avList.length; i++) {
-            let av = this.avList[i];
+            const av = this.avList[i];
 	    // start a new group?
 	    if (nextGroup < groupStarts.length &&
 		groupStarts[nextGroup].first == i) {
@@ -215,7 +215,7 @@ var hdxAV = {
 	
         // run mode
         if (hdxAV.delay == 0) {
-	    let startTime = Date.now();
+	    const startTime = Date.now();
             while (hdxAV.nextAction != "DONE" && !hdxAV.stopAtBreakpoint) {
 		// After hdxAV.updateTime ms have passed, yield so the UI can
 		// refresh and button presses can be processed, allowing
@@ -294,7 +294,7 @@ var hdxAV = {
 
 	// save the idOfAction in case we're in a case where it might
 	// change with the execution of the action
-	let idOfCurrentAction = thisAV.idOfAction(currentAction);
+	const idOfCurrentAction = thisAV.idOfAction(currentAction);
 
         // undo any previous highlighting
         unhighlightPseudocode();
@@ -367,9 +367,9 @@ var hdxAV = {
     // compute a color code to highlight based on code execution frequency
     // light blue is infrequent, pink is frequent
     execCountColor(count) {
-        let rank = 75 * count/hdxAV.maxExecCount;
-        let r = 180 + rank;
-        let b = 255 - rank;
+        const rank = 75 * count/hdxAV.maxExecCount;
+        const r = 180 + rank;
+        const b = 255 - rank;
         return "rgb(" + r + ",210, " + b + ")";
     }
 };
