@@ -106,7 +106,7 @@ const hdxDFSRecAV = {
 
                 //recolor what was previously being visited as discovered
                 if (thisAV.stack.length > 0) {
-                    let prevRoute = thisAV.stack[thisAV.stack.length - 1];
+                    const prevRoute = thisAV.stack[thisAV.stack.length - 1];
                     updateMarkerAndTable(waypoints[thisAV.visiting].prevVertex,
 					 visualSettings.discovered, 10, false);
                     if (prevRoute[1] != -1 ) {
@@ -159,7 +159,7 @@ const hdxDFSRecAV = {
                 if (thisAV.nextEdge >= waypoints[thisAV.visiting].edgeList.length) {
                    
                     if (thisAV.stack.length != 0) {
-                        let route = thisAV.stack.pop();
+                        const route = thisAV.stack.pop();
                         thisAV.nextEdge = route[0];
                         thisAV.connection = route[1];
                         thisAV.visiting = waypoints[thisAV.visiting].prevVertex;
@@ -288,12 +288,12 @@ const hdxDFSRecAV = {
 
     updateSpanningTreeTable() {
 
-        let newtr = document.createElement("tr");
+	const newtr = document.createElement("tr");
         let edgeLabel;
         let fullEdgeLabel;
         let fromLabel;
         let fullFromLabel;
-        let vLabel = shortLabel(waypoints[this.visiting].label, 10);
+        const vLabel = shortLabel(waypoints[this.visiting].label, 10);
         if (waypoints[this.visiting].prevVertex == -1) {
             edgeLabel = "(START)";
             fullEdgeLabel = "(START)";
@@ -386,7 +386,7 @@ const hdxDFSRecAV = {
     },
         
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
@@ -410,7 +410,7 @@ const hdxDFSRecAV = {
         addEntryToAVControlPanel("currentSpanningTree", visualSettings.spanningTree);
         addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
         addEntryToAVControlPanel("found", visualSettings.spanningTree);
-        let foundEntry = '<span id="foundEntriesCount">0</span>' +
+        const foundEntry = '<span id="foundEntriesCount">0</span>' +
             ' <span id="foundTableLabel">Edges in Spanning Tree</span>' +
             '<br /><table class="pathTable"><thead>' +
             '<tr style="text-align:center"><th>Place</th>' +
@@ -435,11 +435,9 @@ const hdxDFSRecAV = {
 
 
 function displayCallStackItem(item, callStack) {
-    let vertexLabel = "";
-    let vertexLabelFull = "";
 
-    vertexLabelFull = waypoints[item].label;
-    vertexLabel = shortLabel(vertexLabelFull, callStack.maxLabelLength);
+    const vertexLabelFull = waypoints[item].label;
+    const vertexLabel = shortLabel(vertexLabelFull, callStack.maxLabelLength);
 
     return '<span custom-title="Vertex #' + item + ":" +
         vertexLabelFull + '">' + "dfs (v = " + item + ": " + vertexLabel + ")" + "</span>";
