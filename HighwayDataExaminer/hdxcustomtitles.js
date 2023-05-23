@@ -14,39 +14,45 @@
 // styles and class, that function as ids (allowing for more "ids")
 function HDXAddCustomTitles() {
 
-    var body = document.body;
+    const body = document.body;
     // selects all things with attribute custom-title
-    var titles = document.querySelectorAll("[custom-title]");
-    var numberOfDataTitles = HDXGetLastCustomTitle();
+    const titles = document.querySelectorAll("[custom-title]");
+    const numberOfDataTitles = HDXGetLastCustomTitle();
     for (let x = 0; x <titles.length; x++) {
         // offset the numbering to avoid conflicts
-        var offset = numberOfDataTitles + x;
-        var theClass = "Atitle" + offset;
+        const offset = numberOfDataTitles + x;
+        const theClass = "Atitle" + offset;
         // adds class to the original html
         titles[x].classList.add(theClass);
         // Remove any duplicates before after adding the class, but
         // before doing anything else
         HDXUpdateCustomTitle(titles[x]);
         
-        // Adds a mouse event when it enters an object with a custom title
-        // will grab the class(psuedo-ID) and change the spantags display to block
+        // Adds a mouse event when it enters an object with a custom
+        // title will grab the class(psuedo-ID) and change the
+        // spantags display to block
         titles[x].addEventListener("mouseenter", function(event) {
             try {
-                var target = event.target; //mouse enter event
-                var currClass = target.getAttribute("class"); // grabs the current class, acting as an ID
+                const target = event.target;
+		// grabs the current class, acting as an ID
+                let currClass = target.getAttribute("class");
                 currClass = currClass.substr(currClass.indexOf("Atitle"));
-                var classNodes = document.body.getElementsByClassName(currClass);
-                var spanTag = classNodes[1];//Grabs the spanTag as it is always the 2nd element when pulled this way
-                var style = window.getComputedStyle(spanTag);
-                var display = style.getPropertyValue("display");
+                const classNodes =
+		      document.body.getElementsByClassName(currClass);
+		// grabs the spanTag as it is always the 2nd element
+		// when pulled this way
+                const spanTag = classNodes[1];
+                const style = window.getComputedStyle(spanTag);
+                const display = style.getPropertyValue("display");
                 if (display == "none") {
                     spanTag.style.display = "block";
                 }
                 
-                // Get the left and top x-y coordinates. Set them for the span tag
-                var rect = classNodes[0].getBoundingClientRect();
-                var right = rect.right;
-                var top = rect.top;
+                // Get the left and top x-y coordinates. Set them for
+                // the span tag
+                const rect = classNodes[0].getBoundingClientRect();
+                const right = rect.right;
+                const top = rect.top;
                 spanTag.style.left = right + 2 + "px";
                 spanTag.style.top = top + -4 + "px";
                //spanTag.style.left = "700px";
@@ -59,7 +65,7 @@ function HDXAddCustomTitles() {
                 // Grab the span tag's right most side, if its past
                 // the screen, shift it to the left the difference to
                 // display it all
-                var rect2 = spanTag.getBoundingClientRect();
+                const rect2 = spanTag.getBoundingClientRect();
                 if (rect2.right > window.innerWidth) {
                     spanTag.style.left = right - (rect2.right - window.innerWidth) + "px";
                 }
@@ -71,18 +77,22 @@ function HDXAddCustomTitles() {
 
         
 	        
-        // Adds a mouse event when it leaves an object with a custom title
-        // will grab the class(psuedo-ID) and change the spantags display to none
+        // Adds a mouse event when it leaves an object with a custom
+        // title will grab the class(psuedo-ID) and change the
+        // spantags display to none
         titles[x].addEventListener("mouseleave", function(event) {
             try {
-                var target = event.target;
-                var currClass = target.getAttribute("class"); // grabs the current class, acting as an ID
+                const target = event.target;
+		// grabs the current class, acting as an ID
+                let currClass = target.getAttribute("class");
                 currClass = currClass.substr(currClass.indexOf("Atitle"));
-                var classNodes = document.body.getElementsByClassName(currClass);
-                var spanTag = classNodes[1]; //Grabs the spanTag as it is always the 2nd element
-                var style = window.getComputedStyle(spanTag);
+                const classNodes =
+		      document.body.getElementsByClassName(currClass); 
+		// grabs the spanTag as it is always the 2nd element
+		const spanTag = classNodes[1];
+                const style = window.getComputedStyle(spanTag);
                 
-                var display = style.getPropertyValue("display");
+                const display = style.getPropertyValue("display");
                 if (display == "block") {
                     spanTag.style.display = "none";
                 }
@@ -94,9 +104,9 @@ function HDXAddCustomTitles() {
         }, false);
 	
         // obtains the text of the custom title and creates a text node
-        var titleValue= titles[x].getAttribute("custom-title");
-        var titleNode = document.createTextNode(titleValue);
-        var title = document.createElement("span");
+        const titleValue = titles[x].getAttribute("custom-title");
+        const titleNode = document.createTextNode(titleValue);
+        const title = document.createElement("span");
         // setAttribute
         // Adds attributes of Style to the span tag
         title.style.display = "none";
@@ -104,7 +114,7 @@ function HDXAddCustomTitles() {
         title.classList.add("data-title");
         title.style.position = "fixed";
 	
-        var rect = titles[x].getBoundingClientRect();
+        const rect = titles[x].getBoundingClientRect();
         title.style.left = "" + rect.left + "px";
         title.style.top = "" + rect.top + "px";
 
@@ -113,14 +123,14 @@ function HDXAddCustomTitles() {
         title.style.maxWidth = "550px";
         // adds the titleNode to title
         title.appendChild(titleNode);
-        var textt = title.innerHTML;
-        title.innerHTML = title.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        let textt = title.innerHTML;
+        title.innerHTML =
+	    title.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
         textt = textt.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
         // in case the label glitches
-        title.addEventListener("mouseenter",function(event) {
-            let target = event.target;
-            target.style.display = "none";
-        },false);
+        title.addEventListener("mouseenter", function(event) {
+            event.target.style.display = "none";
+        }, false);
         // span tag - title - is added to the body
         body.appendChild(title);
 	
@@ -137,23 +147,24 @@ function HDXAddCustomTitles() {
 function HDXUpdateCustomTitle(customSpanTag) {
     
     // Last previously known class with the prefix title
-    var lastClass = "";
+    let lastClass = "";
     // grabs all classes from the current tag
-    let classes = customSpanTag.classList;
+    const classes = customSpanTag.classList;
     for (let temp of classes) {
-        //if the current class has title in it
+        // if the current class has title in it
         if (temp.includes("Atitle")) {
-            //if last class was already a title
+            // if last class was already a title
             if (lastClass.includes("Atitle")) {
-                //remove the class title###... from the main tag
-                //get Elements both with the title###... and data-title classes
-                //find the span tag and remove that node
+                // remove the class title###... from the main tag get
+                // Elements both with the title###... and data-title
+                // classes find the span tag and remove that node
                 customSpanTag.classList.remove(lastClass);
-                let pickMe = lastClass + " data-title";
-                let spanTagRemove = document.getElementsByClassName(pickMe)[0];
+                const pickMe = lastClass + " data-title";
+                const spanTagRemove =
+		      document.getElementsByClassName(pickMe)[0];
                 spanTagRemove.parentNode.removeChild(spanTagRemove);
             }
-            //Last class is set to a title
+            // Last class is set to a title
             lastClass = temp;
         }   
     }
@@ -163,18 +174,18 @@ function HDXUpdateCustomTitle(customSpanTag) {
 // constant so no numbers double over and mess up the link between the
 // tags. OFFSET method
 function HDXGetLastCustomTitle() {
-    //last = length of data-title list -> Check to make sure theres
-    //at least one
-    let last = document.getElementsByClassName("data-title").length-1;
+    // last = length of data-title list -> Check to make sure theres
+    // at least one
+    const last = document.getElementsByClassName("data-title").length-1;
     if (last >= 0) {
         // Get the last indexed data-title class -> This directly relates with the
         // highest number one due to TOP to BOTTOM
-        let lastOne = document.getElementsByClassName("data-title")[last];
+        const lastOne = document.getElementsByClassName("data-title")[last];
         // Grabs the individual classes from the tag
-        let classes = lastOne.classList;
+        const classes = lastOne.classList;
         let theOne = "";
-        // Go through and check the tag's classes. If any have the pattern title#+
-        // make theOne equal to it
+        // Go through and check the tag's classes. If any have the
+        // pattern title#+ make theOne equal to it
         for (let title of classes) {
             if (/Atitle(\d+)/.test(title)) {
                 theOne = title;
