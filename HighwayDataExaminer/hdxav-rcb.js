@@ -206,7 +206,7 @@ const hdxPartitionerAV = {
             comment: "Sets the Partitions based on mid point",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                let mid = Math.trunc(thisAV.partitionSection.length/2) +
+                const mid = Math.trunc(thisAV.partitionSection.length/2) +
 		    thisAV.fp.lowerBound;                
 
                 // setting the partitions based on cutting axis
@@ -352,7 +352,7 @@ const hdxPartitionerAV = {
                 // filling 2d array with necessary data for hdxPart
                 hdxPart.numParts = thisAV.curNumParts;
                 hdxPart.parts = new Array(hdxPart.numParts);
-                var partnum = 0;
+                let partnum = 0;
                 for (let p = 0; p < thisAV.numPartitions; p++) {
                     if (thisAV.partitionStart[p] != 0 ||
 			thisAV.partitionEnd[p] != 0) {
@@ -561,7 +561,7 @@ const hdxPartitionerAV = {
     },
     
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -639,10 +639,10 @@ const hdxPartitionerAV = {
     },
     highlightBoundingBox() {
         this.extremes();
-        let nEnds = [[this.maxlat,this.minlon],[this.maxlat,this.maxlon]];
-        let sEnds = [[this.minlat,this.minlon],[this.minlat,this.maxlon]];
-        let eEnds = [[this.maxlat,this.maxlon],[this.minlat,this.maxlon]];
-        let wEnds = [[this.maxlat,this.minlon],[this.minlat,this.minlon]];
+        const nEnds = [[this.maxlat,this.minlon],[this.maxlat,this.maxlon]];
+        const sEnds = [[this.minlat,this.minlon],[this.minlat,this.maxlon]];
+	const eEnds = [[this.maxlat,this.maxlon],[this.minlat,this.maxlon]];
+        const wEnds = [[this.maxlat,this.minlon],[this.minlat,this.minlon]];
 	
         this.highlightPoly.push(
             L.polyline(nEnds, visualSettings.undiscovered)
