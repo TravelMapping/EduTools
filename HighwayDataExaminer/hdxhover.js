@@ -9,7 +9,7 @@
 // variables and functions to highlight waypoints and connections
 // when the mouse hovers over them
 
-var hdxHover = {
+const hdxHover = {
     vcolor: null,
     vtext: null,
     vicon: null,
