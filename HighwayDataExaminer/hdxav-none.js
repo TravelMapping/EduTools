@@ -30,7 +30,7 @@ const hdxNoAV = {
     },
 
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
     },
 
