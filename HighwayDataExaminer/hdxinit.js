@@ -76,7 +76,7 @@ function HDXInit() {
 
     // if the av= QS parameter is present, try to set the current AV
     if (HDXQSIsSpecified("av")) {
-        let value = HDXQSValue("av");
+        const value = HDXQSValue("av");
 	for (let i = 0; i < hdxAV.avList.length; i++) {
             if ( value == hdxAV.avList[i].value) {
 		hdxAV.currentAV = hdxAV.avList[i];
@@ -92,7 +92,7 @@ function HDXInit() {
     // Note: entries here match those in the construction of the speed
     // dropdown in index.php and in the speedChanged function
     if (HDXQSIsSpecified("avspeed")) {
-	let value = HDXQSValue("avspeed");
+	const value = HDXQSValue("avspeed");
 	let setVal = "NOTFOUND";
 	switch (value) {
 	case "-2":
