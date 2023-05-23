@@ -6,7 +6,7 @@
 // Primary Authors: Michael Plekan
 //
 
-var hdxComputePartStats = {
+const hdxComputePartStats = {
     // entries for list of avs
     value: 'partstats',
 
@@ -70,7 +70,7 @@ var hdxComputePartStats = {
     
     setupUI() {
         // sets up HTML for options
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -84,31 +84,5 @@ var hdxComputePartStats = {
     
     idOfAction(action) {
         return action.label;
-    },
-
-     // note this is currently not working
-     setConditionalBreakpoints(name) {
-        let max = waypoints.length-1;
-        let temp = HDXCommonConditionalBreakpoints(name);
-        if (temp != "No innerHTML") {
-            return temp;
-        }
-        switch (name) {
-            case "isLeaf":
-                html = createInnerHTMLChoice("boolean","",
-                                             "",
-                                             "");
-                return html;
-                
-            }
-        return "No innerHTML";
-    },
-    // note this is currently not working
-    hasConditionalBreakpoints(name) {
-        let answer = HDXHasCommonConditionalBreakpoints(name);
-        if (answer) {
-            return true;
-        }
-        return false;
     }
 }
