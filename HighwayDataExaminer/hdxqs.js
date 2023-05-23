@@ -14,21 +14,21 @@
 // HDXQS.load = "NY-region-collapsed.tmg"
 //
 // being one of its properties
-var hdxQS = new Object();
+const hdxQS = new Object();
 
 // populate the object - this should be called on page load
 function HDXInitQS() {
     
     // get the part of the URL that would contain QS parameters
-    var qs = location.search.substring(1);
+    const qs = location.search.substring(1);
 
     // split into the QS parameters
-    var qsitems = qs.split('&');
+    const qsitems = qs.split('&');
 
     // for each one, get the parameter and value and add
     // properties to the object
     for (let i = 0; i < qsitems.length; i++) {
-        var qsitem = qsitems[i].split('=');
+        const qsitem = qsitems[i].split('=');
 	if (qsitem.length > 1) {
 	    hdxQS[qsitem[0]] = qsitem[1];
 	}
@@ -106,14 +106,14 @@ function HDXQSRegisterAndSetSelectList(av, field, selectid) {
 	    type: "select"
 	}
     );
-    let elt = document.getElementById(selectid);
+    const elt = document.getElementById(selectid);
     if (elt == null) {
 	alert("Internal warning: AV " + av.value + " QS parameter " + field +
 	     " using undefined DOM element id " + selectid + ", ignoring.");
 	return;
     }
     if (HDXQSIsSpecified(field)) {
-	let qsval = HDXQSValue(field);
+	const qsval = HDXQSValue(field);
 
 	// loop over entries, return as soon as we have a successful match
         for (let i = 0; i < elt.length; i++) {
@@ -146,16 +146,16 @@ function HDXQSRegisterAndSetNumber(av, field, inputid, minval, maxval) {
 	    max: maxval
 	}
     );
-    let elt = document.getElementById(inputid);
+    const elt = document.getElementById(inputid);
     if (elt == null) {
 	alert("Internal warning: AV " + av.value + " QS parameter " + field +
 	     " using undefined DOM element id " + inputid + ", ignoring.");
 	return;
     }
     if (HDXQSIsSpecified(field)) {
-	let qsval = HDXQSValue(field);
+	const qsval = HDXQSValue(field);
 	if (!isNaN(qsval)) {
-	    let numval = parseFloat(qsval);
+	    const numval = parseFloat(qsval);
 	    if (numval >= minval && numval <= maxval) {
                 elt.value = numval;
 		// in case we have an onchange listener, make sure it gets
@@ -182,14 +182,14 @@ function HDXQSRegisterAndSetCheckbox(av, field, inputid) {
 	    type: "checkbox"
 	}
     );
-    let elt = document.getElementById(inputid);
+    const elt = document.getElementById(inputid);
     if (elt == null) {
 	alert("Internal warning: AV " + av.value + " QS parameter " + field +
 	     " using undefined DOM element id " + inputid + ", ignoring.");
 	return;
     }
     if (HDXQSIsSpecified(field)) {
-	let qsval = HDXQSValue(field);
+	const qsval = HDXQSValue(field);
 	if (qsval == "true" || qsval == "false") {
             elt.checked = (qsval == "true");
 	    // in case we have an onchange listener, make sure it gets
