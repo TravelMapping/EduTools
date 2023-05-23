@@ -305,7 +305,7 @@ const hdxVertexExtremesSearchAV = {
 		if (thisAV.showAvgOfCoords) {
 
             let icon;
-            let avgOptions = {
+            const avgOptions = {
                 iconShape: 'circle-dot',
                 iconSize: [5, 5],
                 iconAnchor: [5, 5],
@@ -773,7 +773,7 @@ const hdxVertexExtremesSearchAV = {
         this.showBB = document.getElementById("boundingBox").checked;
 
         // are we handling ties?
-        let tS = document.getElementById("tieHandling");
+        const tS = document.getElementById("tieHandling");
         this.trackTies = tS.options[tS.selectedIndex].value == "all";
         
         // are we finding shortest/longest labels?
@@ -981,7 +981,7 @@ avg.lng &larr; lngsum<br />
 
     // set up UI for the start of this algorithm
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
