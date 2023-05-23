@@ -557,9 +557,9 @@ const hdxTraversalsSpanningAVCommon = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 // build list of neighbors to visit
-                let neighbors = getAdjacentPoints(thisAV.visiting.vIndex);
+                const neighbors = getAdjacentPoints(thisAV.visiting.vIndex);
                 for (let i = 0; i < neighbors.length; i++) {
-                    let connection = waypoints[thisAV.visiting.vIndex].edgeList[i].edgeListIndex;
+                    const connection = waypoints[thisAV.visiting.vIndex].edgeList[i].edgeListIndex;
                     // add to list of neighbors unless it's where we just
                     // came from
                     if (connection != thisAV.visiting.connection) {
@@ -720,7 +720,7 @@ const hdxTraversalsSpanningAVCommon = {
                 // object to highlight the component, just need to set its
                 // color to the one for the component number first
 
-                let vs = {
+                const vs = {
                     textColor: "white",
                     scale: 3,
                     name: "completedComponent" + thisAV.componentNum,
@@ -845,7 +845,7 @@ const hdxTraversalsSpanningAVCommon = {
                         while (place != treeEdge.vIndex) {
                             // hide line, it's not part of the path
                             if (place != thisAV.endingVertex) {
-                                let tr = document.getElementById("foundPaths" + plIndex);
+                                const tr = document.getElementById("foundPaths" + plIndex);
                                 if (tr != null) {
                                     tr.style.display = "none";
                                 }
@@ -946,12 +946,12 @@ const hdxTraversalsSpanningAVCommon = {
     // format an LDV entry for addition to the found table
     addLDVEntryToFoundTable(item, maxLabelLength, precision, count) {
 
-        let newtr = document.createElement("tr");
+        const newtr = document.createElement("tr");
         let edgeLabel;
         let fullEdgeLabel;
         let fromLabel;
         let fullFromLabel;
-        let vLabel = shortLabel(waypoints[item.vIndex].label, 10);
+        const vLabel = shortLabel(waypoints[item.vIndex].label, 10);
         if (item.connection == -1) {
             edgeLabel = "(START)";
             fullEdgeLabel = "(START)";
@@ -992,7 +992,7 @@ const hdxTraversalsSpanningAVCommon = {
     // format an LDV entry for display in a log message
     formatLDVEntry(item) {
 
-        let vIndex = item.vIndex;
+        const vIndex = item.vIndex;
         let edgeLabel;
         if (item.connection == -1) {
             edgeLabel = ", the starting vertex";
@@ -1032,7 +1032,7 @@ const hdxTraversalsSpanningAVCommon = {
                             displayLDVItem);
 
         // update stopping condition
-        let selector = document.getElementById("stoppingCondition");
+        const selector = document.getElementById("stoppingCondition");
         this.stoppingCondition =
             selector.options[selector.selectedIndex].value;
         
@@ -1043,7 +1043,7 @@ const hdxTraversalsSpanningAVCommon = {
 
     // set up common UI components for traversals/spanning trees
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -1117,8 +1117,8 @@ const hdxTraversalsSpanningAVCommon = {
 // event handler when stopping condition option selector changes
 function stoppingConditionChanged() {
 
-    let selector = document.getElementById("stoppingCondition");
-    let endSelector = document.getElementById("endPoint");
+    const selector = document.getElementById("stoppingCondition");
+    const endSelector = document.getElementById("endPoint");
     endSelector.disabled =
         selector.options[selector.selectedIndex].value != "StopAtEnd";
 }
@@ -1153,7 +1153,7 @@ hdxGraphTraversalsAV.distEntry = "Hops";
 // required function to create an appropriate list of discovered vertices
 hdxGraphTraversalsAV.createLDV = function() {
     
-    let d = document.getElementById("traversalDiscipline");
+    const d = document.getElementById("traversalDiscipline");
     this.traversalDiscipline = d.options[d.selectedIndex].value;
     let ldv;
     if (this.traversalDiscipline == "BFS") {
