@@ -13,18 +13,18 @@ function HDXCreateBasicGraphSelectionMenu() {
     HDXGraphBoxStart();
     
     // Creates and sets the attributes pf our search bar
-    var box = document.createElement("input");
+    const box = document.createElement("input");
     box.setAttribute("class", "typeahead");
     box.setAttribute("type", "text");
     box.setAttribute("id", "searchBox");
     box.setAttribute("placeholder", "Start typing to get suggestions");
     
     // Datapanel to contain all of the elements
-    var dataPanel = document.getElementById("loadDataPanel");
+    const dataPanel = document.getElementById("loadDataPanel");
     dataPanel.innerHTML = "";
     
     // Back Button
-    var back = document.createElement("button");
+    const back = document.createElement("button");
     back.setAttribute("id", "back");
     back.innerHTML = "Back";
     dataPanel.appendChild(back);
@@ -37,13 +37,13 @@ function HDXCreateBasicGraphSelectionMenu() {
     }
     
     // Spacing on the panel
-    var br = document.createElement("br");
+    const br = document.createElement("br");
     dataPanel.appendChild(br);
     dataPanel.appendChild(br);
     dataPanel.appendChild(br);
     
     // Instructions for the Grpah Search Box
-    var instructions = document.createElement("p");
+    const instructions = document.createElement("p");
     instructions.innerHTML = "Search by name for a METAL graph";
     dataPanel.appendChild(instructions);
     /*var instr2 = document.createElement("p");
@@ -53,7 +53,7 @@ function HDXCreateBasicGraphSelectionMenu() {
     dataPanel.appendChild(instr2);*/
     
     // Container for the input element
-    var basic = document.createElement("div");
+    const basic = document.createElement("div");
     basic.setAttribute("id", "basicgraphsearch");
     basic.appendChild(box);
     
@@ -61,7 +61,7 @@ function HDXCreateBasicGraphSelectionMenu() {
     dataPanel.appendChild(basic);
     
     // makes the next button
-    var next = document.createElement("button");
+    const next = document.createElement("button");
     next.setAttribute("id", "next");
     next.innerHTML = "Next";
     next.addEventListener("click", HDXGraphSearchNextPressed);
@@ -76,13 +76,13 @@ var graphCategoryLabels = [];
 /* build the advanced graph selection menu */
 function advancedMenu() {
     
-    var dataPanel = document.getElementById("loadDataPanel");
+    const dataPanel = document.getElementById("loadDataPanel");
     
     dataPanel.innerHTML = "";
     
-    var br = document.createElement("br");
+    const br = document.createElement("br");
     
-    var back = document.createElement("button");
+    const back = document.createElement("button");
     back.setAttribute("id", "back2");
     back.innerHTML = "Back";
     
@@ -91,7 +91,7 @@ function advancedMenu() {
     container = document.createElement("div");
     container.setAttribute("id", "selects")
     
-    var title = document.createElement("h4");
+    const title = document.createElement("h4");
     title.innerHTML = "Advanced Graph Data Search";
     title.setAttribute("id", "advancedTitle");
     container.appendChild(title);
@@ -104,16 +104,16 @@ function advancedMenu() {
     }
 
     // graph archive set selection
-    var archiveSetP = document.createElement("p");
+    const archiveSetP = document.createElement("p");
     archiveSetP.innerHTML = "Graph Set";
     container.appendChild(archiveSetP);
     container.innerHTML += "<br>";
 
-    var selectArchive = document.createElement("select");
+    const selectArchive = document.createElement("select");
     selectArchive.setAttribute("id", "graphArchive");
     
     // first and default option is for current graphs
-    var optCurrent = document.createElement("option");
+    const optCurrent = document.createElement("option");
     optCurrent.setAttribute("value", "current");
     optCurrent.innerHTML = "Most Recent Graphs";
     if (hdxGlobals.graphSet == "current") {
@@ -123,7 +123,7 @@ function advancedMenu() {
 
     // get remaining archive sets and populate
     for (let i = 0; i < hdxGlobals.graphArchiveSets.length; i++) {
-	let category = document.createElement("option");
+	const category = document.createElement("option");
 	category.innerHTML = hdxGlobals.graphArchiveSets[i].descr;
 	category.setAttribute("value", hdxGlobals.graphArchiveSets[i].setName);
 	if (hdxGlobals.graphSet == hdxGlobals.graphArchiveSets[i].setName) {
@@ -135,25 +135,25 @@ function advancedMenu() {
     container.appendChild(selectArchive);
     container.innerHTML += "<br>";
 
-    var sortP = document.createElement("p");
+    const sortP = document.createElement("p");
     sortP.innerHTML = "Sort by";
     container.appendChild(sortP);
     container.innerHTML += "<br>";
     
-    var select = document.createElement("select");
+    const select = document.createElement("select");
     select.setAttribute("id", "orderOptions");
     
-    var opt1 = document.createElement("option");
+    const opt1 = document.createElement("option");
     opt1.setAttribute("value", "alpha");
     opt1.innerHTML = "Alphabetical";
     select.appendChild(opt1);
     
-    var opt2 = document.createElement("option");
+    const opt2 = document.createElement("option");
     opt2.setAttribute("value", "small");
     opt2.innerHTML = "Smallest First";
     select.appendChild(opt2);
     
-    var opt3 = document.createElement("option");
+    const opt3 = document.createElement("option");
     opt3.setAttribute("value", "large");
     opt3.innerHTML = "Largest First";
     select.appendChild(opt3);
@@ -161,30 +161,30 @@ function advancedMenu() {
     container.appendChild(select);
     container.innerHTML += "<br>";
     
-    var formatP = document.createElement("p");
+    const formatP = document.createElement("p");
     formatP.innerHTML = "Format";
     container.appendChild(formatP);
     container.innerHTML += "<br>";
     
-    var select2 = document.createElement("select");
+    const select2 = document.createElement("select");
     select2.setAttribute("id", "restrictOptions");
     
-    var optA = document.createElement("option");
+    const optA = document.createElement("option");
     optA.setAttribute("value", "collapsed");
     optA.innerHTML = "Standard";
     select2.appendChild(optA);
     
-    var optB = document.createElement("option");
+    const optB = document.createElement("option");
     optB.setAttribute("value", "traveled");
     optB.innerHTML = "Traveled (include traveler info)";
     select2.appendChild(optB);
     
-    var optC = document.createElement("option");
+    const optC = document.createElement("option");
     optC.setAttribute("value", "simple");
     optC.innerHTML = "Simple (straight line edges only)";
     select2.appendChild(optC);
     
-    var optD = document.createElement("option");
+    const optD = document.createElement("option");
     optD.setAttribute("value", "all");
     optD.innerHTML = "All";
     select2.appendChild(optD);
@@ -192,17 +192,17 @@ function advancedMenu() {
     container.appendChild(select2);
     container.innerHTML += "<br>";
     
-    var categoryP = document.createElement("p");
+    const categoryP = document.createElement("p");
     categoryP.innerHTML = "Category";
     container.appendChild(categoryP);
     container.innerHTML += "<br>";
 
     // selection for graph categories
-    var select3 = document.createElement("select");
+    const select3 = document.createElement("select");
     select3.setAttribute("id", "categoryOptions");
 
     // first and default option is for all graphs
-    var optAll = document.createElement("option");
+    const optAll = document.createElement("option");
     optAll.setAttribute("value", "all");
     optAll.innerHTML = "All Graphs";
     select3.appendChild(optAll);
@@ -219,13 +219,13 @@ function advancedMenu() {
     container.appendChild(select3);
     container.innerHTML += "<br>";
     
-    var sizeP = document.createElement("p");
+    const sizeP = document.createElement("p");
     sizeP.innerHTML = "Vertices";
     sizeP.setAttribute("id", "vert");
     container.appendChild(sizeP);
     container.innerHTML += "<br>";
     
-    var min = document.createElement("input");
+    const min = document.createElement("input");
     min.setAttribute("type", "number");
     min.setAttribute("min", "1");
     min.setAttribute("value", "1");
@@ -233,12 +233,12 @@ function advancedMenu() {
     min.setAttribute("style", "width:5rem;");
     container.appendChild(min);
     
-    var sizeP2 = document.createElement("p");
+    const sizeP2 = document.createElement("p");
     sizeP2.innerHTML = "to";
     sizeP2.setAttribute("id", "to");
     container.appendChild(sizeP2);
     
-    var max = document.createElement("input");
+    const max = document.createElement("input");
     max.setAttribute("type", "number");
     max.setAttribute("min", "1");
     max.setAttribute("value", "2000");
@@ -248,11 +248,11 @@ function advancedMenu() {
     container.innerHTML += "<br>";
     
     // back button
-    var back = document.createElement("button");
-    back.setAttribute("id", "back2");
-    back.innerHTML = "Back";
+    const back2 = document.createElement("button");
+    back2.setAttribute("id", "back2");
+    back2.innerHTML = "Back";
     
-    var getList = document.createElement("input");
+    const getList = document.createElement("input");
     getList.setAttribute("type", "button");
     getList.setAttribute("value", "Get Graph List");
     getList.setAttribute("id", "getlist");
@@ -264,11 +264,11 @@ function advancedMenu() {
 
 function loadingMenu() {
 
-    var dataPanel = document.getElementById("loadDataPanel");
+    const dataPanel = document.getElementById("loadDataPanel");
     
     dataPanel.innerHTML = "";
     
-    var loading = document.createElement("p");
+    const loading = document.createElement("p");
     loading.setAttribute("id", "loading");
     loading.innerHTML = "Loading...";
     
@@ -286,25 +286,25 @@ function newGraphMenu() {
             hdxAV.startPause.innerHTML = "Resume";
         }
     }
-    var mainbox = document.getElementById("loadDataPanel");
+    const mainbox = document.getElementById("loadDataPanel");
     
     // clear it
     mainbox.innerHTML = "";
     
-    var br = document.createElement("br");
+    const br = document.createElement("br");
     
-    var cancel = document.createElement("button");
+    const cancel = document.createElement("button");
     cancel.setAttribute("id", "cancel");
     cancel.innerHTML = "Cancel";
     cancel.addEventListener("click", hideLoadDataPanel)
     mainbox.appendChild(cancel);
     
-    var instruct = document.createElement("p");
+    const instruct = document.createElement("p");
     instruct.innerHTML = "Search for a graph in our database";
     
     mainbox.appendChild(instruct);
     
-    var basicSearch = document.createElement("button");
+    const basicSearch = document.createElement("button");
     basicSearch.setAttribute("class", "opt");
     basicSearch.innerHTML = "Basic Search";
     
@@ -312,7 +312,7 @@ function newGraphMenu() {
     
     basicSearch.addEventListener("click", HDXCreateBasicGraphSelectionMenu);
     
-    var advanced = document.createElement("button");
+    const advanced = document.createElement("button");
     advanced.setAttribute("class", "opt");
     advanced.innerHTML = "Advanced Search";
     mainbox.appendChild(advanced);
@@ -321,13 +321,13 @@ function newGraphMenu() {
     
     mainbox.appendChild(br);
     
-    var or = document.createElement("p");
+    const or = document.createElement("p");
     or.setAttribute("id", "or")
     or.innerHTML = "or";
     
     mainbox.appendChild(or);
     
-    var uploadLabel = document.createElement("label");
+    const uploadLabel = document.createElement("label");
     uploadLabel.setAttribute("for", "fileToLoad");
     uploadLabel.setAttribute("id", "uploadLabel");
     uploadLabel.innerHTML = "Upload File";
@@ -335,7 +335,7 @@ function newGraphMenu() {
     
     mainbox.appendChild(br);
     
-    var uploadIn = document.createElement("input");
+    const uploadIn = document.createElement("input");
     uploadIn.setAttribute("id", "fileToLoad");
     uploadIn.setAttribute("name", "fileToLoad");
     uploadIn.setAttribute("type", "file");
@@ -343,7 +343,7 @@ function newGraphMenu() {
     uploadIn.setAttribute("accept", ".tmg, .wpt, .pth, .nmp, .gra, .wpl");
     uploadIn.setAttribute("onChange", "HDXStartFileselectorRead('fileToLoad')");
     
-    var bod = document.querySelector("body");
+    const bod = document.querySelector("body");
     
     bod.appendChild(uploadIn);
     mainbox.style.display = "";
@@ -352,31 +352,31 @@ function newGraphMenu() {
 
 function defaultMenu() {
 
-    var mainbox = document.getElementById("loadDataPanel");
+    const mainbox = document.getElementById("loadDataPanel");
     
     // clear it
     mainbox.innerHTML = "";
     
-    var h3 = document.createElement("h3");
+    const h3 = document.createElement("h3");
     h3.innerHTML = "METAL HDX";
     mainbox.appendChild(h3);
     
-    var intro = document.createElement("p");
+    const intro = document.createElement("p");
     intro.setAttribute("class", "descr");
     intro.setAttribute("id", "overview");
     intro.innerHTML = "Visualize algorithms on maps using real world highway data";
     mainbox.appendChild(intro);
     
-    var br = document.createElement("br");
+    const br = document.createElement("br");
     mainbox.appendChild(br);
     
     
-    var instruct = document.createElement("p");
+    const instruct = document.createElement("p");
     instruct.innerHTML = "Load a graph from the METAL database";
     
     mainbox.appendChild(instruct);
     
-    var basicSearch = document.createElement("button");
+    const basicSearch = document.createElement("button");
     basicSearch.setAttribute("class", "opt");
     basicSearch.innerHTML = "Basic Search";
     
@@ -384,7 +384,7 @@ function defaultMenu() {
     
     basicSearch.addEventListener("click", HDXCreateBasicGraphSelectionMenu);
     
-    var advanced = document.createElement("button");
+    const advanced = document.createElement("button");
     advanced.setAttribute("class", "opt");
     advanced.innerHTML = "Advanced Search";
     mainbox.appendChild(advanced);
@@ -393,13 +393,13 @@ function defaultMenu() {
     
     mainbox.appendChild(br);
     
-    var or = document.createElement("p");
+    const or = document.createElement("p");
     or.setAttribute("id", "or")
     or.innerHTML = "or";
     
     mainbox.appendChild(or);
     
-    var uploadLabel = document.createElement("label");
+    const uploadLabel = document.createElement("label");
     uploadLabel.setAttribute("for", "fileToLoad");
     uploadLabel.setAttribute("id", "uploadLabel");
     uploadLabel.innerHTML = "Upload File";
@@ -407,7 +407,7 @@ function defaultMenu() {
     
     mainbox.appendChild(br);
     
-    var uploadIn = document.createElement("input");
+    const uploadIn = document.createElement("input");
     uploadIn.setAttribute("id", "fileToLoad");
     uploadIn.setAttribute("name", "fileToLoad");
     uploadIn.setAttribute("type", "file");
@@ -415,12 +415,12 @@ function defaultMenu() {
     uploadIn.setAttribute("accept", ".tmg, .wpt, .pth, .nmp, .gra, .wpl");
     uploadIn.setAttribute("onChange", "HDXStartFileselectorRead('fileToLoad')");
     
-    var bod = document.querySelector("body");
+    const bod = document.querySelector("body");
     
     bod.appendChild(uploadIn);
     mainbox.appendChild(br);
     
-    var help = document.createElement("p");
+    const help = document.createElement("p");
     help.setAttribute("class", "descr");
     help.innerHTML = "Need help?  HDX tips can be found <a href='https://courses.teresco.org/metal/tips.html' target='_blank'>here</a>.";
     mainbox.appendChild(help);
