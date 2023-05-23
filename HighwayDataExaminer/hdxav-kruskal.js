@@ -51,8 +51,8 @@ const hdxKruskalAV = {
     
     isCycle: function(edgeNum) {
 
-        let vertex1 = graphEdges[edgeNum].v1;
-        let vertex2 = graphEdges[edgeNum].v2;
+        const vertex1 = graphEdges[edgeNum].v1;
+        const vertex2 = graphEdges[edgeNum].v2;
         
         //can't be a cycle unless both endpoints are already in spanning tree
         if (!this.componentVList.includes(vertex1) || 
@@ -63,12 +63,12 @@ const hdxKruskalAV = {
         //depth first search for path from vertex1 to vertex2 
         let treeV1Index = this.componentVList.indexOf(vertex1);
         let treeV2Index = this.componentVList.indexOf(vertex2);
-        let stack = [];
+        const stack = [];
         let discoveredV = [];
         stack.push(treeV1Index);
         
         while (stack.length != 0) {
-            let currentV = stack.pop();
+            const currentV = stack.pop();
 
             //if we have found a path to v2 it is a cycle
             if (currentV == treeV2Index) {
@@ -170,7 +170,7 @@ const hdxKruskalAV = {
 
                 // need to make method to determine if adding an edge would create a cycle
                 //if MST contains both vertices do a dfs to check for cycle between them
-                let cycle = thisAV.isCycle(thisAV.visiting.connection);
+                const cycle = thisAV.isCycle(thisAV.visiting.connection);
                 if (cycle) {
                     hdxAV.nextAction = "isCycle";
                 }
@@ -219,8 +219,8 @@ const hdxKruskalAV = {
                     visualSettings.spanningTree);
 
                 // was just discovered, now part of spanning tree
-                let vertex1 = graphEdges[thisAV.visiting.connection].v1;
-                let vertex2 = graphEdges[thisAV.visiting.connection].v2;
+                const vertex1 = graphEdges[thisAV.visiting.connection].v1;
+                const vertex2 = graphEdges[thisAV.visiting.connection].v2;
 
                 if (!thisAV.componentVList.includes(vertex1)) {
                     thisAV.componentVList.push(vertex1);
@@ -247,7 +247,7 @@ const hdxKruskalAV = {
                     
                 //add edge to spanning tree vertex's adjacency list
                 for (let i = 0; i < thisAV.componentVList.length; i++) {
-                    let vertex = thisAV.componentVList[i];
+                    const vertex = thisAV.componentVList[i];
                     if (vertex == vertex1) {
                         thisAV.componentVAdj[i].push(thisAV.componentVList.indexOf(vertex2));
                     }
@@ -292,7 +292,7 @@ const hdxKruskalAV = {
 
     // format an LDV entry for addition to the found table
     addLDVEntryToFoundTable(item, maxLabelLength, precision, count) {
-        let newtr = document.createElement("tr");
+        const newtr = document.createElement("tr");
         let edgeLabel;
         let fullEdgeLabel;
         let endpoints;
@@ -319,7 +319,7 @@ const hdxKruskalAV = {
     },
 
     updateControlEntries() {
-        let numComponents = this.numVSpanningTree - this.numESpanningTree;
+        const numComponents = this.numVSpanningTree - this.numESpanningTree;
         let componentLabel = " Components";
         if (numComponents == 1) componentLabel = " Component";
         updateAVControlEntry("undiscovered", "Undiscovered: " +
@@ -384,7 +384,7 @@ const hdxKruskalAV = {
         
     // set up UI for the start of edge search
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
@@ -398,7 +398,7 @@ const hdxKruskalAV = {
         addEntryToAVControlPanel("currentSpanningTree", visualSettings.spanningTree);
         addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
         addEntryToAVControlPanel("found", visualSettings.spanningTree);
-        let foundEntry = '<span id="foundEntriesCount">0</span>' +
+        const foundEntry = '<span id="foundEntriesCount">0</span>' +
             ' <span id="foundTableLabel">Edges in Minimum Spanning Tree/Forest</span>' +
             '<span id="totalTreeCost"></span>' + '<br />' +
             '<table class="pathTable"><thead>' +
