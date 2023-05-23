@@ -7,7 +7,7 @@
 //
 
 // algorithm visualization color settings and other parameters
-var visualSettings = {
+const visualSettings = {
     // first, some used by many algorithms
     
     undiscovered: {
