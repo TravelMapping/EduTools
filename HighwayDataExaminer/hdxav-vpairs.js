@@ -116,7 +116,7 @@ var hdxVertexPairsAV = {
                     updateAVControlEntry("v1visiting", "v<sub>1</sub>: #" + thisAV.v1 + " " + waypoints[thisAV.v1].label);
                     // all subsequent vertices will be looped over and should
                     // go back to undiscovered for now
-                    for (var i = thisAV.v1+1; i < waypoints.length; i++) {
+                    for (let i = thisAV.v1+1; i < waypoints.length; i++) {
                         updateMarkerAndTable(i, visualSettings.undiscovered,
                                              20, false);
                     }

@@ -238,7 +238,7 @@ var hdxQuadtreeAV = {
                     hdxAV.nextAction = thisAV.callStack.pop();
                 }
 		else {
-                    for (var i = 0; i < thisAV.currentQuadtree.points.length; i++) {
+                    for (let i = 0; i < thisAV.currentQuadtree.points.length; i++) {
                         updateMarkerAndTable(thisAV.currentQuadtree.points[i].num,visualSettings.discovered,
 					     31,false);
                     }
@@ -537,7 +537,7 @@ var hdxQuadtreeAV = {
                 updateAVControlEntry("visiting","");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
-                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                     thisAV.highlightPoly[i].remove();
                 }
             },
@@ -650,10 +650,10 @@ var hdxQuadtreeAV = {
 
     cleanupUI() {
         // remove all the polylines made by the bounding box and the quadtree
-        for (var i = 0; i < this.boundingPoly.length; i++) {
+        for (let i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].remove();
         }
-        for (var i = 0; i < this.highlightPoly.length; i++) {
+        for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
         this.boundingPoly = [];
@@ -671,7 +671,7 @@ var hdxQuadtreeAV = {
         this.s = parseFloat(waypoints[0].lat);
         this.e = parseFloat(waypoints[0].lon);
         this.w = parseFloat(waypoints[0].lon);
-        for (var i = 1; i < waypoints.length; i++) {
+        for (let i = 1; i < waypoints.length; i++) {
 
             if (waypoints[i].lat > this.n) {
                 this.n = parseFloat(waypoints[i].lat);
@@ -747,7 +747,7 @@ var hdxQuadtreeAV = {
             }) 
         );
 	
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             this.boundingPoly[i].addTo(map);
         }
     },
@@ -770,13 +770,13 @@ var hdxQuadtreeAV = {
                 weight: 3
             })
         );
-        for (var i = 0; i < this.boundingPoly.length; i++) {
+        for (let i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].addTo(map);
         }
     },
     
     highlightBoundingBox() {
-        for (var i = 0; i < this.highlightPoly.length; i++) {
+        for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
         this.highlightPoly = [];
@@ -804,7 +804,7 @@ var hdxQuadtreeAV = {
             L.polyline(wEnds, visualSettings.highlightBounding) 
         );
 
-        for (var i = 0; i < this.highlightPoly.length; i++) {
+        for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].addTo(map);
         }
     }    
@@ -833,7 +833,7 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.points.length == this.refinement) {
            this.makeChildren();
 
-            for (var i = 0; i < this.points.length; i++) {
+            for (let i = 0; i < this.points.length; i++) {
                 this.childThatContains(this.points[i].lat,this.points[i].lon).add(this.points[i]);
             }
             this.points = [];
@@ -871,7 +871,7 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
     }
     this.get = function(lat,lng) {
         if (this.isLeaf()) {
-            for (var i = 0; i < points.length; i++) {
+            for (let i = 0; i < points.length; i++) {
                 if (this.points[i].lat == lat && points[i].lon == lng) {
                     return this.points[i];
                 }

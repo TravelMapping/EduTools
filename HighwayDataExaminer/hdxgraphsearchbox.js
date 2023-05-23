@@ -41,7 +41,7 @@ function HDXGraphSearchInit() {
             var filenames = opts['filenames'];
 	    var descriptions = opts['descriptions'];
 	    // copy into our arrays used by the search box
-            for (var i = 0; i < filenames.length; i++) {
+            for (let i = 0; i < filenames.length; i++) {
                 HDXGraphs[descriptions[i]] = filenames[i];
 		HDXGraphDescriptions.push(descriptions[i]);
 	    }

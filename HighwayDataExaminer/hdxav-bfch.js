@@ -281,7 +281,7 @@ var hdxBFConvexHullAV = {
                 thisAV.hullvtest = -1;  // will increment to 0 to start
 
                 // mark all as unvisited except v1 and v2
-                for (var i = 0; i < waypoints.length; i++) {
+                for (let i = 0; i < waypoints.length; i++) {
                     if (i != thisAV.hullv1 && i != thisAV.hullv2) {
                         updateMarkerAndTable(i, visualSettings.undiscovered);
                     }
@@ -537,11 +537,11 @@ var hdxBFConvexHullAV = {
 
                 // restore coloring
                 // mark all as unvisited except v1 and v2
-                for (var i = 0; i < waypoints.length; i++) {
+                for (let i = 0; i < waypoints.length; i++) {
                     updateMarkerAndTable(i, visualSettings.undiscovered);
                 }
                 // restore coloring of hull segment endpoints
-                for (var i = 0; i < thisAV.hullPoints.length; i++) {
+                for (let i = 0; i < thisAV.hullPoints.length; i++) {
                     updateMarkerAndTable(thisAV.hullPoints[i],
                                          thisAV.visualSettings.hullComponent);
                 }
@@ -688,7 +688,7 @@ var hdxBFConvexHullAV = {
     cleanupUI() {
 
 	// the convex hull segments
-        for (var i = 0; i < this.hullSegments.length; i++) {
+        for (let i = 0; i < this.hullSegments.length; i++) {
             this.hullSegments[i].remove();
         }
 

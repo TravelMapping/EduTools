@@ -88,7 +88,7 @@ var hdxDegreeAV = {
             comment: "initialize all leader indices to 0",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     thisAV.categories[i].index = 0;
                     thisAV.categories[i].tiedWith = [];
                 }
@@ -211,10 +211,10 @@ var hdxDegreeAV = {
                 
                 // this is a loop to check all old leaders
                 // not just the first when checking ties
-                for (var oldLIndex = 0; oldLIndex < oldLeaders.length; oldLIndex++) {
+                for (let oldLIndex = 0; oldLIndex < oldLeaders.length; oldLIndex++) {
                     let oldLeader = oldLeaders[oldLIndex];
                     let stillALeader = false;
-                    for (var i = 0; i < thisAV.categories.length; i++) {
+                    for (let i = 0; i < thisAV.categories.length; i++) {
                         if (i == thisAV.nextCategory) continue;
                         if ((thisAV.categories[i].index == oldLeader) ||
                             thisAV.categories[i].tiedWith.includes(oldLeader)) {
@@ -359,7 +359,7 @@ var hdxDegreeAV = {
                 // if this waypoint is the leader in any category, show it,
                 // otherwise it gets discarded
                 if (thisAV.foundNewLeader) {
-                    for (var i = 0; i < thisAV.categories.length; i++) {
+                    for (let i = 0; i < thisAV.categories.length; i++) {
                         if ((thisAV.nextToCheck == thisAV.categories[i].index) ||
                             thisAV.categories[i].tiedWith.includes(thisAV.nextToCheck)) {
                             updateMarkerAndTable(thisAV.nextToCheck,
@@ -450,7 +450,7 @@ var hdxDegreeAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
         addEntryToAVControlPanel("visiting", visualSettings.visiting);
         addEntryToAVControlPanel("discarded", visualSettings.discarded);
-        for (var i = 0; i < this.categories.length; i++) {
+        for (let i = 0; i < this.categories.length; i++) {
                 addEntryToAVControlPanel(this.categories[i].name,
                                          this.categories[i].visualSettings);
         }

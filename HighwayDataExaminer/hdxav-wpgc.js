@@ -334,7 +334,7 @@ var hdxWPGraphColoringAV = {
     },
     
     hoverC(p) {
-        for (var w = 0; w < waypoints.length; w++) {
+        for (let w = 0; w < waypoints.length; w++) {
             if (waypoints[w].color == p) {
 		updateMarkerAndTable(waypoints[w].num, {
 		    color: "#" + this.rainbowGradiant.colorAt((p * 223) % 360),
@@ -347,7 +347,7 @@ var hdxWPGraphColoringAV = {
     },
   
     hoverEndC(p) {
-        for (var w = 0; w < waypoints.length; w++) {
+        for (let w = 0; w < waypoints.length; w++) {
             if (waypoints[w].color == p) {
 		updateMarkerAndTable(waypoints[w].num, {
 		    color: "#" + this.rainbowGradiant.colorAt((p * 223) % 360),

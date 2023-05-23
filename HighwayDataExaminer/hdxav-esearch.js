@@ -119,7 +119,7 @@ var hdxEdgeExtremesSearchAV = {
             comment: "initialize all leader indices to 0",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     thisAV.categories[i].index = 0;
                 }
                 
@@ -133,7 +133,7 @@ var hdxEdgeExtremesSearchAV = {
 
                 // show edge 0 as the leader in each category
                 // on the map and in the table
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     updatePolylineAndTable(thisAV.categories[i].index,
                                          thisAV.categories[i].visualSettings, 
                                           false);
@@ -225,7 +225,7 @@ var hdxEdgeExtremesSearchAV = {
                 // color it as such, and if not, discard
                 let oldLeader = thisAV.categories[thisAV.nextCategory].index;
                 let stillALeader = false;
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     if (i == thisAV.nextCategory) continue;
                     if (thisAV.categories[i].index == oldLeader) {
                         stillALeader = true;
@@ -272,7 +272,7 @@ var hdxEdgeExtremesSearchAV = {
                 // if this edge is the leader in any category, show it,
                 // otherwise it gets discarded
                 if (thisAV.foundNewLeader) {
-                    for (var i = 0; i < thisAV.categories.length; i++) {
+                    for (let i = 0; i < thisAV.categories.length; i++) {
                         if (thisAV.nextToCheck == thisAV.categories[i].index) {
                             updatePolylineAndTable(thisAV.categories[i].index,
                                                  thisAV.categories[i].visualSettings, 
@@ -346,7 +346,7 @@ var hdxEdgeExtremesSearchAV = {
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
         addEntryToAVControlPanel("visiting", visualSettings.visiting);
         addEntryToAVControlPanel("discarded", visualSettings.discarded);
-        for (var i = 0; i < this.categories.length; i++) {
+        for (let i = 0; i < this.categories.length; i++) {
             addEntryToAVControlPanel(this.categories[i].name,
                                      this.categories[i].visualSettings);
         }

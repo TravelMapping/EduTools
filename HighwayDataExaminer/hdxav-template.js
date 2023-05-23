@@ -74,7 +74,7 @@ var hdxTemplateAV = {
                     /*here is a loop where we remove all the polylines from the map
                         note this is not the same as popping the polylines
                         */
-                    for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                    for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                         thisAV.highlightPoly[i].remove();
                     }
                     

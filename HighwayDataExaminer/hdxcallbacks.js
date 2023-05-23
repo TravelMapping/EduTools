@@ -578,7 +578,7 @@ function HDXFillGraphList(e) {
 	    // replace "loading" message with "choose" message
 	    var loadingEntry = document.getElementById("loadingEntry");
 	    loadingEntry.innerHTML = "Choose a Graph";
-            for (var i = 0; i < txt.length; i++) {
+            for (let i = 0; i < txt.length; i++) {
                 opt = document.createElement("option");
                 if (values[i].indexOf("simple") != -1) {
                     str = txt[i] + " (simple), size: (" + vertices[i] + ", " + edges[i] + ")";
@@ -604,7 +604,7 @@ var darkMap = false;
 function newMapTileSelected(e) {
 
     let selectedMap = "NOT FOUND";
-    for (var mapname in baseLayers) {
+    for (let mapname in baseLayers) {
 	if (map.hasLayer(baseLayers[mapname])) {
 	    selectedMap = mapname;
 	    break;

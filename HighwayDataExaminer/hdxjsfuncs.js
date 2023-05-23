@@ -105,7 +105,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
         document.getElementById("waypoints").style.display = "";
         
         // show all existing markers on map and table
-        for (var i = 0; i < waypoints.length; i++) {
+        for (let i = 0; i < waypoints.length; i++) {
             markers[i].remove();
             markers[i].addTo(map);
             updateMarkerAndTable(i, vs, 0, false);
@@ -113,7 +113,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
 
         // ensure individual table rows are shown
         var pointRows = document.getElementById("waypoints").getElementsByTagName("*");
-        for (var i = 0; i < pointRows.length; i++) {
+        for (let i = 0; i < pointRows.length; i++) {
             pointRows[i].style.display = "";
         }
     }
@@ -122,7 +122,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
         document.getElementById("waypoints").style.display = "none";
 
         // remove all markers from the map
-        for (var i = 0; i < waypoints.length; i++) {
+        for (let i = 0; i < waypoints.length; i++) {
             markers[i].remove();
         }
     }
@@ -133,12 +133,12 @@ function initWaypointsAndConnections(showW, showC, vs) {
 
         // ensure individual table rows are shown
         var pointRows = document.getElementById("connection").getElementsByTagName("*");
-        for (var i = 0; i < pointRows.length; i++) {
+        for (let i = 0; i < pointRows.length; i++) {
             pointRows[i].style.display = "";
         }
 
         // show edges
-        for (var i = 0; i < connections.length; i++) {
+        for (let i = 0; i < connections.length; i++) {
 	    connections[i].remove();
 	    connections[i].addTo(map);
             updatePolylineAndTable(i, vs, false);
@@ -149,7 +149,7 @@ function initWaypointsAndConnections(showW, showC, vs) {
         document.getElementById("connection").style.display = "none";
 
         // remove each connection from the map
-        for (var i = 0; i < connections.length; i++) {
+        for (let i = 0; i < connections.length; i++) {
             connections[i].remove();
         }
     }
@@ -170,7 +170,7 @@ function shortLabel(label, max) {
 function getAdjacentPoints(pointIndex) {
     var resultArray = [];
     var edgeList = waypoints[pointIndex].edgeList;
-    for (var i = 0; i < edgeList.length; i++) {
+    for (let i = 0; i < edgeList.length; i++) {
         var adjacentIndex;
         if (edgeList[i].v1 == pointIndex) {
             adjacentIndex = edgeList[i].v2;
@@ -516,7 +516,7 @@ function parseTMGContents(fileContents) {
         // setting up numbers and arrays for the hdxPart support file
         hdxPart.numParts = parseFloat(counts[2]);
         hdxPart.parts = new Array(hdxPart.numParts);
-        for (var x = 0; x < hdxPart.numParts; x++) {
+        for (let x = 0; x < hdxPart.numParts; x++) {
             hdxPart.parts[x] = new Array();
         }
     }
@@ -544,7 +544,7 @@ function parseTMGContents(fileContents) {
     
     var vTable = '<table id="waypoints" class="table table-light table-bordered"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Vcolspan+'" id="wp">Waypoints</th></tr><tr><th class="dtHeader">#</th><th scope="col" class="dtHeader">Coordinates</th><th scope="col" class="dtHeader">Waypoint Name</th>'+Vstring+'</tr></thead><tbody>';
     waypoints = new Array(numV);
-    for (var i = 0; i < numV; i++) {
+    for (let i = 0; i < numV; i++) {
         var vertexInfo = lines[i+offset].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", new Array());
         waypoints[i].lat=Number(parseFloat(waypoints[i].lat));
@@ -610,7 +610,7 @@ function parseTMGContents(fileContents) {
     var Einfo='';
     var eTable = '<table  id="connection" class="table table-light"><thead class = "thead-dark"><tr><th scope="col" colspan="'+Ecolspan+'" id="cn">Connections</th></tr><tr><th scope="col" class="dtHeader">#</th><th scope="col" class="dtHeader">Route Name(s)</th><th scope="col" class="dtHeader">Endpoints</th>'+Estring+'</tr></thead><tbody>';
     graphEdges = new Array(numE);
-    for (var i = 0; i < numE; i++) {
+    for (let i = 0; i < numE; i++) {
         var edgeInfo = lines[i+numV+offset].split(' ');
         var newEdge;
         if (haveTravelers) {
@@ -717,7 +717,7 @@ function parseGRAContents(fileContents) {
     var vTable = '<table class="gratable"><thead><tr><th colspan="3">Waypoints</th></tr><tr><th>#</th><th>Coordinates</th><th>Waypoint Name</th></tr></thead><tbody>';
 
     waypoints = new Array(numV);
-    for (var i = 0; i < numV; i++) {
+    for (let i = 0; i < numV; i++) {
         var vertexInfo = lines[i+1].split(' ');
         waypoints[i] = new Waypoint(vertexInfo[0], vertexInfo[1], vertexInfo[2], "", "");
         vTable += '<tr><td>' + i +
@@ -730,7 +730,7 @@ function parseGRAContents(fileContents) {
 
     var eTable = '<table class="gratable"><thead><tr><th colspan="3">Connections</th></tr><tr><th>#</th><th>Route Name(s)</th><th>Endpoints</th></tr></thead><tbody>';
     graphEdges = new Array(numE);
-    for (var i = 0; i < numE; i++) {
+    for (let i = 0; i < numE; i++) {
         var edgeInfo = lines[i+numV+1].split(' ');
         graphEdges[i] = new GraphEdge(edgeInfo[0], edgeInfo[1], edgeInfo[2], null);
         eTable += '<tr><td>' + i + '</td><td>' + edgeInfo[2] + '</td><td>'
@@ -763,7 +763,7 @@ function parseWPTContents(fileContents) {
     var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     graphEdges = new Array();
     waypoints = new Array();
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             waypoints[waypoints.length] = WPTLine2Waypoint(lines[i]);
         }
@@ -809,7 +809,7 @@ function parsePTHContents(fileContents) {
     var totalMiles = 0.0;
     var segmentMiles = 0.0;
     var previousWaypoint = null;
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             // standardize first
             var line = standardizePTHLine(lines[i]);
@@ -867,7 +867,7 @@ function parseNMPContents(fileContents) {
     let unmarkedCount = 0;
     let fpCount = 0;
     let liCount = 0;
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             var xline = lines[i].split(' ');
             if (xline.length == 3 || xline.length == 4) {
@@ -892,7 +892,7 @@ function parseNMPContents(fileContents) {
     // graph edges between pairs, will be drawn as connections
     var numE = waypoints.length/2;
     graphEdges = new Array(numE);
-    for (var i = 0; i < numE; i++) {
+    for (let i = 0; i < numE; i++) {
         // add the edge
         graphEdges[i] = new GraphEdge(2*i, 2*i+1, "", null, null);
 
@@ -947,7 +947,7 @@ function parseWPLContents(fileContents) {
     // all lines describe waypoints
     var lines = fileContents.replace(/\r\n/g,"\n").split('\n');
     waypoints = new Array();
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {
             var vertexInfo = lines[i].split(' ');
             if (vertexInfo.length == 3) {
@@ -1035,7 +1035,7 @@ function standardizePTHLine(line) {
     // simply "lat lng"
     var xline = line.split(' ');
     line = xline[0];
-    for (var pos = 1; pos < xline.length; pos++) {
+    for (let pos = 1; pos < xline.length; pos++) {
         var newlatlng = xline[pos];
         if ((xline[pos].charAt(0) == '(') &&
             (xline[pos].indexOf(',') > 0) &&
@@ -1076,7 +1076,7 @@ function mileageWithPTHLine(from, to, line) {
     var last_lat = from.lat;
     var last_lon = from.lon;
     var num_points = (xline.length - 4) / 2;
-    for (var i = 0; i < num_points; i++) {
+    for (let i = 0; i < num_points; i++) {
         var this_lat = parseFloat(xline[2*i+1]).toFixed(6);
         var this_lon = parseFloat(xline[2*i+2]).toFixed(6);
         total += distanceInMiles(last_lat, last_lon, this_lat, this_lon);
@@ -1126,7 +1126,7 @@ function PTHLineInfo(line, from) {
         var last_lat = from.lat;
         var last_lon = from.lon;
         var num_points = (xline.length - 4) / 2;
-        for (var i = 0; i < num_points; i++) {
+        for (let i = 0; i < num_points; i++) {
             var this_lat = parseFloat(xline[2*i+1]).toFixed(6);
             var this_lon = parseFloat(xline[2*i+2]).toFixed(6);
             total += distanceInMiles(last_lat, last_lon, this_lat, this_lon);
@@ -1158,7 +1158,7 @@ function listToVIndexString(items) {
     }
     else {
         var line = `[`;
-        for (var i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             if (i == items.length - 1) {
                 line += items[i].vIndex;
             } else {

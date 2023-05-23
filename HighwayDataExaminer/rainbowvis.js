@@ -23,7 +23,7 @@ function Rainbow()
 			firstGradient.setNumberRange(minNum, minNum + increment);
 			gradients = [ firstGradient ];
 			
-			for (var i = 1; i < spectrum.length - 1; i++) {
+			for (let i = 1; i < spectrum.length - 1; i++) {
 				var colourGradient = new ColourGradient();
 				colourGradient.setGradient(spectrum[i], spectrum[i + 1]);
 				colourGradient.setNumberRange(minNum + increment * i, minNum + increment * (i + 1)); 

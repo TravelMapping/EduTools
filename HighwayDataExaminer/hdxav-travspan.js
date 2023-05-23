@@ -558,7 +558,7 @@ var hdxTraversalsSpanningAVCommon = {
 
                 // build list of neighbors to visit
                 let neighbors = getAdjacentPoints(thisAV.visiting.vIndex);
-                for (var i = 0; i < neighbors.length; i++) {
+                for (let i = 0; i < neighbors.length; i++) {
                     let connection = waypoints[thisAV.visiting.vIndex].edgeList[i].edgeListIndex;
                     // add to list of neighbors unless it's where we just
                     // came from
@@ -741,10 +741,10 @@ var hdxTraversalsSpanningAVCommon = {
                 highlightPseudocode(this.label, vs);
 
                 // color all vertices and edges in this complete component color
-                for (var i = 0; i < thisAV.componentVList.length; i++) {
+                for (let i = 0; i < thisAV.componentVList.length; i++) {
                     updateMarkerAndTable(thisAV.componentVList[i], vs, false);
                 }
-                for (var i = 0; i < thisAV.componentEList.length; i++) {
+                for (let i = 0; i < thisAV.componentEList.length; i++) {
                     updatePolylineAndTable(thisAV.componentEList[i], vs, false);
                 }
                 

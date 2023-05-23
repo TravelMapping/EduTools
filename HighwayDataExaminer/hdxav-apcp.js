@@ -320,7 +320,7 @@ var hdxAPClosestPointAV = {
                  thisAV.vClosest + '</td><td>' + thisAV.dClosest.toFixed(3) + '</td>';
                 
                 updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
-                for (var i = 0; i < waypoints.length; i++)
+                for (let i = 0; i < waypoints.length; i++)
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
                 }
@@ -340,7 +340,7 @@ var hdxAPClosestPointAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function (thisAV) {
                 
-                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                     updateMarkerAndTable(i, visualSettings.leader, 0, false);
                     thisAV.highlightPoly[i].addTo(map);
                 }
@@ -402,7 +402,7 @@ var hdxAPClosestPointAV = {
     
     cleanupUI() {
 	//remove all the polylines made
-	for (var i = 0; i < this.highlightPoly.length; i++) {
+	for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
 	}
 	this.highlightPoly = [];

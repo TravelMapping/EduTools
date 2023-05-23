@@ -89,13 +89,13 @@ var hdxOrderingAV = {
                 case "morton":
                     thisAV.findExtremePoints();
                     thisAV.quadtree = new Quadtree(thisAV.s,thisAV.n,thisAV.w,thisAV.e,thisAV.refinement);
-                    for (var i = 0; i < waypoints.length; i++) {
+                    for (let i = 0; i < waypoints.length; i++) {
                         waypoints[i].num = i;
                         thisAV.quadtree.add(waypoints[i]);
                     }
                     if (thisAV.showBB) {
                         thisAV.quadtree.mortonOrderPoly(thisAV.boundingPoly);
-                        for (var i = 0; i < thisAV.boundingPoly.length; i++) {
+                        for (let i = 0; i < thisAV.boundingPoly.length; i++) {
                             thisAV.boundingPoly[i].addTo(map);
                         }
                     }
@@ -106,13 +106,13 @@ var hdxOrderingAV = {
                 case "hilbert":
                     thisAV.findExtremePoints();
                     thisAV.quadtree = new Quadtree(thisAV.s,thisAV.n,thisAV.w,thisAV.e,thisAV.refinement);
-                    for (var i = 0; i < waypoints.length; i++) {
+                    for (let i = 0; i < waypoints.length; i++) {
                         waypoints[i].num = i;
                         thisAV.quadtree.add(waypoints[i]);
                     }
                     if (thisAV.showBB) {
                         thisAV.quadtree.hilbertOrderPoly(0,thisAV.boundingPoly);
-                        for (var i = 0; i < thisAV.boundingPoly.length; i++) {
+                        for (let i = 0; i < thisAV.boundingPoly.length; i++) {
                             thisAV.boundingPoly[i].addTo(map);
                         }
                     }
@@ -123,13 +123,13 @@ var hdxOrderingAV = {
                 case "moore":
                     thisAV.findExtremePoints();
                     thisAV.quadtree = new Quadtree(thisAV.s,thisAV.n,thisAV.w,thisAV.e,thisAV.refinement);
-                    for (var i = 0; i < waypoints.length; i++) {
+                    for (let i = 0; i < waypoints.length; i++) {
                         waypoints[i].num = i;
                         thisAV.quadtree.add(waypoints[i]);
                     }
                     if (thisAV.showBB) {
                         thisAV.quadtree.mooreOrderPoly(thisAV.boundingPoly);
-                        for (var i = 0; i < thisAV.boundingPoly.length; i++) {
+                        for (let i = 0; i < thisAV.boundingPoly.length; i++) {
                             thisAV.boundingPoly[i].addTo(map);
                         }
                     }
@@ -140,13 +140,13 @@ var hdxOrderingAV = {
                 case "grey":
                     thisAV.findExtremePoints();
                     thisAV.quadtree = new Quadtree(thisAV.s,thisAV.n,thisAV.w,thisAV.e,thisAV.refinement);
-                    for (var i = 0; i < waypoints.length; i++) {
+                    for (let i = 0; i < waypoints.length; i++) {
                         waypoints[i].num = i;
                         thisAV.quadtree.add(waypoints[i]);
                     }
                     if (thisAV.showBB) {
                         thisAV.quadtree.greyOrderPoly(0,thisAV.boundingPoly);
-                        for (var i = 0; i < thisAV.boundingPoly.length; i++) {
+                        for (let i = 0; i < thisAV.boundingPoly.length; i++) {
                             thisAV.boundingPoly[i].addTo(map);
                         }
                     }
@@ -156,7 +156,7 @@ var hdxOrderingAV = {
                     break;
 		    
                 default:
-                    for (var i = 0; i < waypoints.length; i++) {
+                    for (let i = 0; i < waypoints.length; i++) {
                         waypoints[i].num = i;
                     }
                     break;
@@ -287,7 +287,7 @@ var hdxOrderingAV = {
                     var parts = Number(document.getElementById("numOfParts").value);
                     hdxPart.parts = new Array(parts);
                     hdxPart.numParts = parts;
-                    for (var p = 0; p < parts; p++) {
+                    for (let p = 0; p < parts; p++) {
                         hdxPart.parts[p] = new Array();
                         let left = Math.trunc(waypoints.length%parts);
 	                let inter = Math.trunc(waypoints.length/parts);
@@ -295,7 +295,7 @@ var hdxOrderingAV = {
 	                let cnt = inter;
 	                if (p<left) cnt++;
 	                let end = strt+cnt;
-                        for (var i= strt; i < end; i++) {
+                        for (let i= strt; i < end; i++) {
                             hdxPart.parts[p].push(waypoints[i].num);
                         }
                     }
@@ -393,10 +393,10 @@ var hdxOrderingAV = {
 
     cleanupUI() {
         waypoints = this.originalWaypoints;
-        for (var i = 0; i < this.polyLines.length; i++) {
+        for (let i = 0; i < this.polyLines.length; i++) {
             this.polyLines[i].remove();
         }
-        for (var i = 0; i < this.boundingPoly.length; i++) {
+        for (let i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].remove();
         }
         this.polyLines = [];
@@ -434,7 +434,7 @@ var hdxOrderingAV = {
 		weight: 4
             })
         );
-        for (var i = 0; i < this.polyLines.length; i++) {
+        for (let i = 0; i < this.polyLines.length; i++) {
             this.polyLines[i].addTo(map);
         }  
     },
@@ -444,7 +444,7 @@ var hdxOrderingAV = {
     calculateStdevOfEdges() {
         let variance = 0;
         let mean = this.lengthEdges / (this.nextToCheck + 1);
-        for (var i = 0; i < this.lengthOfEdges.length; i++) {
+        for (let i = 0; i < this.lengthOfEdges.length; i++) {
             variance += Math.pow(this.lengthOfEdges[i] - mean,2)
         }
         let popStdev = Math.sqrt(variance / (this.nextToCheck + 1));
@@ -456,7 +456,7 @@ var hdxOrderingAV = {
         this.s = parseFloat(waypoints[0].lat);
         this.e = parseFloat(waypoints[0].lon);
         this.w = parseFloat(waypoints[0].lon);
-        for (var i = 1; i < waypoints.length; i++) {
+        for (let i = 1; i < waypoints.length; i++) {
 	    
             if (waypoints[i].lat > this.n) {
                 this.n = parseFloat(waypoints[i].lat);
@@ -478,7 +478,7 @@ var hdxOrderingAV = {
         this.s = parseFloat(waypoints[0].lat);
         this.e = parseFloat(waypoints[0].lon);
         this.w = parseFloat(waypoints[0].lon);
-        for (var i = 1; i < waypoints.length; i++) {
+        for (let i = 1; i < waypoints.length; i++) {
 
             if (waypoints[i].lat > this.n) {
                 this.n = parseFloat(waypoints[i].lat);
@@ -529,7 +529,7 @@ var hdxOrderingAV = {
             }) 
         );
 	
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             this.boundingPoly[i].addTo(map);
         }
     },

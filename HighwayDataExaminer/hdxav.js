@@ -163,7 +163,7 @@ var hdxAV = {
         let s = document.getElementById("AlgorithmSelection");
         s.innerHTML = "";
 	let nextGroup = 0;
-        for (var i = 0; i < this.avList.length; i++) {
+        for (let i = 0; i < this.avList.length; i++) {
             let av = this.avList[i];
 	    // start a new group?
 	    if (nextGroup < groupStarts.length &&
@@ -281,7 +281,7 @@ var hdxAV = {
     oneAction(thisAV) {
         // look up the action to execute next
         let currentAction = null;
-        for (var i = 0; i < thisAV.avActions.length; i++) {
+        for (let i = 0; i < thisAV.avActions.length; i++) {
             if (hdxAV.nextAction == thisAV.avActions[i].label) {
                 currentAction = thisAV.avActions[i];
                 break;

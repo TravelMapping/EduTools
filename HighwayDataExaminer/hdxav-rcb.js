@@ -101,12 +101,12 @@ var hdxPartitionerAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 // setting polyline colors
-                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                      thisAV.highlightPoly[i].setStyle(visualSettings.undiscovered);
                 }
                 // coloring points dark gray
                 if (thisAV.coloring == "Waypoints") {
-                   for (var i = 0; i<waypoints.length; i++) {
+                   for (let i = 0; i<waypoints.length; i++) {
                        updateMarkerAndTable(thisAV.waypointParts[i],visualSettings.undiscovered, 31, false);
                    }
                 }
@@ -116,7 +116,7 @@ var hdxPartitionerAV = {
                 
                // removing old overlays
                if (thisAV.coloring == "Overlays") {
-                    for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                    for (let i = 0; i < thisAV.highlightRect.length; i++) {
                          thisAV.highlightRect[i].remove();
                     }
 
@@ -144,7 +144,7 @@ var hdxPartitionerAV = {
 
                 // coloring
                 if (thisAV.coloring == "Waypoints") {
-                    for (var i = thisAV.partitionStart[thisAV.fp.currentPart];
+                    for (let i = thisAV.partitionStart[thisAV.fp.currentPart];
 			 i <= thisAV.partitionEnd[thisAV.fp.currentPart];
 			 i++) {
                         updateMarkerAndTable(thisAV.waypointParts[i],
@@ -161,7 +161,7 @@ var hdxPartitionerAV = {
 			[[thisAV.fp.minLat, thisAV.fp.minLon],
 			 [thisAV.fp.maxLat, thisAV.fp.maxLon]],
 			thisAV.visualSettings.parentPartition) );
-                    for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                    for (let i = 0; i < thisAV.highlightRect.length; i++) {
 			thisAV.highlightRect[i].addTo(map);
                     }
 		}
@@ -256,7 +256,7 @@ var hdxPartitionerAV = {
                 thisAV.curNumParts++;
                 //coloring
                 if (thisAV.coloring == "Overlays") {
-                    for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                    for (let i = 0; i < thisAV.highlightRect.length; i++) {
                         thisAV.highlightRect[i].remove();
                     }
 
@@ -307,25 +307,25 @@ var hdxPartitionerAV = {
                   }
 		}
                 // drawing lines
-		for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+		for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                     thisAV.highlightPoly[i].addTo(map);
                 }
 		
 		// coloring
 		if (thisAV.coloring == "Overlays") {
-                    for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                    for (let i = 0; i < thisAV.highlightRect.length; i++) {
 			thisAV.highlightRect[i].addTo(map);
                     }
 		}
 		if (thisAV.coloring == "Waypoints") {
-                    for (var i = thisAV.partitionStart[thisAV.fp.currentPart];
+                    for (let i = thisAV.partitionStart[thisAV.fp.currentPart];
 			 i <= thisAV.partitionEnd[thisAV.fp.currentPart];
 			 i++) {
 			updateMarkerAndTable(thisAV.waypointParts[i],
 					     thisAV.visualSettings.childPartitionBlue , 31, false);
                     }
 		    
-                    for (var i = thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)];
+                    for (let i = thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)];
 			 i <= thisAV.partitionEnd[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)];i++) {
 			updateMarkerAndTable(thisAV.waypointParts[i],
 					     thisAV.visualSettings.childPartitionRed , 31, false);
@@ -353,11 +353,11 @@ var hdxPartitionerAV = {
                 hdxPart.numParts = thisAV.curNumParts;
                 hdxPart.parts = new Array(hdxPart.numParts);
                 var partnum = 0;
-                for (var p = 0; p < thisAV.numPartitions; p++) {
+                for (let p = 0; p < thisAV.numPartitions; p++) {
                     if (thisAV.partitionStart[p] != 0 ||
 			thisAV.partitionEnd[p] != 0) {
                         hdxPart.parts[partnum]=new Array();
-                        for (var i = thisAV.partitionStart[p];
+                        for (let i = thisAV.partitionStart[p];
 			     i <= thisAV.partitionEnd[p]; i++) {
                             hdxPart.parts[partnum].push(thisAV.waypointParts[i]);
                         }
@@ -366,7 +366,7 @@ var hdxPartitionerAV = {
                 }
 		
                 //coloring
-                for (var i = 0; i < graphEdges.length; i++) {
+                for (let i = 0; i < graphEdges.length; i++) {
 		    updatePolylineAndTable(i,visualSettings.undiscovered, false);
 		}
 		
@@ -489,23 +489,23 @@ var hdxPartitionerAV = {
                 // filling 2d array with nessacary data for hdxPart
                 hdxPart.numParts = thisAV.curNumParts;
                 hdxPart.parts = new Array(hdxPart.numParts);
-                for (var p = 0; p < hdxPart.numParts; p++) {
+                for (let p = 0; p < hdxPart.numParts; p++) {
                     hdxPart.parts[p] = new Array();
-                    for (var i = thisAV.partitionStart[p];
+                    for (let i = thisAV.partitionStart[p];
 			 i <= thisAV.partitionEnd[p]; i++) {
                         hdxPart.parts[p].push(thisAV.waypointParts[i]);
                     }
                 }
                 // coloring
-                for (var i = 0; i < graphEdges.length;i++) {
+                for (let i = 0; i < graphEdges.length;i++) {
 		    updatePolylineAndTable(i,visualSettings.undiscovered, false);
 		}
                 // cleaning up graph for final coloring
-                for (var i = 0; i < thisAV.highlightRect.length; i++) {
+                for (let i = 0; i < thisAV.highlightRect.length; i++) {
                     thisAV.highlightRect[i].remove();
                 }
                 thisAV.highlightRect=[];
-                for (var i = 0; i < thisAV.highlightPoly.length; i++) {
+                for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                     thisAV.highlightPoly[i].setStyle(visualSettings.undiscovered);
                 }
                 // adding data table
@@ -539,7 +539,7 @@ var hdxPartitionerAV = {
     prepToStart() {
         hdxAV.algStat.innerHTML = "Initializing";
         initWaypointsAndConnections(true, true, visualSettings.undiscovered);
-        for (var i = 0; i < graphEdges.length; i++) {
+        for (let i = 0; i < graphEdges.length; i++) {
 	    updatePolylineAndTable(i,{
 		color: "#000",
 		scale: 0,
@@ -593,11 +593,11 @@ var hdxPartitionerAV = {
     // cleans up lines and overlays
     cleanupUI() {
         //remove all the polylines made by any global bounding box
-        for (var i = 0; i < this.highlightPoly.length; i++) {
+        for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
         this.highlightPoly = [];
-        for (var i = 0; i < this.highlightRect.length; i++) {
+        for (let i = 0; i < this.highlightRect.length; i++) {
             this.highlightRect[i].remove();
         }
         this.highlightRect=[];	
@@ -657,7 +657,7 @@ var hdxPartitionerAV = {
             L.polyline(wEnds, visualSettings.undiscovered) 
         );
 	
-        for (var i = 0; i < this.highlightPoly.length; i++) {
+        for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].addTo(map);
         }
     }

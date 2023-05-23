@@ -290,7 +290,7 @@ var hdxVertexExtremesSearchAV = {
             comment: "initialize all leader indices to 0",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     thisAV.categories[i].index = 0;
                     thisAV.categories[i].tiedWith = [];
                 }
@@ -331,7 +331,7 @@ var hdxVertexExtremesSearchAV = {
 
                 // show marker 0 as the leader in each category
                 // on the map and in the table
-                for (var i = 0; i < thisAV.categories.length; i++) {
+                for (let i = 0; i < thisAV.categories.length; i++) {
                     if (!thisAV.categories[i].include(thisAV)) continue;
                     updateMarkerAndTable(thisAV.categories[i].index,
                                          thisAV.categories[i].visualSettings, 
@@ -453,10 +453,10 @@ var hdxVertexExtremesSearchAV = {
                 
                 // this is a loop to check all old leaders
                 // not just the first when checking ties
-                for (var oldLIndex = 0; oldLIndex < oldLeaders.length; oldLIndex++) {
+                for (let oldLIndex = 0; oldLIndex < oldLeaders.length; oldLIndex++) {
                     let oldLeader = oldLeaders[oldLIndex];
                     let stillALeader = false;
-                    for (var i = 0; i < thisAV.categories.length; i++) {
+                    for (let i = 0; i < thisAV.categories.length; i++) {
                         if (i == thisAV.nextCategory) continue;
                         if (!thisAV.categories[i].include(thisAV)) continue;
                         if ((thisAV.categories[i].index == oldLeader) ||
@@ -626,7 +626,7 @@ var hdxVertexExtremesSearchAV = {
                 // if this waypoint is the leader in any category, show it,
                 // otherwise it gets discarded
                 if (thisAV.foundNewLeader) {
-                    for (var i = 0; i < thisAV.categories.length; i++) {
+                    for (let i = 0; i < thisAV.categories.length; i++) {
                         if (!thisAV.categories[i].include(thisAV)) continue;
                         if ((thisAV.nextToCheck == thisAV.categories[i].index) ||
                             thisAV.categories[i].tiedWith.includes(thisAV.nextToCheck)) {
@@ -739,7 +739,7 @@ var hdxVertexExtremesSearchAV = {
                 ); 
             }
         
-            for (var i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; i++) {
                 this.boundingPoly[i].addTo(map);
             }
             if (this.showAvgOfCoords) {
@@ -967,7 +967,7 @@ avg.lng &larr; lngsum<br />
         addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
         addEntryToAVControlPanel("visiting", visualSettings.visiting);
         addEntryToAVControlPanel("discarded", visualSettings.discarded);
-        for (var i = 0; i < this.categories.length; i++) {
+        for (let i = 0; i < this.categories.length; i++) {
             if (this.categories[i].include(this)) {
                 addEntryToAVControlPanel(this.categories[i].name,
                                          this.categories[i].visualSettings);
@@ -1018,7 +1018,7 @@ Show Extremes Bounding Box<br />
     // remove UI modifications made for vertex extremes search
     cleanupUI() {
 
-        for (var i = 0; i < this.boundingPoly.length; i++) {
+        for (let i = 0; i < this.boundingPoly.length; i++) {
             this.boundingPoly[i].remove();
         }
         this.boundingPoly = [];

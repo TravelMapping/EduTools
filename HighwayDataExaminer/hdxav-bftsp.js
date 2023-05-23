@@ -283,7 +283,7 @@ var hdxBFTravelingSalesmanAV = {
                 // adding num variable to waypoints so that we can
                 // keep track of vertex numbers when printing out the
                 // table
-                for (var i = 0; i < waypoints.length; i++) {
+                for (let i = 0; i < waypoints.length; i++) {
                     waypoints[i].num = i;
                     
                 }
@@ -295,7 +295,7 @@ var hdxBFTravelingSalesmanAV = {
                 // here we use the coordinates of the shortest path in
                 // order to make each edge a different color of the
                 // rainbow
-                for (var i = 0; i < waypoints.length; i++) {
+                for (let i = 0; i < waypoints.length; i++) {
                     let newcolor = {
                         color: "#" + thisAV.rainbowGradiant.colorAt(
                             i),
@@ -320,7 +320,7 @@ var hdxBFTravelingSalesmanAV = {
                 }
 		
                 // add all the polylines to the map
-                for (var i = 0; i < thisAV.finalPoly.length; i++) {
+                for (let i = 0; i < thisAV.finalPoly.length; i++) {
                     thisAV.finalPoly[i].addTo(map);
                 }  
 		
