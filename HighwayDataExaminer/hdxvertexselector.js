@@ -31,7 +31,7 @@ var hdxVertexSelector = {
     select(vNum) {
         //alert("select: " + vNum);
         if (this.selector != "") {
-            let v = document.getElementById(this.selector);
+            const v = document.getElementById(this.selector);
             v.value = vNum;
             // and update the label
             waypointSelectorChanged(this.selector);
@@ -83,9 +83,9 @@ function buildCBPWaypointSelector(id,label) {
 // event handler for waypoint selectors
 function waypointSelectorChanged(id) {
 
-    let label = document.getElementById(id + "Label");
+    const label = document.getElementById(id + "Label");
     if (label != null) {
-	let vNum = document.getElementById(id).value;
+	const vNum = document.getElementById(id).value;
 	label.innerHTML = waypoints[vNum].label;
     }
 }
