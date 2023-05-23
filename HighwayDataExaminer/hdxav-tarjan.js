@@ -6,7 +6,7 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxTarjanAV = {
+const hdxTarjanAV = {
     value: "tarjan",
 
     name: "Tarjan's Bridge Detection",

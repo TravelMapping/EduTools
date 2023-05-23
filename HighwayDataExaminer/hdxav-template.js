@@ -9,7 +9,7 @@
 //this variable name is used to store the document containaing all the necessary fields, functions, and states for a given AV
 //variable must be pushed to the this.avList in the hdxav.js file
 //additionally, the file of this AV must be linked in the index.php file
-var hdxTemplateAV = {
+const hdxTemplateAV = {
     //entries for list of avs
     value: 'Sample',
 

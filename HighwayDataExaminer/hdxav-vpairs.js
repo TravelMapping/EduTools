@@ -7,7 +7,7 @@
 //
 
 /* closest/farthest pairs of vertices, just brute force for now */
-var hdxVertexPairsAV = {
+const hdxVertexPairsAV = {
 
     // entries for list of AVs
     value: "vpairs",

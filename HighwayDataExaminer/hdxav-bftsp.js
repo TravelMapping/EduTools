@@ -6,7 +6,7 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxBFTravelingSalesmanAV = {
+const hdxBFTravelingSalesmanAV = {
     //entries for list of avs
     value: 'bftsp',
 

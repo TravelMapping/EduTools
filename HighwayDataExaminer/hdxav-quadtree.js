@@ -6,7 +6,7 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxQuadtreeAV = {
+const hdxQuadtreeAV = {
 
     // entries for list of AVs
     value: "quadtree",

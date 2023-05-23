@@ -6,7 +6,7 @@
 // Primary Author: Jim Teresco, Alissa Ronca
 //
 
-var hdxKruskalAV = {
+const hdxKruskalAV = {
 
     // entries for list of AVs
     value: "kruskal",

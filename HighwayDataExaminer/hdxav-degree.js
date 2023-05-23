@@ -5,7 +5,7 @@
 // highly adapted from hdxvertexextremesav.js 
 //
 
-var hdxDegreeAV = {
+const hdxDegreeAV = {
 
     // entries for list of AVs
     value: "degree",

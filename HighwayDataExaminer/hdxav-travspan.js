@@ -69,7 +69,7 @@ function displayLDVItem(item, ldv) {
 };
 
 
-var hdxTraversalsSpanningAVCommon = {
+const hdxTraversalsSpanningAVCommon = {
 
     //keeps track of LDV length
     counter: 0,
@@ -1125,7 +1125,7 @@ function stoppingConditionChanged() {
 
 /* graph traversals based on hdxTraversalsSpanningAVCommon */
 
-var hdxGraphTraversalsAV = Object.create(hdxTraversalsSpanningAVCommon);
+const hdxGraphTraversalsAV = Object.create(hdxTraversalsSpanningAVCommon);
 
 // entries for the list of AVs
 hdxGraphTraversalsAV.value = "traversals";
@@ -1251,7 +1251,7 @@ hdxGraphTraversalsAV.supportFindAllComponents = true;
 
 /* Dijkstra's algorithm based on hdxTraversalsSpanningAVCommon */
 
-var hdxDijkstraAV = Object.create(hdxTraversalsSpanningAVCommon);
+const hdxDijkstraAV = Object.create(hdxTraversalsSpanningAVCommon);
 
 // entries for the list of AVs
 hdxDijkstraAV.value = "dijkstra";
@@ -1329,7 +1329,7 @@ hdxDijkstraAV.setupCode = function() {
 
 /* Prim's algorithm based on hdxTraversalsSpanningAVCommon */
 
-var hdxPrimAV = Object.create(hdxTraversalsSpanningAVCommon);
+const hdxPrimAV = Object.create(hdxTraversalsSpanningAVCommon);
 
 // entries for the list of AVs
 hdxPrimAV.value = "prim";

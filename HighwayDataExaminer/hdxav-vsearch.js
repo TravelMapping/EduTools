@@ -53,7 +53,7 @@ function vertexLabelLeaderString(category) {
 }
 
 
-var hdxVertexExtremesSearchAV = {
+const hdxVertexExtremesSearchAV = {
 
     // entries for list of AVs
     value: "vsearch",

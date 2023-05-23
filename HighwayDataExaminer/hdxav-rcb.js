@@ -6,7 +6,7 @@
 // Primary Authors: Michael Plekan
 //
 
-var hdxPartitionerAV = {
+const hdxPartitionerAV = {
     value: 'rcb',
     name: "Recursive Coordinate Bisection Partitioner",
     description: "This algorithm partitions the vertices of a graph using the geometric recursive coordinate bisection algorithm.  Note: the number of partitions must be a power of 2.",

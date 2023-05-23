@@ -7,7 +7,7 @@
 // Edited by: Michael Plekan
 //
 
-var hdxOrderingAV = {
+const hdxOrderingAV = {
     value: "ordering",
     name: "Traversal Orderings",
     description: "Visualize various 1D orderings of vertices (waypoints) in 2D space.",

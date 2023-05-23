@@ -21,7 +21,7 @@ function HDXCPRecCallFrame(startIndex, endIndex, recLevel, nextAction) {
     return this;    
 }
 
-var hdxClosestPairsRecAV = {
+const hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "dccp",

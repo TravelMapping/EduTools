@@ -26,7 +26,7 @@ function edgeLengthLeaderString(label, edgeNum) {
         waypoints[graphEdges[edgeNum].v2].label;
 }
 
-var hdxEdgeExtremesSearchAV = {
+const hdxEdgeExtremesSearchAV = {
 
     // entries for list of AVs
     value: "esearch",

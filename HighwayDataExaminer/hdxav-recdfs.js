@@ -6,7 +6,7 @@
 // Primary Author: Jim Teresco, Alissa Ronca, Zac Goodsell
 //
 
-var hdxDFSRecAV = {
+const hdxDFSRecAV = {
 
     // entries for list of AVs
     value: "recdfs",

@@ -8,7 +8,7 @@
 
 // Brute-force convex hull AV
 // based on original code by Arjol Pengu and Maria Bamundo
-var hdxBFConvexHullAV = {
+const hdxBFConvexHullAV = {
 
     // entries for list of AVs
     value: "bfch",

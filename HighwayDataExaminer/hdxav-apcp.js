@@ -8,7 +8,7 @@
 //
 //
 
-var hdxAPClosestPointAV = {
+const hdxAPClosestPointAV = {
     // entries for list of AVs
     value: "apcp",
     name: "All Points Closest Point",

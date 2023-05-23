@@ -6,7 +6,7 @@
 // Primary Authors: Luke Jennings
 //
 
-var hdxTwiceAroundTreeAV = {
+const hdxTwiceAroundTreeAV = {
     value: 'tsptwice',
 
     name: "Twice-Around-the-Tree TSP Approximation",

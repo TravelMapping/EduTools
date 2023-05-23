@@ -8,7 +8,7 @@
 
 // dummy AV entry for main menu
 
-var hdxNoAV = {
+const hdxNoAV = {
 
     // entries for list of AVs
     value: "none",
