@@ -14,7 +14,7 @@
 
    Based on code originally developed by Arjol Pengu, Summer 2017. 
 */
-var hdxVertexSelector = {
+const hdxVertexSelector = {
 
     // the string to find the selector to fill in with
     // a vertex number, if null, no selection is in process
