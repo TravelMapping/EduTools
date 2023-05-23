@@ -370,9 +370,9 @@ const hdxVertexPairsAV = {
                     return "Done processing v<sub>2</sub>=" + thisAV.v2;
                 }
                 let leaderOrNot;
-		let isNewClose = thisAV.closest[0] == thisAV.v1 &&
+		const isNewClose = thisAV.closest[0] == thisAV.v1 &&
                     thisAV.closest[1] == thisAV.v2;
-		let isNewFar = thisAV.farthest[0] == thisAV.v1 &&
+		const isNewFar = thisAV.farthest[0] == thisAV.v1 &&
                     thisAV.farthest[1] == thisAV.v2;
                 if (isNewClose) {
 		    if (isNewFar) {
@@ -388,7 +388,9 @@ const hdxVertexPairsAV = {
                 else {
                     leaderOrNot = "Discarding";
                 }
-                return leaderOrNot + ": distance " + thisAV.d_this.toFixed(3) + " between v<sub>1</sub>=" + thisAV.v1 + " and v<sub>2</sub>=" + thisAV.v2;
+                return leaderOrNot + ": distance " + thisAV.d_this.toFixed(3) +
+		    " between v<sub>1</sub>=" + thisAV.v1 +
+		    " and v<sub>2</sub>=" + thisAV.v2;
             }
         },
         {
@@ -457,7 +459,7 @@ const hdxVertexPairsAV = {
     // candidate pair of vertices
     drawLineVisiting() {
 
-        let visitingLine = [];
+        const visitingLine = [];
         visitingLine[0] = [waypoints[this.v1].lat, waypoints[this.v1].lon];
         visitingLine[1] = [waypoints[this.v2].lat, waypoints[this.v2].lon];
         this.lineVisiting = L.polyline(visitingLine, {
@@ -492,7 +494,7 @@ const hdxVertexPairsAV = {
     movev1Lines() {
 
 	while (this.v1Lines.length > 0) {
-	    let line = this.v1Lines.pop();
+	    const line = this.v1Lines.pop();
 	    line.setStyle( {
 		color: visualSettings.discarded.color,
 		opacity: 0.1,
@@ -506,7 +508,7 @@ const hdxVertexPairsAV = {
     // current closest and furthest pairs
     updateLineClosest() {
 
-        let closestLine = [];
+        const closestLine = [];
         closestLine[0] = [waypoints[this.closest[0]].lat, waypoints[this.closest[0]].lon];
         closestLine[1] = [waypoints[this.closest[1]].lat, waypoints[this.closest[1]].lon];
 
@@ -524,7 +526,7 @@ const hdxVertexPairsAV = {
     },
     updateLineFarthest() {
 
-        let farthestLine = [];
+        const farthestLine = [];
         farthestLine[0] = [waypoints[this.farthest[0]].lat, waypoints[this.farthest[0]].lon];
         farthestLine[1] = [waypoints[this.farthest[1]].lat, waypoints[this.farthest[1]].lon];
 
@@ -548,7 +550,7 @@ const hdxVertexPairsAV = {
         hdxAV.algStat.innerHTML = "Initializing";
 
 	// determine what we are computing
-	let opt = document.getElementById("closeAndOrFar").value;
+	const opt = document.getElementById("closeAndOrFar").value;
 	this.findClosest = (opt == "closest" || opt == "both");
 	this.findFarthest = (opt == "farthest" || opt == "both");
 
@@ -583,7 +585,7 @@ const hdxVertexPairsAV = {
 
     // set up UI entries for closest/farthest pairs
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
