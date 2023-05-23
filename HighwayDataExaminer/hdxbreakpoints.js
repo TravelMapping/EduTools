@@ -7,14 +7,14 @@
 //
 
 // types of conditional breakpoints supported
-var hdxCBPTypes = {
+const hdxCBPTypes = {
 
     VARIABLE: 1,
     CONDITION: 2
 };
 
 // types of conditional breakpoint value selectors supported
-var hdxCBPSelectors = {
+const hdxCBPSelectors = {
 
     VERTEX: 1,
     EDGE: 2,
@@ -28,15 +28,15 @@ var hdxCBPSelectors = {
 // to assign it to the currentBreakpoint variable
 function addBreakpointListeners() {
 
-    let elements = document.getElementsByClassName("codeRow");
+    const elements = document.getElementsByClassName("codeRow");
     for (let element = 0; element < elements.length; element++) {
-        let child = elements[element].childNodes[0];
+        const child = elements[element].childNodes[0];
 	// this listener sets and displays breakpoints when selected, and
 	// displays conditional breakpoint info for actions that
 	// support them
         elements[element].addEventListener("click", function(event) {
 	    
-            let target = event.target;
+            const target = event.target;
             hdxAV.previousBreakpoint = hdxAV.currentBreakpoint;
             hdxAV.currentBreakpoint = target.getAttribute("id");
 
@@ -105,7 +105,7 @@ function breakpointShowCBPControls(cbp) {
     let html = "";
     for (control of controls) {
 	// default control id unless one was specified
-	let controlid = "HDXCBPControl";
+	const controlid = "HDXCBPControl";
 	if (control.selector.hasOwnProperty("id")) {
 	    controlid = control.selector.id;
 	}
@@ -139,16 +139,16 @@ function breakpointCheckMatch(cbp) {
     // check each for a match, if any matches, we return true
     for (control of controls) {
 	// default control id unless one was specified
-	let controlid = "HDXCBPControl";
+	const controlid = "HDXCBPControl";
 	if (control.selector.hasOwnProperty("id")) {
 	    controlid = control.selector.id;
 	}
 
-	let element = document.getElementById(controlid);
+	const element = document.getElementById(controlid);
 	
 	switch (control.selector.type) {
 	case hdxCBPSelectors.VERTEX:
-	    let rawval = element.value;
+	    const rawval = element.value;
 	    if (!isNaN(rawval) &&
 		control.f(hdxAV.currentAV, parseFloat(rawval))) {
 		return true;
@@ -167,7 +167,7 @@ function breakpointHighlight() {
 
     if (hdxAV.currentBreakpoint == "") return;
     
-    let element = document.getElementById(hdxAV.currentBreakpoint);
+    const element = document.getElementById(hdxAV.currentBreakpoint);
     if (element != null) {
         element.style.borderStyle = "dashed";
         element.style.borderColor = "Red";
@@ -180,7 +180,7 @@ function codeRowHighlight() {
 
     if (hdxAV.previousBreakpoint == "") return;
     
-    let element = document.getElementById(hdxAV.previousBreakpoint);
+    const element = document.getElementById(hdxAV.previousBreakpoint);
     if (element != null) {
         element.style.borderStyle = "solid";
         element.style.borderColor = "Black";
@@ -203,25 +203,25 @@ function createCBPSelector() {
     // cbpWholeDiv is the whole CBP selection area, including the
     // conditional/unconditional selector as well as the controls that
     // select vertices, edges, etc.
-    let cbpWholeDiv = document.createElement("div");
+    const cbpWholeDiv = document.createElement("div");
     cbpWholeDiv.setAttribute("id", "CBPWhole");
     cbpWholeDiv.setAttribute("class", "border border-primary rounded");
     
     // This is where the variable selector controls are placed
-    let cbpConditionsDiv = document.createElement("div");
+    const cbpConditionsDiv = document.createElement("div");
     cbpConditionsDiv.setAttribute("id", "CBPConditions");
     cbpConditionsDiv.innerHTML = "Replace with selector controls";
 
     // label and selector to choose conditional/unconditional
-    let bp = document.createElement("span");
+    const bp = document.createElement("span");
     bp.innerHTML = "Breakpoint: ";
-    let cbp = document.createElement("select");
+    const cbp = document.createElement("select");
     cbp.setAttribute("id", "CBPOnOff");
-    let opton = document.createElement("option");
+    const opton = document.createElement("option");
     opton.value = "on";
     opton.innerHTML = "Conditional";
     opton.selected = true;
-    let optoff = document.createElement("option");
+    const optoff = document.createElement("option");
     optoff.value = "off";
     optoff.innerHTML = "Unconditional";
     cbp.appendChild(opton);
@@ -245,7 +245,7 @@ function createCBPSelector() {
     cbpWholeDiv.appendChild(cbpConditionsDiv);
     
     // Set the main div under the pseudocode
-    let pcPanel = document.getElementById("pseudo");
+    const pcPanel = document.getElementById("pseudo");
     pcPanel.appendChild(cbpWholeDiv);
     // Set the default position, add click on/window resize events and hide it
     setDefaultCBPSelectorLocation();
@@ -258,23 +258,23 @@ function createCBPSelector() {
 // issues when resizing and turning it off via breakpoint selector
 function setDefaultCBPSelectorLocation() {
     
-    let avPanel = document.getElementById("avStatusPanel");
-    let rect2 = avPanel.getBoundingClientRect();
+    const avPanel = document.getElementById("avStatusPanel");
+    const rect2 = avPanel.getBoundingClientRect();
     // avCP right side - left side
-    let difference2 = rect2.right-rect2.left;
-    let element = document.getElementById("CBPWhole");
-    let rect = element.getBoundingClientRect();
+    const difference2 = rect2.right-rect2.left;
+    const element = document.getElementById("CBPWhole");
+    const rect = element.getBoundingClientRect();
     // right side - left side
-    let difference = rect.right - rect.left;
+    const difference = rect.right - rect.left;
     // Width of the CP - the width of the selector + 25 offset to get
     // it to stick out
-    let trueDifference = difference2 - difference + 25;
+    const trueDifference = difference2 - difference + 25;
     element.style.left = trueDifference + "px";
 }
 
 function deleteCBPSelector() {
     
-    let element = document.getElementById("CBPWhole");
+    const element = document.getElementById("CBPWhole");
     if (element != null) element.parentNode.removeChild(element);
     hdxAV.useConditionalBreakpoint = false;
 }
