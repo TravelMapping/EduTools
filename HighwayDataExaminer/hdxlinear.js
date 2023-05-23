@@ -9,7 +9,7 @@
 /*
   Linear structure that can be displayed in a collapsed form
 */
-var hdxLinearTypes = {
+const hdxLinearTypes = {
 
     // constants to refer to these, if new ones are added,
     // place before UNKNOWN and increment UNKNOWN's value
@@ -72,20 +72,27 @@ function HDXLinear(type, displayName) {
 
         this.docElement = dE;
         this.elementHTMLCallback = eC;
-        let t = this.displayName + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size = <span id="HDXLinear' +
-        this.idNum + 'Span">'+ this.items.length +
-        '</span>; max = <span id="HDXLinear' + this.idNum +
-        'Mspan">' + this.maxSize +
-        '</span>; avg = <span id="HDXLinear' + this.idNum +
-        'Aspan">' + 0 +
-        '</span> <table><tbody id="HDXLinear' + this.idNum + 'TBody">' +
-            '</tbody></table>';
+        const t = this.displayName +
+	      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size =' +
+	      '<span id="HDXLinear' + this.idNum + 'Span">'+ this.items.length +
+              '</span>; max = <span id="HDXLinear' + this.idNum +
+              'Mspan">' + this.maxSize +
+              '</span>; avg = <span id="HDXLinear' + this.idNum +
+              'Aspan">' + 0 +
+              '</span> <table><tbody id="HDXLinear' + this.idNum + 'TBody">' +
+	      
+              '</tbody></table>';
         this.docElement.innerHTML = t;
-        this.lengthSpan = document.getElementById("HDXLinear" + this.idNum + "Span");
-        this.maxSizeSpan = document.getElementById("HDXLinear" + this.idNum + "Mspan");
-        this.avgSizeSpan = document.getElementById("HDXLinear" + this.idNum + "Aspan");
-        this.tbody = document.getElementById("HDXLinear" + this.idNum + "TBody");
-        this.limitCheck = document.getElementById("HDXLinear" + this.idNum + "Limit");
+        this.lengthSpan =
+	    document.getElementById("HDXLinear" + this.idNum + "Span");
+        this.maxSizeSpan =
+	    document.getElementById("HDXLinear" + this.idNum + "Mspan");
+        this.avgSizeSpan =
+	    document.getElementById("HDXLinear" + this.idNum + "Aspan");
+        this.tbody =
+	    document.getElementById("HDXLinear" + this.idNum + "TBody");
+        this.limitCheck =
+	    document.getElementById("HDXLinear" + this.idNum + "Limit");
         this.limit = 4;
         this.redraw();
     };
@@ -176,17 +183,21 @@ function HDXLinear(type, displayName) {
             }
             
             
-            let maxDisplay = 4;
+            const maxDisplay = 4;
             
             if (maxDisplay >= this.items.length) {
                 if (this.type == hdxLinearTypes.CALL_STACK) {
                     for (let i = this.items.length - 1; i >= 0; i--) {
-                        t += "<tr><td>" + this.elementHTMLCallback(this.items[i], this) + "</td></tr>";
+                        t += "<tr><td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td></tr>";
                     }
                 }
                 else {
                     for (let i = 0; i < this.items.length; i++) {
-                        t += "<td>" + this.elementHTMLCallback(this.items[i], this) + "</td>";
+                        t += "<td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td>";
                     }
                 }
             }
@@ -199,16 +210,20 @@ function HDXLinear(type, displayName) {
                     t += "<td id='dotdotdot'>...</td>";
                     for (let i = this.items.length - maxDisplay;
                          i < this.items.length; i++) {
-                        t += "<td>" + this.elementHTMLCallback(this.items[i], this) + "</td>";
+                        t += "<td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td>";
                     }
                 }
                 // queues will ignore the middle
                 else if ((this.type == hdxLinearTypes.QUEUE) ||
                          (this.type == hdxLinearTypes.PRIORITY_QUEUE)) {
                     // half of the displayable elements from the front
-                    let firstChunk = Math.floor(maxDisplay / 2);
+                    const firstChunk = Math.floor(maxDisplay / 2);
                     for (let i = 0; i < firstChunk; i++) {
-                        t += "<td>" + this.elementHTMLCallback(this.items[i], this) + "</td>";
+                        t += "<td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td>";
                     }
                     // next a placeholder entry
                     t += "<td id='dotdotdot'>...</td>";
@@ -216,22 +231,29 @@ function HDXLinear(type, displayName) {
                     for (let i = this.items.length -
                              (maxDisplay - firstChunk);
                          i < this.items.length; i++) {
-                        t += "<td>" + this.elementHTMLCallback(this.items[i], this) + "</td>";
+                        t += "<td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td>";
                     }
                 }
 
                 else if (this.type == hdxLinearTypes.CALL_STACK) {
                     // half of the displayable elements from the front
-                    let firstChunk = Math.floor(maxDisplay / 2);
+                    const firstChunk = Math.floor(maxDisplay / 2);
                     for (let i = this.items.length - 1;
-                         i >= this.items.length - (maxDisplay - firstChunk); i--) {
-                        t += "<tr><td>" + this.elementHTMLCallback(this.items[i], this) + "</td></tr>";
+                         i >= this.items.length -
+			 (maxDisplay - firstChunk); i--) {
+                        t += "<tr><td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td></tr>";
                     }
                     // next a placeholder entry
                     t += "<tr><td>...</td></tr>";
                     // half of the displayable elements from the end
                     for (let i = firstChunk - 1; i >= 0; i--) {
-                        t += "<tr><td>" + this.elementHTMLCallback(this.items[i], this) + "</td></tr>";
+                        t += "<tr><td>" +
+			    this.elementHTMLCallback(this.items[i], this) +
+			    "</td></tr>";
                     }
                 }
             }
