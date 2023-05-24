@@ -161,7 +161,7 @@ const hdxBFTravelingSalesmanAV = {
                     thisAV.currCoords.push([v1.lat,v1.lon]);
                     
                     // calculate distance of the current edge
-                    let currEdgeDist = distanceInMiles(v1.lat,v1.lon,
+                    const currEdgeDist = distanceInMiles(v1.lat,v1.lon,
                         v2.lat,v2.lon);
                     
                     // add distance of current edge to total and push
@@ -296,9 +296,8 @@ const hdxBFTravelingSalesmanAV = {
                 // order to make each edge a different color of the
                 // rainbow
                 for (let i = 0; i < waypoints.length; i++) {
-                    let newcolor = {
-                        color: "#" + thisAV.rainbowGradiant.colorAt(
-                            i),
+                    const newcolor = {
+                        color: "#" + thisAV.rainbowGradiant.colorAt(i),
                         textColor: "white",
                         scale: 7,
                         name: "color",
@@ -307,7 +306,7 @@ const hdxBFTravelingSalesmanAV = {
                     }
                     updateMarkerAndTable(waypoints[thisAV.shortestPath[i]].num,
 					 newcolor, 30, false);
-                    let visitingLine = [];
+                    const visitingLine = [];
                     visitingLine.push(thisAV.currCoords[i])
                     visitingLine.push(thisAV.currCoords[i+1]);
                     thisAV.finalPoly.push(
@@ -380,7 +379,7 @@ const hdxBFTravelingSalesmanAV = {
     // setup UI is called after you click the algorithm in algorithm
     // selection but before you press the visualize button, required
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -449,7 +448,7 @@ const hdxBFTravelingSalesmanAV = {
 // reverse.  It currently does the job but if someone else can find a
 // better generator that would be great.
 function* HDXTSPpermute(permutation) {
-    var length = permutation.length,
+    let length = permutation.length,
         c = Array(length).fill(0),
         i = 1, k, p;
     
