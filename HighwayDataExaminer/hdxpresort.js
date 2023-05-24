@@ -21,11 +21,11 @@ function HDXWaypointsSorter() {
     // retrieve a copy of the global waypoints array that has been
     // sorted by the criteria in the comesBefore comparator function
     this.sortWaypoints = function() {
-	let s = [];
+	const s = [];
 	
 	for (let index = 0; index < waypoints.length; index++) {
             //add to new array maintaining order
-            let vertex = waypoints[index];
+            const vertex = waypoints[index];
             if (s.length > 0) {
 		// need to maintain in order
 		// does e come first?
