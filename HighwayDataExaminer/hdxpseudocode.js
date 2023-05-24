@@ -10,7 +10,7 @@
 // now also managing execution counts
 function highlightPseudocode(id, vs) {
 
-    let codeChunk = document.getElementById(id);
+    const codeChunk = document.getElementById(id);
     if (codeChunk != null) {
         codeChunk.style.backgroundColor = vs.color;
         codeChunk.style.color = vs.textColor;
@@ -44,7 +44,7 @@ function highlightPseudocode(id, vs) {
 function unhighlightPseudocode() {
 
     if (hdxAV.previousHighlight != null) {
-        let codeChunk = document.getElementById(hdxAV.previousHighlight);
+        const codeChunk = document.getElementById(hdxAV.previousHighlight);
         if (codeChunk != null) {
             codeChunk.style.backgroundColor =
                 hdxAV.execCountColor(hdxAV.execCounts[hdxAV.previousHighlight]);
@@ -57,7 +57,7 @@ function unhighlightPseudocode() {
     if (hdxAV.execCountRecolor) {
         hdxAV.execCountRecolor = false;
         for (let key in hdxAV.execCounts) {
-            let codeChunk = document.getElementById(key);
+            const codeChunk = document.getElementById(key);
             codeChunk.style.backgroundColor =
                 hdxAV.execCountColor(hdxAV.execCounts[key]);
         }
