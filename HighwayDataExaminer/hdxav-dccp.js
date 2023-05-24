@@ -125,7 +125,7 @@ const hdxClosestPairsRecAV = {
 		thisAV.recStack = [];
 
 		// sort the waypoints array west to east
-		let sorter = new HDXWaypointsSorter();
+		const sorter = new HDXWaypointsSorter();
 		thisAV.WtoE = sorter.sortWaypoints();
 		
                 updateAVControlEntry("currentCall", "No calls yet");
@@ -175,8 +175,8 @@ const hdxClosestPairsRecAV = {
 		if (thisAV.overlays) {
 		    // rectangles to obscure parts of the world not involved
 		    // in this recursive call
-		    let westLon = thisAV.WtoE[thisAV.fp.startIndex].lon;
-		    let eastLon = thisAV.WtoE[thisAV.fp.endIndex].lon;
+		    const westLon = thisAV.WtoE[thisAV.fp.startIndex].lon;
+		    const eastLon = thisAV.WtoE[thisAV.fp.endIndex].lon;
 		    thisAV.fp.westBox = L.rectangle(
 			[[-88, -179], [88, westLon]],
 			thisAV.visualSettings.obscure
@@ -220,8 +220,8 @@ const hdxClosestPairsRecAV = {
 				  ((thisAV.fp.endIndex-
 				    thisAV.fp.startIndex)/2));
 		    // draw dividing line for this recursive call
-		    let lineCoords = [];
-		    let lineLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
+		    const lineCoords = [];
+		    const lineLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
 		    lineCoords[0] = [88, lineLon];
 		    lineCoords[1] = [-88, lineLon];
 		    thisAV.fp.recLine = L.polyline(lineCoords, {
@@ -258,9 +258,9 @@ const hdxClosestPairsRecAV = {
                 for (let i = thisAV.fp.startIndex;
 		     i <= thisAV.fp.endIndex - 1; i++) {
                     for (let j = i + 1; j <= thisAV.fp.endIndex; j++) {
-			let v1 = thisAV.WtoE[i];
-			let v2 = thisAV.WtoE[j];
-			let minDistTest = convertToCurrentUnits(
+			const v1 = thisAV.WtoE[i];
+			const v2 = thisAV.WtoE[j];
+			const minDistTest = convertToCurrentUnits(
 			    distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
 			
 			thisAV.bfDComps++;
@@ -328,7 +328,7 @@ const hdxClosestPairsRecAV = {
 				      thisAV.visualSettings.recursiveLeft);
 		
 		// set up call frame for the left half recursive call
-		let newfp = new HDXCPRecCallFrame(
+		const newfp = new HDXCPRecCallFrame(
 		    thisAV.fp.startIndex, thisAV.fp.firstRight - 1,
 		    thisAV.fp.recLevel + 1, "callRecursionRight"
 		);
@@ -360,17 +360,17 @@ const hdxClosestPairsRecAV = {
 		    thisAV.retval.westBox.remove();
 		}
 
-		let rightStart = Math.ceil(thisAV.fp.startIndex + 
+		const rightStart = Math.ceil(thisAV.fp.startIndex + 
 					((thisAV.fp.endIndex-
 					  thisAV.fp.startIndex)/2)) + 1;
-		let rightEnd = thisAV.fp.endIndex;
+		const rightEnd = thisAV.fp.endIndex;
 		
 		// color for the right half
 		thisAV.colorWtoERange(thisAV.fp.firstRight, thisAV.fp.endIndex,
 				      thisAV.visualSettings.recursiveRight);
 		
 		// set up call frame for the right half recursive call
-		let newfp = new HDXCPRecCallFrame(
+		const newfp = new HDXCPRecCallFrame(
 		    thisAV.fp.firstRight, thisAV.fp.endIndex,
 		    thisAV.fp.recLevel + 1, "setMinOfHalves"
 		);
@@ -454,12 +454,12 @@ const hdxClosestPairsRecAV = {
 	    code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		let midLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
+		const midLon = thisAV.WtoE[thisAV.fp.firstRight].lon;
 		// note: degrees are not miles, so in order to find
 		// (actually approximate based on the latitude of
 		// the firstRight point) how much longitude west and
 		// east of this for which points should be considered
-		let degRange =
+		const degRange =
 		    changeInLongitude(thisAV.WtoE[thisAV.fp.firstRight].lat,
 				      thisAV.fp.minDist);
 		// save these for use below and again on bounding box
@@ -489,7 +489,7 @@ const hdxClosestPairsRecAV = {
 		}
 
 		// draw the west and east bounds
-		let westCoords = [];
+		const westCoords = [];
 		westCoords[0] = [88, thisAV.fp.minLon];
 		westCoords[1] = [-88, thisAV.fp.minLon];
 		thisAV.fp.westLine = L.polyline(westCoords, {
@@ -498,7 +498,7 @@ const hdxClosestPairsRecAV = {
 		    weight: 3
 		});
 		thisAV.fp.westLine.addTo(map);
-		let eastCoords = [];
+		const eastCoords = [];
 		eastCoords[0] = [88, thisAV.fp.maxLon];
 		eastCoords[1] = [-88, thisAV.fp.maxLon];
 		thisAV.fp.eastLine = L.polyline(eastCoords, {
@@ -541,7 +541,7 @@ const hdxClosestPairsRecAV = {
 
 		    // bounding box for the points that need to
 		    // considered for this iteration
-		    let bounds = [
+		    const bounds = [
 			[thisAV.NtoS[thisAV.globali].lat, thisAV.fp.minLon],
 			[thisAV.NtoS[thisAV.globali].lat, thisAV.fp.maxLon],
 			[thisAV.NtoS[thisAV.globali].lat - thisAV.fp.latDiff,
@@ -638,7 +638,7 @@ const hdxClosestPairsRecAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		let newd = convertToCurrentUnits(
+		const newd = convertToCurrentUnits(
 		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
 				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
 
@@ -684,7 +684,7 @@ const hdxClosestPairsRecAV = {
 				     visualSettings.leader,
 				     40, false);
 		// update connecting line between
-		let array = []
+		const array = []
 		array[0] = [thisAV.fp.vi.lat, thisAV.fp.vi.lon];
 		array[1] = [thisAV.fp.vk.lat, thisAV.fp.vk.lon];
 		thisAV.fp.minLine.setLatLngs(array);
@@ -809,7 +809,7 @@ const hdxClosestPairsRecAV = {
 	let t = "Total recursive calls: " + this.recCallCount +
 	    ", " + this.bfCases + " base cases<br />";
 	for (let i = 0; i < this.recStack.length; i++) {
-	    let f = this.recStack[i];
+	    const f = this.recStack[i];
 	    let entry = "Level " + f.recLevel;
 	    if (i == 0) {
 		entry += " (initial)";
@@ -926,7 +926,7 @@ const hdxClosestPairsRecAV = {
 
     // set up UI entries for closest pairs divide and conquer
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
@@ -968,13 +968,13 @@ const hdxClosestPairsRecAV = {
 	// clean up any rectangles and polylines still in existence
 	
 	// properties to check
-	let overlays = [ "westLine", "eastLine", "recLine", "minLine",
+	const overlays = [ "westLine", "eastLine", "recLine", "minLine",
 			 "candidateBox", "eastBox", "westBox" ];
 
 	// if there is anything on the recursive stack, look for and
 	// remove the map objects
 	for (let i = 0; i < this.recStack.length; i++) {
-	    let fp = this.recStack[i];
+	    const fp = this.recStack[i];
 	    for (let j = 0; j < overlays.length; j++) {
 		if (fp.hasOwnProperty(overlays[j])) {
 		    fp[overlays[j]].remove();
