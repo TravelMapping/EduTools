@@ -223,7 +223,7 @@ const hdxEdgeExtremesSearchAV = {
 
                 // if the old leader is still leading in some other category,
                 // color it as such, and if not, discard
-                let oldLeader = thisAV.categories[thisAV.nextCategory].index;
+                const oldLeader = thisAV.categories[thisAV.nextCategory].index;
                 let stillALeader = false;
                 for (let i = 0; i < thisAV.categories.length; i++) {
                     if (i == thisAV.nextCategory) continue;
@@ -335,7 +335,7 @@ const hdxEdgeExtremesSearchAV = {
         
     // set up UI for the start of edge search
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
@@ -350,7 +350,6 @@ const hdxEdgeExtremesSearchAV = {
             addEntryToAVControlPanel(this.categories[i].name,
                                      this.categories[i].visualSettings);
         }
-
     },
 
     // clean up edge search UI
