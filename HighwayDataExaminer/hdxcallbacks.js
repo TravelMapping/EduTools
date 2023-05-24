@@ -9,8 +9,8 @@
 // speedChanger dropdown callback
 function speedChanged() {
 
-    var speedChanger = document.getElementById("speedChanger");
-    let temp = speedChanger.options[speedChanger.selectedIndex];
+    const speedChanger = document.getElementById("speedChanger");
+    const temp = speedChanger.options[speedChanger.selectedIndex];
     hdxAV.delay = temp.value;
     hdxAV.speedName = temp.innerHTML;
 
@@ -64,8 +64,8 @@ function labelClickHDX(i) {
 // (factored out here to avoid repeated code)
 function getSelectedAlgorithm() {
 
-    var menuSelection = document.getElementById("AlgorithmSelection");
-    var selectionIndex = menuSelection.selectedIndex;
+    const menuSelection = document.getElementById("AlgorithmSelection");
+    const selectionIndex = menuSelection.selectedIndex;
     return menuSelection.options[selectionIndex].value;
 }
 
@@ -180,7 +180,7 @@ function algorithmSelectionChanged() {
         hdxAV.currentAV.cleanupUI();
     }
     
-    let value = getSelectedAlgorithm();
+    const value = getSelectedAlgorithm();
 
     // set the current algorithm
     for (let i = 0; i < hdxAV.avList.length; i++) {
@@ -276,8 +276,8 @@ function loadDataOptionsPressed() {
 // event handler for "Show Data Tables" checkbox
 function showHideDatatables() {
 
-    let checked = document.getElementById("datatablesCheckbox").checked;
-    let datatable = document.getElementById("datatable");
+    const checked = document.getElementById("datatablesCheckbox").checked;
+    const datatable = document.getElementById("datatable");
     if (checked) {
         datatable.style.display = "inline-block";
     }
@@ -296,14 +296,15 @@ function resizePanels() {
 
     const STATUS_LEFT = 400;  // width of status panel
     const BORDER_THICKNESS = 0;  // border thickness
-    let left = STATUS_LEFT + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
+    const left = STATUS_LEFT + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
     let dtWidth;
-    let mapDOM = document.getElementById("map");
-    let dtDOM = document.getElementById("datatable");
+    const mapDOM = document.getElementById("map");
+    const dtDOM = document.getElementById("datatable");
 
     // determine which panels are displayed
-    let showDataTables = document.getElementById("datatablesCheckbox").checked;
-    let showAvPanel = !hdxAV.dataOnly() && hdxAV.currentAV.value != "NONE";
+    const showDataTables =
+	  document.getElementById("datatablesCheckbox").checked;
+    const showAvPanel = !hdxAV.dataOnly() && hdxAV.currentAV.value != "NONE";
     if (hdxGlobals.titleScreen) {
 	// do nothing
     }
@@ -332,7 +333,7 @@ function resizePanels() {
     else if (showDataTables && !showAvPanel) {
 	// Datatables checked and no algorithm selected
         dtWidth = dtDOM.clientWidth;
-        var left2 = dtWidth + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
+        const left2 = dtWidth + PANEL_SEPARATION + (3 * BORDER_THICKNESS);
         
         dtDOM.style.left = PANEL_SEPARATION + "px";
         mapDOM.style.left =  (left2 + (1 * PANEL_SEPARATION) + (-1 * BORDER_THICKNESS)) + "px"
@@ -385,10 +386,10 @@ function showTopControlPanel() {
     
     resizePanels();
 
-    let av1 = document.getElementById("topControlPanelAV1");
-    let av2 = document.getElementById("topControlPanelAV2");
-    let av3 = document.getElementById("topControlPanelAV3");
-    let pseudocheck = document.getElementById("topControlPanelPseudo");
+    const av1 = document.getElementById("topControlPanelAV1");
+    const av2 = document.getElementById("topControlPanelAV2");
+    const av3 = document.getElementById("topControlPanelAV3");
+    const pseudocheck = document.getElementById("topControlPanelPseudo");
     // show only the relevant components given the current
     // state of HDX
     switch (hdxAV.status) {
@@ -520,12 +521,12 @@ function hideAVStatusPanel() {
 function HDXFillGraphList(e) {
 
     hdxGlobals.graphSet = document.getElementById("graphArchive").value;
-    var sels = document.getElementById("selects");
-    var orderSel = document.getElementById("orderOptions").value;
-    var resSel = document.getElementById("restrictOptions").value;
-    var cateSel = document.getElementById("categoryOptions").value;
-    var min = parseInt(document.getElementById("minVertices").value);
-    var max = parseInt(document.getElementById("maxVertices").value);
+    const sels = document.getElementById("selects");
+    const orderSel = document.getElementById("orderOptions").value;
+    const resSel = document.getElementById("restrictOptions").value;
+    const cateSel = document.getElementById("categoryOptions").value;
+    const min = parseInt(document.getElementById("minVertices").value);
+    const max = parseInt(document.getElementById("maxVertices").value);
     if (max < 0 || min < 0 || min > max) {
         console.log("Out of range.  min: " + min + " max: " + max);
         return;
@@ -533,17 +534,17 @@ function HDXFillGraphList(e) {
     if ($("#graphList").length != 0) {
         sels.removeChild(document.getElementById("graphList"));
     }
-    var mapSel = document.createElement("select");
+    const mapSel = document.createElement("select");
     mapSel.setAttribute("id", "graphList");
     // initially put "Loading..." into the dropdown, to be replaced
     // when the AJAX request is complete
-    var loadingEntry = document.createElement("option");
+    const loadingEntry = document.createElement("option");
     loadingEntry.innerHTML = "Loading...";
     loadingEntry.setAttribute("id", "loadingEntry");
     loadingEntry.value = "loadingEntry";
     mapSel.appendChild(loadingEntry);
     sels.appendChild(mapSel);
-    var params = {
+    const params = {
         graphSet:hdxGlobals.graphSet,
         order:orderSel,
         restrict:resSel,
@@ -551,32 +552,32 @@ function HDXFillGraphList(e) {
         min:min,
         max:max
     };
-    var jsonParams = JSON.stringify(params);
+    const jsonParams = JSON.stringify(params);
     $.ajax({
         type: "POST",
         url: "./generateGraphList.php",
         datatype: "json",
         data: {"params":jsonParams},
         success: function(data) {
-	    var mapSel = document.getElementById("graphList");
+	    const mapSel = document.getElementById("graphList");
 	    
-            var opts = $.parseJSON(data);
-            var txt = opts['text'];
-            var values = opts['values'];
-            var vertices = opts['vertices'];
-            var edges = opts['edges'];
+            const opts = $.parseJSON(data);
+            const txt = opts['text'];
+            const values = opts['values'];
+            const vertices = opts['vertices'];
+            const edges = opts['edges'];
             var opt;
             var str = "";
             if (txt.length == 0) {
 		// remove the dropdown until the button is pressed
 		// again with valid entries
-		var sels = document.getElementById("selects");
+		const sels = document.getElementById("selects");
 		sels.removeChild(mapSel);
                 alert("No graphs matched!  Please choose less restrictive filters.");
 		return;
             }
 	    // replace "loading" message with "choose" message
-	    var loadingEntry = document.getElementById("loadingEntry");
+	    const loadingEntry = document.getElementById("loadingEntry");
 	    loadingEntry.innerHTML = "Choose a Graph";
             for (let i = 0; i < txt.length; i++) {
                 opt = document.createElement("option");
@@ -662,7 +663,8 @@ function newMapTileSelected(e) {
 function copyAVURL() {
 
     // match regex generated by openai
-    let url = document.URL.match(/^(.*?)(\?|$)/)[1] + "?load=" + hdxGlobals.loadingFile;
+    let url = document.URL.match(/^(.*?)(\?|$)/)[1] + "?load=" +
+	hdxGlobals.loadingFile;
 
     // using a graph archive set?
     if (hdxGlobals.graphSet != "current") {
@@ -676,5 +678,4 @@ function copyAVURL() {
     url += HDXQSAVParams(hdxAV.currentAV);
 
     navigator.clipboard.writeText(url);
-    console.log(url);
 }
