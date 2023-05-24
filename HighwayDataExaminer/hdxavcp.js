@@ -9,39 +9,39 @@
 /* functions for algorithm visualization control panel */
 var AVCPsuffix = "AVCPEntry";
 var AVCPentries = [];
-var rows = [];
+var AVCProws = [];
 
 /* add entry to the algorithm visualization control panel */
 function addEntryToAVControlPanel(namePrefix, vs) {
     
-    let avControlTbody = document.getElementById('algorithmVars');
-    let infoBox = document.createElement('td');
-    let infoBoxtr = document.createElement('tr');
+    const avControlTbody = document.getElementById('algorithmVars');
+    const infoBox = document.createElement('td');
+    const infoBoxtr = document.createElement('tr');
     infoBox.setAttribute('id', namePrefix + AVCPsuffix);
     infoBox.setAttribute('style', "color:" + vs.textColor +
                          "; background-color:" + vs.color);
     infoBoxtr.appendChild(infoBox);
     infoBoxtr.style.display = "none";
-    rows.push(infoBoxtr);
+    AVCProws.push(infoBoxtr);
     avControlTbody.appendChild(infoBoxtr);
     AVCPentries.push(namePrefix);
 }
 
 function showEntries()
 {
-    for (let i = 0; i < rows.length; i++)
+    for (let i = 0; i < AVCProws.length; i++)
     {
-        rows[i].style.display = "";
+        AVCProws[i].style.display = "";
     }
 }
 
 function hideEntries()
 {
-    for (let i = 0; i < rows.length; i++)
+    for (let i = 0; i < AVCProws.length; i++)
     {
-        if (rows[i].firstChild.innerHTML == "")
+        if (AVCProws[i].firstChild.innerHTML == "")
         {
-            rows[i].style.display = "none";
+            AVCProws[i].style.display = "none";
         }
     }
 }
@@ -58,10 +58,10 @@ function cleanupAVControlPanel() {
 /* remove entry from algorithm visualization control panel */
 function removeEntryFromAVControlPanel(namePrefix) {
 
-    let avControlTbody = document.getElementById('algorithmVars');
-    let infoBox = document.getElementById(namePrefix + AVCPsuffix);
+    const avControlTbody = document.getElementById('algorithmVars');
+    const infoBox = document.getElementById(namePrefix + AVCPsuffix);
     if (infoBox != null) {
-        let infoBoxtr= infoBox.parentNode;
+        const infoBoxtr= infoBox.parentNode;
         avControlTbody.removeChild(infoBoxtr);
     }
 }
@@ -89,7 +89,7 @@ function updateAVControlEntry(namePrefix, text) {
 /* set the visualSettings of an AV control panel entry */
 function updateAVControlVisualSettings(namePrefix, vs) {
 
-    let infoBox = document.getElementById(namePrefix + AVCPsuffix);
+    const infoBox = document.getElementById(namePrefix + AVCPsuffix);
     infoBox.setAttribute('style', "color:" + vs.textColor +
                          "; background-color:" + vs.color);
 }
