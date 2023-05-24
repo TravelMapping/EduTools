@@ -620,7 +620,7 @@ const hdxQuadtreeAV = {
     },
 
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -697,8 +697,8 @@ const hdxQuadtreeAV = {
         let wEnds = [[this.n,this.w],[this.s,this.w]];
         
         if (document.getElementById("squareBB").checked) {
-            let EW = distanceInMiles(nEnds[0][0],nEnds[0][1],nEnds[1][0],nEnds[1][1]);
-            let NS = distanceInMiles(eEnds[0][0],eEnds[0][1],eEnds[1][0],eEnds[1][1]);
+            const EW = distanceInMiles(nEnds[0][0],nEnds[0][1],nEnds[1][0],nEnds[1][1]);
+            const NS = distanceInMiles(eEnds[0][0],eEnds[0][1],eEnds[1][0],eEnds[1][1]);
             let difference;
             //check if the difference between the east west is longer than the north south
             if (EW > NS) {
@@ -753,8 +753,8 @@ const hdxQuadtreeAV = {
     },
     
     addNewPolylines() {
-        let nsEdge = this.currentQuadtree.makeNSedge();
-        let ewEdge = this.currentQuadtree.makeEWedge();
+        const nsEdge = this.currentQuadtree.makeNSedge();
+	const ewEdge = this.currentQuadtree.makeEWedge();
                 
         this.boundingPoly.push(
             L.polyline(nsEdge, {
@@ -781,15 +781,15 @@ const hdxQuadtreeAV = {
         }
         this.highlightPoly = [];
 	
-        let n = this.currentQuadtree.maxLat;
-        let s = this.currentQuadtree.minLat;
-        let e = this.currentQuadtree.maxLng;
-        let w = this.currentQuadtree.minLng;
+        const n = this.currentQuadtree.maxLat;
+        const s = this.currentQuadtree.minLat;
+        const e = this.currentQuadtree.maxLng;
+        const w = this.currentQuadtree.minLng;
 	
-        let nEnds = [[n,w],[n,e]];
-        let sEnds = [[s,w],[s,e]];
-        let eEnds = [[n,e],[s,e]];
-        let wEnds = [[n,w],[s,w]];
+        const nEnds = [[n,w],[n,e]];
+        const sEnds = [[s,w],[s,e]];
+        const eEnds = [[n,e],[s,e]];
+        const wEnds = [[n,w],[s,w]];
 
         this.highlightPoly.push(
             L.polyline(nEnds, visualSettings.highlightBounding)
@@ -810,7 +810,7 @@ const hdxQuadtreeAV = {
     }    
 };
 
-let k = 0;
+let hdxQTk = 0;
 // Quadtree object constructor
 function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
     this.maxLat = maxLat;
@@ -898,14 +898,14 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
 	else {   
-            let nsEdge = this.makeNSedge();
-            let ewEdge = this.makeEWedge();
+            const nsEdge = this.makeNSedge();
+            const ewEdge = this.makeEWedge();
             
             boundingPoly.push(
                 L.polyline(nsEdge, {
@@ -932,8 +932,8 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
@@ -949,8 +949,8 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
@@ -1025,14 +1025,14 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
 	else {
-            let nsEdge = this.makeNSedge();
-            let ewEdge = this.makeEWedge();
+            const nsEdge = this.makeNSedge();
+            const ewEdge = this.makeEWedge();
             
             boundingPoly.push(
                 L.polyline(nsEdge, {
@@ -1117,8 +1117,8 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
@@ -1133,14 +1133,14 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
 	else {
-            let nsEdge = this.makeNSedge();
-            let ewEdge = this.makeEWedge();
+            const nsEdge = this.makeNSedge();
+            const ewEdge = this.makeEWedge();
             
             boundingPoly.push(
                 L.polyline(nsEdge, {
@@ -1166,8 +1166,8 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
@@ -1194,14 +1194,14 @@ function Quadtree(minLat,maxLat,minLng,maxLng,refinement) {
         if (this.isLeaf()) {
             for (let i = 0; i < this.points.length; i++) {
                 if (this.points[i] != null) {
-                    this.points[i].value = k;
-                    k++;
+                    this.points[i].value = hdxQTk;
+                    hdxQTk++;
                 }
             }
         }
 	else {
-            let nsEdge = this.makeNSedge();
-            let ewEdge = this.makeEWedge();
+            const nsEdge = this.makeNSedge();
+            const ewEdge = this.makeEWedge();
             
             boundingPoly.push(
                 L.polyline(nsEdge, {
