@@ -112,7 +112,7 @@ function startPausePressed() {
         hdxAV.maxExecCount = 0;
 
         showHidePseudocode();
-        showEntries();
+        showAVCPEntries();
 
         // get the simulation going, always start with the "START"
         // action, then do it
@@ -120,7 +120,7 @@ function startPausePressed() {
         hdxAV.nextStep(hdxAV.currentAV);
         addBreakpointListeners();
         resizePanels();
-        hideEntries();
+        hideAVCPEntries();
         newMapTileSelected();
         break;
         

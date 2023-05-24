@@ -27,7 +27,7 @@ function addEntryToAVControlPanel(namePrefix, vs) {
     AVCPentries.push(namePrefix);
 }
 
-function showEntries()
+function showAVCPEntries()
 {
     for (let i = 0; i < AVCProws.length; i++)
     {
@@ -35,7 +35,7 @@ function showEntries()
     }
 }
 
-function hideEntries()
+function hideAVCPEntries()
 {
     for (let i = 0; i < AVCProws.length; i++)
     {
