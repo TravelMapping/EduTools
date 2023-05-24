@@ -5,7 +5,7 @@
 //
 // Primary Author: Michael Plekan
 
-var hdxPart = {
+const hdxPart = {
 
     // various information about the current partitioning
     numParts: 1,
@@ -31,8 +31,8 @@ var hdxPart = {
     
     // calculate Surface Index stats
     calculatePartBdryStats() {
-        let boundaryEdges = new Array(this.numParts).fill(0);
-        let PartEdges = new Array(this.numParts).fill(0);
+        const boundaryEdges = new Array(this.numParts).fill(0);
+        const PartEdges = new Array(this.numParts).fill(0);
         let globalBoundaryEdges = 0;
         this.adjacency = new Array(this.numParts);
         for (let i = 0; i < this.numParts; i++) {
@@ -163,7 +163,7 @@ var hdxPart = {
 	// this.colscheme=document.getElementById('ColoringScheme').value;
 	if (this.colscheme == "rainbow") {
             // rainbow object constructor
-            let rainbowGradiant = new Rainbow();
+            const rainbowGradiant = new Rainbow();
             rainbowGradiant.setNumberRange(0, 360);
             rainbowGradiant.setSpectrum('ff0000', 'ffc000', '00ff00',
 					'00ffff', '0000ff', 'c700ff');
@@ -187,7 +187,7 @@ var hdxPart = {
 		}
             }
             for (let i = 0; i < this.numParts; i++) {
-		let color = "#" + rainbowGradiant.colorAt((i * 223) % 360);
+		const color = "#" + rainbowGradiant.colorAt((i * 223) % 360);
 		pTable += '<tr id="partition' + i + '" custom-title = "Partition ' +i+'" onmouseover = "hoverP('+i+')" onmouseout = "hoverEndP('+i+')">';
 		pTable += '<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>'+i+'</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.surfaceIndices[i].toFixed(5)  + '</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +(this.adjacency[i]*100).toFixed(2)+"%"+ '</td>'+'<td style ="word-break:break-all; text-align:center;" bgcolor='+color+'>' +this.parts[i].length  + '</td></tr>';
             }
@@ -203,7 +203,7 @@ var hdxPart = {
 function hoverP(p) {
     if (hdxPart.colscheme == "rainbow") {
 	//rainbow object constructor
-        let rainbowGradiant = new Rainbow();
+        const rainbowGradiant = new Rainbow();
         rainbowGradiant.setNumberRange(0, 360);
         rainbowGradiant.setSpectrum('ff0000', 'ffc000', '00ff00',
 				    '00ffff', '0000ff', 'c700ff');
@@ -222,7 +222,7 @@ function hoverP(p) {
 function hoverEndP(p) {
     if (hdxPart.colscheme == "rainbow") {
         //rainbow object constructor
-        let rainbowGradiant = new Rainbow();
+        const rainbowGradiant = new Rainbow();
         rainbowGradiant.setNumberRange(0, 360);
         rainbowGradiant.setSpectrum('ff0000', 'ffc000', '00ff00',
 				    '00ffff', '0000ff', 'c700ff');
@@ -242,9 +242,9 @@ function hoverEndP(p) {
 // not the checkbox is selected to enable partitioning
 function partCallback() {
     // Get the checkbox
-    let checkBox = document.getElementById("calcparts");
+    const checkBox = document.getElementById("calcparts");
     // Get the output text
-    let parts = document.getElementById("numpartsselector");
+    const parts = document.getElementById("numpartsselector");
     
     // If the checkbox is checked, display the output text
     if (checkBox.checked) {
