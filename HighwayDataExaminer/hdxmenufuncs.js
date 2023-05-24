@@ -69,10 +69,6 @@ function HDXCreateBasicGraphSelectionMenu() {
     
 }
 
-/* these will be filled in by some PHP when the main index is loaded */
-var graphCategories = [];
-var graphCategoryLabels = [];
-
 /* build the advanced graph selection menu */
 function advancedMenu() {
     
@@ -208,11 +204,12 @@ function advancedMenu() {
     select3.appendChild(optAll);
 
     // other graph categories were put into the graphCategories and
-    // graphCategoryLabels arrays on loading of the main index
-    for (let i = 0; i < graphCategoryLabels.length; i++) {
+    // graphCategoryLabels arrays, which are fields of hdxGlobals, on
+    // loading of the main index
+    for (let i = 0; i < hdxGlobals.graphCategoryLabels.length; i++) {
 	let category = document.createElement("option");
-	category.innerHTML = graphCategoryLabels[i];
-	category.setAttribute("value", graphCategories[i]);
+	category.innerHTML = hdxGlobals.graphCategoryLabels[i];
+	category.setAttribute("value", hdxGlobals.graphCategories[i]);
 	select3.appendChild(category);
     }
     

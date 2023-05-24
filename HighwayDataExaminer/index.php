@@ -103,13 +103,15 @@
 
 <script type="text/javascript">
   hdxGlobals.graphArchiveSets = [];
+  hdxGlobals.graphCategories = [];
+  hdxGlobals.graphCategoryLabels = [];
   <?php
     // get list of graph types for advanced graph search
     $result = tmdb_query("SELECT * FROM graphTypes");
     
     while ($row = $result->fetch_array()) {
-      echo 'graphCategories.push("'.$row['category'].'");';
-      echo 'graphCategoryLabels.push("'.$row['descr'].'");';
+      echo 'hdxGlobals.graphCategories.push("'.$row['category'].'");';
+      echo 'hdxGlobals.graphCategoryLabels.push("'.$row['descr'].'");';
       echo "\n";
     }
     $result->free();
