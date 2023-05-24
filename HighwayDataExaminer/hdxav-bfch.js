@@ -105,7 +105,7 @@ const hdxBFConvexHullAV = {
     // helper function to draw and set the current segment, i to j
     mapCurrentSegment() {
 
-        let visitingLine = [];
+        const visitingLine = [];
         visitingLine[0] = [waypoints[this.hullv1].lat, waypoints[this.hullv1].lon];
         visitingLine[1] = [waypoints[this.hullv2].lat, waypoints[this.hullv2].lon];
         this.currentSegment = L.polyline(visitingLine, {
@@ -125,13 +125,13 @@ const hdxBFConvexHullAV = {
     // update the stats panel entry with latest counts
     updateStatsEntry() {
 
-        let avg = (this.checkValComputations*1.0/this.segmentsConsidered).toFixed(1);
+        const avg = (this.checkValComputations*1.0/this.segmentsConsidered).toFixed(1);
         updateAVControlEntry("stats",
                              "Considered " + this.segmentsConsidered +
                              " segments<br />Checked " +
                              this.checkValComputations +
                              " points, average of " + avg + " per segment");
-        let segCheck = document.getElementById("segmentCheckValCount");
+        const segCheck = document.getElementById("segmentCheckValCount");
         if (this.checkValThisSegment == 1) {
             segCheck.innerHTML = "Checked 1 point";
         }
@@ -251,8 +251,8 @@ const hdxBFConvexHullAV = {
             comment: "Calculate the equation of the line between v1 and v2",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                let pointv1 = waypoints[thisAV.hullv1];
-                let pointv2 = waypoints[thisAV.hullv2];
+                const pointv1 = waypoints[thisAV.hullv1];
+                const pointv2 = waypoints[thisAV.hullv2];
     
                 // compute the coefficients for ax + by = c
                 // of the line connecting v1 and v2
@@ -337,7 +337,7 @@ const hdxBFConvexHullAV = {
             comment: "Plug vertex into the equation of the candidate segment",
             code: function(thisAV) {
                 highlightPseudocode(this.label, thisAV.visualSettings.hullvtest);
-                let pointvtest = waypoints[thisAV.hullvtest];
+                const pointvtest = waypoints[thisAV.hullvtest];
                 thisAV.checkVal = thisAV.a * pointvtest.lon +
                     thisAV.b * pointvtest.lat - thisAV.c;
 
@@ -613,7 +613,7 @@ const hdxBFConvexHullAV = {
 
                 // grab the two endpoints from the last segment that
                 // was added to get started
-                let lastSegment = thisAV.hullSegmentEndpoints.pop();
+                const lastSegment = thisAV.hullSegmentEndpoints.pop();
                 table += thisAV.hullTableRow(lastSegment[0]) +
                     thisAV.hullTableRow(lastSegment[1]);
                 let connectTo = lastSegment[1];
@@ -622,7 +622,7 @@ const hdxBFConvexHullAV = {
                 while (thisAV.hullSegmentEndpoints.length > 0) {
                     for (let i = thisAV.hullSegmentEndpoints.length-1;
                          i >= 0; i--) {
-                        let segment = thisAV.hullSegmentEndpoints[i];
+                        const segment = thisAV.hullSegmentEndpoints[i];
                         if (segment[0] == connectTo) {
                             // we want to add segment[1]
                             table += thisAV.hullTableRow(segment[1]);
@@ -669,7 +669,7 @@ const hdxBFConvexHullAV = {
         //if (waypoints.length > 100) {
         //    alert("This is an O(n^3) algorithm in the worst case, so you might wish to choose a smaller graph.");
         //}
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -712,7 +712,7 @@ const hdxBFConvexHullAV = {
     @return whether this point is between the two given points
 */
 function isBetween(o1, o2, o3) {
-    var sqDisto1o2 = squaredDistance(o1,o2);
+    const sqDisto1o2 = squaredDistance(o1,o2);
     //alert("isBetween" + (squaredDistance(o3,o2) < sqDisto1o2) &&
     //      (squaredDistance(o3,o2) < sqDisto1o2));
     return (squaredDistance(o3,o2) < sqDisto1o2) &&
