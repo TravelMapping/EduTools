@@ -207,12 +207,12 @@ const hdxDegreeAV = {
 
                 // if the old leader is still leading in some other category,
                 // color it as such, and if not, discard
-                let oldLeaders = thisAV.categories[thisAV.nextCategory].tiedWith.concat([ thisAV.categories[thisAV.nextCategory].index ]);
+                const oldLeaders = thisAV.categories[thisAV.nextCategory].tiedWith.concat([ thisAV.categories[thisAV.nextCategory].index ]);
                 
                 // this is a loop to check all old leaders
                 // not just the first when checking ties
                 for (let oldLIndex = 0; oldLIndex < oldLeaders.length; oldLIndex++) {
-                    let oldLeader = oldLeaders[oldLIndex];
+                    const oldLeader = oldLeaders[oldLIndex];
                     let stillALeader = false;
                     for (let i = 0; i < thisAV.categories.length; i++) {
                         if (i == thisAV.nextCategory) continue;
@@ -451,14 +451,14 @@ const hdxDegreeAV = {
         addEntryToAVControlPanel("visiting", visualSettings.visiting);
         addEntryToAVControlPanel("discarded", visualSettings.discarded);
         for (let i = 0; i < this.categories.length; i++) {
-                addEntryToAVControlPanel(this.categories[i].name,
-                                         this.categories[i].visualSettings);
+            addEntryToAVControlPanel(this.categories[i].name,
+                                     this.categories[i].visualSettings);
         }
     },
 
     // set up UI for the start of this algorithm
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
 
         hdxAV.algStat.style.display = "";
