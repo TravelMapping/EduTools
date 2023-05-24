@@ -97,11 +97,11 @@ const hdxDegreeAV = {
                 thisAV.nextToCheck = 0;
                 thisAV.discarded = 0;
 
-                updateAVControlEntry("undiscovered", waypoints.length +
-				     " vertices not yet visited");
-                updateAVControlEntry("visiting",
-				     "Setting #0 " + waypoints[0].label + " as initial leader in each category");
-                updateAVControlEntry("discarded", "0 vertices discarded");
+                hdxAVCP.update("undiscovered", waypoints.length +
+			       " vertices not yet visited");
+                hdxAVCP.update("visiting", "Setting #0 " + waypoints[0].label +
+			       " as initial leader in each category");
+                hdxAVCP.update("discarded", "0 vertices discarded");
 
 		// show incident edges of 0 as being visited
 		for (let i = 0; i < waypoints[0].edgeList.length; i++) {
@@ -114,7 +114,7 @@ const hdxDegreeAV = {
                     updateMarkerAndTable(0,
                                          thisAV.categories[i].visualSettings, 
                                          40, false);
-                    updateAVControlEntry(
+                    hdxAVCP.update(
                         thisAV.categories[i].name,
                         thisAV.categories[i].label + " = " +
 			    waypoints[0].edgeList.length + " at "
@@ -149,8 +149,12 @@ const hdxDegreeAV = {
                     thisAV.foundNewLeader = false;
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.visiting,
                                          30, false);
-                    updateAVControlEntry("undiscovered", (waypoints.length - thisAV.nextToCheck) + " vertices not yet visited");
-                    updateAVControlEntry("visiting", "Visiting: #" + thisAV.nextToCheck + " " + waypoints[thisAV.nextToCheck].label);
+                    hdxAVCP.update("undiscovered",
+				   (waypoints.length - thisAV.nextToCheck) +
+				   " vertices not yet visited");
+                    hdxAVCP.update("visiting", "Visiting: #" +
+				   thisAV.nextToCheck + " " +
+				   waypoints[thisAV.nextToCheck].label);
 		    // higlight incident edges of vertex to be checked
 		    for (let i = 0; i < waypoints[thisAV.nextToCheck].edgeList.length; i++) {
 			updatePolylineAndTable(waypoints[thisAV.nextToCheck].edgeList[i].edgeListIndex,
@@ -229,7 +233,8 @@ const hdxDegreeAV = {
                         updateMarkerAndTable(oldLeader, visualSettings.discarded,
                                              20, true);
                         thisAV.discarded++;
-                        updateAVControlEntry("discarded", thisAV.discarded + " vertices discarded");
+                        hdxAVCP.update("discarded", thisAV.discarded +
+				       " vertices discarded");
                     }
                 }
 
@@ -251,10 +256,8 @@ const hdxDegreeAV = {
                 ans += '>' + thisAV.categories[thisAV.nextCategory].label +
 		    ' = ' + waypoints[thisAV.nextToCheck].edgeList.length +
 		    ' at ' + waypoints[thisAV.nextToCheck].label + '</span>';
-                updateAVControlEntry(
-                    thisAV.categories[thisAV.nextCategory].name,
-                    ans
-                );
+                hdxAVCP.update(thisAV.categories[thisAV.nextCategory].name,
+			       ans);
                 // advance category, skipping if necessary
                 thisAV.nextCategory++;
                 
@@ -332,10 +335,8 @@ const hdxDegreeAV = {
                     ans +=  " other."+ '</span>';
                 }
 		
-                updateAVControlEntry(
-                    thisAV.categories[thisAV.nextCategory].name, 
-                    ans
-                );
+                hdxAVCP.update(thisAV.categories[thisAV.nextCategory].name, 
+			       ans);
                 // advance category, skipping if necessary
                 
                     thisAV.nextCategory++;                
@@ -373,7 +374,8 @@ const hdxDegreeAV = {
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.discarded,
                                          20, true);
                     thisAV.discarded++;
-                    updateAVControlEntry("discarded", thisAV.discarded + " vertices discarded");
+                    hdxAVCP.update("discarded", thisAV.discarded +
+				   " vertices discarded");
 
                 }
                 hdxAV.iterationDone = true;
@@ -389,8 +391,8 @@ const hdxDegreeAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + markers.length + " waypoints.";
-                updateAVControlEntry("undiscovered", "0 vertices not yet visited");
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("undiscovered", "0 vertices not yet visited");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -447,12 +449,12 @@ const hdxDegreeAV = {
         this.code += pcEntry(2, "max.add(check)", "updateTieCategory1");
         this.code += "</table>";
         
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("discarded", visualSettings.discarded);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("discarded", visualSettings.discarded);
         for (let i = 0; i < this.categories.length; i++) {
-            addEntryToAVControlPanel(this.categories[i].name,
-                                     this.categories[i].visualSettings);
+            hdxAVCP.add(this.categories[i].name,
+                        this.categories[i].visualSettings);
         }
     },
 

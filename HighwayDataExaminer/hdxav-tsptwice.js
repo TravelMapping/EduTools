@@ -95,8 +95,8 @@ const hdxTwiceAroundTreeAV = {
 						   '00ff00','00ffff',
 						   '0000ff','c700ff');
 
-                updateAVControlEntry("undiscovered",waypoints.length +
-				     " vertices not yet visited");
+                hdxAVCP.update("undiscovered",waypoints.length +
+			       " vertices not yet visited");
 
                 // next we generate the complete graph behind the
                 // scenes for us to perform the mst and dft algorithms
@@ -204,11 +204,10 @@ const hdxTwiceAroundTreeAV = {
 					 visualSettings.v1,
 					 30, false);
 
-                    updateAVControlEntry("v1","from: #" +
-					 thisAV.finalPath[thisAV.nextToCheck] +
-					 " " + waypoints[thisAV.finalPath[thisAV.nextToCheck]].label);
+                    hdxAVCP.update("v1","from: #" +
+				   thisAV.finalPath[thisAV.nextToCheck] + " " +
+				   waypoints[thisAV.finalPath[thisAV.nextToCheck]].label);
                     
-
                     // This condition does not check the last point
                     // because we need to highlight both v1 and v2, so
                     // if we don't account for the last point we will
@@ -217,14 +216,15 @@ const hdxTwiceAroundTreeAV = {
 			updateMarkerAndTable(thisAV.finalPath[thisAV.nextToCheck + 1],
 					     visualSettings.v2,
 					     30,false);
-                        updateAVControlEntry("v2","to: #" +
-					     thisAV.finalPath[thisAV.nextToCheck + 1] +
-					     " " + waypoints[thisAV.finalPath[thisAV.nextToCheck + 1]].label);
+                        hdxAVCP.update("v2","to: #" +
+				       thisAV.finalPath[thisAV.nextToCheck + 1] +
+				       " " +
+				       waypoints[thisAV.finalPath[thisAV.nextToCheck + 1]].label);
                     }
 		    else {
-                        updateAVControlEntry("v2","to: #" +
-					     thisAV.finalPath[0] + " " +
-					     waypoints[thisAV.finalPath[0]].label);
+                        hdxAVCP.update("v2","to: #" +
+				       thisAV.finalPath[0] + " " +
+				       waypoints[thisAV.finalPath[0]].label);
                     }
                     hdxAV.nextAction = "addToPath";
                 }
@@ -232,8 +232,9 @@ const hdxTwiceAroundTreeAV = {
                     hdxAV.nextAction = 'cleanup';
                 }
                 
-                updateAVControlEntry("undiscovered",(waypoints.length - thisAV.nextToCheck) +
-				     " vertices not yet visited");
+                hdxAVCP.update("undiscovered",
+			       (waypoints.length - thisAV.nextToCheck) +
+			       " vertices not yet visited");
             },
             logMessage: function(thisAV) {
                 return "Iterating over the sorted array of vertices produced by depth-first traversal";
@@ -288,8 +289,8 @@ const hdxTwiceAroundTreeAV = {
                 thisAV.currDistance =
 		    distanceInMiles(currCoords[0][0],currCoords[0][1],
 				    currCoords[1][0],currCoords[1][1]);
-                updateAVControlEntry("currSum","Distance of Path: " +
-				     thisAV.currSum.toFixed(3) + " miles");
+                hdxAVCP.update("currSum","Distance of Path: " +
+			       thisAV.currSum.toFixed(3) + " miles");
                 
                 thisAV.currSum += thisAV.currDistance;
                 
@@ -298,8 +299,7 @@ const hdxTwiceAroundTreeAV = {
                 // add edge to AV table
                 thisAV.table += thisAV.edgeTableRow()
 
-                updateAVControlEntry('minPath',thisAV.table +
-				     '</tbody></table>');
+                hdxAVCP.update('minPath',thisAV.table + '</tbody></table>');
             },
             logMessage: function(thisAV) {
                 return "Adding edge between vertex #" +
@@ -313,11 +313,11 @@ const hdxTwiceAroundTreeAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
 
-                updateAVControlEntry("currSum","Distance of Path: " +
-				     thisAV.currSum.toFixed(3) + " miles");
-                updateAVControlEntry('v1','');
-                updateAVControlEntry('v2','');
-                updateAVControlEntry('undiscovered','');
+                hdxAVCP.update("currSum", "Distance of Path: " +
+			       thisAV.currSum.toFixed(3) + " miles");
+                hdxAVCP.update('v1', '');
+                hdxAVCP.update('v2', '');
+                hdxAVCP.update('undiscovered', '');
 
                 // cleanup
                 for (let i = 0; i < waypoints.length; i++) {
@@ -369,11 +369,11 @@ const hdxTwiceAroundTreeAV = {
 				  waypoints.length - 1);
 
 	// AVCP entries
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("v1",visualSettings.v1);
-        addEntryToAVControlPanel('v2',visualSettings.v2);
-        addEntryToAVControlPanel("currSum",visualSettings.discovered);
-        addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("v1", visualSettings.v1);
+        hdxAVCP.add('v2', visualSettings.v2);
+        hdxAVCP.add("currSum", visualSettings.discovered);
+        hdxAVCP.add("minPath", visualSettings.spanningTree);
     },
 
     cleanupUI() {

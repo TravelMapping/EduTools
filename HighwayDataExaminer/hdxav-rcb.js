@@ -88,8 +88,7 @@ const hdxPartitionerAV = {
 		    minLon: thisAV.minlon
 		});
                 hdxAV.nextAction = "methodCall";
-                addEntryToAVControlPanel("cut", visualSettings.pseudocodeDefault);
-
+                hdxAVCP.add("cut", visualSettings.pseudocodeDefault);
             },
             logMessage: function(thisAV) {
                 return "Doing some setup stuff";
@@ -270,8 +269,8 @@ const hdxPartitionerAV = {
 			    [thisAV.fp.minLat,thisAV.median]],
 				   visualSettings.visiting)
                     );
-                    updateAVControlEntry("cut", "Cutting on " +
-					 thisAV.median + " Longitude");
+                    hdxAVCP.update("cut", "Cutting on " +
+				   thisAV.median + " Longitude");
 
                    if (thisAV.coloring == "Overlays") {
                        thisAV.highlightRect.push(
@@ -290,8 +289,8 @@ const hdxPartitionerAV = {
 				    [thisAV.median,thisAV.fp.minLon]],
 				   visualSettings.visiting)
                     );
-                    updateAVControlEntry("cut", "Cutting on " +
-					 thisAV.median + " Latitude");
+                    hdxAVCP.update("cut", "Cutting on " +
+				   thisAV.median + " Latitude");
 
                   if (thisAV.coloring == "Overlays") {
                       thisAV.highlightRect.push(
@@ -372,9 +371,9 @@ const hdxPartitionerAV = {
 		
                 // adding data table
                 hdxPart.partitionAnalysis();
-                removeEntryFromAVControlPanel("stats");
-                addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
-                updateAVControlEntry("stats", hdxPart.styling());
+                hdxAVCP.remove("stats");
+                hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
+                hdxAVCP.update("stats", hdxPart.styling());
 		
                 hdxAV.nextAction = "base";                    
             },
@@ -510,9 +509,9 @@ const hdxPartitionerAV = {
                 }
                 // adding data table
                 hdxPart.partitionAnalysis();
-                removeEntryFromAVControlPanel("cut");
-                addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
-                updateAVControlEntry("stats", hdxPart.styling());
+                hdxAVCP.remove("cut");
+                hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
+                hdxAVCP.update("stats", hdxPart.styling());
 		
                 hdxAV.nextAction = "cleanup";                    
             },
@@ -586,8 +585,8 @@ const hdxPartitionerAV = {
 	HDXQSRegisterAndSetCheckbox(this, "onfly", "calcOnFly");
 
         // AVCP entries
-        addEntryToAVControlPanel ("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel ("visiting",visualSettings.visiting);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("visiting", visualSettings.visiting);
     },
 
     // cleans up lines and overlays

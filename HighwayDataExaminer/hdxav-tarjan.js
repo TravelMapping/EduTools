@@ -65,10 +65,10 @@ const hdxTarjanAV = {
                 thisAV.numBridges = 0;
 
             
-                updateAVControlEntry("undiscovered", graphEdges.length +
-				     " edges not yet visited");
-                updateAVControlEntry("numBridges","Number of Bridges: " +
-				     thisAV.numBridges);
+                hdxAVCP.update("undiscovered", graphEdges.length +
+			       " edges not yet visited");
+                hdxAVCP.update("numBridges","Number of Bridges: " +
+			       thisAV.numBridges);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topForLoop";
@@ -119,12 +119,12 @@ const hdxTarjanAV = {
             label: "removeEdge",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
-                updateAVControlEntry("undiscovered",
-				     (graphEdges.length - thisAV.nextToCheck - 1) +
-				     " edges not yet visited");
-                updateAVControlEntry("visiting","Removed Edge: #" +
-				     thisAV.nextToCheck + " " +
-				     thisAV.removedEdge.label);
+                hdxAVCP.update("undiscovered",
+			       (graphEdges.length - thisAV.nextToCheck - 1) +
+			       " edges not yet visited");
+                hdxAVCP.update("visiting","Removed Edge: #" +
+			       thisAV.nextToCheck + " " +
+			       thisAV.removedEdge.label);
 		
                 // highlight the current edge being checked
                 updatePolylineAndTable(thisAV.nextToCheck,
@@ -139,10 +139,10 @@ const hdxTarjanAV = {
                 updateMarkerAndTable(thisAV.v1,visualSettings.v1,false);
                 updateMarkerAndTable(thisAV.v2,visualSettings.v2,false);
 
-                updateAVControlEntry("v1","v1: #" + thisAV.v1 + " " +
-				     waypoints[thisAV.v1].label);
-                updateAVControlEntry("v2","v2: #" + thisAV.v2 + " " +
-				     waypoints[thisAV.v2].label);
+                hdxAVCP.update("v1","v1: #" + thisAV.v1 + " " +
+			       waypoints[thisAV.v1].label);
+                hdxAVCP.update("v2","v2: #" + thisAV.v2 + " " +
+			       waypoints[thisAV.v2].label);
                 
                 hdxAV.nextAction = "dft";
             },
@@ -223,8 +223,8 @@ const hdxTarjanAV = {
                     false);
             
                 thisAV.numBridges++;
-                updateAVControlEntry("numBridges","Number of Bridges: " +
-				     thisAV.numBridges);
+                hdxAVCP.update("numBridges","Number of Bridges: " +
+			       thisAV.numBridges);
 
                 // record the current removedEdge as a bridge so it
                 // can be correctly highlighted future iterations
@@ -287,11 +287,11 @@ const hdxTarjanAV = {
                 // removes waypoints from the data table, not useful here
                 document.getElementById("waypoints").style.display = "none";
 		
-                updateAVControlEntry("undiscovered",'');
-                updateAVControlEntry("visiting",'');
+                hdxAVCP.update("undiscovered", '');
+                hdxAVCP.update("visiting", '');
                 
-                updateAVControlEntry("v1",'');
-                updateAVControlEntry("v2",'');
+                hdxAVCP.update("v1", '');
+                hdxAVCP.update("v2", '');
 		
                 hdxAV.iterationDone = "true";
                 hdxAV.nextAction = "DONE";
@@ -334,11 +334,11 @@ const hdxTarjanAV = {
 
         hdxAV.algOptions.innerHTML = '';
 
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("visiting",visualSettings.visiting);
-        addEntryToAVControlPanel("v1",visualSettings.v1);
-        addEntryToAVControlPanel("v2",visualSettings.v2);
-        addEntryToAVControlPanel("numBridges",visualSettings.searchFailed);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("v1", visualSettings.v1);
+        hdxAVCP.add("v2", visualSettings.v2);
+        hdxAVCP.add("numBridges", visualSettings.searchFailed);
     },
     cleanupUI() {
 

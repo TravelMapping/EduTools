@@ -88,7 +88,8 @@ const hdxAPClosestPointAV = {
                 thisAV.discoveredPairs = '<table class="pathTable">' + 
                 '<thead><tr style="text-align:center" id="pathHeaders">' +
                 '<th>From</th><th>To</th><th>Distance</th></tr></thead><tbody>';
-                updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
+                hdxAVCP.update("closestPairs", thisAV.discoveredPairs +
+			       '</tbody></table>');
                 hdxAV.iterationDone = true;
                 
             },
@@ -103,7 +104,8 @@ const hdxAPClosestPointAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.outLoop++;
-                updateAVControlEntry("v1Visiting", "v<sub>1</sub>: " + thisAV.outLoop);
+                hdxAVCP.update("v1Visiting", "v<sub>1</sub>: " +
+			       thisAV.outLoop);
                 
                 if (thisAV.outLoop < waypoints.length) {
 		    hdxAV.nextAction = "resetClosest";
@@ -150,13 +152,14 @@ const hdxAPClosestPointAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.inLoop++;
                 
-                updateAVControlEntry("v2Visiting", "v<sub>2</sub>: " + thisAV.inLoop);
+                hdxAVCP.update("v2Visiting", "v<sub>2</sub>: " + thisAV.inLoop);
                 
                 if (thisAV.inLoop < waypoints.length) {
                     thisAV.v = thisAV.inLoop
                     thisAV.vert1 = waypoints[thisAV.outLoop];
                     thisAV.vert2 = waypoints[thisAV.inLoop];
-                    updateAVControlEntry("checkingDistance", "Distance: " + thisAV.d.toFixed(3));
+                    hdxAVCP.update("checkingDistance", "Distance: " +
+				   thisAV.d.toFixed(3));
                     updateMarkerAndTable(thisAV.outLoop, visualSettings.v1, 30, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.v2, 30, false);
                     thisAV.currentPoly = L.polyline([[thisAV.vert1.lat, thisAV.vert1.lon], [thisAV.vert2.lat, thisAV.vert2.lon]],
@@ -266,17 +269,21 @@ const hdxAPClosestPointAV = {
                     }); 
                     thisAV.leaderPoly.addTo(map);
                     thisAV.currentPoly = null;
-                    updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
-                    + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
+                    hdxAVCP.update("closeLeader", "Closest: [" +
+				   thisAV.outLoop + ", " + thisAV.inLoop +
+				   "], " + "d<sub>closest</sub>: " +
+				   thisAV.dClosest.toFixed(3));
                     
                 // CASE 2: We already have a leader, however, we have
                 // found a new leader in the previous state
                 // "ifClosest"
                 }
 		else {
-                    updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
+                    updateMarkerAndTable(thisAV.vClosest,
+					 visualSettings.discarded, 5, false);
 		    
-                    updateMarkerAndTable(thisAV.v, visualSettings.leader, 5, false);
+                    updateMarkerAndTable(thisAV.v, visualSettings.leader, 5,
+					 false);
 
                     thisAV.currentPoly.remove();
                     thisAV.leaderPoly.remove();
@@ -294,14 +301,15 @@ const hdxAPClosestPointAV = {
                     updateMarkerAndTable(thisAV.vClosest, visualSettings.discarded, 5, false);
                     updateMarkerAndTable(thisAV.inLoop, visualSettings.leader, 5, false);
                     
-                    updateAVControlEntry("closeLeader", "Closest: [" + thisAV.outLoop + ", " + thisAV.inLoop + "], " 
-                    + "d<sub>closest</sub>: " + thisAV.dClosest.toFixed(3));
+                    hdxAVCP.update("closeLeader", "Closest: [" +
+				   thisAV.outLoop + ", " + thisAV.inLoop +
+				   "], d<sub>closest</sub>: " +
+				   thisAV.dClosest.toFixed(3));
                 }
                 thisAV.vClosest = thisAV.inLoop;
                 thisAV.closestVertices[thisAV.outLoop] = thisAV.inLoop;
                 thisAV.dClosest = thisAV.d;
                 hdxAV.nextAction = "v2ForLoopTop";
-                
             },
             logMessage: function (thisAV) {
                 return "Setting v<sub>closest</sub> equal to vertex #" + thisAV.inLoop + " and " +
@@ -319,7 +327,8 @@ const hdxAPClosestPointAV = {
                 thisAV.discoveredPairs += '<tr><td>v<sub>1</sub>: ' + thisAV.outLoop + '</td><td>v<sub>2</sub>: ' +
                  thisAV.vClosest + '</td><td>' + thisAV.dClosest.toFixed(3) + '</td>';
                 
-                updateAVControlEntry("closestPairs", thisAV.discoveredPairs + '</tbody></table>');
+                hdxAVCP.update("closestPairs", thisAV.discoveredPairs +
+			       '</tbody></table>');
                 for (let i = 0; i < waypoints.length; i++)
                 {
                     updateMarkerAndTable(i, visualSettings.undiscovered, 0, false);
@@ -393,11 +402,11 @@ const hdxAPClosestPointAV = {
 	hdxAV.logMessageArr = [];
 	hdxAV.logMessageArr.push("Setting up");
 	
-	addEntryToAVControlPanel("v1Visiting", visualSettings.v1);
-	addEntryToAVControlPanel("v2Visiting", visualSettings.v2);
-	addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
-	addEntryToAVControlPanel("closeLeader", visualSettings.leader);
-	addEntryToAVControlPanel("closestPairs", visualSettings.discovered);    
+	hdxAVCP.add("v1Visiting", visualSettings.v1);
+	hdxAVCP.add("v2Visiting", visualSettings.v2);
+	hdxAVCP.add("checkingDistance", visualSettings.visiting);
+	hdxAVCP.add("closeLeader", visualSettings.leader);
+	hdxAVCP.add("closestPairs", visualSettings.discovered);    
     },
     
     cleanupUI() {

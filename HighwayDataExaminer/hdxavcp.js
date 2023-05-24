@@ -6,96 +6,96 @@
 // Primary Author: Jim Teresco
 //
 
-/* functions for algorithm visualization control panel */
-var AVCPsuffix = "AVCPEntry";
-var AVCPentries = [];
-var AVCProws = [];
+const hdxAVCP = {
 
-/* add entry to the algorithm visualization control panel */
-function addEntryToAVControlPanel(namePrefix, vs) {
+    suffix: "AVCPEntry",
+    entries: [],
+    rows: [],
+
+    // save 
+    init: function() {
+
+	this.tbody = document.getElementById('algorithmVars');
+    },
     
-    const avControlTbody = document.getElementById('algorithmVars');
-    const infoBox = document.createElement('td');
-    const infoBoxtr = document.createElement('tr');
-    infoBox.setAttribute('id', namePrefix + AVCPsuffix);
-    infoBox.setAttribute('style', "color:" + vs.textColor +
-                         "; background-color:" + vs.color);
-    infoBoxtr.appendChild(infoBox);
-    infoBoxtr.style.display = "none";
-    AVCProws.push(infoBoxtr);
-    avControlTbody.appendChild(infoBoxtr);
-    AVCPentries.push(namePrefix);
-}
+    /* add entry to the algorithm visualization control panel */
+    add: function(namePrefix, vs) {
+    
+	const infoBox = document.createElement('td');
+	const infoBoxtr = document.createElement('tr');
+	infoBox.setAttribute('id', namePrefix + this.suffix);
+	infoBox.setAttribute('style', "color:" + vs.textColor +
+                             "; background-color:" + vs.color);
+	infoBoxtr.appendChild(infoBox);
+	infoBoxtr.style.display = "none";
+	this.rows.push(infoBoxtr);
+	this.tbody.appendChild(infoBoxtr);
+	this.entries.push(namePrefix);
+    },
 
-function showAVCPEntries()
-{
-    for (let i = 0; i < AVCProws.length; i++)
-    {
-        AVCProws[i].style.display = "";
-    }
-}
+    showEntries: function() {
+	
+	for (let i = 0; i < this.rows.length; i++) {
+            this.rows[i].style.display = "";
+	}
+    },
 
-function hideAVCPEntries()
-{
-    for (let i = 0; i < AVCProws.length; i++)
-    {
-        if (AVCProws[i].firstChild.innerHTML == "")
-        {
-            AVCProws[i].style.display = "none";
-        }
-    }
-}
-/* clean up all entries from algorithm visualization control panel */
-function cleanupAVControlPanel() {
+    hideEntries: function() {
+	
+	for (let i = 0; i < this.rows.length; i++) {
+            if (this.rows[i].firstChild.innerHTML == "") {
+		this.rows[i].style.display = "none";
+            }
+	}
+    },
+    
+    /* clean up all entries from algorithm visualization control panel */
+    cleanup: function() {
+	
+	document.getElementById("algorithmStatus").innerHTML = "";
+	document.getElementById("pseudoText").innerHTML = "";
+	while (this.entries.length > 0) {
+            this.remove(this.entries.pop());
+	}
+    },
 
-    document.getElementById("algorithmStatus").innerHTML = "";
-    document.getElementById("pseudoText").innerHTML = "";
-    while (AVCPentries.length > 0) {
-        removeEntryFromAVControlPanel(AVCPentries.pop());
-    }
-}
+    /* remove entry from algorithm visualization control panel */
+    remove: function(namePrefix) {
 
-/* remove entry from algorithm visualization control panel */
-function removeEntryFromAVControlPanel(namePrefix) {
+	const infoBox = document.getElementById(namePrefix + this.suffix);
+	if (infoBox != null) {
+            const infoBoxtr= infoBox.parentNode;
+            this.tbody.removeChild(infoBoxtr);
+	}
+    },
 
-    const avControlTbody = document.getElementById('algorithmVars');
-    const infoBox = document.getElementById(namePrefix + AVCPsuffix);
-    if (infoBox != null) {
-        const infoBoxtr= infoBox.parentNode;
-        avControlTbody.removeChild(infoBoxtr);
-    }
-}
-
-/* set the HTML of an AV control panel entry */
-function updateAVControlEntry(namePrefix, text) {
-
+    /* set the HTML of an AV control panel entry */
+    update: function(namePrefix, text) {
         
-    document.getElementById(namePrefix + AVCPsuffix).innerHTML = text;
-    if (text == "")
-    {
-        document.getElementById(namePrefix + AVCPsuffix).parentNode.style.display = "none";
-    }
-    else
-    {
-        document.getElementById(namePrefix + AVCPsuffix).parentNode.style.display = "";
-    }
-    if (hdxAV.delay != 0) {
-        HDXAddCustomTitles();
-    }
+	document.getElementById(namePrefix + this.suffix).innerHTML = text;
+	if (text == "") {
+            document.getElementById(namePrefix + this.suffix).parentNode.style.display = "none";
+	}
+	else {
+            document.getElementById(namePrefix + this.suffix).parentNode.style.display = "";
+	}
+	if (hdxAV.delay != 0) {
+            HDXAddCustomTitles();
+	}
+    },
+
+    /* set the visualSettings of an AV control panel entry */
+    updateVS: function(namePrefix, vs) {
+
+	const infoBox = document.getElementById(namePrefix + this.suffix);
+	infoBox.setAttribute('style', "color:" + vs.textColor +
+                             "; background-color:" + vs.color);
+    },
     
-    
+    /* get the document element of an AV control entry */
+    getDocumentElement: function(namePrefix) {
+
+	return document.getElementById(namePrefix + this.suffix);
+    }
 }
 
-/* set the visualSettings of an AV control panel entry */
-function updateAVControlVisualSettings(namePrefix, vs) {
-
-    const infoBox = document.getElementById(namePrefix + AVCPsuffix);
-    infoBox.setAttribute('style', "color:" + vs.textColor +
-                         "; background-color:" + vs.color);
-}
-
-/* get the document element of an AV control entry */
-function getAVControlEntryDocumentElement(namePrefix) {
-
-    return document.getElementById(namePrefix + AVCPsuffix);
-}

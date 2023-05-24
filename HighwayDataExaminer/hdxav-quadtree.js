@@ -91,7 +91,8 @@ const hdxQuadtreeAV = {
                 thisAV.refI = -1; 
 
                 thisAV.numVUndiscovered = waypoints.length;
-                updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
+                hdxAVCP.update("undiscovered", thisAV.numVUndiscovered +
+			       " vertices not yet visited");
 
                 // other stuff needs to go here but at least the
                 // boundingBox should be generated from here
@@ -124,21 +125,18 @@ const hdxQuadtreeAV = {
                 if (thisAV.nextToCheck < waypoints.length) {
                     waypoints[thisAV.nextToCheck].num = thisAV.nextToCheck;
                     thisAV.currentVertex = waypoints[thisAV.nextToCheck];
-                    updateMarkerAndTable(thisAV.nextToCheck, visualSettings.visiting,
-					 30, false);
-                    updateAVControlEntry("visiting","Visiting: #" +
-					 thisAV.currentVertex.num + " " +
-					 thisAV.currentVertex.label);
+                    updateMarkerAndTable(thisAV.nextToCheck,
+					 visualSettings.visiting, 30, false);
+                    hdxAVCP.update("visiting","Visiting: #" +
+				   thisAV.currentVertex.num + " " +
+				   thisAV.currentVertex.label);
                     thisAV.numVUndiscovered--;
-                    updateAVControlEntry("undiscovered",
-					 thisAV.numVUndiscovered +
-					 " vertices not yet visited");
-                    updateAVControlEntry("numLeaves",
-					 "Number of leaf quadtrees: " +
-					 thisAV.numLeaves);
-                    updateAVControlEntry("maxDepth",
-					 "Depth of the quadtree: " +
-					 thisAV.maxDepth);
+                    hdxAVCP.update("undiscovered", thisAV.numVUndiscovered +
+				   " vertices not yet visited");
+                    hdxAVCP.update("numLeaves", "Number of leaf quadtrees: " +
+				   thisAV.numLeaves);
+                    hdxAVCP.update("maxDepth", "Depth of the quadtree: " +
+				   thisAV.maxDepth);
                     thisAV.qtStack.push(thisAV.currentQuadtree);
                     thisAV.highlightBoundingBox();
                     hdxAV.nextAction = "topAddPoint";
@@ -266,13 +264,12 @@ const hdxQuadtreeAV = {
                 // that the refinement process has begun
                 thisAV.addNewPolylines();
                 thisAV.numLeaves += 3
-                updateAVControlEntry("numLeaves",
-				     "Number of leaf quadtrees: " +
-				     thisAV.numLeaves);
+                hdxAVCP.update("numLeaves", "Number of leaf quadtrees: " +
+			       thisAV.numLeaves);
                 if (thisAV.maxDepth < thisAV.qtStack.length) {
                     thisAV.maxDepth = thisAV.qtStack.length;
-                    updateAVControlEntry("maxDepth","Depth of the quadtree: " +
-					 thisAV.maxDepth);
+                    hdxAVCP.update("maxDepth","Depth of the quadtree: " +
+				   thisAV.maxDepth);
                 }
 
                 //this will overwrite existing polylines
@@ -304,7 +301,9 @@ const hdxQuadtreeAV = {
                 if (thisAV.refI < thisAV.refinement) {
                     hdxAV.nextAction = "loopFindChild";
                     updateMarkerAndTable(thisAV.currentVertex.num,visualSettings.visiting,30,false);
-                    updateAVControlEntry("visiting","Visiting: #" + thisAV.currentVertex.num + " " + thisAV.currentVertex.label);
+                    hdxAVCP.update("visiting","Visiting: #" +
+				   thisAV.currentVertex.num + " " +
+				   thisAV.currentVertex.label);
                 }
 		else {
                     hdxAV.nextAction = "pointsNull";
@@ -534,7 +533,7 @@ const hdxQuadtreeAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + waypoints.length + " waypoints.";
-                updateAVControlEntry("visiting","");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
                 for (let i = 0; i < thisAV.highlightPoly.length; i++) {
@@ -642,10 +641,10 @@ const hdxQuadtreeAV = {
 	HDXQSRegisterAndSetCheckbox(this, "box", "squareBB");
 
 	// AVCP entries
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("visiting",visualSettings.visiting)
-        addEntryToAVControlPanel("numLeaves",visualSettings.discovered);
-        addEntryToAVControlPanel("maxDepth",visualSettings.highlightBounding);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("visiting", visualSettings.visiting)
+        hdxAVCP.add("numLeaves", visualSettings.discovered);
+        hdxAVCP.add("maxDepth", visualSettings.highlightBounding);
     },
 
     cleanupUI() {

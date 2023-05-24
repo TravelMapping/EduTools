@@ -74,7 +74,8 @@ const hdxOrderingAV = {
                 thisAV.lengthOfEdges = [];
 
 
-                updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
+                hdxAVCP.update("undiscovered",thisAV.numVUndiscovered +
+			       " vertices not yet visited");
 
                 thisAV.option = document.getElementById("traversalOrdering").value;
                 thisAV.refinement = document.getElementById("refinement").value;
@@ -216,10 +217,12 @@ const hdxOrderingAV = {
                     hdxAV.nextAction = "addEdge";
 		    
                     thisAV.numVUndiscovered--;
-                    updateAVControlEntry("undiscovered",thisAV.numVUndiscovered + " vertices not yet visited");
-                    updateAVControlEntry("v1","from: #" + thisAV.v1 + " " + waypoints[thisAV.nextToCheck].label);
-                    updateAVControlEntry("v2","to: #" + thisAV.v2 + " " + waypoints[thisAV.nextToCheck + 1].label);
-
+                    hdxAVCP.update("undiscovered",thisAV.numVUndiscovered +
+				   " vertices not yet visited");
+                    hdxAVCP.update("v1","from: #" + thisAV.v1 + " " +
+				   waypoints[thisAV.nextToCheck].label);
+                    hdxAVCP.update("v2","to: #" + thisAV.v2 + " " +
+				   waypoints[thisAV.nextToCheck + 1].label);
                 }
 		else {
                     hdxAV.nextAction = "cleanup";
@@ -261,16 +264,22 @@ const hdxOrderingAV = {
 		
                 thisAV.drawLineVisiting();
 		
-                updateAVControlEntry("totalLength","Total length of edges: " + thisAV.lengthEdges.toFixed(3) + " " + distanceUnits);
+                hdxAVCP.update("totalLength","Total length of edges: " +
+			       thisAV.lengthEdges.toFixed(3) + " " +
+			       distanceUnits);
 		
                 if (thisAV.currentEdgeLength > thisAV.longestEdgeLength) {
                     thisAV.longestEdgeLength = thisAV.currentEdgeLength;
-                    updateAVControlEntry("longestEdge","Longest edge added: " + thisAV.longestEdgeLength.toFixed(3) + " " + distanceUnits);
+                    hdxAVCP.update("longestEdge","Longest edge added: " +
+				   thisAV.longestEdgeLength.toFixed(3) + " " +
+				   distanceUnits);
                 }
 		
-                updateAVControlEntry("varianceLength","Standard deviation of edges: " + thisAV.calculateStdevOfEdges() + " " + distanceUnits);
+                hdxAVCP.update("varianceLength",
+			       "Standard deviation of edges: " +
+			       thisAV.calculateStdevOfEdges() + " " +
+			       distanceUnits);
                 hdxAV.nextAction = "topForLoop"
-		
             },
             logMessage: function(thisAV) {
                 return "Adding edge between vertex #" + waypoints[thisAV.nextToCheck].num + " and vertex #"
@@ -306,9 +315,9 @@ const hdxOrderingAV = {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + waypoints.length + " waypoints.";
                 hdxAV.nextAction = "DONE";
-                updateAVControlEntry("undiscovered","0 vertices not yet visited");
-                updateAVControlEntry("v1","");
-                updateAVControlEntry("v2","");
+                hdxAVCP.update("undiscovered", "0 vertices not yet visited");
+                hdxAVCP.update("v1", "");
+                hdxAVCP.update("v2", "");
 		
                 hdxAV.iterationDone = true;
             },
@@ -381,12 +390,12 @@ const hdxOrderingAV = {
 				  waypoints.length);
 
 	// AVCP entries
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("v1",visualSettings.v1);
-        addEntryToAVControlPanel("v2", visualSettings.v2);
-        addEntryToAVControlPanel("totalLength",visualSettings.discovered);
-        addEntryToAVControlPanel("longestEdge",visualSettings.spanningTree);
-        addEntryToAVControlPanel("varianceLength",visualSettings.averageCoord);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("v1", visualSettings.v1);
+        hdxAVCP.add("v2", visualSettings.v2);
+        hdxAVCP.add("totalLength", visualSettings.discovered);
+        hdxAVCP.add("longestEdge", visualSettings.spanningTree);
+        hdxAVCP.add("varianceLength", visualSettings.averageCoord);
 
         const refSelector = document.getElementById("refinement");
         refSelector.disabled = true;
@@ -427,8 +436,8 @@ const hdxOrderingAV = {
         this.lengthEdges += this.currentEdgeLength;
         this.lengthOfEdges.push(this.currentEdgeLength);
 
-        updateAVControlEntry("totalLength","Total length of edges so far: " +
-			     this.lengthEdges.toFixed(2) + " mi");
+        hdxAVCP.update("totalLength","Total length of edges so far: " +
+		       this.lengthEdges.toFixed(2) + " mi");
         
         this.polyLines.push(
             L.polyline(visitingLine, {

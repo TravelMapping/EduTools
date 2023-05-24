@@ -76,17 +76,19 @@ const hdxVertexPairsAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
 		if (thisAV.findClosest) {
-                    updateAVControlEntry("closeLeader", "no leader yet, d<sub>closest</sub> = &infin;");
+                    hdxAVCP.update("closeLeader",
+				   "no leader yet, d<sub>closest</sub> = &infin;");
 		}
 		else {
-		    updateAVControlEntry("closeLeader", "");
+		    hdxAVCP.update("closeLeader", "");
 		}
-
+		
 		if (thisAV.findFarthest) {
-                    updateAVControlEntry("farLeader", "no leader yet, d<sub>farthest</sub> = 0");
+                    hdxAVCP.update("farLeader",
+				   "no leader yet, d<sub>farthest</sub> = 0");
 		}
 		else {
-		    updateAVControlEntry("farLeader", "");
+		    hdxAVCP.update("farLeader", "");
 		}
 
                 hdxAV.iterationDone = true;
@@ -113,7 +115,9 @@ const hdxVertexPairsAV = {
                     thisAV.v2 = thisAV.v1;  // will increment to +1
                     updateMarkerAndTable(thisAV.v1, thisAV.visualSettings.v1,
                                          30, false);
-                    updateAVControlEntry("v1visiting", "v<sub>1</sub>: #" + thisAV.v1 + " " + waypoints[thisAV.v1].label);
+                    hdxAVCP.update("v1visiting", "v<sub>1</sub>: #" +
+				   thisAV.v1 + " " +
+				   waypoints[thisAV.v1].label);
                     // all subsequent vertices will be looped over and should
                     // go back to undiscovered for now
                     for (let i = thisAV.v1+1; i < waypoints.length; i++) {
@@ -149,8 +153,10 @@ const hdxVertexPairsAV = {
                     hdxAV.nextAction = "computeDistance";
                     updateMarkerAndTable(thisAV.v2, thisAV.visualSettings.v2,
                                          30, false);
-                    updateAVControlEntry("v2visiting", "v<sub>2</sub>: #" + thisAV.v2 + " " + waypoints[thisAV.v2].label);
-                    updateAVControlEntry("checkingDistance", "Distance: ");
+                    hdxAVCP.update("v2visiting", "v<sub>2</sub>: #" +
+				   thisAV.v2 + " " +
+				   waypoints[thisAV.v2].label);
+                    hdxAVCP.update("checkingDistance", "Distance: ");
                     thisAV.drawLineVisiting();
                 }
                 hdxAV.iterationDone = true;
@@ -183,7 +189,8 @@ const hdxVertexPairsAV = {
                                     waypoints[thisAV.v1].lon,
                                     waypoints[thisAV.v2].lat,
                                     waypoints[thisAV.v2].lon));
-                updateAVControlEntry("checkingDistance", "Distance: " + thisAV.d_this.toFixed(3));
+                hdxAVCP.update("checkingDistance", "Distance: " +
+			       thisAV.d_this.toFixed(3));
 		if (thisAV.findClosest) {
                     hdxAV.nextAction = "checkCloseLeader";
 		}
@@ -251,8 +258,10 @@ const hdxVertexPairsAV = {
                 thisAV.closest = [ thisAV.v1, thisAV.v2 ];
                 thisAV.d_closest = thisAV.d_this;
 
-                updateAVControlEntry("closeLeader", "Closest: [" + 
-                                     thisAV.v1 + "," + thisAV.v2 + "], d<sub>closest</sub>: " + thisAV.d_closest.toFixed(3));
+                hdxAVCP.update("closeLeader", "Closest: [" + 
+                               thisAV.v1 + "," + thisAV.v2 +
+			       "], d<sub>closest</sub>: " +
+			       thisAV.d_closest.toFixed(3));
                 updateMarkerAndTable(thisAV.v1, visualSettings.leader,
                                      40, false);
                 updateMarkerAndTable(thisAV.v2, visualSettings.leader,
@@ -320,8 +329,10 @@ const hdxVertexPairsAV = {
                 thisAV.farthest = [ thisAV.v1, thisAV.v2 ];
                 thisAV.d_farthest = thisAV.d_this;
 
-                updateAVControlEntry("farLeader", "Farthest: [" + 
-                                     thisAV.v1 + "," + thisAV.v2 + "], d<sub>farthest</sub>: " + thisAV.d_farthest.toFixed(3));
+                hdxAVCP.update("farLeader", "Farthest: [" + 
+                               thisAV.v1 + "," + thisAV.v2 +
+			       "], d<sub>farthest</sub>: " +
+			       thisAV.d_farthest.toFixed(3));
                 updateMarkerAndTable(thisAV.v1, visualSettings.leader2,
                                      40, false);
                 updateMarkerAndTable(thisAV.v2, visualSettings.leader2,
@@ -443,9 +454,9 @@ const hdxVertexPairsAV = {
                                          visualSettings.discarded, 15, true);
                 }
                 
-                updateAVControlEntry("v1visiting", "");
-                updateAVControlEntry("v2visiting", "");
-                updateAVControlEntry("checkingDistance", "");
+                hdxAVCP.update("v1visiting", "");
+                hdxAVCP.update("v2visiting", "");
+                hdxAVCP.update("checkingDistance", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -608,11 +619,11 @@ Compute: <select id="closeAndOrFar">
 	HDXQSRegisterAndSetCheckbox(this, "keepLines", "keepLines");
 
 	// AVCP entries
-        addEntryToAVControlPanel("v1visiting", this.visualSettings.v1);
-        addEntryToAVControlPanel("v2visiting", this.visualSettings.v2);
-        addEntryToAVControlPanel("checkingDistance", visualSettings.visiting);
-        addEntryToAVControlPanel("closeLeader", visualSettings.leader);
-        addEntryToAVControlPanel("farLeader", visualSettings.leader2);
+        hdxAVCP.add("v1visiting", this.visualSettings.v1);
+        hdxAVCP.add("v2visiting", this.visualSettings.v2);
+        hdxAVCP.add("checkingDistance", visualSettings.visiting);
+        hdxAVCP.add("closeLeader", visualSettings.leader);
+        hdxAVCP.add("farLeader", visualSettings.leader2);
     },
         
         

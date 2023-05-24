@@ -17,6 +17,9 @@ function HDXInit() {
     // graph selector data initialization
     //HDXGraphSearchInit();
 
+    // AVCP initialization
+    hdxAVCP.init();
+
     hdxGlobals.titleScreen = true;
     // will we skip the title screen?
     if (HDXQSIsSpecified("load")) {

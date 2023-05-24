@@ -83,9 +83,9 @@ const hdxDFSRecAV = {
 
                 thisAV.callStack.add(thisAV.visiting);
                
-                updateAVControlEntry("visiting", "Visiting vertex " + thisAV.visiting
-                    + ": " + waypoints[thisAV.visiting].label);
-
+                hdxAVCP.update("visiting", "Visiting vertex " + thisAV.visiting
+			       + ": " + waypoints[thisAV.visiting].label);
+		
                 // show on map as visiting color            
                 updateMarkerAndTable(thisAV.visiting,
                     visualSettings.visiting, 10, false);
@@ -248,8 +248,8 @@ const hdxDFSRecAV = {
                 }
 
                 //update color for new current vertex
-                updateAVControlEntry("visiting", "Visiting vertex " + thisAV.visiting
-				     + ": " + waypoints[thisAV.visiting].label);
+                hdxAVCP.update("visiting", "Visiting vertex " + thisAV.visiting
+			       + ": " + waypoints[thisAV.visiting].label);
                 updateMarkerAndTable(thisAV.visiting,
 				     visualSettings.visiting, 10, false);
 
@@ -276,7 +276,7 @@ const hdxDFSRecAV = {
 				     visualSettings.startVertex, 4, false);
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + graphEdges.length + " edges.";
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -330,13 +330,14 @@ const hdxDFSRecAV = {
     },
     
     updateControlEntries() {
-        updateAVControlEntry("undiscovered", "Undiscovered: " +
-                             this.numEUndiscovered + " E, " +
-                             this.numVUndiscovered + " V");
-        updateAVControlEntry("currentSpanningTree", "Spanning Forest: " +
-                             this.numESpanningTree + " E, " + this.numVSpanningTree + " V");
-        updateAVControlEntry("discardedOnRemoval", "Back edges: " +
-                             this.numEDiscardedOnRemoval + "");
+        hdxAVCP.update("undiscovered", "Undiscovered: " +
+                       this.numEUndiscovered + " E, " +
+                       this.numVUndiscovered + " V");
+        hdxAVCP.update("currentSpanningTree", "Spanning Forest: " +
+                       this.numESpanningTree + " E, " + this.numVSpanningTree +
+		       " V");
+        hdxAVCP.update("discardedOnRemoval", "Back edges: " +
+                       this.numEDiscardedOnRemoval + "");
     },
 
     // required prepToStart function
@@ -370,8 +371,8 @@ const hdxDFSRecAV = {
         if (this.hasOwnProperty("comparator")) {
             this.callStack.setComparator(this.comparator);
         }
-        this.callStack.setDisplay(getAVControlEntryDocumentElement("discovered"),
-            displayCallStackItem);
+        this.callStack.setDisplay(hdxAVCP.getDocumentElement("discovered"),
+				  displayCallStackItem);
 
         // pseudocode
         this.code ='<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
@@ -404,12 +405,12 @@ const hdxDFSRecAV = {
 				  waypoints.length - 1);
 
 	// AVCP entries
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("discovered", visualSettings.discovered);
-        addEntryToAVControlPanel("currentSpanningTree", visualSettings.spanningTree);
-        addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
-        addEntryToAVControlPanel("found", visualSettings.spanningTree);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("discovered", visualSettings.discovered);
+        hdxAVCP.add("currentSpanningTree", visualSettings.spanningTree);
+        hdxAVCP.add("discardedOnRemoval", visualSettings.discarded);
+        hdxAVCP.add("found", visualSettings.spanningTree);
         const foundEntry = '<span id="foundEntriesCount">0</span>' +
             ' <span id="foundTableLabel">Edges in Spanning Tree</span>' +
             '<br /><table class="pathTable"><thead>' +
@@ -418,7 +419,7 @@ const hdxDFSRecAV = {
             '<th>Arrive From</th>' +
             '<th>Via</th></tr>' +
             '</thead><tbody id="foundEntries"></tbody></table>';
-        updateAVControlEntry("found", foundEntry);
+        hdxAVCP.update("found", foundEntry);
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
 

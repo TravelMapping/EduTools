@@ -144,11 +144,12 @@ const hdxKruskalAV = {
                 thisAV.visiting = thisAV.ldv.remove();
                 
                 thisAV.updateControlEntries();
-                updateAVControlEntry("visiting", "Visiting edge " + thisAV.visiting.connection
-                    + ": " + graphEdges[thisAV.visiting.connection].label);
+                hdxAVCP.update("visiting", "Visiting edge " +
+			       thisAV.visiting.connection + ": " +
+			       graphEdges[thisAV.visiting.connection].label);
                 // show on map as visiting color
                 updateMarkerAndTable(thisAV.visiting.vIndex,
-                    visualSettings.visiting, 10, false);
+				     visualSettings.visiting, 10, false);
                 if (thisAV.visiting.connection != -1) {
                     updatePolylineAndTable(thisAV.visiting.connection,
                         visualSettings.visiting,
@@ -277,7 +278,7 @@ const hdxKruskalAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + graphEdges.length + " edges.";
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
                 document.getElementById("totalTreeCost").innerHTML =
@@ -322,15 +323,14 @@ const hdxKruskalAV = {
         const numComponents = this.numVSpanningTree - this.numESpanningTree;
         let componentLabel = " Components";
         if (numComponents == 1) componentLabel = " Component";
-        updateAVControlEntry("undiscovered", "Undiscovered: " +
-                             this.numEUndiscovered + " E, " +
-                             this.numVUndiscovered + " V");
-        updateAVControlEntry("currentSpanningTree", "Spanning Forest: " +
-                             this.numESpanningTree + " E, " + this.numVSpanningTree +
-                             " V, " + numComponents + componentLabel);
-        updateAVControlEntry("discardedOnRemoval", "Discarded on removal: " +
-                             this.numEDiscardedOnRemoval + " E");
-
+        hdxAVCP.update("undiscovered", "Undiscovered: " +
+		       this.numEUndiscovered + " E, " +
+                       this.numVUndiscovered + " V");
+        hdxAVCP.update("currentSpanningTree", "Spanning Forest: " +
+                       this.numESpanningTree + " E, " + this.numVSpanningTree +
+                       " V, " + numComponents + componentLabel);
+        hdxAVCP.update("discardedOnRemoval", "Discarded on removal: " +
+                       this.numEDiscardedOnRemoval + " E");
     },
 
     // required prepToStart function
@@ -367,7 +367,7 @@ const hdxKruskalAV = {
             this.ldv.setComparator(this.comparator);
         }
 
-        this.ldv.setDisplay(getAVControlEntryDocumentElement("discovered"),
+        this.ldv.setDisplay(hdxAVCP.getDocumentElement("discovered"),
                             displayLDVItem);
         
         // pseudocode
@@ -392,12 +392,12 @@ const hdxKruskalAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = '';
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("discovered", visualSettings.discovered);
-        addEntryToAVControlPanel("currentSpanningTree", visualSettings.spanningTree);
-        addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
-        addEntryToAVControlPanel("found", visualSettings.spanningTree);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("discovered", visualSettings.discovered);
+        hdxAVCP.add("currentSpanningTree", visualSettings.spanningTree);
+        hdxAVCP.add("discardedOnRemoval", visualSettings.discarded);
+        hdxAVCP.add("found", visualSettings.spanningTree);
         const foundEntry = '<span id="foundEntriesCount">0</span>' +
             ' <span id="foundTableLabel">Edges in Minimum Spanning Tree/Forest</span>' +
             '<span id="totalTreeCost"></span>' + '<br />' +
@@ -406,7 +406,7 @@ const hdxKruskalAV = {
             '<th>Edge</th>' +
             '<th>Endpoints</th></tr>' +
             '</thead><tbody id="foundEntries"></tbody></table>';
-        updateAVControlEntry("found", foundEntry);
+        hdxAVCP.update("found", foundEntry);
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
     },

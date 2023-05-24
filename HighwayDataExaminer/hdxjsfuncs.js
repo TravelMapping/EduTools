@@ -366,7 +366,7 @@ function HDXProcessFileContents(fileContents) {
 	hdxAV.status == hdxStates.AV_COMPLETE) {
 	// no need to reset waypoints and connections, as they will be
 	// overwritten by the loading
-	cleanupAVControlPanel();
+	hdxAVCP.cleanup();
 	hdxAV.currentAV.cleanupUI();
 	deleteCBPSelector();
 	hdxAV.currentAV = hdxAV.avList[0];

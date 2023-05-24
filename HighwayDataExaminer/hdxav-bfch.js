@@ -126,11 +126,9 @@ const hdxBFConvexHullAV = {
     updateStatsEntry() {
 
         const avg = (this.checkValComputations*1.0/this.segmentsConsidered).toFixed(1);
-        updateAVControlEntry("stats",
-                             "Considered " + this.segmentsConsidered +
-                             " segments<br />Checked " +
-                             this.checkValComputations +
-                             " points, average of " + avg + " per segment");
+        hdxAVCP.update("stats","Considered " + this.segmentsConsidered +
+                       " segments<br />Checked " + this.checkValComputations +
+                       " points, average of " + avg + " per segment");
         const segCheck = document.getElementById("segmentCheckValCount");
         if (this.checkValThisSegment == 1) {
             segCheck.innerHTML = "Checked 1 point";
@@ -157,9 +155,8 @@ const hdxBFConvexHullAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
-                updateAVControlEntry("hullsegments", "No hull segments found yet");
-                updateAVControlEntry("stats", "No segments considered yet");
-
+                hdxAVCP.update("hullsegments", "No hull segments found yet");
+                hdxAVCP.update("stats", "No segments considered yet");
 
                 hdxAV.iterationDone = true;
                 thisAV.hullv1 = -1;  // will increment to 0
@@ -189,8 +186,9 @@ const hdxBFConvexHullAV = {
                     thisAV.hullv2 = thisAV.hullv1;  // will increment to +1
                     updateMarkerAndTable(thisAV.hullv1, thisAV.visualSettings.hullv1,
                                          30, false);
-                    updateAVControlEntry("hullv1", "v<sub>1</sub>: #" + thisAV.hullv1 + " " + waypoints[thisAV.hullv1].label);
-
+                    hdxAVCP.update("hullv1", "v<sub>1</sub>: #" +
+				   thisAV.hullv1 + " " +
+				   waypoints[thisAV.hullv1].label);
                 }
                 hdxAV.iterationDone = true;
             },
@@ -226,7 +224,9 @@ const hdxBFConvexHullAV = {
                     updateMarkerAndTable(thisAV.hullv2,
                                          thisAV.visualSettings.hullv2,
                                          30, false);
-                    updateAVControlEntry("hullv2", "v<sub>2</sub>: #" + thisAV.hullv2 + " " + waypoints[thisAV.hullv2].label);
+                    hdxAVCP.update("hullv2", "v<sub>2</sub>: #" +
+				   thisAV.hullv2 + " " +
+				   waypoints[thisAV.hullv2].label);
                     thisAV.mapCurrentSegment();
                 }
 
@@ -260,12 +260,11 @@ const hdxBFConvexHullAV = {
                 thisAV.b = pointv1.lon - pointv2.lon;
                 thisAV.c = pointv1.lon * pointv2.lat - pointv1.lat * pointv2.lon;
                 
-                updateAVControlEntry("checkingLine",
-                                     "Considering line: " +
-                                     thisAV.a.toFixed(3) + "*lat + " +
-                                     thisAV.b.toFixed(3) + "*lng = " +
-                                     thisAV.c.toFixed(3) +
-                                    '<br /><span id="segmentCheckValCount">Checked 0 points</span>');
+                hdxAVCP.update("checkingLine", "Considering line: " +
+                               thisAV.a.toFixed(3) + "*lat + " +
+                               thisAV.b.toFixed(3) + "*lng = " +
+                               thisAV.c.toFixed(3) +
+                               '<br /><span id="segmentCheckValCount">Checked 0 points</span>');
 
                 // record this segment being checked
                 thisAV.segmentsConsidered++;
@@ -313,8 +312,9 @@ const hdxBFConvexHullAV = {
                     updateMarkerAndTable(thisAV.hullvtest,
                                          thisAV.visualSettings.hullvtest,
                                          30, false);
-                    updateAVControlEntry("hullvtest", "v<sub>test</sub>: #" + thisAV.hullvtest + " " + waypoints[thisAV.hullvtest].label);
-                
+                    hdxAVCP.update("hullvtest", "v<sub>test</sub>: #" +
+				   thisAV.hullvtest + " " +
+				   waypoints[thisAV.hullvtest].label);
                 }
             },
             logMessage: function(thisAV) {
@@ -587,9 +587,8 @@ const hdxBFConvexHullAV = {
                 thisAV.currentSegment.setStyle({
                     color: thisAV.visualSettings.hullComponent.color
                 });
-                updateAVControlEntry("hullsegments",
-                                     thisAV.hullSegments.length +
-                                     " hull segments found");
+                hdxAVCP.update("hullsegments", thisAV.hullSegments.length +
+                               " hull segments found");
                 hdxAV.nextAction = "v2forLoopTop";
             },
             logMessage: function(thisAV) {
@@ -602,10 +601,10 @@ const hdxBFConvexHullAV = {
             comment: "Clean up and finalize visualization",
             code: function(thisAV) {
 
-                updateAVControlEntry("hullv1", "");
-                updateAVControlEntry("hullv2", "");
-                updateAVControlEntry("hullvtest", "");
-                updateAVControlEntry("checkingLine", "");
+                hdxAVCP.update("hullv1", "");
+                hdxAVCP.update("hullv2", "");
+                hdxAVCP.update("hullvtest", "");
+                hdxAVCP.update("checkingLine", "");
 
                 // build table of points in order along the hull
                 let table = '<table class="gratable"><thead>' +
@@ -639,10 +638,8 @@ const hdxBFConvexHullAV = {
                 }
 
                 table += '</tbody></table>';
-                updateAVControlEntry("hullsegments",
-                                     thisAV.hullSegments.length +
-                                     " hull segments found<br />" +
-                                    table);
+                hdxAVCP.update("hullsegments", thisAV.hullSegments.length +
+                               " hull segments found<br />" + table);
 
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
@@ -676,12 +673,12 @@ const hdxBFConvexHullAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = '';
-        addEntryToAVControlPanel("hullsegments", this.visualSettings.hullComponent);
-        addEntryToAVControlPanel("stats", visualSettings.pseudocodeDefault);
-        addEntryToAVControlPanel("hullv1", this.visualSettings.hullv1);
-        addEntryToAVControlPanel("hullv2", this.visualSettings.hullv2);
-        addEntryToAVControlPanel("hullvtest", this.visualSettings.hullvtest);
-        addEntryToAVControlPanel("checkingLine", visualSettings.visiting);
+        hdxAVCP.add("hullsegments", this.visualSettings.hullComponent);
+        hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
+        hdxAVCP.add("hullv1", this.visualSettings.hullv1);
+        hdxAVCP.add("hullv2", this.visualSettings.hullv2);
+        hdxAVCP.add("hullvtest", this.visualSettings.hullvtest);
+        hdxAVCP.add("checkingLine", visualSettings.visiting);
     },
 
     // clean up convex hull UI

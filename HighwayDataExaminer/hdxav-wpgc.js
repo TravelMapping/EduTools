@@ -63,8 +63,8 @@ const hdxWPGraphColoringAV = {
                 // sorts the vertices by the degree of each waypoint
                 thisAV.sortedV.sort(thisAV.compareDegree);
 
-                updateAVControlEntry("undiscovered","Colorless Vertices: " +
-				     thisAV.sortedV.length);
+                hdxAVCP.update("undiscovered","Colorless Vertices: " +
+			       thisAV.sortedV.length);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topWhileLoop";
@@ -94,8 +94,8 @@ const hdxWPGraphColoringAV = {
                 thisAV.nextToCheck = 0;
                 
                 if (thisAV.sortedV.length > 0) {
-                    updateAVControlEntry("totalColors","Number of Colors: " +
-					 (thisAV.currColor + 1));
+                    hdxAVCP.update("totalColors","Number of Colors: " +
+				   (thisAV.currColor + 1));
                     thisAV.countOfColor.push(0);
                     hdxAV.nextAction = "innerWhileLoop";
                 }
@@ -120,9 +120,9 @@ const hdxWPGraphColoringAV = {
 
                     updateMarkerAndTable(thisAV.currVertex,
 					 visualSettings.visiting,false);
-                    updateAVControlEntry("visiting","Visiting: #" +
-					 thisAV.currVertex + " " +
-					 waypoints[thisAV.currVertex].label);
+                    hdxAVCP.update("visiting","Visiting: #" +
+				   thisAV.currVertex + " " +
+				   waypoints[thisAV.currVertex].label);
 
                     hdxAV.nextAction = "neighborCheck";
                 }
@@ -203,8 +203,8 @@ const hdxWPGraphColoringAV = {
                 // increment the currColor's count in countOfColor array
                 thisAV.countOfColor[thisAV.currColor]++;
 
-                updateAVControlEntry("undiscovered","Colorless Vertices: " +
-				     thisAV.sortedV.length);
+                hdxAVCP.update("undiscovered","Colorless Vertices: " +
+			       thisAV.sortedV.length);
 
                 hdxAV.nextAction = "innerWhileLoop";
     
@@ -254,8 +254,8 @@ const hdxWPGraphColoringAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {                    
 
-                updateAVControlEntry("undiscovered","");
-                updateAVControlEntry("visiting","");
+                hdxAVCP.update("undiscovered", "");
+                hdxAVCP.update("visiting", "");
 
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
@@ -274,7 +274,7 @@ const hdxWPGraphColoringAV = {
                 }
                 table += '</tbody></table>';
 
-                updateAVControlEntry("table", table);
+                hdxAVCP.update("table", table);
             },
             logMessage: function(thisAV) {
                 return "Cleanup and finalize visualization";
@@ -313,10 +313,10 @@ const hdxWPGraphColoringAV = {
 
         hdxAV.algOptions.innerHTML = "";
 
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("visiting",visualSettings.visiting);
-        addEntryToAVControlPanel("totalColors",visualSettings.highlightBounding);
-        addEntryToAVControlPanel("table",visualSettings.spanningTree);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("visiting",visualSettings.visiting);
+        hdxAVCP.add("totalColors",visualSettings.highlightBounding);
+        hdxAVCP.add("table",visualSettings.spanningTree);
         
     },
     cleanupUI() {

@@ -112,7 +112,7 @@ function startPausePressed() {
         hdxAV.maxExecCount = 0;
 
         showHidePseudocode();
-        showAVCPEntries();
+        hdxAVCP.showEntries();
 
         // get the simulation going, always start with the "START"
         // action, then do it
@@ -120,7 +120,7 @@ function startPausePressed() {
         hdxAV.nextStep(hdxAV.currentAV);
         addBreakpointListeners();
         resizePanels();
-        hideAVCPEntries();
+        hdxAVCP.hideEntries();
         newMapTileSelected();
         break;
         
@@ -176,7 +176,7 @@ function algorithmSelectionChanged() {
 
     // cleanup anything from the previous algorithm
     if (hdxAV.currentAV != null) {
-        cleanupAVControlPanel();
+        hdxAVCP.cleanup();
         hdxAV.currentAV.cleanupUI();
     }
     
@@ -235,7 +235,7 @@ function resetPressed() {
                               visualSettings.undiscovered);
 
     hideTopControlPanel();
-    cleanupAVControlPanel();
+    hdxAVCP.cleanup();
     algorithmSelectionChanged();
     //hideAVStatusPanel();
     showAlgorithmSelectionPanel();

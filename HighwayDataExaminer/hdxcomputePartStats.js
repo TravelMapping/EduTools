@@ -32,9 +32,9 @@ const hdxComputePartStats = {
                     
                     // Adding table and coloring points(the work is
                     // done in hdxPart.styling())
-                    addEntryToAVControlPanel("stats",
-					     visualSettings.pseudocodeDefault);
-                    updateAVControlEntry("stats", hdxPart.styling());
+                    hdxAVCP.add("stats",
+				     visualSettings.pseudocodeDefault);
+                    hdxAVCP.update("stats", hdxPart.styling());
                 }
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "cleanup";

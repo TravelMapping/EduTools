@@ -323,11 +323,12 @@ const hdxVertexExtremesSearchAV = {
 		    thisAV.avgMarker.addTo(map);
 		}
 		
-                updateAVControlEntry("undiscovered", (waypoints.length-1) + " vertices not yet visited");
-                updateAVControlEntry("visiting",
-				     "Visiting #0 " +  waypoints[0].label +
-				     " (initial leader in each category)");
-                updateAVControlEntry("discarded", "0 vertices discarded");
+                hdxAVCP.update("undiscovered", (waypoints.length-1) +
+			       " vertices not yet visited");
+                hdxAVCP.update("visiting",
+			       "Visiting #0 " +  waypoints[0].label +
+			       " (initial leader in each category)");
+                hdxAVCP.update("discarded", "0 vertices discarded");
 
                 // show marker 0 as the leader in each category
                 // on the map and in the table
@@ -336,15 +337,17 @@ const hdxVertexExtremesSearchAV = {
                     updateMarkerAndTable(thisAV.categories[i].index,
                                          thisAV.categories[i].visualSettings, 
                                          40, false);
-                    updateAVControlEntry(
+                    hdxAVCP.update(
                         thisAV.categories[i].name, 
                         thisAV.categories[i].leaderString(thisAV.categories[i])
                     );
                 }
 
 		if (thisAV.showAvgOfCoords) {
-		    updateAVControlEntry("avgcoord",
-					 "Average of coords so far: (" + thisAV.latsum.toFixed(6) + "," + thisAV.lngsum.toFixed(6) + ")");
+		    hdxAVCP.update("avgcoord",
+				   "Average of coords so far: (" +
+				   thisAV.latsum.toFixed(6) + "," +
+				   thisAV.lngsum.toFixed(6) + ")");
 		}
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "forLoopTop";
@@ -369,14 +372,14 @@ const hdxVertexExtremesSearchAV = {
                     thisAV.foundNewLeader = false;
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.visiting,
                                          30, false);
-                    updateAVControlEntry("undiscovered", (waypoints.length - thisAV.nextToCheck) + " vertices not yet visited");
-                    updateAVControlEntry("visiting", "Visiting: #" +
-					 thisAV.nextToCheck + ' (' +
-					 waypoints[thisAV.nextToCheck].lat +
-					 ',' +
-					 waypoints[thisAV.nextToCheck].lon +
-					 ') ' +
-					 waypoints[thisAV.nextToCheck].label);
+                    hdxAVCP.update("undiscovered",
+				   (waypoints.length - thisAV.nextToCheck) +
+				   " vertices not yet visited");
+                    hdxAVCP.update("visiting", "Visiting: #" +
+				   thisAV.nextToCheck + ' (' +
+				   waypoints[thisAV.nextToCheck].lat + ',' +
+				   waypoints[thisAV.nextToCheck].lon + ') ' +
+				   waypoints[thisAV.nextToCheck].label);
                 }
                 hdxAV.iterationDone = true;
             },
@@ -472,7 +475,8 @@ const hdxVertexExtremesSearchAV = {
                         updateMarkerAndTable(oldLeader, visualSettings.discarded,
                                              20, true);
                         thisAV.discarded++;
-                        updateAVControlEntry("discarded", thisAV.discarded + " vertices discarded");
+                        hdxAVCP.update("discarded", thisAV.discarded +
+				       " vertices discarded");
                     }
                 }
 
@@ -491,7 +495,7 @@ const hdxVertexExtremesSearchAV = {
                     thisAV.directionalBoundingBox();
                 }
                 
-                updateAVControlEntry(
+                hdxAVCP.update(
                     thisAV.categories[thisAV.nextCategory].name, 
                     thisAV.categories[thisAV.nextCategory].leaderString(
                         thisAV.categories[thisAV.nextCategory])
@@ -565,7 +569,7 @@ const hdxVertexExtremesSearchAV = {
 
                 // add to list of values tied for the lead
                 thisAV.categories[thisAV.nextCategory].tiedWith.push(thisAV.nextToCheck);
-                updateAVControlEntry(
+                hdxAVCP.update(
                     thisAV.categories[thisAV.nextCategory].name, 
                     thisAV.categories[thisAV.nextCategory].leaderString(
                         thisAV.categories[thisAV.nextCategory])
@@ -605,11 +609,13 @@ const hdxVertexExtremesSearchAV = {
 		// compute the new average of the waypoint locations so far
 		thisAV.avglat = thisAV.latsum / (thisAV.nextToCheck + 1);
 		thisAV.avglng = thisAV.lngsum / (thisAV.nextToCheck + 1);
-		updateAVControlEntry("avgcoord",
-				     "Average of coordinates so far:<BR/> (" + thisAV.avglat.toFixed(6) + "," + thisAV.avglng.toFixed(6) + ")");
-                    if (thisAV.showBB) {
-                        thisAV.directionalBoundingBox();
-                    }
+		hdxAVCP.update("avgcoord",
+			       "Average of coordinates so far:<BR/> (" +
+			       thisAV.avglat.toFixed(6) + "," +
+			       thisAV.avglng.toFixed(6) + ")");
+                if (thisAV.showBB) {
+                    thisAV.directionalBoundingBox();
+                }
 		thisAV.avgMarker.setLatLng([thisAV.avglat, thisAV.avglng]);
                 hdxAV.nextAction = "forLoopBottom";
             },
@@ -641,7 +647,8 @@ const hdxVertexExtremesSearchAV = {
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.discarded,
                                          20, true);
                     thisAV.discarded++;
-                    updateAVControlEntry("discarded", thisAV.discarded + " vertices discarded");
+                    hdxAVCP.update("discarded", thisAV.discarded +
+				   " vertices discarded");
 
                 }
                 hdxAV.iterationDone = true;
@@ -657,8 +664,8 @@ const hdxVertexExtremesSearchAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + markers.length + " waypoints.";
-                updateAVControlEntry("undiscovered", "0 vertices not yet visited");
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("undiscovered", "0 vertices not yet visited");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
                 
@@ -964,18 +971,18 @@ avg.lng &larr; lngsum<br />
         
         this.code += "</table>";
         
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("discarded", visualSettings.discarded);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("discarded", visualSettings.discarded);
         for (let i = 0; i < this.categories.length; i++) {
             if (this.categories[i].include(this)) {
-                addEntryToAVControlPanel(this.categories[i].name,
-                                         this.categories[i].visualSettings);
+                hdxAVCP.add(this.categories[i].name,
+                            this.categories[i].visualSettings);
             }
         }
 
 	if (this.showAvgOfCoords) {
-            addEntryToAVControlPanel("avgcoord", visualSettings.averageCoord);
+            hdxAVCP.add("avgcoord", visualSettings.averageCoord);
 	}
     },
 

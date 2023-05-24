@@ -79,8 +79,8 @@ const hdxBFTravelingSalesmanAV = {
                 // graph
                 thisAV.pathsRemaining = HDXfactorial(thisAV.permutation.length);
 
-                updateAVControlEntry("undiscovered",thisAV.pathsRemaining +
-				     " paths not yet visited");
+                hdxAVCP.update("undiscovered",thisAV.pathsRemaining +
+			       " paths not yet visited");
             
                 hdxAV.nextAction = "topForLoop";
             },
@@ -109,9 +109,8 @@ const hdxBFTravelingSalesmanAV = {
                     thisAV.currPath.value.push(thisAV.startPoint);
                     thisAV.currPath.value.splice(0,0,thisAV.startPoint);
 
-                    updateAVControlEntry("undiscovered",
-					 thisAV.pathsRemaining +
-					 ' paths not yet visited');
+                    hdxAVCP.update("undiscovered", thisAV.pathsRemaining +
+				   ' paths not yet visited');
                     
                     hdxAV.nextAction = 'findSum';
                 }
@@ -191,8 +190,8 @@ const hdxBFTravelingSalesmanAV = {
                 // add the polyline to the map
                 thisAV.currPoly.addTo(map);
 
-                updateAVControlEntry("currSum","Distance of Current Path: " +
-				     thisAV.currDistance.toFixed(3) + " miles");
+                hdxAVCP.update("currSum","Distance of Current Path: " +
+			       thisAV.currDistance.toFixed(3) + " miles");
                 if (jumped) {
                     hdxAV.nextAction = "topForLoop";
                 }
@@ -244,9 +243,8 @@ const hdxBFTravelingSalesmanAV = {
                 
                 thisAV.shortPoly.addTo(map);
 
-                updateAVControlEntry("minSum","Distance of Shortest Path: "
-				     + thisAV.minDistance.toFixed(3) +
-				     " miles");
+                hdxAVCP.update("minSum","Distance of Shortest Path: " +
+			       thisAV.minDistance.toFixed(3) +" miles");
 
                 hdxAV.nextAction = 'topForLoop';
             },
@@ -261,21 +259,22 @@ const hdxBFTravelingSalesmanAV = {
             comment: "cleanup and updates at the end of the visualization",
             code: function(thisAV) {
                     
-                    updateAVControlEntry("minSum","Distance of Shortest Path: " + thisAV.minDistance.toFixed(3) + " miles");
-                    updateAVControlEntry('undiscovered','');
-                    updateAVControlEntry("currSum","");
-
-                    // rainbow constructor, used to make pattern so
-                    // that users can better see the path in which the
-                    thisAV.rainbowGradiant = new Rainbow();
-
-                    // the gradient is calculated based on a range, as
-                    // such we make the range as long as the number of
-                    // vertices
-                    thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
-                    // this gradient is basically a rainbow, however
-                    // it has a darker yellow and purple as they don't
-                    // contrast well on white background
+                hdxAVCP.update("minSum","Distance of Shortest Path: " +
+			       thisAV.minDistance.toFixed(3) + " miles");
+                hdxAVCP.update('undiscovered', '');
+                hdxAVCP.update("currSum", "");
+		
+                // rainbow constructor, used to make pattern so
+                // that users can better see the path in which the
+                thisAV.rainbowGradiant = new Rainbow();
+		
+                // the gradient is calculated based on a range, as
+                // such we make the range as long as the number of
+                // vertices
+                thisAV.rainbowGradiant.setNumberRange(0,waypoints.length);
+                // this gradient is basically a rainbow, however
+                // it has a darker yellow and purple as they don't
+                // contrast well on white background
                 thisAV.rainbowGradiant.setSpectrum('ff0000','ffc000',
 						   '00ff00','00ffff',
 						   '0000ff','c700ff');
@@ -343,7 +342,7 @@ const hdxBFTravelingSalesmanAV = {
                 }
                 table += '</tbody></table>';
 		
-                updateAVControlEntry("minPath",table);
+                hdxAVCP.update("minPath", table);
                 
             },
             logMessage: function(thisAV) {
@@ -396,11 +395,11 @@ const hdxBFTravelingSalesmanAV = {
 				  waypoints.length - 1);
 
 	// AVCP entries
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("visiting",visualSettings.visiting);
-        addEntryToAVControlPanel("currSum",visualSettings.discovered);
-        addEntryToAVControlPanel("minSum",visualSettings.spanningTree);
-        addEntryToAVControlPanel("minPath",visualSettings.spanningTree);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("currSum", visualSettings.discovered);
+        hdxAVCP.add("minSum", visualSettings.spanningTree);
+        hdxAVCP.add("minPath", visualSettings.spanningTree);
     },
 
     cleanupUI() {

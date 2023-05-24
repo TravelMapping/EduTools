@@ -127,9 +127,13 @@ const hdxEdgeExtremesSearchAV = {
                 thisAV.nextToCheck = 0;
                 thisAV.discarded = 0;
         
-                updateAVControlEntry("undiscovered", (graphEdges.length - thisAV.nextToCheck) + " edges not yet visited");
-                updateAVControlEntry("visiting", "Visiting: #" + thisAV.nextToCheck + " " + graphEdges[thisAV.nextToCheck].label);
-                updateAVControlEntry("discarded", thisAV.discarded + " edges discarded");
+                hdxAVCP.update("undiscovered",
+			       (graphEdges.length - thisAV.nextToCheck) +
+			       " edges not yet visited");
+                hdxAVCP.update("visiting", "Visiting: #" + thisAV.nextToCheck +
+			       " " + graphEdges[thisAV.nextToCheck].label);
+                hdxAVCP.update("discarded", thisAV.discarded +
+			       " edges discarded");
 
                 // show edge 0 as the leader in each category
                 // on the map and in the table
@@ -137,7 +141,7 @@ const hdxEdgeExtremesSearchAV = {
                     updatePolylineAndTable(thisAV.categories[i].index,
                                          thisAV.categories[i].visualSettings, 
                                           false);
-                    updateAVControlEntry(
+                    hdxAVCP.update(
                         thisAV.categories[i].name, 
                         thisAV.categories[i].leaderString(thisAV.categories[i].label,
                                                           thisAV.categories[i].index)
@@ -164,8 +168,12 @@ const hdxEdgeExtremesSearchAV = {
                     hdxAV.nextAction = "checkNextCategory";
                     thisAV.nextCategory = 0;
                     thisAV.foundNewLeader = false;
-                    updateAVControlEntry("undiscovered", (graphEdges.length - thisAV.nextToCheck) + " edges not yet visited");
-                        updateAVControlEntry("visiting", "Visiting: #" + thisAV.nextToCheck + " " + graphEdges[thisAV.nextToCheck].label);
+                    hdxAVCP.update("undiscovered",
+				   (graphEdges.length - thisAV.nextToCheck) +
+				   " edges not yet visited");
+                    hdxAVCP.update("visiting", "Visiting: #" +
+				   thisAV.nextToCheck + " " +
+				   graphEdges[thisAV.nextToCheck].label);
                     updatePolylineAndTable(thisAV.nextToCheck,
                                            visualSettings.visiting,
                                            false);
@@ -239,14 +247,15 @@ const hdxEdgeExtremesSearchAV = {
                     updatePolylineAndTable(oldLeader, visualSettings.discarded,
                                  true);
                     thisAV.discarded++;
-                    updateAVControlEntry("discarded", thisAV.discarded + " vertices discarded");
+                    hdxAVCP.update("discarded", thisAV.discarded +
+				   " vertices discarded");
                 }
                     
                 // update this category to indicate its new leader
                 // but keep it shown as the edge being visited on the
                 // map and in the table until the end of the iteration
                 thisAV.categories[thisAV.nextCategory].index = thisAV.nextToCheck;
-                updateAVControlEntry(
+                hdxAVCP.update(
                     thisAV.categories[thisAV.nextCategory].name, 
                     thisAV.categories[thisAV.nextCategory].leaderString(
                         thisAV.categories[thisAV.nextCategory].label,
@@ -285,7 +294,8 @@ const hdxEdgeExtremesSearchAV = {
                     updatePolylineAndTable(thisAV.nextToCheck, visualSettings.discarded,
                          true);
                     thisAV.discarded++;
-                        updateAVControlEntry("discarded", thisAV.discarded + " edges discarded");
+                    hdxAVCP.update("discarded", thisAV.discarded +
+				   " edges discarded");
 
                 }
                 hdxAV.iterationDone = true;
@@ -301,8 +311,8 @@ const hdxEdgeExtremesSearchAV = {
             code: function(thisAV) {
                 hdxAV.algStat.innerHTML =
                     "Done! Visited " + graphEdges.length + " edges.";
-                updateAVControlEntry("undiscovered", "0 edges not yet visited");
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("undiscovered", "0 edges not yet visited");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -343,12 +353,12 @@ const hdxEdgeExtremesSearchAV = {
         hdxAV.logMessageArr = [];
         hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = '';
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("discarded", visualSettings.discarded);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("discarded", visualSettings.discarded);
         for (let i = 0; i < this.categories.length; i++) {
-            addEntryToAVControlPanel(this.categories[i].name,
-                                     this.categories[i].visualSettings);
+            hdxAVCP.add(this.categories[i].name,
+                        this.categories[i].visualSettings);
         }
     },
 

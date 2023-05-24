@@ -126,8 +126,8 @@ const hdxTemplateAV = {
 
         // Insert entries into the AV control panel to display data
         // structures and variables as the AV is executing
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered); 
-        addEntryToAVControlPanel("visiting",visualSettings.visiting)
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
+        hdxAVCP.add("visiting", visualSettings.visiting)
        
     },
     // cleanupUI is a required function, called when you select a new

@@ -128,10 +128,11 @@ const hdxClosestPairsRecAV = {
 		const sorter = new HDXWaypointsSorter();
 		thisAV.WtoE = sorter.sortWaypoints();
 		
-                updateAVControlEntry("currentCall", "No calls yet");
-                updateAVControlEntry("dComps", "No distance comparisons yet");
-		updateAVControlEntry("overlaps", "No overlap points yet");
-		updateAVControlEntry("overlapLeaders", "No leaders found in overlap points yet");
+                hdxAVCP.update("currentCall", "No calls yet");
+                hdxAVCP.update("dComps", "No distance comparisons yet");
+		hdxAVCP.update("overlaps", "No overlap points yet");
+		hdxAVCP.update("overlapLeaders",
+			       "No leaders found in overlap points yet");
 
 		thisAV.fp = new HDXCPRecCallFrame(
 		    0, // start index
@@ -509,10 +510,9 @@ const hdxClosestPairsRecAV = {
 		thisAV.fp.eastLine.addTo(map);
 
 		thisAV.overlapTotalPoints += thisAV.NtoS.length;
-		updateAVControlEntry("overlaps",
-				     "Overlap points, total: " +
-				     thisAV.overlapTotalPoints +
-				     ", current: " + thisAV.NtoS.length);
+		hdxAVCP.update("overlaps", "Overlap points, total: " +
+			       thisAV.overlapTotalPoints +
+			       ", current: " + thisAV.NtoS.length);
 		
 		// set up the loop index for the for loop
 		thisAV.globali = 0;
@@ -690,9 +690,9 @@ const hdxClosestPairsRecAV = {
 		thisAV.fp.minLine.setLatLngs(array);
 
 		thisAV.overlapLeaders++;
-		updateAVControlEntry("overlapLeaders",
-				     "Leaders found among overlaps: " +
-				     thisAV.overlapLeaders);
+		hdxAVCP.update("overlapLeaders",
+			       "Leaders found among overlaps: " +
+			       thisAV.overlapLeaders);
 		
 		// display updated closest pair on the call stack
 		thisAV.updateCallStack();
@@ -735,9 +735,8 @@ const hdxClosestPairsRecAV = {
 
 		// update overlaps AVCP entry to remove the current
 		// overlap count
-		updateAVControlEntry("overlaps",
-				     "Overlap points, total: " +
-				     thisAV.overlapTotalPoints);
+		hdxAVCP.update("overlaps", "Overlap points, total: " +
+			       thisAV.overlapTotalPoints);
 
 		// update colors
 		// everything in the range is discarded except the
@@ -858,7 +857,7 @@ const hdxClosestPairsRecAV = {
 	    
 	    t = entry + "<br />" + t;
 	}
-	updateAVControlEntry("currentCall", t);
+	hdxAVCP.update("currentCall", t);
     },
 
     // update the colors of waypoints in the given range of the WtoE array,
@@ -879,7 +878,7 @@ const hdxClosestPairsRecAV = {
 	s += "&nbsp;&nbsp;Base cases: " + this.bfDComps + "</br>";
 	s += "&nbsp;&nbsp;Compare left/right leaders: " + this.halvesDComps + "</br>";
 	s += "&nbsp;&nbsp;Overlap regions: " + this.overlapDComps + "</br>";
-	updateAVControlEntry("dComps", s);
+	hdxAVCP.update("dComps", s);
     },
     
     // required prepToStart function
@@ -951,15 +950,13 @@ const hdxClosestPairsRecAV = {
 	HDXQSRegisterAndSetCheckbox(this, "overlays", "overlays");
 
 	// AV control panel entries
-        addEntryToAVControlPanel("dComps", this.visualSettings.dComps);
-        addEntryToAVControlPanel("overlaps",
-				 this.visualSettings.overlapPoints);
-        addEntryToAVControlPanel("overlapLeaders",
-				 this.visualSettings.overlapPoints);
+        hdxAVCP.add("dComps", this.visualSettings.dComps);
+        hdxAVCP.add("overlaps", this.visualSettings.overlapPoints);
+        hdxAVCP.add("overlapLeaders", this.visualSettings.overlapPoints);
 
 	// this one grows and shrinks so should be last to avoid
 	// lots of bouncing up and down of others
-        addEntryToAVControlPanel("currentCall", this.visualSettings.recursiveCall);
+        hdxAVCP.add("currentCall", this.visualSettings.recursiveCall);
     },
 
     // remove UI modifications made for vertex closest pairs

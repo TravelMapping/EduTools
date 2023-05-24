@@ -389,8 +389,8 @@ const hdxTraversalsSpanningAVCommon = {
 
                 // get next place from the LDV
                 thisAV.visiting = thisAV.ldv.remove();
-                updateAVControlEntry("visiting", "Visiting " +
-                                     thisAV.formatLDVEntry(thisAV.visiting));
+                hdxAVCP.update("visiting", "Visiting " +
+                               thisAV.formatLDVEntry(thisAV.visiting));
                 // show on map as visiting color
                 updateMarkerAndTable(thisAV.visiting.vIndex,
                                      visualSettings.visiting,
@@ -869,8 +869,7 @@ const hdxTraversalsSpanningAVCommon = {
                         plIndex--;
                         place = treeEdge.fromVIndex;
                     }
-                    updateAVControlVisualSettings("found",
-                                                  thisAV.visualSettings.foundPath);
+                    hdxAVCP.updateVS("found", thisAV.visualSettings.foundPath);
                     document.getElementById("foundEntriesCount").innerHTML = "";
                     thisAV.foundLabel.innerHTML = "Path found, distance " +
                         parseFloat(distance).toFixed(3) + " with " +
@@ -883,7 +882,7 @@ const hdxTraversalsSpanningAVCommon = {
                         thisAV.totalTreeCost.toFixed(3);
                 }
                 
-                updateAVControlEntry("visiting", "");
+                hdxAVCP.update("visiting", "");
                 hdxAV.nextAction = "DONE";
                 hdxAV.iterationDone = true;
             },
@@ -919,9 +918,9 @@ const hdxTraversalsSpanningAVCommon = {
     ],
 
     updateControlEntries() {
-        updateAVControlEntry("undiscovered", "Undiscovered: " +
-                             this.numVUndiscovered + " V, " +
-                             this.numEUndiscovered + " E");
+        hdxAVCP.update("undiscovered", "Undiscovered: " +
+                       this.numVUndiscovered + " V, " +
+                       this.numEUndiscovered + " E");
         let label;
         let componentCount = "";
         if (this.stoppingCondition == "FindAll") {
@@ -934,13 +933,13 @@ const hdxTraversalsSpanningAVCommon = {
         else {
             label = "Spanning Tree: "
         }
-        updateAVControlEntry("currentSpanningTree", label +
-                             this.numVSpanningTree + " V, " +
-                             this.numESpanningTree + " E" + componentCount);
-        updateAVControlEntry("discardedOnDiscovery", "Discarded on discovery: " +
-                             this.numEDiscardedOnDiscovery + " E");
-        updateAVControlEntry("discardedOnRemoval", "Discarded on removal: " +
-                             this.numEDiscardedOnRemoval + " E");
+        hdxAVCP.update("currentSpanningTree", label +
+                       this.numVSpanningTree + " V, " +
+                       this.numESpanningTree + " E" + componentCount);
+        hdxAVCP.update("discardedOnDiscovery", "Discarded on discovery: " +
+                       this.numEDiscardedOnDiscovery + " E");
+        hdxAVCP.update("discardedOnRemoval", "Discarded on removal: " +
+                       this.numEDiscardedOnRemoval + " E");
     },
 
     // format an LDV entry for addition to the found table
@@ -1028,7 +1027,7 @@ const hdxTraversalsSpanningAVCommon = {
         // note that this means each algorithm must provide a function
         // named displayLDVItem that takes an LDV entry as its
         // parameter
-        this.ldv.setDisplay(getAVControlEntryDocumentElement("discovered"),
+        this.ldv.setDisplay(hdxAVCP.getDocumentElement("discovered"),
                             displayLDVItem);
 
         // update stopping condition
@@ -1063,13 +1062,13 @@ const hdxTraversalsSpanningAVCommon = {
         }
         newAO += '</select>';
         hdxAV.algOptions.innerHTML = newAO + this.extraAlgOptions;
-        addEntryToAVControlPanel("visiting", visualSettings.visiting);
-        addEntryToAVControlPanel("undiscovered", visualSettings.undiscovered);
-        addEntryToAVControlPanel("discovered", visualSettings.discovered);
-        addEntryToAVControlPanel("currentSpanningTree", visualSettings.spanningTree);
-        addEntryToAVControlPanel("discardedOnDiscovery", visualSettings.discardedOnDiscovery);
-        addEntryToAVControlPanel("discardedOnRemoval", visualSettings.discarded);
-        addEntryToAVControlPanel("found", visualSettings.spanningTree);
+        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("discovered", visualSettings.discovered);
+        hdxAVCP.add("currentSpanningTree", visualSettings.spanningTree);
+        hdxAVCP.add("discardedOnDiscovery", visualSettings.discardedOnDiscovery);
+        hdxAVCP.add("discardedOnRemoval", visualSettings.discarded);
+        hdxAVCP.add("found", visualSettings.spanningTree);
         let foundEntry = '<span id="foundEntriesCount">0</span>' +
             ' <span id="foundTableLabel">' +
             this.foundTableHeader + '</span><br />' +
@@ -1081,7 +1080,7 @@ const hdxTraversalsSpanningAVCommon = {
         }
         foundEntry += '<th>Arrive From</th><th>Via</th></tr>' +
             '</thead><tbody id="foundEntries"></tbody></table>';
-        updateAVControlEntry("found", foundEntry);
+        hdxAVCP.update("found", foundEntry);
         this.foundTBody = document.getElementById("foundEntries");
         this.foundLabel = document.getElementById("foundTableLabel");
 
