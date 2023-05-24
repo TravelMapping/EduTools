@@ -284,18 +284,19 @@ const hdxOrderingAV = {
             code: function(thisAV) {
             // Partitioning
                 if (document.getElementById("calcparts").checked == true) {
-                    var parts = Number(document.getElementById("numOfParts").value);
+                    const parts =
+			  Number(document.getElementById("numOfParts").value);
                     hdxPart.parts = new Array(parts);
                     hdxPart.numParts = parts;
                     for (let p = 0; p < parts; p++) {
                         hdxPart.parts[p] = new Array();
-                        let left = Math.trunc(waypoints.length%parts);
-	                let inter = Math.trunc(waypoints.length/parts);
-	                let strt = p*inter+Math.min(p,left);
-	                let cnt = inter;
-	                if (p<left) cnt++;
-	                let end = strt+cnt;
-                        for (let i= strt; i < end; i++) {
+                        const left = Math.trunc(waypoints.length%parts);
+	                const inter = Math.trunc(waypoints.length/parts);
+	                const strt = p * inter + Math.min(p,left);
+	                const cnt = inter;
+	                if (p < left) cnt++;
+	                const end = strt + cnt;
+                        for (let i = strt; i < end; i++) {
                             hdxPart.parts[p].push(waypoints[i].num);
                         }
                     }
@@ -334,7 +335,7 @@ const hdxOrderingAV = {
     },
     
     setupUI() {
-        var algDescription = document.getElementById("algDescription");
+        const algDescription = document.getElementById("algDescription");
         algDescription.innerHTML = this.description;
         hdxAV.algStat.style.display = "";
         hdxAV.algStat.innerHTML = "Setting up";
@@ -387,7 +388,7 @@ const hdxOrderingAV = {
         addEntryToAVControlPanel("longestEdge",visualSettings.spanningTree);
         addEntryToAVControlPanel("varianceLength",visualSettings.averageCoord);
 
-        let refSelector = document.getElementById("refinement");
+        const refSelector = document.getElementById("refinement");
         refSelector.disabled = true;
     },
 
@@ -412,9 +413,11 @@ const hdxOrderingAV = {
     // slight modifications
     drawLineVisiting() {
 
-        let visitingLine = [];
-        visitingLine[0] = [waypoints[this.nextToCheck].lat, waypoints[this.nextToCheck].lon];
-        visitingLine[1] = [waypoints[this.nextToCheck + 1].lat, waypoints[this.nextToCheck + 1].lon];
+        const visitingLine = [];
+        visitingLine[0] = [waypoints[this.nextToCheck].lat,
+			   waypoints[this.nextToCheck].lon];
+        visitingLine[1] = [waypoints[this.nextToCheck + 1].lat,
+			   waypoints[this.nextToCheck + 1].lon];
 
         this.currentEdgeLength = convertToCurrentUnits(
 		    distanceInMiles(waypoints[this.nextToCheck].lat,
@@ -424,7 +427,8 @@ const hdxOrderingAV = {
         this.lengthEdges += this.currentEdgeLength;
         this.lengthOfEdges.push(this.currentEdgeLength);
 
-        updateAVControlEntry("totalLength","Total length of edges so far: " + this.lengthEdges.toFixed(2) + " mi");
+        updateAVControlEntry("totalLength","Total length of edges so far: " +
+			     this.lengthEdges.toFixed(2) + " mi");
         
         this.polyLines.push(
             L.polyline(visitingLine, {
@@ -443,11 +447,11 @@ const hdxOrderingAV = {
     // then square roots it to get the standard deviation
     calculateStdevOfEdges() {
         let variance = 0;
-        let mean = this.lengthEdges / (this.nextToCheck + 1);
+        const mean = this.lengthEdges / (this.nextToCheck + 1);
         for (let i = 0; i < this.lengthOfEdges.length; i++) {
             variance += Math.pow(this.lengthOfEdges[i] - mean,2)
         }
-        let popStdev = Math.sqrt(variance / (this.nextToCheck + 1));
+        const popStdev = Math.sqrt(variance / (this.nextToCheck + 1));
         return popStdev.toFixed(3);
     },
     
@@ -537,8 +541,8 @@ const hdxOrderingAV = {
 
 function refinementChanged() {
 
-    let selector = document.getElementById("traversalOrdering");
-    let refSelector = document.getElementById("refinement");
+    const selector = document.getElementById("traversalOrdering");
+    const refSelector = document.getElementById("refinement");
     switch (selector.options[selector.selectedIndex].value) {
         case "morton":
         case "hilbert":
