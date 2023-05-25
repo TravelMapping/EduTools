@@ -25,8 +25,7 @@ const hdxNoAV = {
     },
 
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
+
     },
 
     cleanupUI() {}

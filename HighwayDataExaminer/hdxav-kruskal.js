@@ -382,13 +382,7 @@ const hdxKruskalAV = {
         
     // set up UI for the start of edge search
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
 
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = '';
         hdxAVCP.add("visiting", visualSettings.visiting);
         hdxAVCP.add("undiscovered", visualSettings.undiscovered);

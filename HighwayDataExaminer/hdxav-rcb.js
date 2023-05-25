@@ -563,12 +563,6 @@ const hdxPartitionerAV = {
     },
     
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
 
         // building HTML options
         let newAO = '<br />Number of Recursive Levels: 2<sup><sup><input type="number" id="parts" style="height: 20px; max-width: 30px; font-size: 12px;" onchange="hdxPartitionerAV.rcbCallback()"min="1" max="' + (Math.trunc(Math.log2(waypoints.length))) + '" value="2"></sup></sup><span id="rcbnumParts">='+this.numPartitions+'</span>';

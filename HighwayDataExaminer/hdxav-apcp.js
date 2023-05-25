@@ -394,12 +394,6 @@ const hdxAPClosestPointAV = {
     },
     
     setupUI() {
-	const algDescription = document.getElementById("algDescription");
-	algDescription.innerHTML = this.description;
-	hdxAV.algStat.style.display = "";
-	hdxAV.algStat.innerHTML = "Setting up";
-	hdxAV.logMessageArr = [];
-	hdxAV.logMessageArr.push("Setting up");
 	
 	hdxAVCP.add("v1Visiting", visualSettings.v1);
 	hdxAVCP.add("v2Visiting", visualSettings.v2);

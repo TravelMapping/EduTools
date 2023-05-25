@@ -346,15 +346,9 @@ const hdxOrderingAV = {
     },
     
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
-        // I'm going to need to learn how to make the AO change
-        // depending on which ordering is selected
 
+        // Would like to make the AO change depending on which
+        // ordering is selected
         let newAO = `Order: <select id="traversalOrdering" onchange="refinementChanged();">
         <option value="byLat">By Latitude</option>
         <option value="byLng">By Longitude</option>

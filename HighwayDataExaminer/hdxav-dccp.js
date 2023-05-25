@@ -921,13 +921,7 @@ const hdxClosestPairsRecAV = {
 
     // set up UI entries for closest pairs divide and conquer
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
 
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
         let newAO = 'Brute force problem size limit ' +
 	    '<input type="number" id="minPoints" min="3" max="' +
 	    (waypoints.length - 1)/2 + '" value="3"><br />';

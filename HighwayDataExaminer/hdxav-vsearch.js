@@ -986,13 +986,7 @@ avg.lng &larr; lngsum<br />
 
     // set up UI for the start of this algorithm
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
 
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = `<div id="vex">
 <input id="boundingBox" type="checkbox" name="Show Bounding Box" checked />&nbsp;
 Show Extremes Bounding Box<br />

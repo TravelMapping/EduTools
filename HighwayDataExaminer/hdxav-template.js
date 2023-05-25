@@ -109,12 +109,6 @@ const hdxTemplateAV = {
     // the algorithm in algorithm selection but before you press the
     // visualize button
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
 
         let newAO;
         // Build HTML for AV options, which may consist of checkboxes,

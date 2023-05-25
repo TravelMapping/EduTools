@@ -201,9 +201,20 @@ function algorithmSelectionChanged() {
         }
     }
 
-    document.getElementById("currentAlgorithm").innerHTML = hdxAV.currentAV.name;
+    document.getElementById("currentAlgorithm").innerHTML =
+	hdxAV.currentAV.name;
 
-    // call its function to set up its status and options
+    // display AV description
+    document.getElementById("algDescription").innerHTML =
+	hdxAV.currentAV.description;
+
+    // initialize algorithm status display and log messaging
+    hdxAV.algStat.style.display = "";
+    hdxAV.algStat.innerHTML = "Setting up";
+    hdxAV.logMessageArr = [];
+    hdxAV.logMessageArr.push("Setting up");
+    
+    // call its function to set up its remaining startup status and options
     hdxAV.currentAV.setupUI();
 }
 

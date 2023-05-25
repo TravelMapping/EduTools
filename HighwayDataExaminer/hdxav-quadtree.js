@@ -622,12 +622,6 @@ const hdxQuadtreeAV = {
     },
 
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
 
         let newAO = 'Refinement Threshold <input type="number" id="refinement" min="2" max="' 
         + (waypoints.length) + '" value="3">';

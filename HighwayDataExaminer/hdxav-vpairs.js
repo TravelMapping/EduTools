@@ -600,13 +600,7 @@ const hdxVertexPairsAV = {
 
     // set up UI entries for closest/farthest pairs
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
 
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = `
 Compute: <select id="closeAndOrFar">
 <option value="closest" selected>Closest Pair Only</option>

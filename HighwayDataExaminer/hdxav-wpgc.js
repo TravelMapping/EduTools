@@ -304,12 +304,6 @@ const hdxWPGraphColoringAV = {
      },
 
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
 
         hdxAV.algOptions.innerHTML = "";
 

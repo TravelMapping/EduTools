@@ -665,13 +665,9 @@ const hdxBFConvexHullAV = {
         //if (waypoints.length > 100) {
         //    alert("This is an O(n^3) algorithm in the worst case, so you might wish to choose a smaller graph.");
         //}
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
+
         hdxAV.algOptions.innerHTML = '';
+	
         hdxAVCP.add("hullsegments", this.visualSettings.hullComponent);
         hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
         hdxAVCP.add("hullv1", this.visualSettings.hullv1);

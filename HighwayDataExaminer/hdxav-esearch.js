@@ -344,14 +344,9 @@ const hdxEdgeExtremesSearchAV = {
         
     // set up UI for the start of edge search
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
 
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
         hdxAV.algOptions.innerHTML = '';
+	
         hdxAVCP.add("undiscovered", visualSettings.undiscovered);
         hdxAVCP.add("visiting", visualSettings.visiting);
         hdxAVCP.add("discarded", visualSettings.discarded);

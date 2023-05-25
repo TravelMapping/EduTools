@@ -377,12 +377,6 @@ const hdxBFTravelingSalesmanAV = {
     // setup UI is called after you click the algorithm in algorithm
     // selection but before you press the visualize button, required
     setupUI() {
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");
 
         let newAO = buildWaypointSelector("startPoint", "Start Vertex", 0);
 
