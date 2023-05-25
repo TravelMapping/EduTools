@@ -25,11 +25,13 @@ const hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "dccp",
-    
     name: "Divide and Conquer Closest Pairs",
-    
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer, following the algorithm in Levitin.",
     
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     // global state variables for closest pairs search
     minPoints: 3,
     maxRec: 0,
@@ -884,12 +886,6 @@ const hdxClosestPairsRecAV = {
     // required prepToStart function
     // initialize a vertex closest pairs divide and conquer search
     prepToStart() {
-
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // show waypoints, hide connections
-        initWaypointsAndConnections(true, false,
-                                    visualSettings.undiscovered);
 
 	this.minPoints = document.getElementById("minPoints").value;
 	this.maxRec = document.getElementById("maxRec").value;

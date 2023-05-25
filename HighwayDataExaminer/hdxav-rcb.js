@@ -7,10 +7,15 @@
 //
 
 const hdxPartitionerAV = {
+
     value: 'rcb',
     name: "Recursive Coordinate Bisection Partitioner",
     description: "This algorithm partitions the vertices of a graph using the geometric recursive coordinate bisection algorithm.  Note: the number of partitions must be a power of 2.",
 
+    // vertices, no edges
+    useV: true,
+    useE: false,
+    
     partitionStart: [],
     partitionEnd: [],
     waypointParts: [],
@@ -536,8 +541,8 @@ const hdxPartitionerAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        initWaypointsAndConnections(true, true, visualSettings.undiscovered);
+
+	// edges start as black
         for (let i = 0; i < graphEdges.length; i++) {
 	    updatePolylineAndTable(i,{
 		color: "#000",
@@ -555,8 +560,6 @@ const hdxPartitionerAV = {
         this.code += '</td></tr>' + pcEntry(1,'if(number of Partitions > 2)','base');
         this.code += '</td></tr>' + pcEntry(2,'Partition(newPartion)<br/>'+pcIndent(4)+'Partition(newPartion2)','recursiveCall');
         this.code += '</td></tr>' + pcEntry(1,'else<br/>'+pcIndent(4)+'//do nothing','end');
-
-
     },
     
     setupUI() {

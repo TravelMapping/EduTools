@@ -13,6 +13,10 @@ const hdxVertexPairsAV = {
     value: "vpairs",
     name: "Vertex Closest/Farthest Pairs",
     description: "Search for the closest and/or farthest pair of vertices (waypoints).",
+
+    // vertices, no edges
+    useV: true,
+    useE: false,
     
     // state variables for closest pairs search
     // loop indices

@@ -15,6 +15,10 @@ const hdxBFConvexHullAV = {
     name: "Brute-Force Convex Hull",
     description: "Compute the convex hull of the vertices (waypoints) using a brute-force algorithm.",
     
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     // pseudocode
     code:'<table class="pseudocode">' +
         pcEntry(0, "hull &larr; new list", "START") +
@@ -653,11 +657,6 @@ const hdxBFConvexHullAV = {
     // required prepToStart method for brute force convex hull
     prepToStart() {
 
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // show waypoints, hide connections
-        initWaypointsAndConnections(true, false,
-                                    visualSettings.undiscovered);
     },
 
     // set up UI for convex hull

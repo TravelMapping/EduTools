@@ -7,11 +7,14 @@
 //
 
 const hdxWPGraphColoringAV = {
+
     value: "wpgc",
-    
     name: "Welsh-Powell Graph Coloring",
-    
     description: "Greedy algorithm that provides a polynomial time approximation of the graph coloring problem. Although answers are unlikely to be minimal, no vertex will have the same color as any of its neighbors.",
+
+    // use vertices and edges
+    useV: true,
+    useE: true,
     
     sortedV: [],
     
@@ -283,9 +286,6 @@ const hdxWPGraphColoringAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        initWaypointsAndConnections(true, true, visualSettings.undiscovered);
 
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `color &larr; 0</br>`

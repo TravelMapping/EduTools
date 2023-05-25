@@ -12,6 +12,11 @@ const hdxQuadtreeAV = {
     value: "quadtree",
     name: "Quadtree Construction",
     description: "Construct a quadtree by inserting vertices (waypoints) and refining into smaller quadtrees.",
+
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     //this is used to help determine the universe of our quadtree
     n: 0,
     e: 0,
@@ -547,8 +552,6 @@ const hdxQuadtreeAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
         // pseudocode for the start state    
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';

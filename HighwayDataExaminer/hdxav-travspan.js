@@ -71,7 +71,11 @@ function displayLDVItem(item, ldv) {
 
 const hdxTraversalsSpanningAVCommon = {
 
-    //keeps track of LDV length
+    // use vertices and edges
+    useV: true,
+    useE: true,
+
+    // keeps track of LDV length
     counter: 0,
 
     // entries for value, name, description, code will be in
@@ -1006,12 +1010,6 @@ const hdxTraversalsSpanningAVCommon = {
     // required prepToStart function, here do things common to all
     // traversals/spanning algorithms
     prepToStart() {
-
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // show waypoints, show connections
-        initWaypointsAndConnections(true, true,
-                                    visualSettings.undiscovered);
 
         // each algorithm will be required to provide a function
         // to create its LDV

@@ -13,6 +13,10 @@ const hdxKruskalAV = {
     name: "Kruskal's Algorithm",
     description: "Finds minimum spanning forest by considering edges (connections) in increasing length.",
     
+    // no vertices, use edges
+    useV: false,
+    useE: true,
+
     // state variables for edge search
     discarded: 0,
     ldv: null,
@@ -336,12 +340,6 @@ const hdxKruskalAV = {
     // required prepToStart function
     prepToStart() {
 
-        hdxAV.algStat.innerHTML = "Initializing";
-        
-        // hide waypoints, show connections
-        initWaypointsAndConnections(false, true,
-                                    visualSettings.undiscovered);
-        
         this.discarded = 0;
         this.ldv = null;
         // last place to come out of the LDV, currently "visiting"

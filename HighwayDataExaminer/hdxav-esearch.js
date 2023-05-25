@@ -33,6 +33,10 @@ const hdxEdgeExtremesSearchAV = {
     name: "Edge Extremes Search",
     description: "Search for extreme values based on edge (connection) lengths and labels.",
     
+    // no vertices, use edges
+    useV: false,
+    useE: true,
+
     // state variables for edge search
     // next to examine
     nextToCheck: 0,
@@ -325,11 +329,6 @@ const hdxEdgeExtremesSearchAV = {
     // required prepToStart function
     prepToStart() {
 
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // hide waypoints, show connections
-        initWaypointsAndConnections(false, true,
-                                    visualSettings.undiscovered);
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += 'longestLabel &larr; 0<br />shortestLabel &larr; 0<br />longestEdge &larr; 0<br />shortestEdge &larr; 0</td></tr>';
         this.code += pcEntry(0,'for (checkIndex &larr; 1 to |E|-1)',"forLoopTop");

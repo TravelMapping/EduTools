@@ -13,6 +13,10 @@ const hdxDFSRecAV = {
     name: "Recursive Depth First Search",
     description: "Depth-first graph traversal by recursive depth-first searches from each vertex (waypoint).",
     
+    // use vertices and edges
+    useV: true,
+    useE: true,
+
     // state variables for edge search
     discarded: 0,
     stack: null,
@@ -343,12 +347,6 @@ const hdxDFSRecAV = {
     // required prepToStart function
     prepToStart() {
 
-        hdxAV.algStat.innerHTML = "Initializing";
-        
-        // hide waypoints, show connections
-        initWaypointsAndConnections(true, true,
-                                    visualSettings.undiscovered);
-        
         this.discarded= 0;
         // last place to come out of the call stack, currently "visiting"
         this.visiting= null;

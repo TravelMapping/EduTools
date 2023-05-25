@@ -7,11 +7,14 @@
 //
 
 const hdxTarjanAV = {
+
     value: "tarjan",
-
     name: "Tarjan's Bridge Detection",
-
     description: "Tarjan's algorithm to find all bridges, which are the edges of the graph whose removal increases the number of connected components in the graph.",
+
+    // vertices and edges
+    useV: true,
+    useE: true,
 
     // edge is currently checked for being a bridge
     nextToCheck: -1,
@@ -304,8 +307,6 @@ const hdxTarjanAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        initWaypointsAndConnections(true, true, visualSettings.undiscovered);
 
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `bridges &larr; []<br />`;

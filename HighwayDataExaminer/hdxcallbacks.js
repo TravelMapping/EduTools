@@ -101,10 +101,22 @@ function startPausePressed() {
         else {
             hdxAV.startPause.innerHTML = "Pause";
         }
+
+        hdxAV.algStat.innerHTML = "Initializing";
+
+	// vertices and/or edges here?  Update only if useV is specified
+	if (hdxAV.currentAV.hasOwnProperty("useV")) {
+            initWaypointsAndConnections(hdxAV.currentAV.useV,
+					hdxAV.currentAV.useE,
+					visualSettings.undiscovered);
+	}
+
+	// remaining AV-specific preparation, after which the AV's
+	// code property should be HTML for the pseudocode
         hdxAV.currentAV.prepToStart();
+	
         // set pseudocode
         document.getElementById("pseudoText").innerHTML = hdxAV.currentAV.code;
-        document.getElementById("pseudo").parentNode.style.display = "";
       
         // reset all execution counts
         hdxAV.execCounts = [];

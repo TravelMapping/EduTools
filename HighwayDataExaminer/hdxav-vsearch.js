@@ -60,6 +60,10 @@ const hdxVertexExtremesSearchAV = {
     name: "Vertex Extremes Search",
     description: "Search for extreme values based on vertex (waypoint) locations and labels.",
 
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     // state variables for vertex extremes search
     nextToCheck: 0,
     discarded: 0,
@@ -769,12 +773,6 @@ const hdxVertexExtremesSearchAV = {
     // required prepToStart function
     // initialize a vertex-based search
     prepToStart() {
-
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // show waypoints, hide connections
-        initWaypointsAndConnections(true, false,
-                                    visualSettings.undiscovered);
 
         // honor bounding box checkbox
         this.showBB = document.getElementById("boundingBox").checked;

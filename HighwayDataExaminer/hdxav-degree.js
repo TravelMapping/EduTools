@@ -12,6 +12,10 @@ const hdxDegreeAV = {
     name: "Vertex Min/Max Degree Search",
     description: "Search for minimum and maximum degree vertices (waypoints) in the graph.",
 
+    // vertices and edges
+    useV: true,
+    useE: true,
+
     // state variables for vertex degree search
     nextToCheck: 0, //for loop counter
     discarded: 0,

@@ -22,10 +22,14 @@ const hdxTemplateAV = {
     //the drop down but before they press the "visualize" button
     description: "This description is used to decribe the algorithm to the user.",
 
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     // Next, define AV-specific fields that are needed across multiple
     // actions and other AV-specific functions
 
-    // Bwlow are some common examples
+    // Below are some common examples
 
     // list of polylines, any line you manually insert onto the HDX to
     // aid the AV.  Often used in vertex only algorithms, these
@@ -91,12 +95,7 @@ const hdxTemplateAV = {
     // prepToStart is a required function which is called when you hit
     // visualize but before you hit start
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
 	
-        // this function determines if you are using vertices (first
-        // param), edges (second param), and color (this gives black)
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
-
         // Build HTML for the pseudocode, which is an HTML table, with
         // each state being a different row.
 	
@@ -105,7 +104,7 @@ const hdxTemplateAV = {
 	
 	// see existing AVs for examples of how this is built
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
-},
+    },
     // setupUI is a required function that is called after you click
     // the algorithm in algorithm selection but before you press the
     // visualize button

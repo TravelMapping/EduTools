@@ -6,7 +6,6 @@
 // Primary Authors: Mark Verra
 // Version: Summer 2022
 //
-//
 
 const hdxAPClosestPointAV = {
     // entries for list of AVs
@@ -14,6 +13,10 @@ const hdxAPClosestPointAV = {
     name: "All Points Closest Point",
     description: "Search for the closest other vertex (waypoint) to each vertex.",
 
+    // vertices, no edges
+    useV: true,
+    useE: false,
+    
     // This variable stores the array of corresponding indices for
     // which vertices are closest to which other vertices.  For
     // example, if the closest vertex to vertex #0 is vertex #10, then
@@ -364,10 +367,6 @@ const hdxAPClosestPointAV = {
     ],
 
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        
-        // we want only vertices for this algorithm
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 

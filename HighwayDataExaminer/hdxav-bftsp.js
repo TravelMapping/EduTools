@@ -7,12 +7,15 @@
 //
 
 const hdxBFTravelingSalesmanAV = {
+
     //entries for list of avs
     value: 'bftsp',
-
     name: "Brute Force Traveling Salesman",
-
     description: "Find the shortest path visiting each location by trying all permutations. NOTE: Only use on small graphs, 10 vertices and less",
+
+    // vertices, no edges
+    useV: true,
+    useE: false,
 
     // the polyline for the current permutation/path being checked
     currPoly: null,
@@ -352,10 +355,6 @@ const hdxBFTravelingSalesmanAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        
-        // we use only vertices for this algorithm
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 	
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 

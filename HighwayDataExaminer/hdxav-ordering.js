@@ -12,6 +12,10 @@ const hdxOrderingAV = {
     name: "Traversal Orderings",
     description: "Visualize various 1D orderings of vertices (waypoints) in 2D space.",
 
+    // vertices, no edges
+    useV: true,
+    useE: false,
+
     // used to track the num of the two verticies we are drawing an
     // edge between
     v1: 0,
@@ -328,8 +332,6 @@ const hdxOrderingAV = {
     ],
 
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
         // pseudocode
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';

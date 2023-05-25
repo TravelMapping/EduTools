@@ -7,11 +7,14 @@
 //
 
 const hdxTwiceAroundTreeAV = {
+
     value: 'tsptwice',
-
     name: "Twice-Around-the-Tree TSP Approximation",
-
     description: "This algorithm provides an polynomial time approximation of the traveling salesman problem, where using a minimum spanning tree and depth-first-search, the approximate distance is guaranteed to be less than twice the actual solution",
+
+    // use vertices, no edges
+    useV: true,
+    useE: false,
 
     edgePoly: [],
 
@@ -339,9 +342,6 @@ const hdxTwiceAroundTreeAV = {
     ],
     
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        initWaypointsAndConnections(true, false, visualSettings.undiscovered);
 
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `k<sub>n</sub> &larr; completeGraph(v[]) <br />`;

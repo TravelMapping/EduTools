@@ -17,14 +17,9 @@ const hdxNoAV = {
 
     code: "Select and start an algorithm to view pseudocode.",
     
-    // provide prepToStart, nextStep, setupUI, just in case buttons are
+    // provide prepToStart, setupUI, cleanupUI, just in case buttons are
     // somehow active when this option is selected
     prepToStart() {
-
-        alert("Please select an algorithm first.");
-    },
-    
-    nextStep() {
 
         alert("Please select an algorithm first.");
     },
