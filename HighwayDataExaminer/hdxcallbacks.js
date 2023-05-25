@@ -566,8 +566,8 @@ function HDXFillGraphList(e) {
             const values = opts['values'];
             const vertices = opts['vertices'];
             const edges = opts['edges'];
-            var opt;
-            var str = "";
+            let opt;
+            let str = "";
             if (txt.length == 0) {
 		// remove the dropdown until the button is pressed
 		// again with valid entries
