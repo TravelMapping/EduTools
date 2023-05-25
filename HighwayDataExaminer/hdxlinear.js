@@ -21,9 +21,6 @@ const hdxLinearTypes = {
     UNKNOWN: 6
 };
 
-// to generate unique document element ids
-var HDXLinearCounter = 1;
-
 function HDXLinear(type, displayName) {
 
     // supported types listed above
@@ -32,10 +29,10 @@ function HDXLinear(type, displayName) {
     }
     this.type = type;
     this.displayName = displayName;
-    this.idNum = HDXLinearCounter;
+    this.idNum = HDXLinear.counter;
     this.maxLabelLength = 10;
     this.valPrecision = 3;
-    HDXLinearCounter++;
+    HDXLinear.counter++;
 
     // the actual array representing this linear structure
     this.items = [];
@@ -293,4 +290,7 @@ function HDXLinear(type, displayName) {
     
     return this;
 }
+
+// class variable to generate unique document element ids
+HDXLinear.counter = 1;
 
