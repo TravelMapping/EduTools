@@ -7,12 +7,15 @@
 //
 
 const hdxComputePartStats = {
+
     // entries for list of avs
     value: 'partstats',
-
     name: "Compute Partition Stats",
-
     description: "Compute partition quality stats.  Partitioned data must be loaded or calculated before using this AV.",
+
+    // use vertices and edges
+    useV: true,
+    useE: true,
 
     avActions : [
         {
@@ -59,23 +62,13 @@ const hdxComputePartStats = {
     // prepToStart is a necessary function for everyAV and is called
     // when you hit visualize but before you hit start
     prepToStart() {
-        hdxAV.algStat.innerHTML = "Initializing";
-
-	// show both vertices and edges
-        initWaypointsAndConnections(true, true, visualSettings.undiscovered);
 
         this.code =''; //'<table class="pseudocode"><tr id="START"
 		       //class="pseudocode"><td class="pseudocode">';
     },
     
     setupUI() {
-        // sets up HTML for options
-        const algDescription = document.getElementById("algDescription");
-        algDescription.innerHTML = this.description;
-        hdxAV.algStat.style.display = "";
-        hdxAV.algStat.innerHTML = "Setting up";
-        hdxAV.logMessageArr = [];
-        hdxAV.logMessageArr.push("Setting up");        
+
         hdxAV.algOptions.innerHTML = hdxPart.colorHtml();
     },
 

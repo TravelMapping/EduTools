@@ -968,7 +968,8 @@ avg.lng &larr; lngsum<br />
 	}
         
         this.code += "</table>";
-        
+
+        // AVCP entries added here because some are AV option dependent
         hdxAVCP.add("undiscovered", visualSettings.undiscovered);
         hdxAVCP.add("visiting", visualSettings.visiting);
         hdxAVCP.add("discarded", visualSettings.discarded);

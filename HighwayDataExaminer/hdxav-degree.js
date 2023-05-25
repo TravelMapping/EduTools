@@ -410,12 +410,6 @@ const hdxDegreeAV = {
     // initialize a vertex-based search
     prepToStart() {
 
-        hdxAV.algStat.innerHTML = "Initializing";
-
-        // show waypoints and connections
-        initWaypointsAndConnections(true, true,
-                                    visualSettings.undiscovered);
-
 	// we want connections shown, but not to be too prominent,
 	// to color them with the discarded style
 	for (let i = 0; i < connections.length; i++) {
