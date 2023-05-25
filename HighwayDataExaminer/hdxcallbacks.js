@@ -106,7 +106,6 @@ function startPausePressed() {
         document.getElementById("pseudoText").innerHTML = hdxAV.currentAV.code;
         document.getElementById("pseudo").parentNode.style.display = "";
       
-
         // reset all execution counts
         hdxAV.execCounts = [];
         hdxAV.maxExecCount = 0;
