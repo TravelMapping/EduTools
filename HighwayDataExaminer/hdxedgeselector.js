@@ -56,12 +56,28 @@ function buildEdgeSelector(id,label,initVal) {
 // breakpoints and has no initVal
 function buildCBPEdgeSelector(id,label) {
 
-    return label + ' <input id="' + id +
+    const selid = id + "sel";
+    let html = label + ' <input id="' + id +
         '" onfocus="hdxEdgeSelector.startSelection(\'' + id +
         '\')" type="number" min="0" max="' +
-        (graphEdges.length-1) + '" size="6" style="width: 47px" name="quantity" ' +
-        'onchange="edgeSelectorChanged(\'' + id + '\')"' +
-        '/>';
+        (graphEdges.length-1) +
+	'" size="6" style="width: 47px" name="quantity" ' +
+        'onchange="edgeSelectorChanged(\'' + id + '\'")/>' +
+	'<br />or <select id="' + selid + '">' +
+	'<option value="exact">exact</option>' +
+	'<option value="substring">substring</option>' +
+	'<option value="starts">starts with</option>' +
+	'<option value="route">has route</option>' +
+	'</select> label match <input id="' + id + 'text" size="10" />';
+
+    // only if the AV displays vertices will we also allow to match an
+    // edge by its vertex endpoints
+    if (hdxAV.currentAV.useV) {
+	const vid = id + "end";
+	html += '<br />ADD VERTEX ENDPOINT';
+    }
+	
+    return html;
 }
 
 // event handler for egde selectors
@@ -72,4 +88,48 @@ function edgeSelectorChanged(id) {
 	const eNum = document.getElementById(id).value;
 	label.innerHTML = graphEdges[eNum].label;
     }
+}
+
+// function to check if the given values from a CBP edge selector
+// match the edge with the given number
+function isCBPEdgeMatch(edgenum, matchedgenum, matchtype, matchtext) {
+
+    // first check for an edge number match
+    if (edgenum == matchedgenum) {
+	return true;
+    }
+    if (edgenum >= 0 && edgenum < graphEdges.length) {
+	const elabel = graphEdges[edgenum].label;
+	switch (matchtype) {
+	case "exact":
+	    if (elabel == matchtext) {
+		return true;
+	    }
+	    break;
+	case "substring":
+	    if (elabel.includes(matchtext)) {
+		return true;
+	    }
+	    break;
+	case "starts":
+	    if (elabel.startsWith(matchtext)) {
+		return true;
+	    }
+	    break;
+	case "route":
+	    const routes = elabel.split(',');
+	    for (route of routes) {
+		if (route == matchtext) {
+		    return true;
+		}
+	    }
+	    break;
+	}
+    }
+    if (hdxAV.currentAV.useV) {
+	console.log("NOT YET CHECKING VERTEX ENDPOINT MATCHES");
+    }
+    
+    // nothing matched
+    return false;
 }

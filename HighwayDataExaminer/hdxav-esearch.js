@@ -193,9 +193,10 @@ const hdxEdgeExtremesSearchAV = {
 		    type: hdxCBPSelectors.EDGE,
 		    label: "Stop at check ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.nextToCheck == val;
-		}		
+		f: function(thisAV, edgenum, matchtype, textval) {
+		    return isCBPEdgeMatch(thisAV.nextToCheck, edgenum,
+					  matchtype, textval);
+		}    
             }
         },
         {

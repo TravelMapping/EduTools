@@ -105,7 +105,7 @@ function breakpointShowCBPControls(cbp) {
     let html = "";
     for (control of controls) {
 	// default control id unless one was specified
-	const controlid = "HDXCBPControl";
+	let controlid = "HDXCBPControl";
 	if (control.selector.hasOwnProperty("id")) {
 	    controlid = control.selector.id;
 	}
@@ -142,21 +142,29 @@ function breakpointCheckMatch(cbp) {
     // check each for a match, if any matches, we return true
     for (control of controls) {
 	// default control id unless one was specified
-	const controlid = "HDXCBPControl";
+	let controlid = "HDXCBPControl";
 	if (control.selector.hasOwnProperty("id")) {
 	    controlid = control.selector.id;
 	}
-
+	
 	const element = document.getElementById(controlid);
 	
 	switch (control.selector.type) {
 	case hdxCBPSelectors.VERTEX:
-	case hdxCBPSelectors.EDGE:
-	    const rawval = element.value;
-	    if (!isNaN(rawval) &&
-		control.f(hdxAV.currentAV, parseFloat(rawval))) {
+	    if (element.value.length > 0 && !isNaN(element.value) &&
+		control.f(hdxAV.currentAV, parseFloat(element.value))) {
 		return true;
 	    }
+	    break;
+	case hdxCBPSelectors.EDGE:
+	    let edgenum = -1;
+	    if (element.value.length > 0 && !isNaN(element.value)) {
+		edgenum = parseFloat(element.value);
+	    }
+	    const selelement = document.getElementById(controlid + "sel");
+	    const textelement = document.getElementById(controlid + "text");
+	    return control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
+			     textelement.value.trim());
 	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");
