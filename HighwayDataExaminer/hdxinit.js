@@ -28,7 +28,7 @@ function HDXInit() {
     hdxGlobals.algSelectScreen = false;
 
     // HDX menuing system initialization
-    defaultMenu();
+    HDXCreateDefaultGraphSelectionMenu();
 
     // HDX AV initialization (could delay?)
     hdxAV.initOnLoad();

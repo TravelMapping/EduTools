@@ -413,7 +413,7 @@ function showTopControlPanel() {
         av1.style.display = "none";
         av2.style.display = "none";
         av2.style.display = "";
-        document.getElementById("newGraph").addEventListener("click", newGraphMenu);
+        document.getElementById("newGraph").addEventListener("click", HDXCreateNewGraphMenu);
         document.getElementById("newAlg").addEventListener("click", resetPressed);
         document.getElementById("newAlg").addEventListener("click", cleanupBreakpoints());
         
@@ -501,7 +501,7 @@ function showAlgorithmSelectionPanel() {
 // other information showing the status of an AV
 function showAVStatusPanel() {
 
-    document.getElementById("newGraph").addEventListener("click", newGraphMenu);
+    document.getElementById("newGraph").addEventListener("click", HDXCreateNewGraphMenu);
     document.getElementById("newAlg").addEventListener("click", resetPressed);
     document.getElementById("newAlg").addEventListener("click", cleanupBreakpoints());
     

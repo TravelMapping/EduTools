@@ -99,7 +99,7 @@ function HDXGraphBoxStart() {
             if (keycode == '13') {
 		const input = document.getElementById("searchBox").value;
 		if (HDXGraphs.hasOwnProperty(input)) {
-		    loadingMenu();
+		    HDXLoadingMenu();
 		    HDXReadFileFromWebServer(HDXGraphs[input]);
 		}
 		else {
@@ -128,7 +128,7 @@ function HDXGraphSearchNextPressed() {
     
     const input = document.getElementById("searchBox").value;
     if (HDXGraphs.hasOwnProperty(input)) {
-	loadingMenu();
+	HDXLoadingMenu();
 	HDXReadFileFromWebServer(HDXGraphs[input]);
     }
     else {

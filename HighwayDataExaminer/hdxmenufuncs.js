@@ -30,10 +30,10 @@ function HDXCreateBasicGraphSelectionMenu() {
     dataPanel.appendChild(back);
     back.addEventListener("click", HDXGraphSearchCleanup());
     if (hdxGlobals.titleScreen) {
-	back.addEventListener("click", defaultMenu);
+	back.addEventListener("click", HDXCreateDefaultGraphSelectionMenu);
     }
     else {
-	back.addEventListener("click", newGraphMenu);
+	back.addEventListener("click", HDXCreateNewGraphMenu);
     }
     
     // Spacing on the panel
@@ -42,7 +42,7 @@ function HDXCreateBasicGraphSelectionMenu() {
     dataPanel.appendChild(br);
     dataPanel.appendChild(br);
     
-    // Instructions for the Grpah Search Box
+    // Instructions for the Graph Search Box
     const instructions = document.createElement("p");
     instructions.innerHTML = "Search by name for a METAL graph";
     dataPanel.appendChild(instructions);
@@ -66,11 +66,10 @@ function HDXCreateBasicGraphSelectionMenu() {
     next.innerHTML = "Next";
     next.addEventListener("click", HDXGraphSearchNextPressed);
     dataPanel.appendChild(next);
-    
 }
 
 /* build the advanced graph selection menu */
-function advancedMenu() {
+function HDXCreateAdvancedGraphSelectionMenu() {
     
     const dataPanel = document.getElementById("loadDataPanel");
     
@@ -93,10 +92,10 @@ function advancedMenu() {
     container.appendChild(title);
     
     if (hdxGlobals.titleScreen) {
-	back.addEventListener("click", defaultMenu);
+	back.addEventListener("click", HDXCreateDefaultGraphSelectionMenu);
     }
     else {
-	back.addEventListener("click", newGraphMenu);
+	back.addEventListener("click", HDXCreateNewGraphMenu);
     }
 
     // graph archive set selection
@@ -259,7 +258,7 @@ function advancedMenu() {
     dataPanel.appendChild(container);    
 }
 
-function loadingMenu() {
+function HDXLoadingMenu() {
 
     const dataPanel = document.getElementById("loadDataPanel");
     
@@ -272,7 +271,7 @@ function loadingMenu() {
     dataPanel.appendChild(loading);
 }
 
-function newGraphMenu() {
+function HDXCreateNewGraphMenu() {
     
     if (hdxAV.status == hdxStates.AV_RUNNING) {
 	hdxAV.setStatus(hdxStates.AV_PAUSED);
@@ -314,7 +313,7 @@ function newGraphMenu() {
     advanced.innerHTML = "Advanced Search";
     mainbox.appendChild(advanced);
     
-    advanced.addEventListener("click", advancedMenu);
+    advanced.addEventListener("click", HDXCreateAdvancedGraphSelectionMenu);
     
     mainbox.appendChild(br);
     
@@ -346,8 +345,7 @@ function newGraphMenu() {
     mainbox.style.display = "";
 }
 
-
-function defaultMenu() {
+function HDXCreateDefaultGraphSelectionMenu() {
 
     const mainbox = document.getElementById("loadDataPanel");
     
@@ -386,7 +384,7 @@ function defaultMenu() {
     advanced.innerHTML = "Advanced Search";
     mainbox.appendChild(advanced);
     
-    advanced.addEventListener("click", advancedMenu);
+    advanced.addEventListener("click", HDXCreateAdvancedGraphSelectionMenu);
     
     mainbox.appendChild(br);
     
