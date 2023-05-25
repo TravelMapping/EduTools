@@ -115,6 +115,9 @@ function breakpointShowCBPControls(cbp) {
 	case hdxCBPSelectors.VERTEX:
 	    html += buildCBPWaypointSelector(controlid, control.selector.label);
 	    break;
+	case hdxCBPSelectors.EDGE:
+	    html += buildCBPEdgeSelector(controlid, control.selector.label);
+	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");
 	}
@@ -148,6 +151,7 @@ function breakpointCheckMatch(cbp) {
 	
 	switch (control.selector.type) {
 	case hdxCBPSelectors.VERTEX:
+	case hdxCBPSelectors.EDGE:
 	    const rawval = element.value;
 	    if (!isNaN(rawval) &&
 		control.f(hdxAV.currentAV, parseFloat(rawval))) {

@@ -187,8 +187,15 @@ const hdxEdgeExtremesSearchAV = {
             logMessage: function(thisAV) {
                 return "Top of main for loop over edges, check=" + thisAV.nextToCheck;
             },
-            currentVariable: function(thisAV, whatToDo) {
-                return (thisAV.nextToCheck+1);
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.EDGE,
+		    label: "Stop at check ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextToCheck == val;
+		}		
             }
         },
         {
@@ -217,9 +224,6 @@ const hdxEdgeExtremesSearchAV = {
                 else {
                     return "Check for new " + thisAV.categories[thisAV.nextCategory-1].label + " leader";
                 }
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.categories[thisAV.nextCategory].newLeader();
             }
         },
         {

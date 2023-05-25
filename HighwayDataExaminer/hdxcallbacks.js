@@ -39,6 +39,13 @@ function speedChanged() {
 }
 
 
+// HDX-specific edge/connection/polyline click callback
+function edgeClickHDX(i) {
+
+    // handle edge control selection
+    hdxEdgeSelector.select(i);
+}
+
 // special HDX version of the label click event handler that is
 // called by the general TM addMarker, as it is registered
 // by the registerMarkerClickListener call in updateMap

@@ -65,6 +65,7 @@
 <script src="hdxvisualsettings.js" type="text/javascript"></script>
 <script src="hdxcustomtitles.js" type="text/javascript"></script>
 <script src="hdxavcp.js" type="text/javascript"></script>
+<script src="hdxedgeselector.js" type="text/javascript"></script>
 <script src="hdxvertexselector.js" type="text/javascript"></script>
 <script src="hdxhover.js" type="text/javascript"></script>
 <script src="hdxpseudocode.js" type="text/javascript"></script>

@@ -191,6 +191,8 @@ const hdxAV = {
 
         // register the HDX-specific event handler for waypoint clicks
         registerMarkerClickListener(labelClickHDX);
+	// and for edge clicks
+	registerConnectionClickListener(edgeClickHDX);
     },
 
     // this will do an action, an iteration, or run to completion
