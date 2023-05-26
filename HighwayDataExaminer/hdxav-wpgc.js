@@ -290,7 +290,7 @@ const hdxWPGraphColoringAV = {
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `color &larr; 0</br>`
         this.code += `sortedV[] &larr; sort(V,degree)</br>`
-        this.code += `for i &larr 0 to |sortedV|</br>`
+        this.code += `for i &larr; 0 to |sortedV|</br>`
         this.code += pcIndent(2) + `sortedV[i].color &larr; -1 //colorless</br>`
         this.code += pcEntry(0,"while(sortedV is not empty)</br>" +
             pcIndent(2) + "i &larr; 0","topWhileLoop");
