@@ -66,7 +66,6 @@ const hdxTarjanAV = {
 
                 // numBridges is incremented every time we find a new bridge
                 thisAV.numBridges = 0;
-
             
                 hdxAVCP.update("undiscovered", graphEdges.length +
 			       " edges not yet visited");
@@ -111,6 +110,17 @@ const hdxTarjanAV = {
                 }
             
                 hdxAV.iterationDone = true;
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.EDGE,
+		    label: "Stop at e ="
+		},
+		f: function(thisAV, edgenum, matchtype, textval, vnum) {
+		    return isCBPEdgeMatch(thisAV.nextToCheck, edgenum,
+					  matchtype, textval, vnum);
+		}    
             },
             logMessage: function(thisAV) {
                 return "Checking if edge #" + thisAV.nextToCheck +
