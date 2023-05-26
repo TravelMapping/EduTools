@@ -94,12 +94,15 @@ function edgeSelectorChanged(id) {
 // match the edge with the given number
 function isCBPEdgeMatch(edgenum, matchedgenum, matchtype, matchtext) {
 
+    console.log("isCBPEdgeMatch: considering edgenum " + edgenum);
+    console.log("isCBPEdgeMatch: checking number match with " + matchedgenum);
     // first check for an edge number match
     if (edgenum == matchedgenum) {
 	return true;
     }
     if (edgenum >= 0 && edgenum < graphEdges.length) {
 	const elabel = graphEdges[edgenum].label;
+	console.log("isCBPEdgeMatch: checking " + matchtype + " label match, edgelabel: " + elabel + " with " + matchtext);
 	switch (matchtype) {
 	case "exact":
 	    if (elabel == matchtext) {

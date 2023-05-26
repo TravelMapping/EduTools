@@ -160,6 +160,17 @@ const hdxKruskalAV = {
 
                 hdxAV.nextAction = "checkCycle";
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.EDGE,
+		    label: "Stop at edge ="
+		},
+		f: function(thisAV, edgenum, matchtype, textval) {
+		    return isCBPEdgeMatch(thisAV.visiting.connection, edgenum,
+					  matchtype, textval);
+		}    
+            },
             logMessage: function(thisAV) {
                 return "Removed edge #" +
                     thisAV.visiting.connection + " from Priority Queue";
