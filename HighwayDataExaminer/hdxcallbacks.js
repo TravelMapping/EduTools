@@ -53,6 +53,7 @@ function labelClickHDX(i) {
 
     // handle vertex control selection
     hdxVertexSelector.select(i);
+    hdxEdgeSelector.selectV(i);
 
     // standard map center/infowindow display
 

@@ -163,8 +163,14 @@ function breakpointCheckMatch(cbp) {
 	    }
 	    const selelement = document.getElementById(controlid + "sel");
 	    const textelement = document.getElementById(controlid + "text");
+	    let vnum = -1;
+	    const velement = document.getElementById(controlid + "end");
+	    if (velement != null && velement.value.length > 0 &&
+		!isNaN(velement.value)) {
+		vnum = parseFloat(velement.value);
+	    }
 	    return control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
-			     textelement.value.trim());
+			     textelement.value.trim(), vnum);
 	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");

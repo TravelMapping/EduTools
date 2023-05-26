@@ -24,7 +24,7 @@ const hdxEdgeSelector = {
         this.selector = label;
     },
 
-    // the actual event handler function to set the value
+    // the actual event handler function to set the edge value
     select(eNum) {
 
         if (this.selector != "") {
@@ -32,6 +32,16 @@ const hdxEdgeSelector = {
             e.value = eNum;
             // and update the label
             edgeSelectorChanged(this.selector);
+        }
+        this.selector = "";
+    },
+
+    // the actual event handler function to set the vertex value
+    selectV(vNum) {
+
+        if (this.selector != "") {
+            const e = document.getElementById(this.selector);
+            e.value = vNum;
         }
         this.selector = "";
     }
@@ -74,7 +84,10 @@ function buildCBPEdgeSelector(id,label) {
     // edge by its vertex endpoints
     if (hdxAV.currentAV.useV) {
 	const vid = id + "end";
-	html += '<br />ADD VERTEX ENDPOINT';
+	html += '<br />or match either end vertex: <input id="' + vid +
+            '" onfocus="hdxEdgeSelector.startSelection(\'' + vid +
+            '\')" type="number" min="0" max="' + (waypoints.length-1) +
+	    '" size="6" style="width: 47px" name="quantity" />';
     }
 	
     return html;
@@ -92,17 +105,14 @@ function edgeSelectorChanged(id) {
 
 // function to check if the given values from a CBP edge selector
 // match the edge with the given number
-function isCBPEdgeMatch(edgenum, matchedgenum, matchtype, matchtext) {
+function isCBPEdgeMatch(edgenum, matchedgenum, matchtype, matchtext, matchendv) {
 
-    console.log("isCBPEdgeMatch: considering edgenum " + edgenum);
-    console.log("isCBPEdgeMatch: checking number match with " + matchedgenum);
     // first check for an edge number match
     if (edgenum == matchedgenum) {
 	return true;
     }
     if (edgenum >= 0 && edgenum < graphEdges.length) {
 	const elabel = graphEdges[edgenum].label;
-	console.log("isCBPEdgeMatch: checking " + matchtype + " label match, edgelabel: " + elabel + " with " + matchtext);
 	switch (matchtype) {
 	case "exact":
 	    if (elabel == matchtext) {
@@ -129,8 +139,12 @@ function isCBPEdgeMatch(edgenum, matchedgenum, matchtype, matchtext) {
 	    break;
 	}
     }
-    if (hdxAV.currentAV.useV) {
-	console.log("NOT YET CHECKING VERTEX ENDPOINT MATCHES");
+    if (hdxAV.currentAV.useV && matchendv != -1) {
+	const v1 = graphEdges[edgenum].v1;
+	const v2 = graphEdges[edgenum].v2;
+	if (v1 == matchendv || v2 == matchendv) {
+	    return true;
+	}
     }
     
     // nothing matched

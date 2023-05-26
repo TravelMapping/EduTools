@@ -166,9 +166,9 @@ const hdxKruskalAV = {
 		    type: hdxCBPSelectors.EDGE,
 		    label: "Stop at edge ="
 		},
-		f: function(thisAV, edgenum, matchtype, textval) {
+		f: function(thisAV, edgenum, matchtype, textval, vnum) {
 		    return isCBPEdgeMatch(thisAV.visiting.connection, edgenum,
-					  matchtype, textval);
+					  matchtype, textval, vnum);
 		}    
             },
             logMessage: function(thisAV) {
