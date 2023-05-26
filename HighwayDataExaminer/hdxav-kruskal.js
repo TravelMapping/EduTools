@@ -13,8 +13,8 @@ const hdxKruskalAV = {
     name: "Kruskal's Algorithm",
     description: "Finds minimum spanning forest by considering edges (connections) in increasing length.",
     
-    // no vertices, use edges
-    useV: false,
+    // use vertices, use edges
+    useV: true,
     useE: true,
 
     // state variables for edge search
@@ -152,8 +152,6 @@ const hdxKruskalAV = {
 			       thisAV.visiting.connection + ": " +
 			       graphEdges[thisAV.visiting.connection].label);
                 // show on map as visiting color
-                updateMarkerAndTable(thisAV.visiting.vIndex,
-				     visualSettings.visiting, 10, false);
                 if (thisAV.visiting.connection != -1) {
                     updatePolylineAndTable(thisAV.visiting.connection,
                         visualSettings.visiting,
