@@ -759,8 +759,9 @@ const hdxTraversalsSpanningAVCommon = {
 			label: "Stop at v =",
 			id: "ToVertex"
 		    },
-		    f: function(thisAV, val) {
-			return thisAV.nextNeighbor.to == val;
+		    f: function(thisAV, matchvnum, matchtype, textval) {
+			return isCBPVertexMatch(thisAV.nextNeighbor.to,
+				    matchvnum, matchtype, textval);
 		    }		
 		},
 		{
