@@ -79,8 +79,9 @@ const hdxCBPToAndVia = [
 	    label: "Stop at to =",
 	    id: "ToVertex"
 	},
-	f: function(thisAV, val) {
-	    return thisAV.visiting.vIndex == val;
+	f: function(thisAV, matchvnum, matchtype, textval) {
+	    return isCBPVertexMatch(thisAV.visiting.vIndex,
+				    matchvnum, matchtype, textval);
 	}		
     },
     {
@@ -649,8 +650,9 @@ const hdxTraversalsSpanningAVCommon = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.nextNeighbor.to == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.nextNeighbor.to,
+					    matchvnum, matchtype, textval);
 		}
 	    },
             logMessage: function(thisAV) {

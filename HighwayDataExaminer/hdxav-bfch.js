@@ -205,8 +205,9 @@ const hdxBFConvexHullAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v<sub>1</sub> ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.hullv1 == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.hullv1,
+					    matchvnum, matchtype, textval);
 		}		
             },
         },
@@ -245,8 +246,9 @@ const hdxBFConvexHullAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v<sub>2</sub> ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.hullv2 == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.hullv2,
+					    matchvnum, matchtype, textval);
 		}		
             }
         },
@@ -331,8 +333,9 @@ const hdxBFConvexHullAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v<sub>test</sub> ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.hullvtest == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.hullvtest,
+					    matchvnum, matchtype, textval);
 		}		
             }
         },

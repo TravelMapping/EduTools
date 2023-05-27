@@ -127,8 +127,9 @@ const hdxAPClosestPointAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v<sub>1</sub> ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.outLoop == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.outLoop,
+					    matchvnum, matchtype, textval);
 		}		
             }
         },
@@ -192,8 +193,9 @@ const hdxAPClosestPointAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v<sub>2</sub> ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.inLoop == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.inLoop,
+					    matchvnum, matchtype, textval);
 		}		
             }
         },

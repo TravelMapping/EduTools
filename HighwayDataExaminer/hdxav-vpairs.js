@@ -139,8 +139,9 @@ const hdxVertexPairsAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v1 ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.v1 == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.v1,
+					    matchvnum, matchtype, textval);
 		}		
 	    }
         },
@@ -178,8 +179,9 @@ const hdxVertexPairsAV = {
 		    type: hdxCBPSelectors.VERTEX,
 		    label: "Stop at v2 ="
 		},
-		f: function(thisAV, val) {
-		    return thisAV.v2 == val;
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.v2,
+					    matchvnum, matchtype, textval);
 		}		
             }
         },
