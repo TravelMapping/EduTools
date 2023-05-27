@@ -32,9 +32,11 @@ const hdxVertexSelector = {
         //alert("select: " + vNum);
         if (this.selector != "") {
             const v = document.getElementById(this.selector);
-            v.value = vNum;
-            // and update the label
-            waypointSelectorChanged(this.selector);
+	    if (v != null) {
+		v.value = vNum;
+		// and update the label
+		waypointSelectorChanged(this.selector);
+	    }
         }
         this.selector = "";
     }

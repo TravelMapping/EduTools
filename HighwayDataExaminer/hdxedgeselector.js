@@ -29,9 +29,11 @@ const hdxEdgeSelector = {
 
         if (this.selector != "") {
             const e = document.getElementById(this.selector);
-            e.value = eNum;
-            // and update the label
-            edgeSelectorChanged(this.selector);
+	    if (e != null) {
+		e.value = eNum;
+		// and update the label
+		edgeSelectorChanged(this.selector);
+	    }
         }
         this.selector = "";
     },
@@ -41,7 +43,9 @@ const hdxEdgeSelector = {
 
         if (this.selector != "") {
             const e = document.getElementById(this.selector);
-            e.value = vNum;
+	    if (e != null) {
+		e.value = vNum;
+	    }
         }
         this.selector = "";
     }
