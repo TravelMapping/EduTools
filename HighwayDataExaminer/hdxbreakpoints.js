@@ -102,7 +102,7 @@ function breakpointShowCBPControls(cbp) {
     }
 
     // build an HTML string that will have our needed inputs for this CBP
-    let html = "";
+    let html = "<hr />";
     for (control of controls) {
 	// default control id unless one was specified
 	let controlid = "HDXCBPControl";
@@ -121,6 +121,7 @@ function breakpointShowCBPControls(cbp) {
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");
 	}
+	html += "<hr />";
     }
 
     // add the constructed HTML to the right element
@@ -146,7 +147,7 @@ function breakpointCheckMatch(cbp) {
 	if (control.selector.hasOwnProperty("id")) {
 	    controlid = control.selector.id;
 	}
-	
+
 	const element = document.getElementById(controlid);
 	
 	switch (control.selector.type) {
@@ -169,8 +170,10 @@ function breakpointCheckMatch(cbp) {
 		!isNaN(velement.value)) {
 		vnum = parseFloat(velement.value);
 	    }
-	    return control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
-			     textelement.value.trim(), vnum);
+	    if (control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
+			  textelement.value.trim(), vnum)) {
+		return true;
+	    }
 	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");

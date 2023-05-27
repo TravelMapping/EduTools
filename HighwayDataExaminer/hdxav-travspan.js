@@ -68,6 +68,33 @@ function displayLDVItem(item, ldv) {
         "</span>";
 };
 
+// a conditional breakpoint array that is used for a few places,
+// where we want to be able to stop on a vertex in thisAV.visiting
+// or a connection in thisAV.visiting
+const hdxCBPToAndVia = [
+    {
+	type: hdxCBPTypes.VARIABLE,
+	selector: {
+	    type: hdxCBPSelectors.VERTEX,
+	    label: "Stop at to =",
+	    id: "ToVertex"
+	},
+	f: function(thisAV, val) {
+	    return thisAV.visiting.vIndex == val;
+	}		
+    },
+    {
+	type: hdxCBPTypes.VARIABLE,
+	selector: {
+	    type: hdxCBPSelectors.EDGE,
+	    label: "Stop at via ="
+	},
+	f: function(thisAV, edgenum, matchtype, textval, vnum) {
+	    return isCBPEdgeMatch(thisAV.visiting.connection,
+				  edgenum, matchtype, textval, vnum);
+	},
+    }
+];    
 
 const hdxTraversalsSpanningAVCommon = {
 
@@ -407,6 +434,7 @@ const hdxTraversalsSpanningAVCommon = {
                 
                 hdxAV.nextAction = "checkAdded";
             },
+	    cbp: hdxCBPToAndVia,
             logMessage: function(thisAV) {
                 return "Removed " +
                     thisAV.formatLDVEntry(thisAV.visiting) + " from " +
@@ -492,6 +520,7 @@ const hdxTraversalsSpanningAVCommon = {
                     hdxAV.nextAction = "checkComponentDone";
                 }
             },
+	    cbp: hdxCBPToAndVia,
             logMessage: function(thisAV) {
                 return "Discarding " +
                     thisAV.formatLDVEntry(thisAV.visiting) + " on removal";
@@ -550,6 +579,7 @@ const hdxTraversalsSpanningAVCommon = {
                 thisAV.updateControlEntries();
                 hdxAV.nextAction = "checkNeighborsLoopTop";
             },
+	    cbp: hdxCBPToAndVia,
             logMessage: function(thisAV) {
                 return "Adding " + thisAV.formatLDVEntry(thisAV.visiting) + " to tree";
             }
@@ -613,6 +643,16 @@ const hdxTraversalsSpanningAVCommon = {
                     hdxAV.nextAction = "checkNeighborsLoopIfFalse";
                 }
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    label: "Stop at v ="
+		},
+		f: function(thisAV, val) {
+		    return thisAV.nextNeighbor.to == val;
+		}
+	    },
             logMessage: function(thisAV) {
                 return "Checking if #" + thisAV.nextNeighbor.to +
                     " is in the tree";
@@ -709,6 +749,30 @@ const hdxTraversalsSpanningAVCommon = {
                     hdxAV.nextAction = "checkComponentDone";
                 }
             },
+	    cbp: [
+		{
+		    type: hdxCBPTypes.VARIABLE,
+		    selector: {
+			type: hdxCBPSelectors.VERTEX,
+			label: "Stop at v =",
+			id: "ToVertex"
+		    },
+		    f: function(thisAV, val) {
+			return thisAV.nextNeighbor.to == val;
+		    }		
+		},
+		{
+		    type: hdxCBPTypes.VARIABLE,
+		    selector: {
+			type: hdxCBPSelectors.EDGE,
+			label: "Stop at e ="
+		    },
+		    f: function(thisAV, edgenum, matchtype, textval, vnum) {
+			return isCBPEdgeMatch(thisAV.nextNeighbor.via,
+					      edgenum, matchtype, textval, vnum);
+		    },
+		}
+	    ],
             logMessage: function(thisAV) {
                 return "#" + thisAV.nextNeighbor.to + " via " +
                     graphEdges[thisAV.nextNeighbor.via].label +
