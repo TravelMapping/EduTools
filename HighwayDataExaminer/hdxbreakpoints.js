@@ -152,8 +152,14 @@ function breakpointCheckMatch(cbp) {
 	
 	switch (control.selector.type) {
 	case hdxCBPSelectors.VERTEX:
-	    if (element.value.length > 0 && !isNaN(element.value) &&
-		control.f(hdxAV.currentAV, parseFloat(element.value))) {
+	    let vnum = -1;
+	    if (element.value.length > 0 && !isNaN(element.value)) {
+		vnum = parseFloat(element.value);
+	    }
+	    const vselelement = document.getElementById(controlid + "sel");
+	    const vtextelement = document.getElementById(controlid + "text");
+	    if (control.f(hdxAV.currentAV, vnum, vselelement.value.trim(),
+			  vtextelement.value.trim())) {
 		return true;
 	    }
 	    break;
@@ -164,14 +170,14 @@ function breakpointCheckMatch(cbp) {
 	    }
 	    const selelement = document.getElementById(controlid + "sel");
 	    const textelement = document.getElementById(controlid + "text");
-	    let vnum = -1;
-	    const velement = document.getElementById(controlid + "end");
-	    if (velement != null && velement.value.length > 0 &&
-		!isNaN(velement.value)) {
-		vnum = parseFloat(velement.value);
+	    let evnum = -1;
+	    const evelement = document.getElementById(controlid + "end");
+	    if (evelement != null && evelement.value.length > 0 &&
+		!isNaN(evelement.value)) {
+		evnum = parseFloat(evelement.value);
 	    }
 	    if (control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
-			  textelement.value.trim(), vnum)) {
+			  textelement.value.trim(), evnum)) {
 		return true;
 	    }
 	    break;

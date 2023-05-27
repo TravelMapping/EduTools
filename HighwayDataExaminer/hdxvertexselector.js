@@ -59,12 +59,17 @@ function buildWaypointSelector(id,label,initVal) {
 // breakpoints
 function buildCBPWaypointSelector(id,label) {
 
+    const selid = id + "sel";
     return label + ' <input id="' + id +
         '" onfocus="hdxVertexSelector.startSelection(\'' + id +
         '\')" type="number" min="0" max="' +
         (waypoints.length-1) + '" size="6" style="width: 47px" name="quantity" ' +
         'onchange="waypointSelectorChanged(\'' + id + '\')"' +
-        '/>';
+        '/><br />or <select id="' + selid + '">' +
+	'<option value="exact">exact</option>' +
+	'<option value="substring">substring</option>' +
+	'<option value="starts">starts with</option>' +
+	'</select> label match <input id="' + id + 'text" size="10" />';
 }
 
 // event handler for waypoint selectors
@@ -75,4 +80,37 @@ function waypointSelectorChanged(id) {
 	const vNum = document.getElementById(id).value;
 	label.innerHTML = waypoints[vNum].label;
     }
+}
+
+// function to check if the given values from a CBP vertex selector
+// match the vertex with the given number or label
+function isCBPVertexMatch(vnum, matchvnum, matchtype, matchtext) {
+
+    // first check for a vertex number match
+    if (vnum == matchvnum) {
+	return true;
+    }
+    if (vnum >= 0 && vnum < waypoints.length) {
+	const vlabel = waypoints[vnum].label;
+	switch (matchtype) {
+	case "exact":
+	    if (vlabel == matchtext) {
+		return true;
+	    }
+	    break;
+	case "substring":
+	    if (vlabel.includes(matchtext)) {
+		return true;
+	    }
+	    break;
+	case "starts":
+	    if (vlabel.startsWith(matchtext)) {
+		return true;
+	    }
+	    break;
+	}
+    }
+    
+    // nothing matched
+    return false;
 }
