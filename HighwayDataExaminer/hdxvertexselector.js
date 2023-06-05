@@ -62,16 +62,16 @@ function buildWaypointSelector(id,label,initVal) {
 function buildCBPWaypointSelector(id,label) {
 
     const selid = id + "sel";
-    return label + ' <input id="' + id +
+    return "Stop when " + label + '= <input id="' + id +
         '" onfocus="hdxVertexSelector.startSelection(\'' + id +
         '\')" type="number" min="0" max="' +
         (waypoints.length-1) + '" size="6" style="width: 47px" name="quantity" ' +
         'onchange="waypointSelectorChanged(\'' + id + '\')"' +
-        '/><br />or <select id="' + selid + '">' +
+        '/><br />or on <select id="' + selid + '">' +
 	'<option value="exact">exact</option>' +
 	'<option value="substring">substring</option>' +
 	'<option value="starts">starts with</option>' +
-	'</select> label match <input id="' + id + 'text" size="10" />';
+	'</select> label match with <input id="' + id + 'text" size="10" />';
 }
 
 // event handler for waypoint selectors
