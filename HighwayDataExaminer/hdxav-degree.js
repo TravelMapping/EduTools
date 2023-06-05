@@ -174,7 +174,7 @@ const hdxDegreeAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at check ="
+		    vindexvar: "check"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.nextToCheck,

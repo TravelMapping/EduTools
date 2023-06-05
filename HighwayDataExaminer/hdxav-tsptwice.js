@@ -246,7 +246,7 @@ const hdxTwiceAroundTreeAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at v ="
+		    vindexvar: "v"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.finalPath[thisAV.nextToCheck],

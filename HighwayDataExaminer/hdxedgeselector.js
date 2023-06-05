@@ -68,10 +68,10 @@ function buildEdgeSelector(id,label,initVal) {
 
 // Same as buildEdgeSelector but is used for conditional
 // breakpoints and has no initVal
-function buildCBPEdgeSelector(id,label) {
+function buildCBPEdgeSelector(id, eindexvar) {
 
     const selid = id + "sel";
-    let html = label + ' <input id="' + id +
+    let html = "Stop when <tt>" + eindexvar + '</tt> = <input id="' + id +
         '" onfocus="hdxEdgeSelector.startSelection(\'' + id +
         '\')" type="number" min="0" max="' +
         (graphEdges.length-1) +

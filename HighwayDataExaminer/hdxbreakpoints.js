@@ -113,10 +113,11 @@ function breakpointShowCBPControls(cbp) {
 	// build the HTML for this one
 	switch (control.selector.type) {
 	case hdxCBPSelectors.VERTEX:
-	    html += buildCBPWaypointSelector(controlid, control.selector.label);
+	    html += buildCBPWaypointSelector(controlid,
+					     control.selector.vindexvar);
 	    break;
 	case hdxCBPSelectors.EDGE:
-	    html += buildCBPEdgeSelector(controlid, control.selector.label);
+	    html += buildCBPEdgeSelector(controlid, control.selector.eindexvar);
 	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");
