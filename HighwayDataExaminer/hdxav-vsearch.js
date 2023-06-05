@@ -394,7 +394,7 @@ const hdxVertexExtremesSearchAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at check ="
+		    vindexvar: "check"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.nextToCheck,
@@ -439,9 +439,6 @@ const hdxVertexExtremesSearchAV = {
             },
             logMessage: function(thisAV) {
                 return "Check for new " + thisAV.categories[thisAV.checkedCategory].label + " leader";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.categories[thisAV.nextCategory].newLeader();
             }
         },
         {

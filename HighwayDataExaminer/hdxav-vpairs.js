@@ -137,7 +137,7 @@ const hdxVertexPairsAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at v1 ="
+		    vindexvar: "v<sub>1</sub>"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.v1,
@@ -177,7 +177,7 @@ const hdxVertexPairsAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at v2 ="
+		    vindexvar: "v<sub>2</sub>"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.v2,

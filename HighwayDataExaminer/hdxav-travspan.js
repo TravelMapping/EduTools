@@ -76,7 +76,7 @@ const hdxCBPToAndVia = [
 	type: hdxCBPTypes.VARIABLE,
 	selector: {
 	    type: hdxCBPSelectors.VERTEX,
-	    label: "Stop at to =",
+	    vindexvar: "to",
 	    id: "ToVertex"
 	},
 	f: function(thisAV, matchvnum, matchtype, textval) {
@@ -88,7 +88,7 @@ const hdxCBPToAndVia = [
 	type: hdxCBPTypes.VARIABLE,
 	selector: {
 	    type: hdxCBPSelectors.EDGE,
-	    label: "Stop at via ="
+	    eindexvar: "via"
 	},
 	f: function(thisAV, edgenum, matchtype, textval, vnum) {
 	    return isCBPEdgeMatch(thisAV.visiting.connection,
@@ -648,7 +648,7 @@ const hdxTraversalsSpanningAVCommon = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "Stop at v ="
+		    vindexvar: "v"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.nextNeighbor.to,
@@ -756,7 +756,7 @@ const hdxTraversalsSpanningAVCommon = {
 		    type: hdxCBPTypes.VARIABLE,
 		    selector: {
 			type: hdxCBPSelectors.VERTEX,
-			label: "Stop at v =",
+			vindexvar: "v",
 			id: "ToVertex"
 		    },
 		    f: function(thisAV, matchvnum, matchtype, textval) {
@@ -768,7 +768,7 @@ const hdxTraversalsSpanningAVCommon = {
 		    type: hdxCBPTypes.VARIABLE,
 		    selector: {
 			type: hdxCBPSelectors.EDGE,
-			label: "Stop at e ="
+			eindexvar: "e"
 		    },
 		    f: function(thisAV, edgenum, matchtype, textval, vnum) {
 			return isCBPEdgeMatch(thisAV.nextNeighbor.via,
