@@ -59,10 +59,10 @@ function buildWaypointSelector(id,label,initVal) {
 
 // Same as buildWaypointSelector but is used for conditional
 // breakpoints
-function buildCBPWaypointSelector(id,label) {
+function buildCBPWaypointSelector(id, vindexvar) {
 
     const selid = id + "sel";
-    return "Stop when " + label + '= <input id="' + id +
+    return "Stop when <tt>" + vindexvar + '</tt> = <input id="' + id +
         '" onfocus="hdxVertexSelector.startSelection(\'' + id +
         '\')" type="number" min="0" max="' +
         (waypoints.length-1) + '" size="6" style="width: 47px" name="quantity" ' +

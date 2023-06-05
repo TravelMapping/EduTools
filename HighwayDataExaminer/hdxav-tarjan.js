@@ -115,7 +115,7 @@ const hdxTarjanAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.EDGE,
-		    label: "Stop at e ="
+		    eindexvar: "e"
 		},
 		f: function(thisAV, edgenum, matchtype, textval, vnum) {
 		    return isCBPEdgeMatch(thisAV.nextToCheck, edgenum,

@@ -394,7 +394,7 @@ const hdxVertexExtremesSearchAV = {
 		type: hdxCBPTypes.VARIABLE,
 		selector: {
 		    type: hdxCBPSelectors.VERTEX,
-		    label: "<tt>check</tt>"
+		    vindexvar: "check"
 		},
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.nextToCheck,
