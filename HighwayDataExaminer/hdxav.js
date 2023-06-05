@@ -152,6 +152,7 @@ const hdxAV = {
         this.avList.push(hdxDegreeAV);
         this.avList.push(hdxGraphTraversalsAV);
         this.avList.push(hdxDijkstraAV);
+        this.avList.push(hdxAstarAV);
         this.avList.push(hdxPrimAV);
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
