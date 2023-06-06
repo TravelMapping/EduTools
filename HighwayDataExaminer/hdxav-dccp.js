@@ -544,6 +544,17 @@ const hdxClosestPairsRecAV = {
 		
                 hdxAV.nextAction = "forLoopTop";
 	    },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "nearMid.length"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.NtoS.length,
+					 matchtype, matchval);
+		}
+	    },
             logMessage: function(thisAV) {
                 return "Found " + thisAV.NtoS.length +
 		    " candidate overlap points";
