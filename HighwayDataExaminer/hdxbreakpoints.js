@@ -119,6 +119,10 @@ function breakpointShowCBPControls(cbp) {
 	case hdxCBPSelectors.EDGE:
 	    html += buildCBPEdgeSelector(controlid, control.selector.eindexvar);
 	    break;
+	case hdxCBPSelectors.FLOAT:
+	    html += buildCBPFloatSelector(controlid,
+					  control.selector.checkvar);
+	    break;
 	default:
 	    console.log("UNHANDLED CBP SELECTOR TYPE!");
 	}
@@ -179,6 +183,16 @@ function breakpointCheckMatch(cbp) {
 	    }
 	    if (control.f(hdxAV.currentAV, edgenum, selelement.value.trim(),
 			  textelement.value.trim(), evnum)) {
+		return true;
+	    }
+	    break;
+	case hdxCBPSelectors.FLOAT:
+	    let entered = -1;
+	    if (element.value.length > 0 && !isNaN(element.value)) {
+		entered = parseFloat(element.value);
+	    }
+	    const fselelement = document.getElementById(controlid + "sel");
+	    if (control.f(hdxAV.currentAV, entered, fselelement.value.trim())) {
 		return true;
 	    }
 	    break;
@@ -323,3 +337,36 @@ function createInnerHTMLChoice(choice, id, firstText, secondText) {
     }
 }
 */
+
+
+// build a selector for a generic floating-point value match
+function buildCBPFloatSelector(id, matchvar) {
+
+    const selid = id + "sel";
+    return "Stop when <tt>" + matchvar + '</tt>' +
+        ' <select id="' + selid + '">' +
+	'<option value="lt">&lt;</option>' +
+	'<option value="gt">&gt;</option>' +
+	'</select> <input id="' + id + '" type="number" size="6" />';
+}
+
+// function to check if the given values from a CBP float selector
+// match the variable's value
+function isCBPFloatMatch(varvalue, matchval, matchtype) {
+
+    switch (matchtype) {
+    case "lt":
+	if (varvalue < matchval) {
+	    return true;
+	}
+	break;
+    case "gt":
+	if (varvalue > matchval) {
+	    return true;
+	}
+	break;
+    }
+    
+    // nothing matched
+    return false;
+}

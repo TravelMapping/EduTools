@@ -206,7 +206,18 @@ const hdxVertexPairsAV = {
             },
             logMessage: function(thisAV) {
                 return "Compute distance " + thisAV.d_this.toFixed(3) + " between v<sub>1</sub>=" + thisAV.v1 + " and v<sub>2</sub>=" + thisAV.v2;
-            }
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.FLOAT,
+		    checkvar: "d"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPFloatMatch(thisAV.d_this,
+					   matchtype, matchval);
+		}		
+	    }
         },
         {
             label: "checkCloseLeader",
