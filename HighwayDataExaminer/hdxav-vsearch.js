@@ -399,7 +399,7 @@ const hdxVertexExtremesSearchAV = {
 		f: function(thisAV, matchvnum, matchtype, textval) {
 		    return isCBPVertexMatch(thisAV.nextToCheck,
 					    matchvnum, matchtype, textval);
-		}		
+		}
 	    }
         },
         {
