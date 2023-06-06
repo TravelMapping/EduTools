@@ -1417,10 +1417,10 @@ hdxAstarAV.comparator = function(a, b) {
 // second parameter is the destination vertex and edge traversed
 // to get from the vertex being visited
 hdxAstarAV.valForLDVEntry = function(oldEntry, nextNeighbor) {
-    let pathLength = oldEntry.val - convertToCurrentUnits(
-        distanceInMiles(nextNeighbor., nextNeighbor.lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
-    return oldEntry.val + convertToCurrentUnits(edgeLengthInMiles(graphEdges[nextNeighbor.via]))+convertToCurrentUnits(
-        distanceInMiles(nextNeighbor.lat, nextNeighbor.lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    let pathLength = oldEntry.val - convertToCurrentUnits(distanceInMiles(waypoints[oldEntry.vIndex].lat, waypoints[oldEntry.vIndex].lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    return pathLength 
+    + convertToCurrentUnits(edgeLengthInMiles(graphEdges[nextNeighbor.via])) 
+    + convertToCurrentUnits(distanceInMiles(waypoints[nextNeighbor.to].lat, waypoints[nextNeighbor.to].lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
 };
 
 // helper function to help build pseudocode
