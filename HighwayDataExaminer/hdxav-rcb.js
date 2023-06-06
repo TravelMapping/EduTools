@@ -19,7 +19,7 @@ const hdxPartitionerAV = {
     partitionStart: [],
     partitionEnd: [],
     waypointParts: [],
-    callStack: [],
+    callStack: null,
     numPartitions: 4,
     curNumParts: 1,
 
@@ -70,7 +70,7 @@ const hdxPartitionerAV = {
                 for (let x = 0; x < waypoints.length; x++) {
                        thisAV.waypointParts[x] = x;
                 } 
-
+                
                 thisAV.partitionSection = thisAV.waypointParts;
                 thisAV.highlightBoundingBox();
                 thisAV.numPartitions =
@@ -82,7 +82,7 @@ const hdxPartitionerAV = {
                 thisAV.partitionEnd = Array(thisAV.numPartitions).fill(0);
 
 		// set up initial recursive step
-                thisAV.callStack.push({
+                thisAV.callStack.add({
 		    currentPart: 0,
 		    lowerBound: 0,
 		    upperBound: waypoints.length-1,
@@ -116,7 +116,7 @@ const hdxPartitionerAV = {
                 }
                 // get the frame pointer for the recursive call we are
                 // starting
-                thisAV.fp = thisAV.callStack.pop();
+                thisAV.fp = thisAV.callStack.remove();
                 
                // removing old overlays
                if (thisAV.coloring == "Overlays") {
@@ -142,6 +142,7 @@ const hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 // get the subarray needed for the current partition
                 // being split
+                console.log(thisAV.fp);
                 thisAV.partitionSection =
 		    thisAV.waypointParts.slice(thisAV.fp.lowerBound,
 					       thisAV.fp.upperBound+1); 
@@ -416,7 +417,7 @@ const hdxPartitionerAV = {
 		// push our two recursive calls onto the stack according to
 		// the orientation of the next cut
                 if (thisAV.fp.cutLon) {
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: (thisAV.fp.currentPart+thisAV.fp.partsLeft/2), 
 			lowerBound: thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
 			upperBound: thisAV.partitionEnd[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
@@ -426,7 +427,7 @@ const hdxPartitionerAV = {
 			minLat: thisAV.fp.minLat, 
 			minLon: thisAV.median
 		    });
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: thisAV.fp.currentPart, 
 			lowerBound: thisAV.partitionStart[thisAV.fp.currentPart], 
 			upperBound: thisAV.partitionEnd[thisAV.fp.currentPart], 
@@ -438,7 +439,7 @@ const hdxPartitionerAV = {
 		    });
 		} 
 		else {
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: (thisAV.fp.currentPart+thisAV.fp.partsLeft/2), 
 			lowerBound: thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
 			upperBound: thisAV.partitionEnd[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
@@ -448,7 +449,7 @@ const hdxPartitionerAV = {
 			minLat: thisAV.median, 
 			minLon: thisAV.fp.minLon
 		    });
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: thisAV.fp.currentPart, 
 			lowerBound: thisAV.partitionStart[thisAV.fp.currentPart], 
 			upperBound: thisAV.partitionEnd[thisAV.fp.currentPart], 
@@ -560,6 +561,11 @@ const hdxPartitionerAV = {
         this.code += '</td></tr>' + pcEntry(1,'if(number of Partitions > 2)','base');
         this.code += '</td></tr>' + pcEntry(2,'Partition(newPartion)<br/>'+pcIndent(4)+'Partition(newPartion2)','recursiveCall');
         this.code += '</td></tr>' + pcEntry(1,'else<br/>'+pcIndent(4)+'//do nothing','end');
+
+        this.callStack = new HDXLinear(hdxLinearTypes.CALL_STACK,
+            "Call Stack");
+        this.callStack.setDisplay(hdxAVCP.getDocumentElement("visiting"),
+				  displayCallStackItem);
     },
     
     setupUI() {
@@ -658,3 +664,10 @@ const hdxPartitionerAV = {
         }
     }
 }
+function displayCallStackItem(item, Stack) {
+
+    //const vertexLabelFull = waypoints[item].partsLeft;
+    //const vertexLabel = shortLabel(vertexLabelFull, Stack.maxLabelLength);
+
+    return '<span custom-title="Vertex #' + item + ":" + '">' + "rcb (v = " + item + ": " +  ")" + "</span>";
+};
