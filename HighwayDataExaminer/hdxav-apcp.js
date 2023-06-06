@@ -249,6 +249,16 @@ const hdxAPClosestPointAV = {
                     hdxAV.iterationDone = true;
                 }
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.FLOAT,
+		    checkvar: "d"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPFloatMatch(thisAV.d, matchtype, matchval);
+		}
+	    },
             logMessage: function (thisAV) {
                 return "Setting d equal to the distance between vertex #" + thisAV.outLoop + " and vertex #" + thisAV.inLoop;
             }
