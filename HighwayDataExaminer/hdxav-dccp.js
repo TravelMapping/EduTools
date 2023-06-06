@@ -194,6 +194,17 @@ const hdxClosestPairsRecAV = {
 		
                 hdxAV.nextAction = "checkBaseCase";
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "Level"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.fp.recLevel,
+					 matchtype, matchval);
+		}		
+	    },
             logMessage: function(thisAV) {
                 return "Recursive function call: Level " + thisAV.fp.recLevel +
 		    ": [" + thisAV.fp.startIndex + "," +
