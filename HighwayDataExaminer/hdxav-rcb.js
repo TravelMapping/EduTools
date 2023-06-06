@@ -142,7 +142,6 @@ const hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 // get the subarray needed for the current partition
                 // being split
-                console.log(thisAV.fp);
                 thisAV.partitionSection =
 		    thisAV.waypointParts.slice(thisAV.fp.lowerBound,
 					       thisAV.fp.upperBound+1); 
@@ -474,7 +473,7 @@ const hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
                 //determine if call stack is empty
-                if (thisAV.callStack.length == 0) {
+                if (thisAV.callStack.items.length == 0) {
 		    hdxAV.nextAction = "calculating";
 		}
                 else {
@@ -516,6 +515,7 @@ const hdxPartitionerAV = {
                 // adding data table
                 hdxPart.partitionAnalysis();
                 hdxAVCP.remove("cut");
+                hdxAVCP.remove("stack");
                 hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
                 hdxAVCP.update("stats", hdxPart.styling());
 		
@@ -564,7 +564,7 @@ const hdxPartitionerAV = {
 
         this.callStack = new HDXLinear(hdxLinearTypes.CALL_STACK,
             "Call Stack");
-        this.callStack.setDisplay(hdxAVCP.getDocumentElement("visiting"),
+        this.callStack.setDisplay(hdxAVCP.getDocumentElement("stack"),
 				  displayCallStackItem);
     },
     
@@ -589,6 +589,7 @@ const hdxPartitionerAV = {
 
         // AVCP entries
         hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("stack", visualSettings.discovered);
         hdxAVCP.add("visiting", visualSettings.visiting);
     },
 
@@ -665,9 +666,5 @@ const hdxPartitionerAV = {
     }
 }
 function displayCallStackItem(item, Stack) {
-
-    //const vertexLabelFull = waypoints[item].partsLeft;
-    //const vertexLabel = shortLabel(vertexLabelFull, Stack.maxLabelLength);
-
-    return '<span custom-title="Vertex #' + item + ":" + '">' + "rcb (v = " + item + ": " +  ")" + "</span>";
+    return '<span custom-title="Partition #' + item.currentPart + ":" + '">' + "rcb (p = " + item.currentPart + ": " + item.partsLeft + ")" + "</span>";
 };
