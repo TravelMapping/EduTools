@@ -249,6 +249,18 @@ const hdxClosestPairsRecAV = {
                     hdxAV.nextAction = "callRecursionLeft";
                 }
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "n"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.fp.endIndex -
+					 thisAV.fp.startIndex,
+					 matchtype, matchval);
+		}		
+	    },
             logMessage: function(thisAV) {
 		if (thisAV.maxRec > 0) {
                     return "Check whether minimum problem size or recursive limit has been reached";
