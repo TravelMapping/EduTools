@@ -198,9 +198,6 @@ const hdxDegreeAV = {
             },
             logMessage: function(thisAV) {
                 return "Check for new " + thisAV.categories[thisAV.nextCategory].label + " leader";
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.categories[thisAV.nextCategory].newLeader();
             }
         },
         {
@@ -302,9 +299,6 @@ const hdxDegreeAV = {
             
             logMessage: function(thisAV) {
                 return "Check for tie in " + thisAV.categories[thisAV.checkedCategory].label;
-            },
-            currentVariable: function(thisAV, whatToDo) {
-                return thisAV.categories[thisAV.nextCategory].tiedForLead();
             }
         },
         {
