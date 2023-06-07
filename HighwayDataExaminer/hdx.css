@@ -765,6 +765,10 @@ h3
 
 
 }
+#copyURL:hover
+{
+    border: 3px solid rgb(95, 55, 126);
+}
 
 #algorithmSelectionPanelTable td select#traversalDiscipline
 {

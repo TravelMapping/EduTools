@@ -19,7 +19,7 @@ const hdxPartitionerAV = {
     partitionStart: [],
     partitionEnd: [],
     waypointParts: [],
-    callStack: [],
+    callStack: null,
     numPartitions: 4,
     curNumParts: 1,
 
@@ -70,7 +70,7 @@ const hdxPartitionerAV = {
                 for (let x = 0; x < waypoints.length; x++) {
                        thisAV.waypointParts[x] = x;
                 } 
-
+                
                 thisAV.partitionSection = thisAV.waypointParts;
                 thisAV.highlightBoundingBox();
                 thisAV.numPartitions =
@@ -82,7 +82,7 @@ const hdxPartitionerAV = {
                 thisAV.partitionEnd = Array(thisAV.numPartitions).fill(0);
 
 		// set up initial recursive step
-                thisAV.callStack.push({
+                thisAV.callStack.add({
 		    currentPart: 0,
 		    lowerBound: 0,
 		    upperBound: waypoints.length-1,
@@ -93,7 +93,6 @@ const hdxPartitionerAV = {
 		    minLon: thisAV.minlon
 		});
                 hdxAV.nextAction = "methodCall";
-                hdxAVCP.add("cut", visualSettings.pseudocodeDefault);
             },
             logMessage: function(thisAV) {
                 return "Doing some setup stuff";
@@ -116,7 +115,7 @@ const hdxPartitionerAV = {
                 }
                 // get the frame pointer for the recursive call we are
                 // starting
-                thisAV.fp = thisAV.callStack.pop();
+                thisAV.fp = thisAV.callStack.remove();
                 
                // removing old overlays
                if (thisAV.coloring == "Overlays") {
@@ -416,7 +415,7 @@ const hdxPartitionerAV = {
 		// push our two recursive calls onto the stack according to
 		// the orientation of the next cut
                 if (thisAV.fp.cutLon) {
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: (thisAV.fp.currentPart+thisAV.fp.partsLeft/2), 
 			lowerBound: thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
 			upperBound: thisAV.partitionEnd[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
@@ -426,7 +425,7 @@ const hdxPartitionerAV = {
 			minLat: thisAV.fp.minLat, 
 			minLon: thisAV.median
 		    });
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: thisAV.fp.currentPart, 
 			lowerBound: thisAV.partitionStart[thisAV.fp.currentPart], 
 			upperBound: thisAV.partitionEnd[thisAV.fp.currentPart], 
@@ -438,7 +437,7 @@ const hdxPartitionerAV = {
 		    });
 		} 
 		else {
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: (thisAV.fp.currentPart+thisAV.fp.partsLeft/2), 
 			lowerBound: thisAV.partitionStart[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
 			upperBound: thisAV.partitionEnd[(thisAV.fp.currentPart+thisAV.fp.partsLeft/2)], 
@@ -448,7 +447,7 @@ const hdxPartitionerAV = {
 			minLat: thisAV.median, 
 			minLon: thisAV.fp.minLon
 		    });
-                    thisAV.callStack.push({
+                    thisAV.callStack.add({
 			currentPart: thisAV.fp.currentPart, 
 			lowerBound: thisAV.partitionStart[thisAV.fp.currentPart], 
 			upperBound: thisAV.partitionEnd[thisAV.fp.currentPart], 
@@ -473,7 +472,7 @@ const hdxPartitionerAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
                 //determine if call stack is empty
-                if (thisAV.callStack.length == 0) {
+                if (thisAV.callStack.items.length == 0) {
 		    hdxAV.nextAction = "calculating";
 		}
                 else {
@@ -515,6 +514,8 @@ const hdxPartitionerAV = {
                 // adding data table
                 hdxPart.partitionAnalysis();
                 hdxAVCP.remove("cut");
+                hdxAVCP.update("stack", "");
+                hdxAVCP.remove("stack");
                 hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
                 hdxAVCP.update("stats", hdxPart.styling());
 		
@@ -560,6 +561,11 @@ const hdxPartitionerAV = {
         this.code += '</td></tr>' + pcEntry(1,'if(number of Partitions > 2)','base');
         this.code += '</td></tr>' + pcEntry(2,'Partition(newPartion)<br/>'+pcIndent(4)+'Partition(newPartion2)','recursiveCall');
         this.code += '</td></tr>' + pcEntry(1,'else<br/>'+pcIndent(4)+'//do nothing','end');
+
+        this.callStack = new HDXLinear(hdxLinearTypes.CALL_STACK,
+            "Call Stack");
+        this.callStack.setDisplay(hdxAVCP.getDocumentElement("stack"),
+				  displayCallStackItem);
     },
     
     setupUI() {
@@ -582,8 +588,8 @@ const hdxPartitionerAV = {
 	HDXQSRegisterAndSetCheckbox(this, "onfly", "calcOnFly");
 
         // AVCP entries
-        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
-        hdxAVCP.add("visiting", visualSettings.visiting);
+        hdxAVCP.add("cut", visualSettings.pseudocodeDefault);
+        hdxAVCP.add("stack", visualSettings.discovered);
     },
 
     // cleans up lines and overlays
@@ -658,3 +664,6 @@ const hdxPartitionerAV = {
         }
     }
 }
+function displayCallStackItem(item, Stack) {
+    return '<span custom-title="Partition #' + item.currentPart + ":" + '">' + "rcb (p = " + item.currentPart + ": " + item.partsLeft + ")" + "</span>";
+};

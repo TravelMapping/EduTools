@@ -1386,6 +1386,93 @@ hdxDijkstraAV.setupCode = function() {
     this.code += "</table>";
 };
 
+
+/* Astar's algorithm based on hdxTraversalsSpanningAVCommon */
+
+const hdxAstarAV = Object.create(hdxTraversalsSpanningAVCommon);
+
+// entries for the list of AVs
+hdxAstarAV.value = "astar";
+hdxAstarAV.name = "A* Algorithm";
+hdxAstarAV.description = "A* algorithm for single-source shortest paths.";
+hdxAstarAV.foundTableHeader = "Paths Found So Far";
+hdxAstarAV.distEntry = "Priority";
+
+// required function to create an appropriate list of discovered vertices
+hdxAstarAV.createLDV = function() {
+    
+    return new HDXLinear(hdxLinearTypes.PRIORITY_QUEUE,
+                         "Priority Queue");
+};
+
+// comparator for priority queue
+hdxAstarAV.comparator = function(a, b) {
+    return a.val < b.val;
+};
+
+// function to determine the next "val" field for a new LDV entry
+// in this case, the old cumulative distance plus the edge length
+//
+// first parameter is the LDV entry being visited at this point,
+// second parameter is the destination vertex and edge traversed
+// to get from the vertex being visited
+hdxAstarAV.valForLDVEntry = function(oldEntry, nextNeighbor) {
+    let pathLength = oldEntry.val - 
+    convertToCurrentUnits(
+        distanceInMiles(
+            waypoints[oldEntry.vIndex].lat, waypoints[oldEntry.vIndex].lon, 
+            waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    pathLength = oldEntry.val != 0 ? pathLength : 0;//conditional is for starting node
+
+    let newpath = convertToCurrentUnits(
+        edgeLengthInMiles(graphEdges[nextNeighbor.via])); 
+
+    let distance = convertToCurrentUnits(
+        distanceInMiles(
+            waypoints[nextNeighbor.to].lat, waypoints[nextNeighbor.to].lon, 
+            waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    return pathLength + newpath + distance;
+};
+
+// helper function to help build pseudocode
+hdxAstarAV.mainLoopBody = function(indent) {
+
+    return pcEntry(indent+1, "(to,via,d) &larr; pq." +
+                   this.ldv.removeOperation() + "()", "getPlaceFromLDV") +
+        pcEntry(indent+1, "if tree.contains(to)", "checkAdded") +
+        pcEntry(indent+2, "discard (to,via) // on removal", "wasAdded") +
+        pcEntry(indent+1, "else", "") +
+        pcEntry(indent+2, "tree.add(to,via,d)", "wasNotAdded") +
+        pcEntry(indent+2, "for each e=(to,v) // neighbors",
+                "checkNeighborsLoopTop") +
+        pcEntry(indent+3, "if tree.contains(v)", "checkNeighborsLoopIf") +
+        pcEntry(indent+4, "discard (v,e) // on discovery",
+                "checkNeighborsLoopIfTrue") +
+        pcEntry(indent+3, "else", "") +
+        pcEntry(indent+4, "pq." + this.ldv.addOperation() + "(v,e,d+len(e)+distance(v,end))", 
+                "checkNeighborsLoopIfFalse");
+
+};
+
+// Astar-specific psuedocode, note labels must match those
+// expected by hdxTraversalsSpanningAVCommon avActions
+hdxAstarAV.setupCode = function() {
+    this.code = '<table class="pseudocode">' +
+        pcEntry(0, ["pq &larr; new " + this.ldv.displayName,
+                    "pq." + this.ldv.addOperation() + "(start,distance(start,end),0)" ],
+                "START");
+    if (this.stoppingCondition == "StopAtEnd") {
+        this.code +=
+            pcEntry(0, "while not tree.contains(end)", "checkEndAdded") +
+            pcEntry(1, "if pq.isEmpty", "checkLDVEmpty") +
+            pcEntry(2, "error: no path", "LDVEmpty") +
+            this.mainLoopBody(0);
+    }
+
+    this.code += "</table>";
+};
+hdxAstarAV.supportFindAllComponents = false;
+
 /* Prim's algorithm based on hdxTraversalsSpanningAVCommon */
 
 const hdxPrimAV = Object.create(hdxTraversalsSpanningAVCommon);
