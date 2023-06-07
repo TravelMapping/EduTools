@@ -134,6 +134,31 @@ const hdxWPGraphColoringAV = {
                 }
     
             },
+	    cbp: [
+		{
+		    type: hdxCBPTypes.VARIABLE,
+		    selector: {
+			type: hdxCBPSelectors.VERTEX,
+			vindexvar: "vertex"
+		    },
+		    f: function(thisAV, matchvnum, matchtype, textval) {
+			return isCBPVertexMatch(thisAV.currVertex,
+						matchvnum, matchtype, textval);
+		    }
+		},
+		{
+		    type: hdxCBPTypes.VARIABLE,
+		    selector: {
+			type: hdxCBPSelectors.INTEGER,
+			id: "checki",
+			checkvar: "i"
+		    },
+		    f: function(thisAV, matchtype, matchval) {
+			return isCBPIntMatch(thisAV.nextToCheck,
+					     matchtype, matchval);
+		    }
+		}
+	    ],
             logMessage: function(thisAV) {
                 return "Visiting vertex #" + thisAV.currVertex + " " +
 		    waypoints[thisAV.currVertex].label;
@@ -247,6 +272,17 @@ const hdxWPGraphColoringAV = {
                 hdxAV.nextAction = "topWhileLoop";
     
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "color"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.currColor,
+					 matchtype, matchval);
+		}
+	    },
             logMessage: function(thisAV) {
                 return "Increasing the value of color to" + thisAV.currColor;
             }

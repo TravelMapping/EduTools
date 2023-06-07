@@ -124,6 +124,17 @@ const hdxDFSRecAV = {
                 hdxAV.nextAction = "setHops";
                 hdxAV.iterationDone = true;
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    vindexvar: "v"
+		},
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.visiting,
+					    matchvnum, matchtype, textval);
+		}
+	    },
             logMessage: function(thisAV) {
                 return "Recursive call to dfs on vertex #" + thisAV.visiting;
             }
@@ -187,6 +198,17 @@ const hdxDFSRecAV = {
                     hdxAV.nextAction = "checkUndiscovered";
                 }
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    vindexvar: "w"
+		},
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.nextVertex,
+					    matchvnum, matchtype, textval);
+		}
+	    },
             logMessage: function(thisAV) {
                 return "Loop through each vertex in V's adjacency list";
             }

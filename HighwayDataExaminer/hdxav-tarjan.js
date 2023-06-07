@@ -245,6 +245,17 @@ const hdxTarjanAV = {
             
                 hdxAV.nextAction = "addEdgeBack";
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.EDGE,
+		    eindexvar: "e<sub>removed</sub>"
+		},
+		f: function(thisAV, edgenum, matchtype, textval, vnum) {
+		    return isCBPEdgeMatch(thisAV.removedEdge.num, edgenum,
+					  matchtype, textval, vnum);
+		}    
+            },
             logMessage: function(thisAV) {
                 return "Edge #" + thisAV.nextToCheck + " " +
 		    thisAV.removedEdge.label + " found to be bridge";

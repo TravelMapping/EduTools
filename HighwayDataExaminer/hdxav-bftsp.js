@@ -198,7 +198,7 @@ const hdxBFTravelingSalesmanAV = {
                 if (jumped) {
                     hdxAV.nextAction = "topForLoop";
                 }
-		else{
+		else {
                     // if we never had to break out of the loop at any
                     // point for the current path being too large that
                     // means the current path is the shortest one so

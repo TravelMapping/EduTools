@@ -194,6 +194,17 @@ const hdxClosestPairsRecAV = {
 		
                 hdxAV.nextAction = "checkBaseCase";
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "Level"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.fp.recLevel,
+					 matchtype, matchval);
+		}		
+	    },
             logMessage: function(thisAV) {
                 return "Recursive function call: Level " + thisAV.fp.recLevel +
 		    ": [" + thisAV.fp.startIndex + "," +
@@ -238,6 +249,18 @@ const hdxClosestPairsRecAV = {
                     hdxAV.nextAction = "callRecursionLeft";
                 }
             },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "n"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.fp.endIndex -
+					 thisAV.fp.startIndex,
+					 matchtype, matchval);
+		}		
+	    },
             logMessage: function(thisAV) {
 		if (thisAV.maxRec > 0) {
                     return "Check whether minimum problem size or recursive limit has been reached";
@@ -520,6 +543,17 @@ const hdxClosestPairsRecAV = {
 		thisAV.globali = 0;
 		
                 hdxAV.nextAction = "forLoopTop";
+	    },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.INTEGER,
+		    checkvar: "nearMid.length"
+		},
+		f: function(thisAV, matchtype, matchval) {
+		    return isCBPIntMatch(thisAV.NtoS.length,
+					 matchtype, matchval);
+		}
 	    },
             logMessage: function(thisAV) {
                 return "Found " + thisAV.NtoS.length +
