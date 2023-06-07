@@ -93,7 +93,6 @@ const hdxPartitionerAV = {
 		    minLon: thisAV.minlon
 		});
                 hdxAV.nextAction = "methodCall";
-                hdxAVCP.add("cut", visualSettings.pseudocodeDefault);
             },
             logMessage: function(thisAV) {
                 return "Doing some setup stuff";
@@ -515,6 +514,7 @@ const hdxPartitionerAV = {
                 // adding data table
                 hdxPart.partitionAnalysis();
                 hdxAVCP.remove("cut");
+                hdxAVCP.update("stack", "");
                 hdxAVCP.remove("stack");
                 hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
                 hdxAVCP.update("stats", hdxPart.styling());
@@ -588,9 +588,8 @@ const hdxPartitionerAV = {
 	HDXQSRegisterAndSetCheckbox(this, "onfly", "calcOnFly");
 
         // AVCP entries
-        hdxAVCP.add("undiscovered", visualSettings.undiscovered);
+        hdxAVCP.add("cut", visualSettings.pseudocodeDefault);
         hdxAVCP.add("stack", visualSettings.discovered);
-        hdxAVCP.add("visiting", visualSettings.visiting);
     },
 
     // cleans up lines and overlays

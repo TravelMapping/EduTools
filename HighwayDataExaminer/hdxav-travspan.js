@@ -1395,8 +1395,8 @@ const hdxAstarAV = Object.create(hdxTraversalsSpanningAVCommon);
 hdxAstarAV.value = "astar";
 hdxAstarAV.name = "A* Algorithm";
 hdxAstarAV.description = "A* algorithm for single-source shortest paths.";
-hdxAstarAV.foundTableHeader = "Shortest Paths Found So Far";
-hdxAstarAV.distEntry = "Distance";
+hdxAstarAV.foundTableHeader = "Paths Found So Far";
+hdxAstarAV.distEntry = "Priority";
 
 // required function to create an appropriate list of discovered vertices
 hdxAstarAV.createLDV = function() {
@@ -1417,15 +1417,21 @@ hdxAstarAV.comparator = function(a, b) {
 // second parameter is the destination vertex and edge traversed
 // to get from the vertex being visited
 hdxAstarAV.valForLDVEntry = function(oldEntry, nextNeighbor) {
-    let pathLength = oldEntry.val - convertToCurrentUnits(distanceInMiles(waypoints[oldEntry.vIndex].lat, waypoints[oldEntry.vIndex].lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
-    pathLength = oldEntry.val!=0?pathLength:0;//conditional is for starting node
-    let newpath = convertToCurrentUnits(edgeLengthInMiles(graphEdges[nextNeighbor.via])); 
-    let distance = convertToCurrentUnits(distanceInMiles(waypoints[nextNeighbor.to].lat, waypoints[nextNeighbor.to].lon, waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
-    console.log("oldEntry.val: "+oldEntry.val)
-    console.log("pathLength: "+pathLength)
-    console.log("newpath:"+newpath)
-    console.log("distance:"+distance)
-    return pathLength+newpath+distance;
+    let pathLength = oldEntry.val - 
+    convertToCurrentUnits(
+        distanceInMiles(
+            waypoints[oldEntry.vIndex].lat, waypoints[oldEntry.vIndex].lon, 
+            waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    pathLength = oldEntry.val != 0 ? pathLength : 0;//conditional is for starting node
+
+    let newpath = convertToCurrentUnits(
+        edgeLengthInMiles(graphEdges[nextNeighbor.via])); 
+
+    let distance = convertToCurrentUnits(
+        distanceInMiles(
+            waypoints[nextNeighbor.to].lat, waypoints[nextNeighbor.to].lon, 
+            waypoints[this.endingVertex].lat, waypoints[this.endingVertex].lon));
+    return pathLength + newpath + distance;
 };
 
 // helper function to help build pseudocode
