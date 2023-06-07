@@ -238,9 +238,6 @@ const hdxVertexPairsAV = {
             },
             logMessage: function(thisAV) {
                 return "Check if [" + thisAV.v1 + "," + thisAV.v2 + "] is the new closest pair";
-            },
-            currentVariable: function(thisAV) {
-                return (thisAV.d_this < thisAV.d_closest);
             }
         },
         {
@@ -309,9 +306,6 @@ const hdxVertexPairsAV = {
             },
             logMessage: function(thisAV) {
                 return "Check if [" + thisAV.v1 + "," + thisAV.v2 + "] is the new farthest pair";
-            },
-            currentVariable: function(thisAV) {
-                return (thisAV.d_this > thisAV.d_farthest);
             }
         },
         {
