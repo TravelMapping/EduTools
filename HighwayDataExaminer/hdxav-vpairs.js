@@ -578,9 +578,6 @@ const hdxVertexPairsAV = {
 
 	this.keepAllLines = document.getElementById("keepLines").checked;
 	
-        // show waypoints, hide connections
-        initWaypointsAndConnections(true, false,
-                                    visualSettings.undiscovered);
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
 	if (this.findClosest) {
 	    this.code += 'closest &larr; null<br />d<sub>closest</sub> &larr; &infin;';
