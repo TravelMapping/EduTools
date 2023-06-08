@@ -213,6 +213,7 @@ const hdxAV = {
         // if the simulation is paused, we can do nothing, as this function
         // will be called again when we restart
         if (hdxAV.paused()) {
+            HDXAddCustomTitles();
             return;
         }
 	
@@ -327,9 +328,6 @@ const hdxAV = {
         ans += '">' + hdxAV.logMessageArr[hdxAV.logMessageArr.length-1] +
 	    '</span>';
         hdxAV.algStat.innerHTML = ans;
-        if (hdxAV.delay != 0) {
-            HDXAddCustomTitles();
-        }
 
         // finally check if a breakpoint should pause execution following
 	// the just-completed action

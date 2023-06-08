@@ -79,9 +79,6 @@ const hdxAVCP = {
 	else {
             document.getElementById(namePrefix + this.suffix).parentNode.style.display = "";
 	}
-	if (hdxAV.delay != 0) {
-            HDXAddCustomTitles();
-	}
     },
 
     /* set the visualSettings of an AV control panel entry */
