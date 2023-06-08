@@ -81,7 +81,7 @@ function HDXInit() {
     if (HDXQSIsSpecified("av")) {
         const value = HDXQSValue("av");
 	for (let i = 0; i < hdxAV.avList.length; i++) {
-            if ( value == hdxAV.avList[i].value) {
+            if (value == hdxAV.avList[i].value) {
 		hdxAV.currentAV = hdxAV.avList[i];
 		document.getElementById("AlgorithmSelection").selectedIndex=i;
 		break;
