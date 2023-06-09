@@ -238,9 +238,13 @@ function algOptionsDonePressed() {
     
     // set status depending on whether an AV was selected
     if (hdxAV.currentAV.value == hdxNoAV.value) {
+        document.getElementById("topControlPanelPseudo").style.display = "none";
+        document.getElementById("speedChanger").style.display = "none";
         hdxAV.setStatus(hdxStates.GRAPH_LOADED);
     }
     else {
+        document.getElementById("topControlPanelPseudo").style.display = "";
+        document.getElementById("speedChanger").style.display = "";
         hdxAV.setStatus(hdxStates.AV_SELECTED);
 	// set all waypoints and connections to undiscovered to start
         initWaypointsAndConnections(true, true,
