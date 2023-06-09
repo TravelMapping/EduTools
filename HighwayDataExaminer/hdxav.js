@@ -313,22 +313,22 @@ const hdxAV = {
         // this also creates a past log message that appears when you
         // hover over the current action, this shows the last 5 messages
         //hdxAV.algStat.innerHTML = currentAction.logMessage(thisAV);
-
-        hdxAV.logMessageArr.push(currentAction.logMessage(thisAV));
-        if (hdxAV.logMessageArr.length == 8) {
-             hdxAV.logMessageArr.splice(0, 1);
-        }
-        ans = '<span custom-title="Past Logs -  ';
-        for (let j = 2; j <7; j++) {
-            if (hdxAV.logMessageArr.length > j) {
-                ans += '<br>' + (j-1) + "&nbsp;-&nbsp;" +
-		    hdxAV.logMessageArr[hdxAV.logMessageArr.length-j];
+        if(hdxAV.delay == -1 || hdxAV.delay == 2000 || hdxAV.delay == 675){
+            hdxAV.logMessageArr.push(currentAction.logMessage(thisAV));
+            if (hdxAV.logMessageArr.length == 8) {
+                hdxAV.logMessageArr.splice(0, 1);
             }
-        }    
-        ans += '">' + hdxAV.logMessageArr[hdxAV.logMessageArr.length-1] +
-	    '</span>';
-        hdxAV.algStat.innerHTML = ans;
-
+            ans = '<span custom-title="Past Logs -  ';
+            for (let j = 2; j <7; j++) {
+                if (hdxAV.logMessageArr.length > j) {
+                    ans += '<br>' + (j-1) + "&nbsp;-&nbsp;" +
+                hdxAV.logMessageArr[hdxAV.logMessageArr.length-j];
+                }
+            }    
+            ans += '">' + hdxAV.logMessageArr[hdxAV.logMessageArr.length-1] +
+            '</span>';
+            hdxAV.algStat.innerHTML = ans;
+        }
         // finally check if a breakpoint should pause execution following
 	// the just-completed action
 	hdxAV.stopAtBreakpoint = false;

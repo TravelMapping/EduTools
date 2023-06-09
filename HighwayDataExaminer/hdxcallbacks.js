@@ -30,11 +30,11 @@ function speedChanged() {
     }
     // this will hide the log message when running on faster speeds
     // when it is going by too fast to see anyway
-    if (hdxAV.delay > 0 && hdxAV.delay < 500) {
-        document.getElementById("algorithmStatus").style.display = "none";
+    if (hdxAV.delay == -1 || hdxAV.delay == 2000 || hdxAV.delay == 675) {
+        document.getElementById("algorithmStatus").style.display = "";
     }
     else {
-        document.getElementById("algorithmStatus").style.display = "";
+        document.getElementById("algorithmStatus").style.display = "none";
     }
 }
 
