@@ -135,12 +135,13 @@ function startPausePressed() {
 
         // get the simulation going, always start with the "START"
         // action, then do it
-        hdxAV.nextAction = "START";
-        hdxAV.nextStep(hdxAV.currentAV);
+        
         addBreakpointListeners();
         resizePanels();
         hdxAVCP.hideEntries();
         newMapTileSelected();
+        hdxAV.nextAction = "START";
+        hdxAV.nextStep(hdxAV.currentAV);
         break;
         
     case hdxStates.AV_RUNNING:
