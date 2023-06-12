@@ -21,6 +21,14 @@ const hdxDFSRecAV = {
     discarded: 0,
     stack: null,
     callStack: null,
+    displayCallStackItem:(item, callStack)=> {
+
+        const vertexLabelFull = waypoints[item].label;
+        const vertexLabel = shortLabel(vertexLabelFull, callStack.maxLabelLength);
+    
+        return '<span custom-title="Vertex #' + item + ":" +
+            vertexLabelFull + '">' + "dfs (v = " + item + ": " + vertexLabel + ")" + "</span>";
+    },
     // last place to come out of the call stack, currently "visiting"
     visiting: 0,
     connection: 0,
@@ -392,7 +400,7 @@ const hdxDFSRecAV = {
             this.callStack.setComparator(this.comparator);
         }
         this.callStack.setDisplay(hdxAVCP.getDocumentElement("discovered"),
-				  displayCallStackItem);
+				  this.displayCallStackItem);
 
         // pseudocode
         this.code ='<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
@@ -449,11 +457,4 @@ const hdxDFSRecAV = {
 };
 
 
-function displayCallStackItem(item, callStack) {
 
-    const vertexLabelFull = waypoints[item].label;
-    const vertexLabel = shortLabel(vertexLabelFull, callStack.maxLabelLength);
-
-    return '<span custom-title="Vertex #' + item + ":" +
-        vertexLabelFull + '">' + "dfs (v = " + item + ": " + vertexLabel + ")" + "</span>";
-};

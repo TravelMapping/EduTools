@@ -30,11 +30,11 @@ function speedChanged() {
     }
     // this will hide the log message when running on faster speeds
     // when it is going by too fast to see anyway
-    if (hdxAV.delay > 0 && hdxAV.delay < 500) {
-        document.getElementById("algorithmStatus").style.display = "none";
+    if (hdxAV.delay == -1 || hdxAV.delay == 2000 || hdxAV.delay == 675) {
+        document.getElementById("algorithmStatus").style.display = "";
     }
     else {
-        document.getElementById("algorithmStatus").style.display = "";
+        document.getElementById("algorithmStatus").style.display = "none";
     }
 }
 
@@ -135,12 +135,13 @@ function startPausePressed() {
 
         // get the simulation going, always start with the "START"
         // action, then do it
-        hdxAV.nextAction = "START";
-        hdxAV.nextStep(hdxAV.currentAV);
+        
         addBreakpointListeners();
         resizePanels();
         hdxAVCP.hideEntries();
         newMapTileSelected();
+        hdxAV.nextAction = "START";
+        hdxAV.nextStep(hdxAV.currentAV);
         break;
         
     case hdxStates.AV_RUNNING:
@@ -238,9 +239,13 @@ function algOptionsDonePressed() {
     
     // set status depending on whether an AV was selected
     if (hdxAV.currentAV.value == hdxNoAV.value) {
+        document.getElementById("topControlPanelPseudo").style.display = "none";
+        document.getElementById("speedChanger").style.display = "none";
         hdxAV.setStatus(hdxStates.GRAPH_LOADED);
     }
     else {
+        document.getElementById("topControlPanelPseudo").style.display = "";
+        document.getElementById("speedChanger").style.display = "";
         hdxAV.setStatus(hdxStates.AV_SELECTED);
 	// set all waypoints and connections to undiscovered to start
         initWaypointsAndConnections(true, true,
