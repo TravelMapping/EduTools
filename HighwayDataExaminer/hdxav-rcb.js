@@ -20,6 +20,9 @@ const hdxPartitionerAV = {
     partitionEnd: [],
     waypointParts: [],
     callStack: null,
+    displayCallStackItem:(item, Stack)=>{
+        return '<span custom-title="Partition #' + item.currentPart + ":" + '">' + "rcb (p = " + item.currentPart + ": " + item.partsLeft + ")" + "</span>";
+    },
     numPartitions: 4,
     curNumParts: 1,
 
@@ -565,7 +568,7 @@ const hdxPartitionerAV = {
         this.callStack = new HDXLinear(hdxLinearTypes.CALL_STACK,
             "Call Stack");
         this.callStack.setDisplay(hdxAVCP.getDocumentElement("stack"),
-				  displayCallStackItem);
+				  this.displayCallStackItem);
     },
     
     setupUI() {
@@ -664,6 +667,3 @@ const hdxPartitionerAV = {
         }
     }
 }
-function displayCallStackItem(item, Stack) {
-    return '<span custom-title="Partition #' + item.currentPart + ":" + '">' + "rcb (p = " + item.currentPart + ": " + item.partsLeft + ")" + "</span>";
-};
