@@ -209,7 +209,7 @@ const hdxBFConvexHullAV = {
 		    return isCBPVertexMatch(thisAV.hullv1,
 					    matchvnum, matchtype, textval);
 		}		
-            },
+            }
         },
         {
             label: "v2forLoopTop",
@@ -601,6 +601,19 @@ const hdxBFConvexHullAV = {
             logMessage: function(thisAV) {
                 return "Added " + thisAV.currentSegmentString() +
                     " to hull";
+            },
+	    cbp: {
+		type: hdxCBPTypes.VARIABLE,
+		selector: {
+		    type: hdxCBPSelectors.VERTEX,
+		    vindexvar: "v<sub>1</sub> <i>or</i> v<sub>2</sub>"
+		},
+		f: function(thisAV, matchvnum, matchtype, textval) {
+		    return isCBPVertexMatch(thisAV.hullv1,
+					    matchvnum, matchtype, textval) ||
+			isCBPVertexMatch(thisAV.hullv2,
+					 matchvnum, matchtype, textval);
+		}
             }
         },
         {
