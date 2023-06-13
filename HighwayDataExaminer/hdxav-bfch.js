@@ -24,18 +24,18 @@ const hdxBFConvexHullAV = {
         pcEntry(0, "hull &larr; new list", "START") +
         pcEntry(0, "for (v<sub>1</sub> &larr; 0 to |V|-2)", "v1forLoopTop") +
         pcEntry(1, "for (v<sub>2</sub> &larr; v<sub>1</sub>+1 to |V|-1)", "v2forLoopTop") +
-        pcEntry(2, [ "// find line through V[v<sub>1</sub>] and V[v<sub>2</sub>]",
-                     "a &larr; V[v<sub>2</sub>].lat - V[v<sub>1</sub>].lat",
-                     "b &larr; V[v<sub>1</sub>].lon - V[v<sub>2</sub>].lon",
-                     "c &larr; V[v<sub>1</sub>].lon*V[v<sub>2</sub>].lat - V[v<sub>1</sub>].lat*V[v<sub>2</sub>].lon",
+        pcEntry(2, [ "// find line through v<sub>1</sub> and v<sub>2</sub>",
+                     "a &larr; v<sub>2</sub>.lat - v<sub>1</sub>.lat",
+                     "b &larr; v<sub>1</sub>.lon - v<sub>2</sub>.lon",
+                     "c &larr; v<sub>1</sub>.lon*v<sub>2</sub>.lat - v<sub>1</sub>.lat*v<sub>2</sub>.lon",
                      "eliminated &larr; false",
                      "lookingFor &larr; UNKNOWN" ],
                 "calculateLine") +
         pcEntry(2, "for (v<sub>test</sub> &larr; 0 to |V|-1), skip v<sub>1</sub>, v<sub>2</sub>", "vtestforLoopTop") +
-        pcEntry(3, "checkVal &larr; a*V[v<sub>test</sub>].lon + b*V[v<sub>test</sub>].lat - c",
+        pcEntry(3, "checkVal &larr; a*v<sub>test</sub>.lon + b*v<sub>test</sub>.lat - c",
                 "computeCheckVal") +
         pcEntry(3, "if checkVal = 0", "isCheckVal0") +
-        pcEntry(4, "if V[v<sub>test</sub>] not between V[v<sub>1</sub>] and V[v<sub>2</sub>]", "checkBetween") +
+        pcEntry(4, "if v<sub>test</sub> not between v<sub>1</sub> and v<sub>2</sub>", "checkBetween") +
         pcEntry(5, "eliminated &larr; true; break", "isColinearNotBetween") +
         pcEntry(3, "else", "") +
         pcEntry(4, "if lookingFor = UNKNOWN", "checkFirst") +
@@ -48,7 +48,7 @@ const hdxBFConvexHullAV = {
                 "checkSameSide") +
         pcEntry(6, "eliminated &larr; true; break", "notSameSide") +
         pcEntry(3, "if not eliminated", "checkEliminated") +
-        pcEntry(4, "hull.add(V[v<sub>1</sub>],V[v<sub>2</sub>])", "addToHull") +
+        pcEntry(4, "hull.add(v<sub>1</sub>,v<sub>2</sub>)", "addToHull") +
         '</table>',
 
     // the list of points in the convex hull being computed
