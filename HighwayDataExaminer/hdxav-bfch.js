@@ -191,24 +191,24 @@ const hdxBFConvexHullAV = {
                     updateMarkerAndTable(thisAV.hullv1, thisAV.visualSettings.hullv1,
                                          30, false);
                     hdxAVCP.update("hullv1", "v<sub>1</sub>: #" +
-				   thisAV.hullv1 + " " +
-				   waypoints[thisAV.hullv1].label);
+                                   thisAV.hullv1 + " " +
+                                   waypoints[thisAV.hullv1].label);
                 }
                 hdxAV.iterationDone = true;
             },
             logMessage: function(thisAV) {
                 return "Top of outer for loop over vertices, v<sub>1</sub>=" + thisAV.hullv1;
             },
-	    cbp: {
-		type: hdxCBPTypes.VARIABLE,
-		selector: {
-		    type: hdxCBPSelectors.VERTEX,
-		    vindexvar: "v<sub>1</sub>"
-		},
-		f: function(thisAV, matchvnum, matchtype, textval) {
-		    return isCBPVertexMatch(thisAV.hullv1,
-					    matchvnum, matchtype, textval);
-		}		
+            cbp: {
+                type: hdxCBPTypes.VARIABLE,
+                selector: {
+                    type: hdxCBPSelectors.VERTEX,
+                    vindexvar: "v<sub>1</sub>"
+                },
+                f: function(thisAV, matchvnum, matchtype, textval) {
+                    return isCBPVertexMatch(thisAV.hullv1,
+                                            matchvnum, matchtype, textval);
+                }               
             }
         },
         {
@@ -230,8 +230,8 @@ const hdxBFConvexHullAV = {
                                          thisAV.visualSettings.hullv2,
                                          30, false);
                     hdxAVCP.update("hullv2", "v<sub>2</sub>: #" +
-				   thisAV.hullv2 + " " +
-				   waypoints[thisAV.hullv2].label);
+                                   thisAV.hullv2 + " " +
+                                   waypoints[thisAV.hullv2].label);
                     thisAV.mapCurrentSegment();
                 }
 
@@ -240,16 +240,16 @@ const hdxBFConvexHullAV = {
             logMessage: function(thisAV) {
                 return "Top of inner for loop over vertices, v<sub>2</sub>=" + thisAV.hullv2;
             },
-	    cbp: {
-		type: hdxCBPTypes.VARIABLE,
-		selector: {
-		    type: hdxCBPSelectors.VERTEX,
-		    vindexvar: "v<sub>2</sub>"
-		},
-		f: function(thisAV, matchvnum, matchtype, textval) {
-		    return isCBPVertexMatch(thisAV.hullv2,
-					    matchvnum, matchtype, textval);
-		}		
+            cbp: {
+                type: hdxCBPTypes.VARIABLE,
+                selector: {
+                    type: hdxCBPSelectors.VERTEX,
+                    vindexvar: "v<sub>2</sub>"
+                },
+                f: function(thisAV, matchvnum, matchtype, textval) {
+                    return isCBPVertexMatch(thisAV.hullv2,
+                                            matchvnum, matchtype, textval);
+                }               
             }
         },
         {
@@ -319,24 +319,24 @@ const hdxBFConvexHullAV = {
                                          thisAV.visualSettings.hullvtest,
                                          30, false);
                     hdxAVCP.update("hullvtest", "v<sub>test</sub>: #" +
-				   thisAV.hullvtest + " " +
-				   waypoints[thisAV.hullvtest].label);
+                                   thisAV.hullvtest + " " +
+                                   waypoints[thisAV.hullvtest].label);
                 }
             },
             logMessage: function(thisAV) {
                 return "Top of loop over vertices testing " +
                     thisAV.currentSegmentString();
             },
-	    cbp: {
-		type: hdxCBPTypes.VARIABLE,
-		selector: {
-		    type: hdxCBPSelectors.VERTEX,
-		    vindexvar: "v<sub>test</sub>"
-		},
-		f: function(thisAV, matchvnum, matchtype, textval) {
-		    return isCBPVertexMatch(thisAV.hullvtest,
-					    matchvnum, matchtype, textval);
-		}		
+            cbp: {
+                type: hdxCBPTypes.VARIABLE,
+                selector: {
+                    type: hdxCBPSelectors.VERTEX,
+                    vindexvar: "v<sub>test</sub>"
+                },
+                f: function(thisAV, matchvnum, matchtype, textval) {
+                    return isCBPVertexMatch(thisAV.hullvtest,
+                                            matchvnum, matchtype, textval);
+                }               
             }
         },
         {
@@ -602,18 +602,18 @@ const hdxBFConvexHullAV = {
                 return "Added " + thisAV.currentSegmentString() +
                     " to hull";
             },
-	    cbp: {
-		type: hdxCBPTypes.VARIABLE,
-		selector: {
-		    type: hdxCBPSelectors.VERTEX,
-		    vindexvar: "v<sub>1</sub> <i>or</i> v<sub>2</sub>"
-		},
-		f: function(thisAV, matchvnum, matchtype, textval) {
-		    return isCBPVertexMatch(thisAV.hullv1,
-					    matchvnum, matchtype, textval) ||
-			isCBPVertexMatch(thisAV.hullv2,
-					 matchvnum, matchtype, textval);
-		}
+            cbp: {
+                type: hdxCBPTypes.VARIABLE,
+                selector: {
+                    type: hdxCBPSelectors.VERTEX,
+                    vindexvar: "v<sub>1</sub> <i>or</i> v<sub>2</sub>"
+                },
+                f: function(thisAV, matchvnum, matchtype, textval) {
+                    return isCBPVertexMatch(thisAV.hullv1,
+                                            matchvnum, matchtype, textval) ||
+                        isCBPVertexMatch(thisAV.hullv2,
+                                         matchvnum, matchtype, textval);
+                }
             }
         },
         {
@@ -683,7 +683,7 @@ const hdxBFConvexHullAV = {
         //}
 
         hdxAV.algOptions.innerHTML = '';
-	
+        
         hdxAVCP.add("hullsegments", this.visualSettings.hullComponent);
         hdxAVCP.add("stats", visualSettings.pseudocodeDefault);
         hdxAVCP.add("hullv1", this.visualSettings.hullv1);
@@ -695,15 +695,15 @@ const hdxBFConvexHullAV = {
     // clean up convex hull UI
     cleanupUI() {
 
-	// the convex hull segments
+        // the convex hull segments
         for (let i = 0; i < this.hullSegments.length; i++) {
             this.hullSegments[i].remove();
         }
 
-	// if there's a current segment still on display, remove it
-	if (this.currentSegment != null) {
-	    this.currentSegment.remove();
-	}
+        // if there's a current segment still on display, remove it
+        if (this.currentSegment != null) {
+            this.currentSegment.remove();
+        }
     },
     
     idOfAction(action) {
