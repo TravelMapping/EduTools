@@ -1387,7 +1387,7 @@ hdxDijkstraAV.setupCode = function() {
 };
 
 
-/* Astar's algorithm based on hdxTraversalsSpanningAVCommon */
+/* A* algorithm based on hdxTraversalsSpanningAVCommon */
 
 const hdxAstarAV = Object.create(hdxTraversalsSpanningAVCommon);
 
@@ -1454,7 +1454,7 @@ hdxAstarAV.mainLoopBody = function(indent) {
 
 };
 
-// Astar-specific psuedocode, note labels must match those
+// A*-specific psuedocode, note labels must match those
 // expected by hdxTraversalsSpanningAVCommon avActions
 hdxAstarAV.setupCode = function() {
     this.code = '<table class="pseudocode">' +
