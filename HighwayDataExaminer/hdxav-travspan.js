@@ -576,8 +576,8 @@ const hdxTraversalsSpanningAVCommon = {
                 if (thisAV.stoppingCondition == "StopAtEnd") {
                     thisAV.treeEdges.push(thisAV.visiting);
 
-		    // change the path to here to the "foundPath" color
-		    thisAV.setVSOfPathToVisiting(thisAV.visualSettings.foundPath);
+                    // change the path to here to the "foundPath" color
+                    thisAV.setVSOfPathToVisiting(thisAV.visualSettings.foundPath);
                 }
                 
                 thisAV.updateControlEntries();
@@ -594,9 +594,9 @@ const hdxTraversalsSpanningAVCommon = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-		// change the path to here back to the "spanningTree" color
-		thisAV.setVSOfPathToVisiting(visualSettings.spanningTree);
-		
+                // change the path to here back to the "spanningTree" color
+                thisAV.setVSOfPathToVisiting(visualSettings.spanningTree);
+                
                 // build list of neighbors to visit
                 const neighbors = getAdjacentPoints(thisAV.visiting.vIndex);
                 for (let i = 0; i < neighbors.length; i++) {
@@ -1084,22 +1084,22 @@ const hdxTraversalsSpanningAVCommon = {
     // path to the place just added to the spanning tree
     setVSOfPathToVisiting(vs) {
 
-	// in the table of tree edges, work back from this.visiting.vIndex
-	// until we get to the starting vertex
-	let place = this.visiting.vIndex;
-	updateMarkerAndTable(place, vs, 4, false);
-	let plIndex = this.treeEdges.length - 1;
-	while (place != this.startingVertex) {
+        // in the table of tree edges, work back from this.visiting.vIndex
+        // until we get to the starting vertex
+        let place = this.visiting.vIndex;
+        updateMarkerAndTable(place, vs, 4, false);
+        let plIndex = this.treeEdges.length - 1;
+        while (place != this.startingVertex) {
             let treeEdge = this.treeEdges[plIndex];
             while (place != treeEdge.vIndex) {
-		plIndex--;
+                plIndex--;
                 treeEdge = this.treeEdges[plIndex];
-	    }
-	    updateMarkerAndTable(place, vs, 4, false);
-	    updatePolylineAndTable(treeEdge.connection, vs, false);
-	    plIndex--;
-	    place = treeEdge.fromVIndex;
-	}
+            }
+            updateMarkerAndTable(place, vs, 4, false);
+            updatePolylineAndTable(treeEdge.connection, vs, false);
+            plIndex--;
+            place = treeEdge.fromVIndex;
+        }
     },
     
     // required prepToStart function, here do things common to all
