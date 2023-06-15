@@ -1138,9 +1138,9 @@ const hdxTraversalsSpanningAVCommon = {
 
         let newAO =
             buildWaypointSelector("startPoint", "Start Vertex", 0) +
-            "<br />" +
+            '<br /><span id="endPointAll">' +
             buildWaypointSelector("endPoint", "End Vertex", 1) + `
-<br />
+<br /></span>
 <select id="stoppingCondition" onchange="stoppingConditionChanged();">
 <option value="StopAtEnd" selected>Stop When End Vertex Reached</option>
 <option value="FindReachable">Find All Vertices Reachable from Start</option>
@@ -1205,9 +1205,13 @@ const hdxTraversalsSpanningAVCommon = {
 function stoppingConditionChanged() {
 
     const selector = document.getElementById("stoppingCondition");
-    const endSelector = document.getElementById("endPoint");
-    endSelector.disabled =
-        selector.options[selector.selectedIndex].value != "StopAtEnd";
+    const endSelectorAll = document.getElementById("endPointAll");
+    if (selector.options[selector.selectedIndex].value == "StopAtEnd") {
+        endSelectorAll.style.display = "";
+    }
+    else {
+        endSelectorAll.style.display = "none";
+    }
 }
 
 /* graph traversals based on hdxTraversalsSpanningAVCommon */
