@@ -192,7 +192,7 @@ function HDXQSRegisterAndSetCheckbox(av, field, inputid, predicate = null) {
             field: field,
             domid: inputid,
             type: "checkbox",
-            pred: null
+            pred: predicate
         }
     );
     const elt = document.getElementById(inputid);

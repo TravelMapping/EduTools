@@ -363,15 +363,15 @@ const hdxOrderingAV = {
         <!--<option value="fixedGrey">Fixed Grey Curve</option>-->
         </select>`;
         
-        newAO += '<br />Refinement Threshold<input type="number" id="refinement" min="2" max="' 
-            + (waypoints.length) + '" value="2">';
+        newAO += '<span id="forQuadtreeOnly" style="display:none"><br />Quadtree Refinement Threshold <input type="number" id="refinement" min="2" max="' 
+            + (waypoints.length) + '" value="2" size="6" style="width: 7em">';
         
         newAO += `<br /><input id="boundingBox" type="checkbox" name="Show Bounding Box"/>&nbsp;
-        Show Bounding Box<br />`
+        Show Quadrants</span>`
         
         newAO +=
             `<br /><input id="extraEdge" type="checkbox" name="Draw Edge from Last to First"/>&nbsp;
-        Draw Edge from Last to First<br />`
+        Draw Edge from Last to First`
         
         // partitioning
         newAO += hdxPart.partHtml();
@@ -380,7 +380,15 @@ const hdxOrderingAV = {
         // QS parameters
         HDXQSClear(this);
         HDXQSRegisterAndSetSelectList(this, "curve", "traversalOrdering");
-        HDXQSRegisterAndSetCheckbox(this, "box", "boundingBox");
+        HDXQSRegisterAndSetNumber(this, "refinement", "refinement", 2,
+                                  waypoints.length,
+                                  function(av) {
+                                      return av.usingQuadtree();
+                                  }); 
+        HDXQSRegisterAndSetCheckbox(this, "box", "boundingBox",
+                                    function(av) {
+                                        return av.usingQuadtree();
+                                    }); 
         HDXQSRegisterAndSetCheckbox(this, "connect", "extraEdge");
         HDXQSRegisterAndSetCheckbox(this, "calcparts", "calcparts");
         HDXQSRegisterAndSetNumber(this, "numparts", "numOfParts", 1,
@@ -545,21 +553,23 @@ const hdxOrderingAV = {
             this.boundingPoly[i].addTo(map);
         }
     },
+
+    // is the currently selected traversal order based on a quadtree?
+    usingQuadtree() {
+
+        this.option = document.getElementById("traversalOrdering").value;
+        return this.option == "morton" || this.option == "hilbert" ||
+            this.option == "moore" || this.option == "grey";
+    }
 };
 
 function refinementChanged() {
 
-    const selector = document.getElementById("traversalOrdering");
-    const refSelector = document.getElementById("refinement");
-    switch (selector.options[selector.selectedIndex].value) {
-        case "morton":
-        case "hilbert":
-        case "moore":
-        case "grey":
-            refSelector.disabled = false;
-            break;
-        default:
-            refSelector.disabled = true;
-            break;
-    }        
+    const qtOnlySpan = document.getElementById("forQuadtreeOnly");
+    if (hdxOrderingAV.usingQuadtree()) {
+        qtOnlySpan.style.display = "";
+    }
+    else {
+        qtOnlySpan.style.display = "none";
+    }
 };
