@@ -137,7 +137,7 @@ const hdxPart = {
     },
     
     partHtml() {
-        return '<br /><input id="calcparts" type="checkbox" name="partitions" onchange="partCallback()"> Calculate Partitions <br /> <span id="numpartsselector" style="display :none;" > Number of Partitions<input type="number" id="numOfParts" min="1" max="' + waypoints.length + '" value="2" ><span/>';
+        return '<br /><input id="calcparts" type="checkbox" name="partitions" onchange="partCallback()"> Create Partitions <br /> <span id="numpartsselector" style="display :none;" ># Partitions: <input type="number" id="numOfParts" min="1" max="' + waypoints.length + '" value="2" size="6" style="width: 7em"><span/>';
     },
     
     
