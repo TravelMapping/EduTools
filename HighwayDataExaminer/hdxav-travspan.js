@@ -1176,8 +1176,15 @@ const hdxTraversalsSpanningAVCommon = {
         HDXQSClear(this);
         HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0,
                                   waypoints.length - 1);
+        // fifth parameter here is a function to check, when a list of QS
+        // parameters is being constructed, under what circumstances this
+        // one should be included
         HDXQSRegisterAndSetNumber(this, "endPoint", "endPoint", 0,
-                                  waypoints.length - 1);
+                                  waypoints.length - 1,
+                                  function(av) {
+                                      const selector = document.getElementById("stoppingCondition");
+                                      return selector.options[selector.selectedIndex].value == "StopAtEnd"; 
+                                  });
         HDXQSRegisterAndSetSelectList(this, "stoppingCondition",
                                       "stoppingCondition");
         // note: traversal discipline will be specified only for

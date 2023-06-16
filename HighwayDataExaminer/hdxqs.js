@@ -96,14 +96,18 @@ function HDXQSCheck(av) {
 
 // function to check for and register a QS parameter intended to match
 // a select object (drop-down option menu)
-function HDXQSRegisterAndSetSelectList(av, field, selectid) {
+// the predicate is a callback function to the AV to determine if the
+// given QS parameter should be included in URLs for the specific AV
+// parameters chosen at the time the URL is generated
+function HDXQSRegisterAndSetSelectList(av, field, selectid, predicate = null) {
 
     HDXQSCheck(av);
     av.QSList.push(
 	{
 	    field: field,
 	    domid: selectid,
-	    type: "select"
+	    type: "select",
+	    pred: predicate
 	}
     );
     const elt = document.getElementById(selectid);
@@ -134,7 +138,11 @@ function HDXQSRegisterAndSetSelectList(av, field, selectid) {
 
 // function to check for and register a QS parameter intended to
 // contain a number in the given range
-function HDXQSRegisterAndSetNumber(av, field, inputid, minval, maxval) {
+// the predicate is a callback function to the AV to determine if the
+// given QS parameter should be included in URLs for the specific AV
+// parameters chosen at the time the URL is generated
+function HDXQSRegisterAndSetNumber(av, field, inputid, minval, maxval,
+				   predicate = null) {
 
     HDXQSCheck(av);
     av.QSList.push(
@@ -143,7 +151,8 @@ function HDXQSRegisterAndSetNumber(av, field, inputid, minval, maxval) {
 	    domid: inputid,
 	    type: "number",
 	    min: minval,
-	    max: maxval
+	    max: maxval,
+	    pred: predicate
 	}
     );
     const elt = document.getElementById(inputid);
@@ -172,14 +181,18 @@ function HDXQSRegisterAndSetNumber(av, field, inputid, minval, maxval) {
 
 // function to check for and registe a QS parameter intended to
 // contain a true/false value
-function HDXQSRegisterAndSetCheckbox(av, field, inputid) {
+// the predicate is a callback function to the AV to determine if the
+// given QS parameter should be included in URLs for the specific AV
+// parameters chosen at the time the URL is generated
+function HDXQSRegisterAndSetCheckbox(av, field, inputid, predicate = null) {
 
     HDXQSCheck(av);
     av.QSList.push(
 	{
 	    field: field,
 	    domid: inputid,
-	    type: "checkbox"
+	    type: "checkbox",
+	    pred: null
 	}
     );
     const elt = document.getElementById(inputid);
@@ -209,15 +222,19 @@ function HDXQSAVParams(av) {
 
     let r = "";
     if (av.hasOwnProperty("QSList")) {
-	for (e of av.QSList) {
-	    r += "&" + e.field + "=";
-	    if (e.type == "checkbox") {
-		r += document.getElementById(e.domid).checked;
-	    }
-	    else {
-		r += document.getElementById(e.domid).value;
-	    }
-	}	
+        for (e of av.QSList) {
+            // check if there is a predicate to determine inclusion conditions
+            // and if so, call it, include this one only if true
+            if (e.pred == null || e.pred(av)) {
+                r += "&" + e.field + "=";
+                if (e.type == "checkbox") {
+                    r += document.getElementById(e.domid).checked;
+                }
+                else {
+                    r += document.getElementById(e.domid).value;
+                }
+            }
+        }
     }
     return r;
 }
