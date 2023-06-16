@@ -384,7 +384,9 @@ const hdxOrderingAV = {
 	HDXQSRegisterAndSetCheckbox(this, "connect", "extraEdge");
 	HDXQSRegisterAndSetCheckbox(this, "calcparts", "calcparts");
 	HDXQSRegisterAndSetNumber(this, "numparts", "numOfParts", 1,
-				  waypoints.length);
+				  waypoints.length, function(av) {
+				      return document.getElementById("calcparts").checked;
+				  });
 
 	// AVCP entries
         hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
