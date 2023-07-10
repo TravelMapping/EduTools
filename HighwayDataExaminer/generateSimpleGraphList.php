@@ -36,7 +36,7 @@ else { // must be some other graphSet, but make sure it's a valid one
 while ($row = $result->fetch_array()) {
 
     array_push($response['filenames'], $row['filename']);
-    $descr = $row['filename']." - ".$row['descr']." (".$row['vertices'].", ".$row['edges'].") ".$tmdbname;
+    $descr = $row['filename']." - ".$row['descr']." (".$row['vertices'].", ".$row['edges'].") ";
     array_push($response['descriptions'], $descr);
 }
 
