@@ -59,8 +59,8 @@ function labelClickHDX(i) {
 
     markers[i].unbindPopup();
     //build HTML string for popup
-    markers[i].bindPopup('<p style="line-height:160%;"><span style="font-size:24pt;color:black;">' + waypoints[i].label + '</span><br><b>Vertex Number: ' + i + '<\/b><br><b><a target="_blank" href="http://www.openstreetmap.org/?lat='+waypoints[i].lat+'&lon='+waypoints[i].lon+'">Coords.:<\a><\/b> ' +
- waypoints[i].lat + '&deg;, ' + waypoints[i].lon + '&deg;<\/p><div id="intersections' + i + '"><\/div>');
+    markers[i].bindPopup('<p style="line-height:160%;"><span style="font-size:24pt;color:black;">' + waypoints[i].label + '</span><br><b>Vertex Number: ' + i + '<\/b><br><b><a target="_blank" href="http://www.openstreetmap.org/?lat='+waypoints[i].lat.toFixed(6)+'&lon='+waypoints[i].lon.toFixed(6)+'">Coords.:<\a><\/b> ' +
+ waypoints[i].lat.toFixed(6) + '&deg;, ' + waypoints[i].lon.toFixed(6) + '&deg;<\/p><div id="intersections' + i + '"><\/div>');
 
     map.panTo([waypoints[i].lat, waypoints[i].lon]);
 
