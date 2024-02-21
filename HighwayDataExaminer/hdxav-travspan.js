@@ -1100,6 +1100,10 @@ const hdxTraversalsSpanningAVCommon = {
             plIndex--;
             place = treeEdge.fromVIndex;
         }
+        // make sure the start vertex stays in the start color
+        updateMarkerAndTable(this.startingVertex,
+                             visualSettings.startVertex,
+                             4, false);
     },
     
     // required prepToStart function, here do things common to all
