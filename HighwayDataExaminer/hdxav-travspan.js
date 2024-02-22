@@ -595,8 +595,10 @@ const hdxTraversalsSpanningAVCommon = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
                 // change the path to here back to the "spanningTree" color
-                thisAV.setVSOfPathToVisiting(visualSettings.spanningTree);
-                
+                if (thisAV.stoppingCondition == "StopAtEnd") {
+                    thisAV.setVSOfPathToVisiting(visualSettings.spanningTree);
+                }
+
                 // build list of neighbors to visit
                 const neighbors = getAdjacentPoints(thisAV.visiting.vIndex);
                 for (let i = 0; i < neighbors.length; i++) {
