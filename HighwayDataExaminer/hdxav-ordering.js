@@ -307,7 +307,7 @@ const hdxOrderingAV = {
                         const left = Math.trunc(waypoints.length%parts);
                         const inter = Math.trunc(waypoints.length/parts);
                         const strt = p * inter + Math.min(p,left);
-                        const cnt = inter;
+                        let cnt = inter;
                         if (p < left) cnt++;
                         const end = strt + cnt;
                         for (let i = strt; i < end; i++) {
