@@ -348,8 +348,9 @@ const hdxOrderingAV = {
         //this.code += `sortedV[] &larr; sort(V)`;
         // if the ordering is random, we want to make it clear that we are randomizing the 
         // order of the vertices instead of sorting them
-        const sortStep = this.option === "rand" ? "randomizedV[] &larr; randomize(V)" : "sortedV[] &larr; sort(V)";
-        this.code += sortStep;
+        // const sortStep = this.option == "rand" ? 'randomizedV[] &larr; randomize(V)' : 'sortedV[] &larr; sort(V)';
+        // this.code += sortStep;
+        this.code += 'sortedV[] &larr; randomize(V)';
 
         this.code += '</td></tr>' +
             pcEntry(0,'for (check &larr; 0 to |sortedV| - 1)',"topForLoop");
