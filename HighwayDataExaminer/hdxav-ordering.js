@@ -175,7 +175,14 @@ const hdxOrderingAV = {
                     waypoints.sort(function(a, b) {return a.lon - b.lon});
                     break;
                 case "rand":
-                    waypoints.sort(function(a, b) {return Math.random() * 2 - 1});
+                    // old code
+                    //waypoints.sort(function(a, b) {return Math.random() * 2 - 1});
+                    // using fisher yates shuffle algorithm to generate a random ordering
+                    for (let i = waypoints.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [waypoints[i], waypoints[j]] = [waypoints[j], waypoints[i]];
+                    }
+                    break;
                     break;
                 case "hilbert":
                 case "moore":
@@ -337,7 +344,12 @@ const hdxOrderingAV = {
         // pseudocode
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += `g &larr; new Graph(V[], null)<br />`;
-        this.code += `sortedV[] &larr; sort(V)`;
+
+        //this.code += `sortedV[] &larr; sort(V)`;
+        // if the ordering is random, we want to make it clear that we are randomizing the 
+        // order of the vertices instead of sorting them
+        const sortStep = thisAV.option === "rand" ? "randomizedV[] &larr; randomize(V)" : "sortedV[] &larr; sort(V)";
+        this.code += sortStep;
 
         this.code += '</td></tr>' +
             pcEntry(0,'for (check &larr; 0 to |sortedV| - 1)',"topForLoop");
