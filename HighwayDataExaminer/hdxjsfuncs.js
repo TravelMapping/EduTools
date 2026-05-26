@@ -320,16 +320,16 @@ function HDXReadFileFromWebServer(graphName) {
 
     hdxGlobals.loadingFile = graphName;
     // check what we're loading, to find the right location
-    let urlPath = "https://courses.teresco.org/metal/graphdata/";
+    let urlPath = "/metal/graphdata/";
     if (hdxGlobals.graphSet != "current") {
-	urlPath = "https://courses.teresco.org/metal/grapharchives/" +
+	urlPath = "/metal/grapharchives/" +
 	    hdxGlobals.graphSet + "/";
     }
     if (graphName == "tm-master.nmp") {
-	urlPath = "https://courses.teresco.org/metal/tmlogs/";
+	urlPath = "/metal/tmlogs/";
     }
     else if (graphName.endsWith(".nmp")) {
-	urlPath = "https://courses.teresco.org/metal/tmlogs/nmpbyregion/";
+	urlPath = "/metal/tmlogs/nmpbyregion/";
     }
     // open and send the AJAX request, on completion the HDXFileLoadedCallback
     // function will handle the results
