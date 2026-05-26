@@ -417,6 +417,6 @@ function HDXCreateDefaultGraphSelectionMenu() {
     
     const help = document.createElement("p");
     help.setAttribute("class", "descr");
-    help.innerHTML = "Need help?  HDX tips can be found <a href='/metal/tips.html' target='_blank'>here</a>.";
+    help.innerHTML = "Need help?  HDX tips can be found <a href='https://course.teresco.org/metal/tips.html' target='_blank'>here</a>.";
     mainbox.appendChild(help);
 }
