@@ -1,4 +1,4 @@
-<?
+<?php
 // read information about graphs from our DB
 $params = json_decode($_POST['params'], true);
 
