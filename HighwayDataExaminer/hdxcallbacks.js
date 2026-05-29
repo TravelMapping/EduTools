@@ -706,11 +706,13 @@ function copyAVURL() {
 	url += "&gv=" + hdxGlobals.graphSet;
     }
 
-    // current AV name
-    url += "&av=" + hdxAV.currentAV.value;
-
-    // AV parameters
-    url += HDXQSAVParams(hdxAV.currentAV);
+   
+    if (hdxAV.currentAV.value != hdxNoAV.value) {
+        // current AV name
+        url += "&av=" + hdxAV.currentAV.value;
+        // AV parameters
+        url += HDXQSAVParams(hdxAV.currentAV);
+    }
 
     navigator.clipboard.writeText(url);
 }
