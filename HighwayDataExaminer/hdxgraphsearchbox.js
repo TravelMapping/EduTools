@@ -32,7 +32,7 @@ function HDXGraphSearchInit() {
     const jsonParams = JSON.stringify(params);
     $.ajax({
 	type: "POST",
-	url: "./generateSimpleGraphList.php",
+	url: "/metal/hdx/generateSimpleGraphList.php",
 	datatype: "json",
 	data: {"params":jsonParams},
 	success: function(data) {

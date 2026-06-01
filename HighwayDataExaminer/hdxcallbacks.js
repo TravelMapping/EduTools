@@ -590,7 +590,7 @@ function HDXFillGraphList(e) {
     const jsonParams = JSON.stringify(params);
     $.ajax({
         type: "POST",
-        url: "./generateGraphList.php",
+        url: "/metal/hdx/generateGraphList.php",
         datatype: "json",
         data: {"params":jsonParams},
         success: function(data) {
@@ -714,5 +714,9 @@ function copyAVURL() {
         url += HDXQSAVParams(hdxAV.currentAV);
     }
 
-    navigator.clipboard.writeText(url);
+    if(location.protocol!="https:"){
+        location.href=url;
+    }else{
+        navigator.clipboard.writeText(url);
+    }
 }
