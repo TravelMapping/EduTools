@@ -590,7 +590,7 @@ function HDXFillGraphList(e) {
     const jsonParams = JSON.stringify(params);
     $.ajax({
         type: "POST",
-        url: "/metal/hdx/generateGraphList.php",
+        url: "./generateGraphList.php",
         datatype: "json",
         data: {"params":jsonParams},
         success: function(data) {

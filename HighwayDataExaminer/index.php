@@ -35,7 +35,7 @@
       rel="stylesheet">
 <link rel="stylesheet" href="/leaflet/BeautifyMarker/leaflet-beautify-marker-icon.css">
 
-<link rel="icon" type="image/png" href="/metal/hdx/MetalBetaLogoSmall.png">
+<link rel="icon" type="image/png" href="./MetalBetaLogoSmall.png">
 <script type="text/javascript">
   "use strict";
 </script>
@@ -53,54 +53,54 @@
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
-<script src="/metal/hdx/tmlib/tmjsfuncs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxjsfuncs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxqs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxinit.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxmenufuncs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxpart.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxbreakpoints.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxcallbacks.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxvisualsettings.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxcustomtitles.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxavcp.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxedgeselector.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxvertexselector.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxhover.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxpseudocode.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-none.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-vsearch.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-esearch.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-vpairs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-travspan.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-bfch.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxlinear.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxpresort.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxgraphsearchbox.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-apcp.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-kruskal.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-degree.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-recdfs.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-dccp.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-quadtree.js" type="text/javascript"></script>
-<script src="/metal/hdx/rainbowvis.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-ordering.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-bftsp.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-tsptwice.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-rcb.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-tarjan.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxav-wpgc.js" type="text/javascript"></script>
-<script src="/metal/hdx/hdxcomputePartStats.js" type="text/javascript"></script>
+<script src="tmlib/tmjsfuncs.js" type="text/javascript"></script>
+<script src="hdxjsfuncs.js" type="text/javascript"></script>
+<script src="hdxqs.js" type="text/javascript"></script>
+<script src="hdxinit.js" type="text/javascript"></script>
+<script src="hdxmenufuncs.js" type="text/javascript"></script>
+<script src="hdxav.js" type="text/javascript"></script>
+<script src="hdxpart.js" type="text/javascript"></script>
+<script src="hdxbreakpoints.js" type="text/javascript"></script>
+<script src="hdxcallbacks.js" type="text/javascript"></script>
+<script src="hdxvisualsettings.js" type="text/javascript"></script>
+<script src="hdxcustomtitles.js" type="text/javascript"></script>
+<script src="hdxavcp.js" type="text/javascript"></script>
+<script src="hdxedgeselector.js" type="text/javascript"></script>
+<script src="hdxvertexselector.js" type="text/javascript"></script>
+<script src="hdxhover.js" type="text/javascript"></script>
+<script src="hdxpseudocode.js" type="text/javascript"></script>
+<script src="hdxav-none.js" type="text/javascript"></script>
+<script src="hdxav-vsearch.js" type="text/javascript"></script>
+<script src="hdxav-esearch.js" type="text/javascript"></script>
+<script src="hdxav-vpairs.js" type="text/javascript"></script>
+<script src="hdxav-travspan.js" type="text/javascript"></script>
+<script src="hdxav-bfch.js" type="text/javascript"></script>
+<script src="hdxlinear.js" type="text/javascript"></script>
+<script src="hdxpresort.js" type="text/javascript"></script>
+<script src="hdxgraphsearchbox.js" type="text/javascript"></script>
+<script src="hdxav-apcp.js" type="text/javascript"></script>
+<script src="hdxav-kruskal.js" type="text/javascript"></script>
+<script src="hdxav-degree.js" type="text/javascript"></script>
+<script src="hdxav-recdfs.js" type="text/javascript"></script>
+<script src="hdxav-dccp.js" type="text/javascript"></script>
+<script src="hdxav-quadtree.js" type="text/javascript"></script>
+<script src="rainbowvis.js" type="text/javascript"></script>
+<script src="hdxav-ordering.js" type="text/javascript"></script>
+<script src="hdxav-bftsp.js" type="text/javascript"></script>
+<script src="hdxav-tsptwice.js" type="text/javascript"></script>
+<script src="hdxav-rcb.js" type="text/javascript"></script>
+<script src="hdxav-tarjan.js" type="text/javascript"></script>
+<script src="hdxav-wpgc.js" type="text/javascript"></script>
+<script src="hdxcomputePartStats.js" type="text/javascript"></script>
 
-<link rel="stylesheet" type="text/css" href="/metal/hdx/supplmentalTypeAhead.css"/>
+<link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
-<link rel="stylesheet" type="text/css" href="/metal/hdx/tm/css/travelMapping.css"/>
+<link rel="stylesheet" type="text/css" href="tm/css/travelMapping.css"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/metal/hdx/hdx.css" />
+<link rel="stylesheet" type="text/css" href="hdx.css" />
 
 <script type="text/javascript">
   hdxGlobals.graphArchiveSets = [];
