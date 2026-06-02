@@ -35,7 +35,7 @@
       rel="stylesheet">
 <link rel="stylesheet" href="/leaflet/BeautifyMarker/leaflet-beautify-marker-icon.css">
 
-<link rel="icon" type="image/png" href="MetalBetaLogoSmall.png">
+<link rel="icon" type="image/png" href="./MetalBetaLogoSmall.png">
 <script type="text/javascript">
   "use strict";
 </script>
@@ -118,7 +118,7 @@
     $result->free();
   
     // get the list of graph archive sets
-    $result = tmdb_query("SELECT * from graphArchiveSets");
+    $result = tmdb_query("SELECT * from graphArchiveSets order by dateStamp desc");
 
     while ($row = $result->fetch_array()) {
       echo "hdxGlobals.graphArchiveSets.push({ setName:'".$row['setName']."', descr:'".$row['descr']."', dateStamp:'".$row['dateStamp']."'});";

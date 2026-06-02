@@ -714,5 +714,9 @@ function copyAVURL() {
         url += HDXQSAVParams(hdxAV.currentAV);
     }
 
-    navigator.clipboard.writeText(url);
+    if(location.protocol!="https:"){
+        location.href=url;
+    }else{
+        navigator.clipboard.writeText(url);
+    }
 }
