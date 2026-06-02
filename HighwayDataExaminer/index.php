@@ -118,7 +118,7 @@
     $result->free();
   
     // get the list of graph archive sets
-    $result = tmdb_query("SELECT * from graphArchiveSets");
+    $result = tmdb_query("SELECT * from graphArchiveSets order by dateStamp desc");
 
     while ($row = $result->fetch_array()) {
       echo "hdxGlobals.graphArchiveSets.push({ setName:'".$row['setName']."', descr:'".$row['descr']."', dateStamp:'".$row['dateStamp']."'});";
