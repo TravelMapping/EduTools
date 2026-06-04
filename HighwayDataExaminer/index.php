@@ -207,9 +207,9 @@ will display
     <tbody>
       <tr>
 	<td>
-	  <select id="AlgorithmSelection" onchange="algorithmSelectionChanged()">
-	    <!-- filled in with options by JS code in hdxAV.initOnLoad() -->
-	  </select>
+	  <div id="AlgorithmSelection">
+	    <!-- filled in by JS code in hdxAV.initOnLoad() -->
+	  </div>
 	</td>
       </tr>
       <tr>

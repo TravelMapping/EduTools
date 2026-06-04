@@ -736,6 +736,90 @@ h3
     border: none;
 }
 
+#AlgorithmSelection
+{
+    text-align: left;
+    margin-top: 5px;
+    width: 100%;
+    font-size: 14px;
+}
+
+#AlgorithmSelection > details
+{
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 5px;
+    border: none;
+    color: rgb(95, 55, 126);
+}
+
+#AlgorithmSelection > details > summary
+{
+    cursor: pointer;
+    padding: 0 4px;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#AlgorithmSelection > details > summary::-webkit-details-marker
+{
+    display: none;
+}
+
+#AlgorithmSelection > details > summary::after
+{
+    content: "\25BC";
+    font-size: 9px;
+    color: rgb(95, 55, 126);
+}
+
+#AlgorithmSelection details details
+{
+    padding-left: 12px;
+}
+
+#AlgorithmSelection details details > summary
+{
+    cursor: pointer;
+    font-weight: bold;
+    padding: 4px 6px;
+    border-radius: 6px;
+    user-select: none;
+}
+
+#AlgorithmSelection details details > summary:hover
+{
+    background-color: rgba(95, 55, 126, 0.15);
+}
+
+#AlgorithmSelection .av-tree-group
+{
+    padding-left: 12px;
+}
+
+#AlgorithmSelection .av-tree-item
+{
+    cursor: pointer;
+    padding: 4px 8px 4px 16px;
+    border-radius: 6px;
+    margin: 2px 0;
+}
+
+#AlgorithmSelection .av-tree-item:hover
+{
+    background-color: rgba(95, 55, 126, 0.2);
+}
+
+#AlgorithmSelection .av-tree-item-selected
+{
+    background-color: rgba(95, 55, 126, 0.4);
+    font-weight: bold;
+}
+
 #algorithmSelectionPanelTable td input
 {
     border-radius: 10px;
