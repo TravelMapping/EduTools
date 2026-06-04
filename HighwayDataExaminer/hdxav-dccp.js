@@ -842,7 +842,7 @@ const hdxClosestPairsRecAV = {
     // update description of the call stack in the currentCall AVCP entry
     updateCallStack() {
 	let t = "Total recursive calls: " + this.recCallCount +
-	    ", " + this.bfCases + " base cases<br />";
+	    "<br>" + "Base cases: " + this.bfCases + "<br />";
 	for (let i = 0; i < this.recStack.length; i++) {
 	    const f = this.recStack[i];
 	    let entry = "Level " + f.recLevel;
