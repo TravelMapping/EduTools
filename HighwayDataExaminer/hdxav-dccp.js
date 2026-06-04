@@ -25,7 +25,7 @@ const hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "dccp",
-    name: "Divide and Conquer Closest Pairs",
+    name: "Divide and Conquer Closest Pair",
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer, following the algorithm in Levitin.",
     
     // vertices, no edges
