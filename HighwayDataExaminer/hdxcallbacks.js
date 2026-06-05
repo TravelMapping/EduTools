@@ -68,13 +68,12 @@ function labelClickHDX(i) {
 }
 
 
-// get the selected algorithm from the AlgorithmSelection menu
+// get the selected algorithm from the AlgorithmSelection tree
 // (factored out here to avoid repeated code)
 function getSelectedAlgorithm() {
 
     const menuSelection = document.getElementById("AlgorithmSelection");
-    const selectionIndex = menuSelection.selectedIndex;
-    return menuSelection.options[selectionIndex].value;
+    return menuSelection.dataset.selected || hdxNoAV.value;
 }
 
 // pseudocode display event handler
