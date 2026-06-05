@@ -25,7 +25,7 @@ const hdxClosestPairsRecAV = {
 
     // entries for list of AVs
     value: "dccp",
-    name: "Divide and Conquer Closest Pairs",
+    name: "Divide and Conquer Closest Pair",
     description: "Search for the closest pair of vertices (waypoints) using recursive divide and conquer, following the algorithm in Levitin.",
     
     // vertices, no edges
@@ -842,7 +842,7 @@ const hdxClosestPairsRecAV = {
     // update description of the call stack in the currentCall AVCP entry
     updateCallStack() {
 	let t = "Total recursive calls: " + this.recCallCount +
-	    ", " + this.bfCases + " base cases<br />";
+	    "<br>" + "Base cases: " + this.bfCases + "<br />";
 	for (let i = 0; i < this.recStack.length; i++) {
 	    const f = this.recStack[i];
 	    let entry = "Level " + f.recLevel;

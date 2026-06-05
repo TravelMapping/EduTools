@@ -11,7 +11,7 @@ const hdxVertexPairsAV = {
 
     // entries for list of AVs
     value: "vpairs",
-    name: "Vertex Closest/Farthest Pairs",
+    name: "Vertex Closest/Farthest Pair",
     description: "Search for the closest and/or farthest pair of vertices (waypoints).",
 
     // vertices, no edges
