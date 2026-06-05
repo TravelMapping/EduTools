@@ -115,7 +115,25 @@ const hdxAV = {
 	    this.status == hdxStates.WPL_LOADED ||
 	    this.status == hdxStates.PTH_LOADED;
     },
-    
+
+    // highlight the given algorithm value in the tree without triggering
+    // the change handler (used during init and reset)
+    highlightAlgorithmSelection(value) {
+        const s = document.getElementById("AlgorithmSelection");
+        s.querySelectorAll(".av-tree-item").forEach(function(item) {
+            item.classList.remove("av-tree-item-selected");
+        });
+        const target = s.querySelector('.av-tree-item[data-value="' + value + '"]');
+        if (target) target.classList.add("av-tree-item-selected");
+        s.dataset.selected = value;
+    },
+
+    // select an algorithm by value, highlight it, and trigger the change handler
+    selectAlgorithmByValue(value) {
+        this.highlightAlgorithmSelection(value);
+        algorithmSelectionChanged();
+    },
+
     // all setup that needs to happen on page load for HDX
     initOnLoad() {
 
@@ -159,27 +177,49 @@ const hdxAV = {
         this.avList.push(hdxTarjanAV);
         this.avList.push(hdxWPGraphColoringAV);
         
-        // populate the algorithm selection select with options
-        // from the avList
+        // populate the algorithm selection tree from the avList
         const s = document.getElementById("AlgorithmSelection");
         s.innerHTML = "";
+        // outer collapsible wrapper for all categories
+        const outerDetails = document.createElement("details");
+        outerDetails.open = true;
+        const outerSummary = document.createElement("summary");
+        outerSummary.textContent = "Algorithm Categories";
+        outerDetails.appendChild(outerSummary);
+        s.appendChild(outerDetails);
+
 	let nextGroup = 0;
+        let currentGroupDiv = null;
         for (let i = 0; i < this.avList.length; i++) {
             const av = this.avList[i];
 	    // start a new group?
 	    if (nextGroup < groupStarts.length &&
 		groupStarts[nextGroup].first == i) {
-		if (nextGroup != 0) {
-		    s.innerHTML += '</optgroup>';
-		}
-		s.innerHTML += '<optgroup label="' +
-		    groupStarts[nextGroup].text + '">';
-		nextGroup++;
+		const details = document.createElement("details");
+                if (nextGroup === 0) details.open = true;
+                const summary = document.createElement("summary");
+                summary.textContent = groupStarts[nextGroup].text;
+                details.appendChild(summary);
+                currentGroupDiv = document.createElement("div");
+                currentGroupDiv.className = "av-tree-group";
+                details.appendChild(currentGroupDiv);
+                outerDetails.appendChild(details);
+                nextGroup++;
 	    }
-            s.innerHTML += '<option value="' + av.value +
-                '">' + av.name + '</option>';
+            const item = document.createElement("div");
+            item.className = "av-tree-item";
+            item.dataset.value = av.value;
+            item.textContent = av.name;
+            item.onclick = (function(val) {
+                return function() { hdxAV.selectAlgorithmByValue(val); };
+            })(av.value);
+            if (currentGroupDiv !== null) {
+                currentGroupDiv.appendChild(item);
+            } else {
+                outerDetails.appendChild(item);
+            }
         }
-	s.innerHTML += '</optgroup>';
+        this.highlightAlgorithmSelection(this.avList[0].value);
 
         // set up some references to commonly-used document elements
 

@@ -83,7 +83,7 @@ function HDXInit() {
 	for (let i = 0; i < hdxAV.avList.length; i++) {
             if (value == hdxAV.avList[i].value) {
 		hdxAV.currentAV = hdxAV.avList[i];
-		document.getElementById("AlgorithmSelection").selectedIndex=i;
+		hdxAV.highlightAlgorithmSelection(value);
 		break;
             }
 	}

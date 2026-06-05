@@ -370,7 +370,7 @@ function HDXProcessFileContents(fileContents) {
 	hdxAV.currentAV.cleanupUI();
 	deleteCBPSelector();
 	hdxAV.currentAV = hdxAV.avList[0];
-	document.getElementById("AlgorithmSelection").selectedIndex = 0;
+	hdxAV.highlightAlgorithmSelection(hdxAV.avList[0].value);
 	document.getElementById("currentAlgorithm").innerHTML =
             hdxAV.currentAV.name;
     }
