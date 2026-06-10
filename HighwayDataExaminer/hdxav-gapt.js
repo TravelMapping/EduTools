@@ -1,5 +1,3 @@
-//Use of Call stack to simulate a recursive algorithm. (usedVertices, availableVertices, loopIteration)
-
 //
 // HDX Algorithm Visualization Get All Possible Traversals File
 //
@@ -8,10 +6,7 @@
 // Primary Authors: (Insert names here)
 //
 
-// This global variable refers to the object containaing all the
-// necessary fields, functions, and states for a given AV.  This
-// variable must be pushed to the this.avList in the hdxav.js file,
-// and the file of this AV must be included in the index.php file
+// 
 const hdxGAPTAV = {
     value: 'gapt',
     name: "Get All Possible Traversals",
@@ -21,8 +16,8 @@ const hdxGAPTAV = {
     useV: true,
     useE: true,
 
+	//Data structure used to simulate recursive calls
 	callStack: null,
-	visiting: 0,
 	
 	// Array to contain all possible traversal, with each traversal being an array of Vertices
 	traversals:[],
@@ -47,6 +42,7 @@ const hdxGAPTAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+                //Initializes variables
                 thisAV.traversals=[];
                 thisAV.usedVertices=[];
                 thisAV.usedVertices.push(document.getElementById("startPoint").value);
@@ -55,23 +51,17 @@ const hdxGAPTAV = {
                 thisAV.availableVertices=[];
                 thisAV.availableVertices=hdxGAPTAV.newAvailableVertices(thisAV.availableVertices, thisAV.usedVertices, getAdjacentPoints(thisAV.usedVertices[0]));
             	thisAV.callStack = [];
-                // Note that the fields of the AV's object must be
-                // accessed through "thisAV" rather than "this"
                 thisAV.nextToCheck = -1;
             
-                // each action must set the nextAction field to the
-                // label of the next action to be performed
                 hdxAV.nextAction = "topOfFunction";
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "Doing some setup stuff";
+                return "Initializing";
             }
         },
         {
             label: "topOfFunction",
-            comment: "",
+            comment: "setting next action to either baseCase or to enter into the loop",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
@@ -82,33 +72,31 @@ const hdxGAPTAV = {
                 	hdxAV.nextAction = "topOfLoop";
                 }
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "setting nextAction to "+hdxAV.nextAction;
             }
         },
         {
             label: "topOfLoop",
-            comment: "",
+            comment: "increments loop count, sets nextAction to recursion",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
+				// increment loop count
 				thisAV.loopIteration++;
 				hdxAV.nextAction = "recursion";
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "loop count: "+thisAV.loopIteration;
             }
         },
         {
             label: "recursion",
-            comment: "",
+            comment: "simulates a recursive call, updates variables",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
+				// updates usedVertices and availableVertices arrays, saves old contents
 				let tmpAvails=hdxGAPTAV.newAvailableVertices(thisAV.availableVertices, thisAV.usedVertices, getAdjacentPoints(thisAV.availableVertices[thisAV.loopIteration]));
 				let tmpUses=hdxGAPTAV.newTraversalWay(thisAV.usedVertices, thisAV.availableVertices[thisAV.loopIteration]);
 				tmpAvails.splice(thisAV.loopIteration,1);
@@ -116,26 +104,25 @@ const hdxGAPTAV = {
 				thisAV.callStack.push(snapshot);
 				thisAV.availableVertices=tmpAvails;
 				thisAV.usedVertices=tmpUses;
+				
+				// updates map 
 				for(i=1;i<thisAV.usedVertices.length-1;i++){
-					updateMarkerAndTable(thisAV.usedVertices[i],
-				    	visualSettings.discovered, 30, false);
+					updateMarkerAndTable(thisAV.usedVertices[i], visualSettings.discovered, 30, false);
 				}
-				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1],
-				     visualSettings.visiting, 30, false);
+				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1], visualSettings.visiting, 30, false);
 				hdxAV.nextAction = "topOfFunction";
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "availableVertices: ["+thisAV.availableVertices+"] <br> usedVertices: ["+thisAV.usedVertices+"]";
             }
         },
         {
             label: "baseCase",
-            comment: "",
+            comment: "a new traversal has been found",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
             
+				// updates AVCP with new path found, incrementing count
 				let newPath=document.createElement("tr");
 				let traversalStr="";
 				for(i=0;i<thisAV.usedVertices.length;i++){
@@ -156,22 +143,23 @@ const hdxGAPTAV = {
 					hdxAV.nextAction = "cleanup"
 				}
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "new traversal: "+thisAV.traversals[thisAV.traversals.length-1];
             }
         },
         {
             label: "collectArr",
-            comment: "",
+            comment: "simulates going back up a level in the recursion",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 
+				// restoring older version of availableVertices and usedVertices
 				let snapshot=thisAV.callStack.pop();
 				thisAV.usedVertices=snapshot[0];
 				thisAV.availableVertices=snapshot[1];
 				thisAV.loopIteration=snapshot[2];
+				
+				// update map
 				for(i=0;i<waypoints.length;i++){
 					updateMarkerAndTable(i,
 				    	visualSettings.undiscovered, 30, false);
@@ -183,21 +171,20 @@ const hdxGAPTAV = {
 				     visualSettings.startVertex, 30, false);
 				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1],
 				     visualSettings.visiting, 30, false);
+
 				if(thisAV.loopIteration<thisAV.availableVertices.length-1){
 					hdxAV.nextAction = "topOfLoop";
 				}else{
 					hdxAV.nextAction = "bottomOfFunction"
 				}
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "availableVertices: ["+thisAV.availableVertices+"] <br> usedVertices: ["+thisAV.usedVertices+"]";
             }
         },
         {
             label: "bottomOfFunction",
-            comment: "",
+            comment: "sets nextAction",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
@@ -207,14 +194,11 @@ const hdxGAPTAV = {
 					hdxAV.nextAction = "cleanup"
 				}
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "";
+                return "nextAction = "+hdxAV.nextAction;
             }
         },
         {
-            //global variables are reset
                 label: "cleanup",
                 comment: "cleanup and updates at the end of the visualization",
                 code: function(thisAV) {
@@ -231,15 +215,11 @@ const hdxGAPTAV = {
 
     // prepToStart is a required function which is called when you hit
     // visualize but before you hit start
+    // sets up pseudocode
     prepToStart() {
 	
         // Build HTML for the pseudocode, which is an HTML table, with
         // each state being a different row.
-	
-        // Each row must be labeled the same EXACT name as the label
-        // in the state machine.
-	
-	// see existing AVs for examples of how this is built
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
         this.code += 'usedVert[] &larr; startState </td></tr>'
         this.code += pcEntry(0, ["gapt(usedVerts[], availableVertices[])", "&emsp;traversals[][]"], "topOfFunction");
@@ -248,9 +228,7 @@ const hdxGAPTAV = {
         this.code += pcEntry(2, "traversals[]+=gapt(usedVerts+a, availableVertices-a+a.availableVertices)", "recursion");
         this.code += pcEntry(1, "return traversals[][]", "bottomOfFunction")
     },
-    // setupUI is a required function that is called after you click
-    // the algorithm in algorithm selection but before you press the
-    // visualize button
+    // set up UI entries for getting all possible traversals
     setupUI() {
 
         let newAO=buildWaypointSelector("startPoint", "Start Vertex", 0) +
@@ -258,29 +236,26 @@ const hdxGAPTAV = {
 
         hdxAV.algOptions.innerHTML = newAO;
 
-        // Insert entries into the AV control panel to display data
-        // structures and variables as the AV is executing
+        // adds a section that gives the number of paths found and list the traversals
         hdxAVCP.add("found", visualSettings.discovered);
         const foundEntry = '<span id="found">Number of paths: 0</span>' +
             '<table id="foundEntries" style="width:100%;"></table>';
         hdxAVCP.update("found", foundEntry);
        
     },
-    // cleanupUI is a required function, called when you select a new
-    // AV or map when after running an algorithm
+    // remove any changes made
     cleanupUI() {
         // for example, remove all the polylines made by any global
         // bounding box
     },
-
-    // required function that is most often just what is shown here,
-    // but see examples like vsearch for cases where this is not the
-    // case (actions that are shared by multiple lines of code)
     idOfAction(action) {
 	
         return action.label;
     },
     
+    // returns a new array of available vertices, adding adjacent vertices of the current
+    // vertex with currently availableVertices not allowing vertices either in usedVertices
+    // array or availableVertices
     newAvailableVertices(currAvails, usedVerts, candidateAvails){
     	let discards=[];
     	let newAvails=[];
@@ -305,6 +280,8 @@ const hdxGAPTAV = {
     	}
     	return newAvails;
     },
+    
+    // returns a new array of traversed vertices including exiting list and the new point
     newTraversalWay(usedVertices, currentVertice){
     	let newTraversal=[]
     	for(i=0;i<usedVertices.length;i++){
