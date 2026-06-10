@@ -92,6 +92,7 @@
 <script src="hdxav-tarjan.js" type="text/javascript"></script>
 <script src="hdxav-wpgc.js" type="text/javascript"></script>
 <script src="hdxcomputePartStats.js" type="text/javascript"></script>
+<script src="hdxav-gapt.js" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 
