@@ -50,6 +50,8 @@ const hdxGAPTAV = {
                 thisAV.traversals=[];
                 thisAV.usedVertices=[];
                 thisAV.usedVertices.push(document.getElementById("startPoint").value);
+                updateMarkerAndTable(thisAV.usedVertices[0],
+				     visualSettings.startVertex, 30, false);
                 thisAV.availableVertices=[];
                 thisAV.availableVertices=hdxGAPTAV.newAvailableVertices(thisAV.availableVertices, thisAV.usedVertices, getAdjacentPoints(thisAV.usedVertices[0]));
             	thisAV.callStack = [];
@@ -114,6 +116,12 @@ const hdxGAPTAV = {
 				thisAV.callStack.push(snapshot);
 				thisAV.availableVertices=tmpAvails;
 				thisAV.usedVertices=tmpUses;
+				for(i=1;i<thisAV.usedVertices.length-1;i++){
+					updateMarkerAndTable(thisAV.usedVertices[i],
+				    	visualSettings.discovered, 30, false);
+				}
+				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1],
+				     visualSettings.visiting, 30, false);
 				hdxAV.nextAction = "topOfFunction";
             },
             // define the message displayed above the pseudocode when
@@ -164,6 +172,17 @@ const hdxGAPTAV = {
 				thisAV.usedVertices=snapshot[0];
 				thisAV.availableVertices=snapshot[1];
 				thisAV.loopIteration=snapshot[2];
+				for(i=0;i<waypoints.length;i++){
+					updateMarkerAndTable(i,
+				    	visualSettings.undiscovered, 30, false);
+				}for(i=1;i<thisAV.usedVertices.length-1;i++){
+					updateMarkerAndTable(thisAV.usedVertices[i],
+				    	visualSettings.discovered, 30, false);
+				}
+				updateMarkerAndTable(thisAV.usedVertices[0],
+				     visualSettings.startVertex, 30, false);
+				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1],
+				     visualSettings.visiting, 30, false);
 				if(thisAV.loopIteration<thisAV.availableVertices.length-1){
 					hdxAV.nextAction = "topOfLoop";
 				}else{
