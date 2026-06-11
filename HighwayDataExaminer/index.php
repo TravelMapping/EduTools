@@ -52,7 +52,6 @@
 
 ?>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.jquery.min.js"></script>
 <script src="tmlib/tmjsfuncs.js" type="text/javascript"></script>
 <script src="hdxjsfuncs.js" type="text/javascript"></script>
 <script src="hdxqs.js" type="text/javascript"></script>
@@ -93,8 +92,6 @@
 <script src="hdxav-wpgc.js" type="text/javascript"></script>
 <script src="hdxcomputePartStats.js" type="text/javascript"></script>
 <script src="hdxav-gapt.js" type="text/javascript"></script>
-
-<link rel="stylesheet" type="text/css" href="supplmentalTypeAhead.css"/>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"/>
