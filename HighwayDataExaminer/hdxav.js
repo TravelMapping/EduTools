@@ -174,9 +174,9 @@ const hdxAV = {
         this.avList.push(hdxPrimAV);
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
+        this.avList.push(hdxGAPTAV);
         this.avList.push(hdxTarjanAV);
         this.avList.push(hdxWPGraphColoringAV);
-	this.avList.push(hdxGAPTAV);
         
         // populate the algorithm selection tree from the avList
         const s = document.getElementById("AlgorithmSelection");
