@@ -32,17 +32,6 @@
     color: white;
 }
 
-#avStatusPanel::-webkit-scrollbar, #discoveredAVCPEntry::-webkit-scrollbar, #datatable::-webkit-scrollbar
-{
-    display: none;  /*Removes scrollbar in Chrome, Safari, and Opera*/
-} 
-
-#avStatusPanel, #discoveredAVCPEntry, #datatable
-{
-    -ms-overflow-style: none;  /*Removes scrollbar in Internet Explorer and Edge*/
-    scrollbar-width: none;  /*removes scrollbar in Firefox*/
-}
-
 #avStatusTable {
     border: none;
     width: 100%;
