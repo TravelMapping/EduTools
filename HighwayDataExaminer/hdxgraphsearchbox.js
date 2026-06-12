@@ -46,7 +46,6 @@ function HDXGraphSearchInit() {
 				HDXGraphDescriptions.push(descriptions[i]);
 	    	}
 	    const lResults = document.createElement("datalist");
-	    lResults.setAttribute("class","tt-menu tt-open");
     	lResults.setAttribute("id", "searchResults");
     	for (let i = 0; i < HDXGraphDescriptions.length; i++){
     		let opt = document.createElement("option");
