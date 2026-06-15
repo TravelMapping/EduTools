@@ -14,9 +14,10 @@ function HDXCreateBasicGraphSelectionMenu() {
     
     // Creates and sets the attributes pf our search bar
     const box = document.createElement("input");
-    box.setAttribute("class", "typeahead");
     box.setAttribute("type", "text");
     box.setAttribute("id", "searchBox");
+    box.setAttribute("list", "searchResults");
+    box.setAttribute("style", "position: relative; vertical-align: top; background-color: transparent; padding-left: 2px;");
     box.setAttribute("placeholder", "Start typing to get suggestions");
     
     // Datapanel to contain all of the elements
@@ -54,6 +55,7 @@ function HDXCreateBasicGraphSelectionMenu() {
     
     // Container for the input element
     const basic = document.createElement("div");
+    basic.setAttribute("style", "position: relative; display: inline-block; background-color: white; border-radius: 10px; font-family: Avenir, Arial, Helvetica, sans-serif; padding: 5px; margin-top: 4px;");
     basic.setAttribute("id", "basicgraphsearch");
     basic.appendChild(box);
     

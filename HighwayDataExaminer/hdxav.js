@@ -174,6 +174,7 @@ const hdxAV = {
         this.avList.push(hdxPrimAV);
         this.avList.push(hdxKruskalAV);
         this.avList.push(hdxDFSRecAV);
+        this.avList.push(hdxGAPTAV);
         this.avList.push(hdxTarjanAV);
         this.avList.push(hdxWPGraphColoringAV);
         

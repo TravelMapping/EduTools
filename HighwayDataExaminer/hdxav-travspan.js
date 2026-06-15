@@ -117,6 +117,7 @@ const hdxTraversalsSpanningAVCommon = {
     // does the algorithm support finding all components?  if so,
     // the specific AV instance should set this variable to true
     supportFindAllComponents: false,
+    supportFindAllFromStart: false,
     
     // The header for the table of found places
     foundTableHeader: "MISSING",
@@ -1146,11 +1147,12 @@ const hdxTraversalsSpanningAVCommon = {
             buildWaypointSelector("startPoint", "Start Vertex", 0) +
             '<br /><span id="endPointAll">' +
             buildWaypointSelector("endPoint", "End Vertex", 1) + `
-<br /></span>
-<select id="stoppingCondition" onchange="stoppingConditionChanged();">
-<option value="StopAtEnd" selected>Stop When End Vertex Reached</option>
-<option value="FindReachable">Find All Vertices Reachable from Start</option>
-`;
+			<br /></span>
+			<select id="stoppingCondition" onchange="stoppingConditionChanged();">
+			<option value="StopAtEnd" selected>Stop When End Vertex Reached</option>`;
+		if(this.supportFindAllFromStart){
+			newAO += `<option value="FindReachable">Find All Vertices Reachable from Start</option>`;
+		}
         if (this.supportFindAllComponents) {
             newAO += '<option value="FindAll">Find All Connected Components</option>';
         }
@@ -1351,6 +1353,7 @@ hdxGraphTraversalsAV.setupCode = function() {
 
 // graph traversals allow the option to find all components
 hdxGraphTraversalsAV.supportFindAllComponents = true;
+hdxGraphTraversalsAV.supportFindAllFromStart = true;
 
 
 /* Dijkstra's algorithm based on hdxTraversalsSpanningAVCommon */
@@ -1430,7 +1433,7 @@ hdxDijkstraAV.setupCode = function() {
 
     this.code += "</table>";
 };
-
+hdxDijkstraAV.supportFindAllFromStart = true;
 
 /* A* algorithm based on hdxTraversalsSpanningAVCommon */
 
@@ -1506,17 +1509,16 @@ hdxAstarAV.setupCode = function() {
         pcEntry(0, ["pq &larr; new " + this.ldv.displayName,
                     "pq." + this.ldv.addOperation() + "(start,distance(start,end),0)" ],
                 "START");
-    if (this.stoppingCondition == "StopAtEnd") {
-        this.code +=
-            pcEntry(0, "while not tree.contains(end)", "checkEndAdded") +
-            pcEntry(1, "if pq.isEmpty", "checkLDVEmpty") +
-            pcEntry(2, "error: no path", "LDVEmpty") +
-            this.mainLoopBody(0);
-    }
+    this.code +=
+        pcEntry(0, "while not tree.contains(end)", "checkEndAdded") +
+        pcEntry(1, "if pq.isEmpty", "checkLDVEmpty") +
+        pcEntry(2, "error: no path", "LDVEmpty") +
+        this.mainLoopBody(0);
 
     this.code += "</table>";
 };
 hdxAstarAV.supportFindAllComponents = false;
+hdxAstarAV.supportFindAllFromStart = false;
 
 /* Prim's algorithm based on hdxTraversalsSpanningAVCommon */
 
@@ -1611,3 +1613,4 @@ hdxPrimAV.setupCode = function() {
 
 // Prim's allows the option to find all components
 hdxPrimAV.supportFindAllComponents = true;
+hdxPrimAV.supportFindAllFromStart = true;

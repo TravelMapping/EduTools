@@ -43,8 +43,16 @@ function HDXGraphSearchInit() {
 	    // copy into our arrays used by the search box
             for (let i = 0; i < filenames.length; i++) {
                 HDXGraphs[descriptions[i]] = filenames[i];
-		HDXGraphDescriptions.push(descriptions[i]);
-	    }
+				HDXGraphDescriptions.push(descriptions[i]);
+	    	}
+	    const lResults = document.createElement("datalist");
+    	lResults.setAttribute("id", "searchResults");
+    	for (let i = 0; i < HDXGraphDescriptions.length; i++){
+    		let opt = document.createElement("option");
+    		opt.setAttribute("value", HDXGraphDescriptions[i]);
+    		lResults.appendChild(opt);
+    	}
+    document.getElementById("basicgraphsearch").appendChild(lResults);
 	}
     });
 }
@@ -81,17 +89,6 @@ function HDXGraphBoxStart() {
     
     //jQuery asking if the DOM is in a ready state for our changes to commence
     $(document).ready(function() {
-	$('#basicgraphsearch .typeahead').typeahead(
-            {
-		hint: true,
-		highlight: true,
-		minLength: 1,
-		
-            },
-            {
-		name: 'description',
-		source: HDXGraphSubstringMatcher(HDXGraphDescriptions)
-            });
 	
 	// adapted from https://howtodoinjava.com/scripting/jquery/jquery-detect-if-enter-key-is-pressed/
 	$("#searchBox").keypress(function(event) {

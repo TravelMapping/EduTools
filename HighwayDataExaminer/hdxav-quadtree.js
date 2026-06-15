@@ -77,6 +77,18 @@ const hdxQuadtreeAV = {
     // quadtree, which is reset and changed whenever the current
     // quadtree is changed
     highlightPoly: [],
+    
+    highlightRect:null,
+    visualSettings: {
+	highlightPartition: {
+            color: "#FD0",
+            textColor: "white",
+            scale: 4,
+            weight: 0.5,
+            name: "highlightPartition",
+            value: 0
+	}
+    },
 
     avActions: [
         {
@@ -144,6 +156,14 @@ const hdxQuadtreeAV = {
 				   thisAV.maxDepth);
                     thisAV.qtStack.push(thisAV.currentQuadtree);
                     thisAV.highlightBoundingBox();
+                    if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                    thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
                     hdxAV.nextAction = "topAddPoint";
                 }
 		else {
@@ -238,6 +258,13 @@ const hdxQuadtreeAV = {
                         
                     thisAV.currentQuadtree = thisAV.qtStack.pop();
                     thisAV.highlightBoundingBox();
+					if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }                    thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
                         
                     hdxAV.nextAction = thisAV.callStack.pop();
                 }
@@ -471,6 +498,14 @@ const hdxQuadtreeAV = {
                 // is a big problem
                 thisAV.currentQuadtree = thisAV.currentQuadtree.sw;
                 thisAV.highlightBoundingBox();
+                if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
                
                 hdxAV.nextAction = thisAV.callStack.pop();
             },
@@ -489,6 +524,14 @@ const hdxQuadtreeAV = {
 
                 thisAV.currentQuadtree = thisAV.currentQuadtree.se;
                 thisAV.highlightBoundingBox();
+                if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
 
                 hdxAV.nextAction = thisAV.callStack.pop();
             },
@@ -507,6 +550,14 @@ const hdxQuadtreeAV = {
                 
                 thisAV.currentQuadtree = thisAV.currentQuadtree.nw;
                 thisAV.highlightBoundingBox();
+                if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
                
                 hdxAV.nextAction = thisAV.callStack.pop();
             },
@@ -525,6 +576,14 @@ const hdxQuadtreeAV = {
 
                 thisAV.currentQuadtree = thisAV.currentQuadtree.ne;
                 thisAV.highlightBoundingBox();
+                if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                thisAV.highlightRect=L.rectangle(
+			[[thisAV.currentQuadtree.minLat, thisAV.currentQuadtree.minLng],
+			 [thisAV.currentQuadtree.maxLat, thisAV.currentQuadtree.maxLng]],
+			thisAV.visualSettings.highlightPartition);
+			thisAV.highlightRect.addTo(map);
               
                 hdxAV.nextAction = thisAV.callStack.pop();
             },
@@ -545,6 +604,10 @@ const hdxQuadtreeAV = {
                 for (let i = 0; i < thisAV.highlightPoly.length; i++) {
                     thisAV.highlightPoly[i].remove();
                 }
+                if(thisAV.highlightRect!=null){
+                    	thisAV.highlightRect.remove();
+                    }
+                thisAV.highlightRect=null;
             },
             logMessage: function(thisAV) {
                 return "Cleanup and finalize visualization";
@@ -653,6 +716,10 @@ const hdxQuadtreeAV = {
         for (let i = 0; i < this.highlightPoly.length; i++) {
             this.highlightPoly[i].remove();
         }
+        if(this.highlightRect!=null){
+                    	this.highlightRect.remove();
+                    }
+        this.highlightRect=null;
         this.boundingPoly = [];
         this.highlightPoly = [];
     },
