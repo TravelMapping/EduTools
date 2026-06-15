@@ -69,8 +69,6 @@ const hdxTarjanAV = {
             
                 hdxAVCP.update("undiscovered", graphEdges.length +
 			       " edges not yet visited");
-                hdxAVCP.update("numBridges","Number of Bridges: " +
-			       thisAV.numBridges);
 
                 hdxAV.iterationDone = true;
                 hdxAV.nextAction = "topForLoop";
@@ -236,8 +234,10 @@ const hdxTarjanAV = {
                     false);
             
                 thisAV.numBridges++;
-                hdxAVCP.update("numBridges","Number of Bridges: " +
-			       thisAV.numBridges);
+                let newBridge=document.createElement("tr");
+                newBridge.innerHTML='<td style="background-color:white; color:black;"><center>'+thisAV.removedEdge.label+' between '+waypoints[thisAV.removedEdge.v1].label+' and '+waypoints[thisAV.removedEdge.v2].label+'</center></td>';
+				document.getElementById("numBridges").innerText="Number of Bridges: "+thisAV.numBridges;
+				document.getElementById("bridgeEntries").appendChild(newBridge);
 
                 // record the current removedEdge as a bridge so it
                 // can be correctly highlighted future iterations
@@ -355,6 +355,9 @@ const hdxTarjanAV = {
         hdxAVCP.add("v1", visualSettings.v1);
         hdxAVCP.add("v2", visualSettings.v2);
         hdxAVCP.add("numBridges", visualSettings.searchFailed);
+        const bridgeEntry = '<span id="numBridges">Number of Bridges: 0</span>' +
+            '<table id="bridgeEntries" style="width:100%;"></table>';
+        hdxAVCP.update("numBridges", bridgeEntry);
     },
     cleanupUI() {
 
