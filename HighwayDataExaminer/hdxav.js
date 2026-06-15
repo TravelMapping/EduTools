@@ -183,7 +183,7 @@ const hdxAV = {
         s.innerHTML = "";
         // outer collapsible wrapper for all categories
         const outerDetails = document.createElement("details");
-        outerDetails.open = true;
+        outerDetails.open = false;
         const outerSummary = document.createElement("summary");
         outerSummary.textContent = "Algorithm Categories";
         outerDetails.appendChild(outerSummary);
@@ -197,7 +197,7 @@ const hdxAV = {
 	    if (nextGroup < groupStarts.length &&
 		groupStarts[nextGroup].first == i) {
 		const details = document.createElement("details");
-                if (nextGroup === 0) details.open = true;
+                if (nextGroup === 0) details.open = false;
                 const summary = document.createElement("summary");
                 summary.textContent = groupStarts[nextGroup].text;
                 details.appendChild(summary);
@@ -212,7 +212,7 @@ const hdxAV = {
             item.dataset.value = av.value;
             item.textContent = av.name;
             item.onclick = (function(val) {
-                return function() { hdxAV.selectAlgorithmByValue(val); };
+                return function() { hdxAV.selectAlgorithmByValue(val); outerDetails.open=false;};
             })(av.value);
             if (currentGroupDiv !== null) {
                 currentGroupDiv.appendChild(item);
