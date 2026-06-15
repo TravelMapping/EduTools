@@ -134,7 +134,7 @@ const hdxGAPTAV = {
 				}
 				newPath.innerHTML='<td style="background-color:white; color:black;"><center>'+traversalStr+'</center></td>';
 				thisAV.traversals.push(thisAV.usedVertices);
-				document.getElementById("found").innerText="Number of paths: "+thisAV.traversals.length;
+				document.getElementById("found").innerText="Number of traversals: "+thisAV.traversals.length;
 				document.getElementById("foundEntries").appendChild(newPath);
 				
                 if(thisAV.callStack.length>0){
@@ -238,7 +238,7 @@ const hdxGAPTAV = {
 
         // adds a section that gives the number of paths found and list the traversals
         hdxAVCP.add("found", visualSettings.discovered);
-        const foundEntry = '<span id="found">Number of paths: 0</span>' +
+        const foundEntry = '<span id="found">Number of traversals: 0</span>' +
             '<table id="foundEntries" style="width:100%;"></table>';
         hdxAVCP.update("found", foundEntry);
        
