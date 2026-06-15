@@ -73,7 +73,7 @@ const hdxClosestPairsRecAV = {
         recursiveCall: {
             color: "darkgreen",
             textColor: "white",
-            scale: 6,
+            scale: 3,
             name: "recursiveCall",
             value: 0
         },
