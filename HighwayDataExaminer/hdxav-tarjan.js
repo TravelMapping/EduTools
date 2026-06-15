@@ -235,7 +235,9 @@ const hdxTarjanAV = {
             
                 thisAV.numBridges++;
                 let newBridge=document.createElement("tr");
-                newBridge.innerHTML='<td style="background-color:white; color:black;"><center>'+thisAV.removedEdge.label+' between '+waypoints[thisAV.removedEdge.v1].label+' and '+waypoints[thisAV.removedEdge.v2].label+'</center></td>';
+                newBridge.innerHTML='<td style="background-color:white; color:black;"><center>#'+thisAV.nextToCheck+" "+thisAV.removedEdge.label+' '+waypoints[thisAV.removedEdge.v1].label+' <-> '+waypoints[thisAV.removedEdge.v2].label+'</center></td>';
+				newBridge.setAttribute("onmouseover", "hoverE(event, "+thisAV.nextToCheck+")");
+				newBridge.setAttribute("onmouseout", "hoverEndE(event, "+thisAV.nextToCheck+")");
 				document.getElementById("numBridges").innerText="Number of Bridges: "+thisAV.numBridges;
 				document.getElementById("bridgeEntries").appendChild(newBridge);
 
