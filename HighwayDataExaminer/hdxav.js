@@ -197,7 +197,6 @@ const hdxAV = {
 	    if (nextGroup < groupStarts.length &&
 		groupStarts[nextGroup].first == i) {
 		const details = document.createElement("details");
-                if (nextGroup === 0) details.open = false;
                 const summary = document.createElement("summary");
                 summary.textContent = groupStarts[nextGroup].text;
                 details.appendChild(summary);
@@ -212,7 +211,14 @@ const hdxAV = {
             item.dataset.value = av.value;
             item.textContent = av.name;
             item.onclick = (function(val) {
-                return function() { hdxAV.selectAlgorithmByValue(val); outerDetails.open=false;};
+                return function() {
+                	hdxAV.selectAlgorithmByValue(val);
+                	outerDetails.open=false;
+                	const algGroups = document.querySelectorAll("details");
+                	algGroups.forEach(function(event){
+                		event.open=false;
+                	});
+                };
             })(av.value);
             if (currentGroupDiv !== null) {
                 currentGroupDiv.appendChild(item);
