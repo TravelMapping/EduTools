@@ -137,6 +137,7 @@ const hdxGAPTAV = {
 				document.getElementById("found").innerText="Number of traversals: "+thisAV.traversals.length;
 				document.getElementById("foundEntries").appendChild(newPath);
 				
+                hdxAV.iterationDone = true;
                 if(thisAV.callStack.length>0){
 					hdxAV.nextAction = "collectArr";
 				}else{
