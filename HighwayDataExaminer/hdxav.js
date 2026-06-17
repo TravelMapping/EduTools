@@ -185,7 +185,7 @@ const hdxAV = {
         const outerDetails = document.createElement("details");
         outerDetails.open = false;
         const outerSummary = document.createElement("summary");
-        outerSummary.textContent = "Algorithm Categories";
+        outerSummary.textContent = hdxNoAV.name;
         outerDetails.appendChild(outerSummary);
         s.appendChild(outerDetails);
 
@@ -213,11 +213,12 @@ const hdxAV = {
             item.onclick = (function(val) {
                 return function() {
                 	hdxAV.selectAlgorithmByValue(val);
-                	outerDetails.open=false;
+                	outerSummary.textContent = av.name;
                 	const algGroups = document.querySelectorAll("details");
                 	algGroups.forEach(function(event){
                 		event.open=false;
                 	});
+                	outerDetails.open=false;
                 };
             })(av.value);
             if (currentGroupDiv !== null) {
