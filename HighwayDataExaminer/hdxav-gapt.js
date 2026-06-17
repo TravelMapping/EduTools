@@ -236,6 +236,9 @@ const hdxGAPTAV = {
             "<br />";
 
         hdxAV.algOptions.innerHTML = newAO;
+        
+        HDXQSClear(this);
+        HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0, waypoints.length - 1);
 
         // adds a section that gives the number of paths found and list the traversals
         hdxAVCP.add("found", visualSettings.discovered);
