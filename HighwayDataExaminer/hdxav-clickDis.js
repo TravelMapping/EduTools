@@ -6,20 +6,10 @@
 // Primary Authors: (Insert names here)
 //
 
-// This global variable refers to the object containaing all the
-// necessary fields, functions, and states for a given AV.  This
-// variable must be pushed to the this.avList in the hdxav.js file,
-// and the file of this AV must be included in the index.php file
+// 
 const hdxClickDisAV = {
-    // short name for list of avs, will be used for the av= QS parameter value
     value: 'clickDis',
-
-    // Name as shown in the drop down menu when selecting from
-    // different algorithms
     name: "Distance from Click",
-
-    // Description as shown after the user selects the algorithm in
-    //the drop down but before they press the "visualize" button
     description: "This algorithm will show the user the distance of points from the spot at which they click in the map.",
 
     // vertices, no edges
@@ -52,19 +42,14 @@ const hdxClickDisAV = {
     // The avActions array defines all of the actions of the AV
     avActions : [
         {
-            // label represents the current state in state machine
-	    // the initial state must be labeled as "START"
             label: "START",
             comment: "Initializes fields",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
-                // Note that the fields of the AV's object must be
-                // accessed through "thisAV" rather than "this"
                 thisAV.nextToCheck = -1;
 
-                //this is typically used to track progress or how many
-                //times to loop through the algorithm
+                // User configurations
                 thisAV.numVUndiscovered = waypoints.length,
                 
                 thisAV.vertexStatus = true;
@@ -73,27 +58,25 @@ const hdxClickDisAV = {
                 
                 thisAV.closestMarker = [-1, 24901];
                 thisAV.furthestMarker = [-1, 0];
-            
-                // each action must set the nextAction field to the
-                // label of the next action to be performed
+
                 hdxAV.nextAction = "topOfLoop";
             },
-            // define the message displayed above the pseudocode when
-            // running at slow enough speeds
             logMessage: function(thisAV) {
-                return "Doing some setup stuff";
+                return "Initializing";
             }
         },
         {
                 label: "topOfLoop",
-                comment: "",
+                comment: "Top of loop handles incrementing count and where to go next",
                 code: function(thisAV) {
+                	// Setting old vertex to new color
                 	if(!thisAV.vertexStatus){
                 		updateMarkerAndTable(thisAV.nextToCheck, visualSettings.discarded, 30, false);
                 	}
                 	thisAV.vertexStatus = false;
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
+                    // On new point
                     thisAV.nextToCheck++;
                     if(thisAV.nextToCheck<thisAV.numVUndiscovered){
                     	updateMarkerAndTable(thisAV.nextToCheck, visualSettings.discovered, 30, false);
@@ -102,36 +85,22 @@ const hdxClickDisAV = {
                     if(thisAV.nextToCheck<thisAV.numVUndiscovered){
                     	hdxAV.nextAction = "distCalc";
                     }else{
-                    	if(thisAV.findVertices=="givenVertices"){
-                    		document.getElementById("distance").innerHTML="Minimum distance: "+thisAV.computedDistances[thisAV.minVertices-1][1];
-                    		const pointEntries=document.createElement("tbody");
-                    		for(let i=0;i<thisAV.minVertices;i++){
-                    			pointEntries.innerHTML+="<tr><td>"+thisAV.computedDistances[i][0]+" "+waypoints[thisAV.computedDistances[i][0]].label+"</td><td>"+thisAV.computedDistances[i][1]+"</td></tr>";
-                    			updateMarkerAndTable(thisAV.computedDistances[i][0], visualSettings.v1, 30, false);
-                    		}
-                    		document.getElementById("pointEntries").appendChild(pointEntries);
-                    		thisAV.circle=L.circle([thisAV.lat, thisAV.lon], {
-								color: 'red',
-								fillColor: '#f03',
-								fillOpacity: 0.5,
-								radius: thisAV.computedDistances[thisAV.minVertices-1][1]*1609.34
-							}).addTo(map);
-                    		
-                    	}
                     	hdxAV.nextAction = "cleanup";
                     }
                     hdxAV.iterationDone = true;
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "Vertex number: "+thisAV.nextToCheck+"<br> nextAction: "+hdxAV.nextAction;
                 }
         },
         {
                 label: "distCalc",
-                comment: "",
+                comment: "Calculates current distance in miles",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
+                	
+                	// Calculating distance from click point to current vertex
                 	thisAV.currentDistance=distanceInMiles(thisAV.lat, thisAV.lon, waypoints[thisAV.nextToCheck].lat, waypoints[thisAV.nextToCheck].lon);
                     
                     if(thisAV.findVertices=="SLDistance"){
@@ -144,12 +113,12 @@ const hdxClickDisAV = {
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "Distance: "+thisAV.currentDistance;
                 }
         },
         {
                 label: "checkSmallest",
-                comment: "",
+                comment: "Checking if it is the closest point",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
@@ -161,33 +130,37 @@ const hdxClickDisAV = {
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "nextAction: "+hdxAV.nextAction;
                 }
         },
         {
                 label: "setSmallest",
-                comment: "",
+                comment: "Setting new shortest distance",
                 code: function(thisAV) {
-                	highlightPseudocode(this.label, visualSettings.visiting);
+                	highlightPseudocode(this.label, visualSettings.v1);
                     
+                    // Changing old closest to a different color
                     if(thisAV.closestMarker[0]!=-1){
                     	updateMarkerAndTable(thisAV.closestMarker[0], visualSettings.discarded, 30, false);
                     }
+                    // Saving closest vertex
                     thisAV.closestMarker=[thisAV.nextToCheck, thisAV.currentDistance]
                     hdxAV.nextAction = "checkFurthest";
                     thisAV.vertexStatus=true;
-                    document.getElementById("closestPoint").innerHTML="<tr><td>"+
-                    thisAV.closestMarker[0]+" "+waypoints[thisAV.closestMarker[0]].label+"</td></tr>";
+                    // Update AVCP
+                    document.getElementById("closestPoint").innerHTML="<tr><td style='background-color: rgb(30, 179, 238);'>#"+
+                    thisAV.closestMarker[0]+" "+waypoints[thisAV.closestMarker[0]].label+" distance: "+thisAV.closestMarker[1].toFixed(3)+"</td></tr>";
+                    // Update on map
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v1, 30, false);
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "The closest vertex has now been set to "+waypoints[thisAV.nextToCheck].label;
                 }
         },
         {
                 label: "checkFurthest",
-                comment: "",
+                comment: "Checking if it is the furthest point",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
@@ -199,33 +172,37 @@ const hdxClickDisAV = {
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "nextAction: "+hdxAV.nextAction;
                 }
         },
         {
                 label: "setFurthest",
-                comment: "",
+                comment: "Setting new furthest distance",
                 code: function(thisAV) {
-                	highlightPseudocode(this.label, visualSettings.visiting);
+                	highlightPseudocode(this.label, visualSettings.v2);
                     
+                    // Changing old furthest to a different color
                     if(thisAV.furthestMarker[0]!=-1){
                     	updateMarkerAndTable(thisAV.furthestMarker[0], visualSettings.discarded, 30, false);
                     }
+                    // Saving furthest vertex
                     thisAV.furthestMarker=[thisAV.nextToCheck, thisAV.currentDistance];
                     hdxAV.nextAction = "topOfLoop";
                     thisAV.vertexStatus=true;
-                    document.getElementById("furthestPoint").innerHTML="<tr><td>"+
-                    thisAV.furthestMarker[0]+" "+waypoints[thisAV.furthestMarker[0]].label+"</td></tr>";
+                    // Update AVCP 
+                    document.getElementById("furthestPoint").innerHTML="<tr><td style='background-color: rgb(255, 60, 60);'>#"+
+                    thisAV.furthestMarker[0]+" "+waypoints[thisAV.furthestMarker[0]].label+" distance: "+thisAV.furthestMarker[1].toFixed(3)+"</td></tr>";
+                    // Update on map
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v2, 30, false);
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "The furthest vertex has now been set to "+waypoints[thisAV.nextToCheck].label;
                 }
         },
         {
                 label: "inRadiusCheck",
-                comment: "",
+                comment: "Checking to see if the current vertex is within prescribed area",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
@@ -237,32 +214,35 @@ const hdxClickDisAV = {
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "nextAction: "+hdxAV.nextAction;
                 }
         },
         {
                 label: "inRadius",
-                comment: "",
+                comment: "Adding to data structure",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
+                    // Save vertex in data structure
                     thisAV.computedDistances.push([thisAV.nextToCheck, thisAV.currentDistance]);
                     hdxAV.nextAction = "topOfLoop";
                     thisAV.vertexStatus=true;
+                    // Update AVCP
                     document.getElementById("pointCount").innerText="Number of points: "+thisAV.computedDistances.length;
                     const pointEntry = document.createElement("tr");
-                    pointEntry.innerHTML = "<td>"+thisAV.nextToCheck+" "+waypoints[thisAV.nextToCheck].label+"</td><td>"+thisAV.currentDistance+"</td>";
+                    pointEntry.innerHTML = "<td>"+thisAV.nextToCheck+" "+waypoints[thisAV.nextToCheck].label+"</td><td>"+thisAV.currentDistance.toFixed(3)+"</td>";
                     document.getElementById("pointEntries").appendChild(pointEntry);
+                    // Update on map
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v1, 30, false);
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                    return "Data structure size: "+thisAV.computedDistances.length;
                 }
         },
         {
                 label: "nDistances",
-                comment: "",
+                comment: "Adding point to the given vertices data structure if appropriate",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
@@ -272,10 +252,31 @@ const hdxClickDisAV = {
                     }
                     thisAV.computedDistances.splice(i, 0, [thisAV.nextToCheck, thisAV.currentDistance])
                     hdxAV.nextAction = "topOfLoop";
+                    if(thisAV.computedDistances.length>thisAV.minVertices){
+                    	updateMarkerAndTable(thisAV.computedDistances[thisAV.computedDistances.length-1][0], visualSettings.discarded, 30, false);
+                    	thisAV.computedDistances.pop();
+                    }
+                    
+                    if(thisAV.circle!=null){
+                    	thisAV.circle.remove();
+                    }
+                    document.getElementById("distance").innerHTML="Minimum distance: "+thisAV.computedDistances[thisAV.computedDistances.length-1][1].toFixed(3);
+                    let pointEntries="<tr><td>Vertex</td><td>Distance</td></tr>";
+                    for(let i=0;i<thisAV.computedDistances.length;i++){
+                    	pointEntries+="<tr><td>"+thisAV.computedDistances[i][0]+" "+waypoints[thisAV.computedDistances[i][0]].label+"</td><td>"+thisAV.computedDistances[i][1].toFixed(3)+"</td></tr>";
+                    	updateMarkerAndTable(thisAV.computedDistances[i][0], visualSettings.v1, 30, false);
+                    }
+                    document.getElementById("pointEntries").innerHTML=pointEntries;
+                    thisAV.circle=L.circle([thisAV.lat, thisAV.lon], {
+						color: 'red',
+						fillColor: '#f03',
+						fillOpacity: 0.5,
+						radius: thisAV.computedDistances[thisAV.computedDistances.length-1][1]*1609.34
+					}).addTo(map);
                     
                 },
                 logMessage: function(thisAV) {
-                    return "";
+                	return "Furthest point in the data structure has a distance of "+thisAV.computedDistances[thisAV.computedDistances.length-1][1];
                 }
         },
         {
@@ -295,6 +296,7 @@ const hdxClickDisAV = {
     
     // prepToStart is a required function which is called when you hit
     // visualize but before you hit start
+    // Adds elements to the map, sets up AVCP and Pseudo code
     prepToStart() {
 		// Setting user configurations
         this.findVertices=document.getElementById("findVertices").value;
@@ -355,9 +357,7 @@ const hdxClickDisAV = {
         }
         hdxAVCP.update("distanceInfo", points);
     },
-    // setupUI is a required function that is called after you click
-    // the algorithm in algorithm selection but before you press the
-    // visualize button
+    // setupUI sets up what options are available for the user to select before running the AV and the adds an element to the AVCP
     setupUI() {
 
         let newAO;
@@ -380,6 +380,7 @@ const hdxClickDisAV = {
     		document.getElementById("centerLon").value = e.latlng.lng;
 		});
 		
+        // Add AV options to the QS
         HDXQSClear(this);
         HDXQSRegisterAndSetSelectList(this, "findVertices", "findVertices");
         HDXQSRegisterAndSetNumber(this, "lat", "centerLat", -90, 90);
@@ -387,31 +388,21 @@ const hdxClickDisAV = {
         HDXQSRegisterAndSetNumber(this, "maxDistance", "maxDistance", 0, 24901);
         HDXQSRegisterAndSetNumber(this, "minVertices", "minVertices", 1, waypoints.length);
 
-        // Insert entries into the AV control panel to display data
-        // structures and variables as the AV is executing
+        // Add element to AVCP
         hdxAVCP.add("distanceInfo", visualSettings.discovered);
        
     },
-    // cleanupUI is a required function, called when you select a new
-    // AV or map when after running an algorithm
+    // removing map changes
     cleanupUI() {
-        // for example, remove all the polylines made by any global
-        // bounding box
         this.marker.remove();
         this.circle.remove();
     },
-
-    // required function that is most often just what is shown here,
-    // but see examples like vsearch for cases where this is not the
-    // case (actions that are shared by multiple lines of code)
     idOfAction(action) {
 	
         return action.label;
     },
     
-    // any additional AV-specific functions may be added to the AV's
-    // object here
-    //adapted from hdxav-ordering.js
+    // adapted from hdxav-ordering.js to change options available to the user when appropriate
 	refinementChanged() {
     	const selectionOptions = document.getElementById("findVertices");
     	const gDistance = document.getElementById("givenD");
