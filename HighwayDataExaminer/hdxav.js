@@ -152,6 +152,7 @@ const hdxAV = {
         this.avList.push(hdxBFConvexHullAV);
         this.avList.push(hdxAPClosestPointAV);
         this.avList.push(hdxClosestPairsRecAV);
+        this.avList.push(hdxClickDisAV)
         this.avList.push(hdxQuadtreeAV);
         this.avList.push(hdxOrderingAV);
         this.avList.push(hdxBFTravelingSalesmanAV);
