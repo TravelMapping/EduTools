@@ -3,7 +3,7 @@
 //
 // METAL Project
 //
-// Primary Authors: (Insert names here)
+// Primary Authors: Gregory Drapeau
 //
 
 // 
