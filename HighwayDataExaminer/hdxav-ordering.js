@@ -449,7 +449,7 @@ const hdxOrderingAV = {
                            waypoints[this.nextToCheck + 1].lon];
 
         this.currentEdgeLength = convertToCurrentUnits(
-                    distanceInMiles(waypoints[this.nextToCheck].lat,
+                    exactDistanceInMiles(waypoints[this.nextToCheck].lat,
                                     waypoints[this.nextToCheck].lon,
                                     waypoints[this.nextToCheck + 1].lat,
                                     waypoints[this.nextToCheck + 1].lon));

@@ -1202,3 +1202,12 @@ function spanWithVS(text, vs) {
     return "<span style='background-color:" + vs.color +
 	"; color:" + vs.textColor + "'>" + text + "</span>";
 }
+function exactDistanceInMiles(lat1, lon1, lat2, lon2) {
+    if(lat1 == lat2 && lon1 == lon2)
+	return 0.;
+    
+    var rad = 3963.;
+    var deg2rad = Math.PI/180.;
+    var ang = Math.cos(lat1 * deg2rad) * Math.cos(lat2 * deg2rad) * Math.cos((lon1 - lon2)*deg2rad) + Math.sin(lat1 * deg2rad) * Math.sin(lat2 * deg2rad);
+    return Math.acos(ang) * rad;
+}

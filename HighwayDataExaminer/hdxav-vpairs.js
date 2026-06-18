@@ -191,7 +191,7 @@ const hdxVertexPairsAV = {
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);       
                 thisAV.d_this = convertToCurrentUnits(
-		    distanceInMiles(waypoints[thisAV.v1].lat,
+		    exactDistanceInMiles(waypoints[thisAV.v1].lat,
                                     waypoints[thisAV.v1].lon,
                                     waypoints[thisAV.v2].lat,
                                     waypoints[thisAV.v2].lon));

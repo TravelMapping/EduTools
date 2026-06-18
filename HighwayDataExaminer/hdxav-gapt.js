@@ -3,7 +3,7 @@
 //
 // METAL Project
 //
-// Primary Authors: (Insert names here)
+// Primary Authors: Gregory Drapeau
 //
 
 // 
@@ -222,7 +222,7 @@ const hdxGAPTAV = {
         // Build HTML for the pseudocode, which is an HTML table, with
         // each state being a different row.
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
-        this.code += 'usedVert[] &larr; startState </td></tr>';
+        this.code += 'usedVert[] &larr; startState<br>gapt(usedVert, usedVert[0].availableVertices)</td></tr>';
         this.code += pcEntry(0, ["gapt(usedVerts[], availableVertices[])", "&emsp;traversals[][]"], "topOfFunction");
         this.code += pcEntry(1, ["if availableVertices.length = 0", "&emsp;return usedVerts[]"], "baseCase");
         this.code += pcEntry(1, "for each a in availableVertices do", "topOfLoop");

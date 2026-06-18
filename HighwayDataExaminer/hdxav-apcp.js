@@ -206,7 +206,7 @@ const hdxAPClosestPointAV = {
             code: function (thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.d = convertToCurrentUnits(
-                           distanceInMiles(waypoints[thisAV.outLoop].lat,
+                           exactDistanceInMiles(waypoints[thisAV.outLoop].lat,
                                            waypoints[thisAV.outLoop].lon,
                                            waypoints[thisAV.inLoop].lat,
                                            waypoints[thisAV.inLoop].lon));
