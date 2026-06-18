@@ -107,7 +107,7 @@ const hdxClickDisAV = {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                 	
                 	// Calculating distance from click point to current vertex
-                	thisAV.currentDistance=distanceInMiles(thisAV.lat, thisAV.lon, waypoints[thisAV.nextToCheck].lat, waypoints[thisAV.nextToCheck].lon);
+                	thisAV.currentDistance=exactDistanceInMiles(thisAV.lat, thisAV.lon, waypoints[thisAV.nextToCheck].lat, waypoints[thisAV.nextToCheck].lon);
                     
                     if(thisAV.findVertices=="SLDistance"){
                     	hdxAV.nextAction = "checkSmallest";

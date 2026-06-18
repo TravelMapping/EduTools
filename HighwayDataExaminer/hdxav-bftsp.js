@@ -163,7 +163,7 @@ const hdxBFTravelingSalesmanAV = {
                     thisAV.currCoords.push([v1.lat,v1.lon]);
                     
                     // calculate distance of the current edge
-                    const currEdgeDist = distanceInMiles(v1.lat,v1.lon,
+                    const currEdgeDist = exactDistanceInMiles(v1.lat,v1.lon,
                         v2.lat,v2.lon);
                     
                     // add distance of current edge to total and push

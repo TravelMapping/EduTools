@@ -287,7 +287,7 @@ const hdxClosestPairsRecAV = {
 			const v1 = thisAV.WtoE[i];
 			const v2 = thisAV.WtoE[j];
 			const minDistTest = convertToCurrentUnits(
-			    distanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
+			    exactDistanceInMiles(v1.lat, v1.lon, v2.lat, v2.lon));
 			
 			thisAV.bfDComps++;
                         if (minDistTest < thisAV.fp.minDist) {
@@ -675,7 +675,7 @@ const hdxClosestPairsRecAV = {
                 highlightPseudocode(this.label, visualSettings.visiting);
 
 		const newd = convertToCurrentUnits(
-		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
+		    exactDistanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
 				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
 
 		thisAV.overlapDComps++;
@@ -707,7 +707,7 @@ const hdxClosestPairsRecAV = {
 				     40, false);
 		
 		thisAV.fp.minDist = convertToCurrentUnits(
-		    distanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
+		    exactDistanceInMiles(thisAV.fp.vi.lat, thisAV.fp.vi.lon,
 				    thisAV.fp.vk.lat, thisAV.fp.vk.lon));
 		thisAV.fp.minv1 = thisAV.fp.vi;
 		thisAV.fp.minv2 = thisAV.fp.vk;

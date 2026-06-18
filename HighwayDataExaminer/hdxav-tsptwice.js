@@ -291,7 +291,7 @@ const hdxTwiceAroundTreeAV = {
 
                 //calculating the distance of the current edge and then adding it to the total
                 thisAV.currDistance =
-		    distanceInMiles(currCoords[0][0],currCoords[0][1],
+		    exactDistanceInMiles(currCoords[0][0],currCoords[0][1],
 				    currCoords[1][0],currCoords[1][1]);
                 hdxAVCP.update("currSum","Distance of Path: " +
 			       thisAV.currSum.toFixed(3) + " miles");
@@ -419,7 +419,7 @@ function completeGraph(vertices) {
     
     for (let i = 0; i <this.v.length; i++) {
         for (let j = 0; j < this.v.length; j++) {
-            this.e[i][j] = distanceInMiles(waypoints[i].lat,waypoints[i].lon,
+            this.e[i][j] = exactDistanceInMiles(waypoints[i].lat,waypoints[i].lon,
 					   waypoints[j].lat,waypoints[j].lon);
             this.validEdge[i][j] = false;
         }
