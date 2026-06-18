@@ -222,12 +222,12 @@ const hdxGAPTAV = {
         // Build HTML for the pseudocode, which is an HTML table, with
         // each state being a different row.
         this.code = '<table class="pseudocode"><tr id="START" class="pseudocode"><td class="pseudocode">';
-        this.code += 'usedVert[] &larr; startState </td></tr>'
+        this.code += 'usedVert[] &larr; startState </td></tr>';
         this.code += pcEntry(0, ["gapt(usedVerts[], availableVertices[])", "&emsp;traversals[][]"], "topOfFunction");
         this.code += pcEntry(1, ["if availableVertices.length = 0", "&emsp;return usedVerts[]"], "baseCase");
         this.code += pcEntry(1, "for each a in availableVertices do", "topOfLoop");
         this.code += pcEntry(2, "traversals[]+=gapt(usedVerts+a, availableVertices-a+a.availableVertices)", "recursion");
-        this.code += pcEntry(1, "return traversals[][]", "bottomOfFunction")
+        this.code += pcEntry(1, "return traversals[][]", "bottomOfFunction");
     },
     // set up UI entries for getting all possible traversals
     setupUI() {
@@ -236,6 +236,9 @@ const hdxGAPTAV = {
             "<br />";
 
         hdxAV.algOptions.innerHTML = newAO;
+        
+        HDXQSClear(this);
+        HDXQSRegisterAndSetNumber(this, "startPoint", "startPoint", 0, waypoints.length - 1);
 
         // adds a section that gives the number of paths found and list the traversals
         hdxAVCP.add("found", visualSettings.discovered);
