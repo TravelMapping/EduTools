@@ -235,7 +235,7 @@ const hdxClickDisAV = {
                     // Update AVCP
                     document.getElementById("pointCount").innerText="Number of points: "+thisAV.computedDistances.length;
                     const pointEntry = document.createElement("tr");
-                    pointEntry.innerHTML = "<td>"+thisAV.nextToCheck+" "+waypoints[thisAV.nextToCheck].label+"</td><td>"+thisAV.currentDistance.toFixed(3)+"</td>";
+                    pointEntry.innerHTML = "<td>#"+thisAV.nextToCheck+" "+waypoints[thisAV.nextToCheck].label+"</td><td>"+thisAV.currentDistance.toFixed(3)+"</td>";
                     document.getElementById("pointEntries").appendChild(pointEntry);
                     // Update on map
                     updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v1, 30, false);
@@ -268,7 +268,7 @@ const hdxClickDisAV = {
                     document.getElementById("distance").innerHTML="Minimum distance: "+thisAV.computedDistances[thisAV.computedDistances.length-1][1].toFixed(3);
                     let pointEntries="<tr><td>Vertex</td><td>Distance</td></tr>";
                     for(let i=0;i<thisAV.computedDistances.length;i++){
-                    	pointEntries+="<tr><td>"+thisAV.computedDistances[i][0]+" "+waypoints[thisAV.computedDistances[i][0]].label+"</td><td>"+thisAV.computedDistances[i][1].toFixed(3)+"</td></tr>";
+                    	pointEntries+="<tr><td>#"+thisAV.computedDistances[i][0]+" "+waypoints[thisAV.computedDistances[i][0]].label+"</td><td>"+thisAV.computedDistances[i][1].toFixed(3)+"</td></tr>";
                     	updateMarkerAndTable(thisAV.computedDistances[i][0], visualSettings.v1, 30, false);
                     }
                     document.getElementById("pointEntries").innerHTML=pointEntries;
