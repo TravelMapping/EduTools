@@ -70,6 +70,12 @@ const hdxClickDisAV = {
                 comment: "Top of loop handles incrementing count and where to go next",
                 code: function(thisAV) {
                 	// Setting old vertex to new color
+                	if(thisAV.closestMarker[0]!=-1){
+                		updateMarkerAndTable(thisAV.closestMarker[0], visualSettings.v1, 30, false);
+                	}
+                	if(thisAV.furthestMarker[0]!=-1){
+                		updateMarkerAndTable(thisAV.furthestMarker[0], visualSettings.v2, 30, false);
+                    }
                 	if(!thisAV.vertexStatus){
                 		updateMarkerAndTable(thisAV.nextToCheck, visualSettings.discarded, 30, false);
                 	}
@@ -151,7 +157,7 @@ const hdxClickDisAV = {
                     document.getElementById("closestPoint").innerHTML="<tr><td style='background-color: rgb(30, 179, 238);'>#"+
                     thisAV.closestMarker[0]+" "+waypoints[thisAV.closestMarker[0]].label+" distance: "+thisAV.closestMarker[1].toFixed(3)+"</td></tr>";
                     // Update on map
-                    updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v1, 30, false);
+                    updateMarkerAndTable(thisAV.closestMarker[0], visualSettings.v1, 30, false);
                     
                 },
                 logMessage: function(thisAV) {
@@ -163,7 +169,6 @@ const hdxClickDisAV = {
                 comment: "Checking if it is the furthest point",
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
-                    
                     if(thisAV.currentDistance>thisAV.furthestMarker[1]){
                     	hdxAV.nextAction = "setFurthest";
                     }else{
@@ -193,7 +198,7 @@ const hdxClickDisAV = {
                     document.getElementById("furthestPoint").innerHTML="<tr><td style='background-color: rgb(255, 60, 60);'>#"+
                     thisAV.furthestMarker[0]+" "+waypoints[thisAV.furthestMarker[0]].label+" distance: "+thisAV.furthestMarker[1].toFixed(3)+"</td></tr>";
                     // Update on map
-                    updateMarkerAndTable(thisAV.nextToCheck, visualSettings.v2, 30, false);
+                    updateMarkerAndTable(thisAV.furthestMarker[0], visualSettings.v2, 30, false);
                     
                 },
                 logMessage: function(thisAV) {
