@@ -25,9 +25,6 @@ const hdxNoAV = {
     },
 
     setupUI() {
-    	if(location.search.includes("none")){
-    		algOptionsDonePressed();
-    	}
 
     },
 
