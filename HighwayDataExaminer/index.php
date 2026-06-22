@@ -140,7 +140,7 @@ will display
 <!-- Bar across the top -->
 <div class="menubar">
   <div id="info">
-    <button id="newGraph">New Graph</button><span id="filename"></span><br>
+    <button id="newGraph" onclick="document.getElementById('AVSelectionName').textContent=hdxNoAV.name;">New Graph</button><span id="filename"></span><br>
     <button id="newAlg">New Algorithm</button><span id="currentAlgorithm" onclick="resetPressed();cleanupBreakpoints();cleanupAVControlPanel()"></span>
   </div>
   <div id="topControlPanel">
