@@ -251,6 +251,7 @@ const hdxClickDisAV = {
                 code: function(thisAV) {
                 	highlightPseudocode(this.label, visualSettings.visiting);
                     
+                    thisAV.vertexStatus=true;
                     let i=0;
                     while(i<thisAV.computedDistances.length && thisAV.currentDistance>thisAV.computedDistances[i][1]){
                     	i++;
