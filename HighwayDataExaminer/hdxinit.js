@@ -157,5 +157,6 @@ function HDXInit() {
     if(HDXQSIsSpecified("noav")){
     		document.getElementById("topControlPanelPseudo").style.display = "none";
         	document.getElementById("speedChanger").style.display = "none";
+        	document.getElementById("topCPConnections").style.display = "";
     	}
 }

@@ -1211,3 +1211,19 @@ function exactDistanceInMiles(lat1, lon1, lat2, lon2) {
     var ang = Math.cos(lat1 * deg2rad) * Math.cos(lat2 * deg2rad) * Math.cos((lon1 - lon2)*deg2rad) + Math.sin(lat1 * deg2rad) * Math.sin(lat2 * deg2rad);
     return Math.acos(ang) * rad;
 }
+
+// callback for when the showWays checkbox is clicked
+function showConnectionsClicked() {
+
+    var showThem = document.getElementById('showConnections').checked;
+    if (showThem) {
+		for (var i = 0; i < graphEdges.length; i++) {
+			connections[i].addTo(map);
+		}
+    }
+    else {
+		for (var i = 0; i < graphEdges.length; i++) {
+	    	connections[i].remove();
+		}
+    }
+}
