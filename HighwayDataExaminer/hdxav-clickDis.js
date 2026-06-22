@@ -400,7 +400,9 @@ const hdxClickDisAV = {
     // removing map changes
     cleanupUI() {
         this.marker.remove();
-        this.circle.remove();
+        if(this.findVertices!="SLDistance"){
+        	this.circle.remove();
+        }
     },
     idOfAction(action) {
 	
