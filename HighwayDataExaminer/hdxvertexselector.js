@@ -57,7 +57,7 @@ function buildWaypointSelector(id, label, initVal){
 	contents +=`</datalist>`;
 	return contents;
 }
-// On change function for SelectorByLabel function, which translates label to number
+// On change function for buildWaypointSelector function, which translates label to number
 function labelToNumber(value, id){
 	for(let i=0;i<waypoints.length;i++){
 		let validV="#"+i+" "+waypoints[i].label;
