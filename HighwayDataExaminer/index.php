@@ -174,10 +174,10 @@ will display
 	    </select>
 	  </td><td>
 	    <div id="topControlPanelAV3">
-	      <input id="showMarkers" type="checkbox" name="Show Markers" onclick="showMarkersClicked()" checked />&nbsp;Show Markers<br>
-	      <span id="topCPConnections" style="display:none;"><input id="showConnections" type="checkbox" name="Show Connections" onclick="showConnectionsClicked()" checked />&nbsp;Show Connections<br></span>
-	      <span id="topControlPanelPseudo"><input id="pseudoCheckbox" type="checkbox" name="Pseudocode-level AV" checked onclick="showHidePseudocode();cleanupBreakpoints()" />&nbsp;Trace Pseudocode<br></span>
-	      <input id="datatablesCheckbox" type="checkbox" name="Datatables" checked onclick="showHideDatatables()" />&nbsp;Show Data Tables
+	      <input id="showMarkers" type="checkbox" name="Show Markers" onclick="showMarkersClicked()" checked /><label for="showMarkers">&nbsp;Show Markers</label><br>
+	      <span id="topCPConnections" style="display:none;"><input id="showConnections" type="checkbox" name="Show Connections" onclick="showConnectionsClicked()" checked /><label for="showConnections">&nbsp;Show Connections</label><br></span>
+	      <span id="topControlPanelPseudo"><input id="pseudoCheckbox" type="checkbox" name="Pseudocode-level AV" checked onclick="showHidePseudocode();cleanupBreakpoints()" /><label for="pseudoCheckbox">&nbsp;Trace Pseudocode</label><br></span>
+	      <input id="datatablesCheckbox" type="checkbox" name="Datatables" checked onclick="showHideDatatables()" /><label for="datatablesCheckbox">&nbsp;Show Data Tables</label>
 	    </div>	  
 	  </td>
 	</tr>
