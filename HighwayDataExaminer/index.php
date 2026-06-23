@@ -140,7 +140,7 @@ will display
 <!-- Bar across the top -->
 <div class="menubar">
   <div id="info">
-    <button id="newGraph">New Graph</button><span id="filename"></span><br>
+    <button id="newGraph" onclick="document.getElementById('AVSelectionName').textContent=hdxNoAV.name;">New Graph</button><span id="filename"></span><br>
     <button id="newAlg">New Algorithm</button><span id="currentAlgorithm" onclick="resetPressed();cleanupBreakpoints();cleanupAVControlPanel()"></span>
   </div>
   <div id="topControlPanel">
@@ -175,6 +175,7 @@ will display
 	  </td><td>
 	    <div id="topControlPanelAV3">
 	      <input id="showMarkers" type="checkbox" name="Show Markers" onclick="showMarkersClicked()" checked />&nbsp;Show Markers<br>
+	      <span id="topCPConnections" style="display:none;"><input id="showConnections" type="checkbox" name="Show Connections" onclick="showConnectionsClicked()" checked />&nbsp;Show Connections<br></span>
 	      <span id="topControlPanelPseudo"><input id="pseudoCheckbox" type="checkbox" name="Pseudocode-level AV" checked onclick="showHidePseudocode();cleanupBreakpoints()" />&nbsp;Trace Pseudocode<br></span>
 	      <input id="datatablesCheckbox" type="checkbox" name="Datatables" checked onclick="showHideDatatables()" />&nbsp;Show Data Tables
 	    </div>	  

@@ -33,6 +33,8 @@ const hdxGAPTAV = {
 	
     // loop variable that tracks which point is currently being operated upon
     nextToCheck: -1,
+    
+    gradient: new Rainbow(),
 
     // The avActions array defines all of the actions of the AV
     avActions : [
@@ -52,6 +54,9 @@ const hdxGAPTAV = {
                 thisAV.availableVertices=hdxGAPTAV.newAvailableVertices(thisAV.availableVertices, thisAV.usedVertices, getAdjacentPoints(thisAV.usedVertices[0]));
             	thisAV.callStack = [];
                 thisAV.nextToCheck = -1;
+                
+                //Vertex colors on hover in AVCP
+                thisAV.gradiant = new Rainbow();
             
                 hdxAV.nextAction = "topOfFunction";
             },
@@ -132,7 +137,7 @@ const hdxGAPTAV = {
 						traversalStr += ", " + thisAV.usedVertices[i];
 					}
 				}
-				newPath.innerHTML='<td style="background-color:white; color:black;"><center>'+traversalStr+'</center></td>';
+				newPath.innerHTML='<td style="background-color:white; color:black;" onmouseover="hdxGAPTAV.traversalAVCPHover('+thisAV.traversals.length+')" onmouseout="hdxGAPTAV.resetVs()"><center>'+traversalStr+'</center></td>';
 				thisAV.traversals.push(thisAV.usedVertices);
 				document.getElementById("found").innerText="Number of traversals: "+thisAV.traversals.length;
 				document.getElementById("foundEntries").appendChild(newPath);
@@ -168,10 +173,10 @@ const hdxGAPTAV = {
 					updateMarkerAndTable(thisAV.usedVertices[i],
 				    	visualSettings.discovered, 30, false);
 				}
-				updateMarkerAndTable(thisAV.usedVertices[0],
-				     visualSettings.startVertex, 30, false);
 				updateMarkerAndTable(thisAV.usedVertices[thisAV.usedVertices.length-1],
 				     visualSettings.visiting, 30, false);
+				updateMarkerAndTable(thisAV.usedVertices[0],
+				     visualSettings.startVertex, 30, false);
 
 				if(thisAV.loopIteration<thisAV.availableVertices.length-1){
 					hdxAV.nextAction = "topOfLoop";
@@ -293,5 +298,27 @@ const hdxGAPTAV = {
     	}
     	newTraversal.push(currentVertice)
     	return newTraversal;
+    },
+    
+    // Resets the vertex colors after hover off
+    resetVs(){
+    	for(i=0; i<waypoints.length;i++){
+    		updateMarkerAndTable(i, visualSettings.undiscovered, 30, false);
+    	}
+    	updateMarkerAndTable(hdxGAPTAV.usedVertices[0], visualSettings.startVertex, 30, false)
+    },
+    traversalAVCPHover(travNum){
+    	this.gradiant.setNumberRange(0,this.traversals[travNum].length-1);
+    	for(i=0; i<this.traversals[travNum].length;i++){
+    		updateMarkerAndTable(this.traversals[travNum][i], {
+                color: "#" + this.gradiant.colorAt(i),
+        		textColor: "white",
+        		scale: 8,
+        		name: "visiting",
+        		value: 0,
+        		weight: 8,
+        		opacity: 1
+            }, 30, false);
+    	}
     }
 }

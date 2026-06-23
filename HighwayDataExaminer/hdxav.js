@@ -186,6 +186,7 @@ const hdxAV = {
         const outerDetails = document.createElement("details");
         outerDetails.open = false;
         const outerSummary = document.createElement("summary");
+        outerSummary.setAttribute("id", "AVSelectionName");
         outerSummary.textContent = hdxNoAV.name;
         outerDetails.appendChild(outerSummary);
         s.appendChild(outerDetails);
