@@ -61,7 +61,7 @@ const hdxOrderingAV = {
     avActions: [
         {
             label: "START",
-            comment: "",
+            comment: "Initializing AV variables, and establishes waypoint ordering method",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 thisAV.nextToCheck = -1;
@@ -211,7 +211,7 @@ const hdxOrderingAV = {
 
         {
             label: "topForLoop",
-            comment: "",
+            comment: "Updates active vertices and changes map accordingly",
             code: function(thisAV) {
 
                 highlightPseudocode(this.label, visualSettings.visiting);
@@ -258,7 +258,7 @@ const hdxOrderingAV = {
         
         {
             label: "addEdge",
-            comment: "",
+            comment: "Adds edge with gradient coloring and updates AVCP",
             code: function(thisAV) {
                 highlightPseudocode(this.label, visualSettings.visiting);
                 let color = {
@@ -301,7 +301,7 @@ const hdxOrderingAV = {
         },          
         {
             label: "cleanup",
-            description: "",
+            description: "Updates AVCP with ordering information",
             code: function(thisAV) {
             // Partitioning
                 if (document.getElementById("calcparts").checked == true) {
