@@ -350,7 +350,7 @@ const hdxClickDisAV = {
         if(this.findVertices=="SLDistance"){
         	points = '<span>Closest point:</span>' +
             '<table id="closestPoint" style="width:100%;"></table>'+
-            '<span>Furthest point:</span>' +
+            '<br><span>Furthest point:</span>' +
             '<table id="furthestPoint" style="width:100%;"></table>';
         }else if(this.findVertices=="givenDistance"){
         	points = '<span id="pointCount">Number of points: 0</span>' +
