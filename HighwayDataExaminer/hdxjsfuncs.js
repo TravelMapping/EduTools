@@ -1212,7 +1212,7 @@ function exactDistanceInMiles(lat1, lon1, lat2, lon2) {
     return Math.acos(ang) * rad;
 }
 
-// callback for when the showWays checkbox is clicked
+// callback for when the showConnections checkbox is clicked
 function showConnectionsClicked() {
 
     var showThem = document.getElementById('showConnections').checked;
@@ -1226,4 +1226,19 @@ function showConnectionsClicked() {
 	    	connections[i].remove();
 		}
     }
+}
+
+// function to handle when avcp elments are clicked and when to expand or collapse
+function collapseInnerTable(element){
+	for(const child of element.children){
+		if(child.tagName=="TABLE"){
+			if(child.style.display=="none"){
+				child.style.display="";
+				console.log("open");
+			}else{
+				child.style.display="none";
+				console.log("close");
+			}
+		}
+	}
 }
