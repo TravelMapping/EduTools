@@ -1234,10 +1234,8 @@ function collapseInnerTable(element){
 		if(child.tagName=="TABLE"){
 			if(child.style.display=="none"){
 				child.style.display="";
-				console.log("open");
 			}else{
 				child.style.display="none";
-				console.log("close");
 			}
 		}
 	}
