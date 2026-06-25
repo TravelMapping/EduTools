@@ -373,7 +373,7 @@ const hdxClickDisAV = {
         <option value="givenDistance">All points within a given Distance</option>
         <option value="givenVertices">Find the Distance needed to find N points</option>
         </select>`;
-        newAO += `<br><label for="centerLat">Latitude: </label><input id="centerLat" min="-90" max="90">
+        newAO += `<br><label for="centerLat">Latitude: </label><input id="centerLat" min="-90" max="90"><br>
         <label for="centerLon">Longitude: </label><input id="centerLon" min="-180" max="180">`;
         newAO += `<div id="givenD" style="display:none;"><label for="maxDistance">Find the number of vertices within: </label>
         <input type="number" min="0" id="maxDistance"></div>`;
