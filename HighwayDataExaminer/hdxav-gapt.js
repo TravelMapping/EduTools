@@ -309,6 +309,7 @@ const hdxGAPTAV = {
     },
     traversalAVCPHover(travNum){
     	this.gradiant.setNumberRange(0,this.traversals[travNum].length-1);
+		this.gradiant.setSpectrum('bb133e','ffffff','002147');
     	for(i=0; i<this.traversals[travNum].length;i++){
     		updateMarkerAndTable(this.traversals[travNum][i], {
                 color: "#" + this.gradiant.colorAt(i),
