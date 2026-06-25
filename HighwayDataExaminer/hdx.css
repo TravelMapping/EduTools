@@ -1229,7 +1229,6 @@ p#pscode
 #title p#metalTitle
 {
     float: left;
-    max-width: 200px;
     color: white;
     font-family: Avenir, Arial, Helvetica, sans-serif;
     font-size: 36px;

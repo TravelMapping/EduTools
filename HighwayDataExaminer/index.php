@@ -185,7 +185,7 @@ will display
     </table>
   </div>
   <div id="title">
-    <p id="metalTitle">METAL&nbsp;HDX</p>
+    <p id="metalTitle"><img src="MetalBetaLogoSmall.png" height="40px" style="padding-left:1rem" alt="M">ETAL&nbsp;HDX</p>
   </div>
 </div>
 
