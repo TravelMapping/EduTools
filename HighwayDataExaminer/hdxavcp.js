@@ -26,6 +26,7 @@ const hdxAVCP = {
 	infoBox.setAttribute('id', namePrefix + this.suffix);
 	infoBox.setAttribute('style', "color:" + vs.textColor +
                              "; background-color:" + vs.color);
+    infoBox.setAttribute("onclick", "collapseInnerTable(this)")
 	infoBoxtr.appendChild(infoBox);
 	infoBoxtr.style.display = "none";
 	this.rows.push(infoBoxtr);

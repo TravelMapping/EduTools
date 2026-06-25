@@ -335,9 +335,9 @@ const hdxClickDisAV = {
         this.code += pcEntry(1, "d &larr; dist(referencePoint, v)", "distCalc");
         if(this.findVertices=="SLDistance"){
         	this.code += pcEntry(1, "if d < d<sub>closest</sub>", "checkSmallest");
-        	this.code += pcEntry(2, "d<sub>closest</sub> &larr; d<br>&emsp;&emsp;&emsp;&emsp;v<sub>closest</sub> &larr; v", "setSmallest");
+        	this.code += pcEntry(2, ["d<sub>closest</sub> &larr; d", "v<sub>closest</sub> &larr; v"], "setSmallest");
         	this.code += pcEntry(1, "else if d > d<sub>furthest</sub>", "checkFurthest");
-        	this.code += pcEntry(2, "d<sub>furthest</sub> &larr; d<br>&emsp;&emsp;&emsp;&emsp;v<sub>furthest</sub> &larr; v", "setFurthest");
+        	this.code += pcEntry(2, ["d<sub>furthest</sub> &larr; d", "v<sub>furthest</sub> &larr; v"], "setFurthest");
         }else if(this.findVertices=="givenDistance"){
         	this.code += pcEntry(1, "if d < maxDistance", "inRadiusCheck");
         	this.code += pcEntry(2, "closePoints.push(v)", "inRadius");
@@ -350,7 +350,7 @@ const hdxClickDisAV = {
         if(this.findVertices=="SLDistance"){
         	points = '<span>Closest point:</span>' +
             '<table id="closestPoint" style="width:100%;"></table>'+
-            '<span>Furthest point:</span>' +
+            '<br><span>Furthest point:</span>' +
             '<table id="furthestPoint" style="width:100%;"></table>';
         }else if(this.findVertices=="givenDistance"){
         	points = '<span id="pointCount">Number of points: 0</span>' +

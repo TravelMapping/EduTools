@@ -47,14 +47,24 @@ const hdxVertexSelector = {
 // id is the HTML element id for the input
 // label is the label for the control
 // initVal is the waypoint number to use for initialization
-function buildWaypointSelector(id,label,initVal) {
-        
-    return label + ' <input id="' + id +
-        '" onfocus="hdxVertexSelector.startSelection(\'' + id +
-        '\')" type="number" value="' + initVal + '" min="0" max="' +
-        (waypoints.length-1) + '" size="6" style="width: 7em" ' +
-        'onchange="waypointSelectorChanged(\'' + id + '\')"' +
-        '/>';        
+function buildWaypointSelector(id, label, initVal){
+	let contents = label + ` <input type="text" id="`+id+`" list="`+id+`List" onchange=
+	"labelToNumber(this.value, id)" value="`+initVal+`" onfocus="hdxVertexSelector.startSelection(\'' + id +
+        '\')"><datalist id="`+id+`List">`;
+	for(let i=0;i<waypoints.length;i++){
+		contents +=`<option value="#`+i+` `+waypoints[i].label+`">`;
+	}
+	contents +=`</datalist>`;
+	return contents;
+}
+// On change function for buildWaypointSelector function, which translates label to number
+function labelToNumber(value, id){
+	for(let i=0;i<waypoints.length;i++){
+		let validV="#"+i+" "+waypoints[i].label;
+		if(value==validV){
+			document.getElementById(id).value=i;
+		}
+	}
 }
 
 // Same as buildWaypointSelector but is used for conditional
