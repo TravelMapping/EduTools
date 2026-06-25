@@ -22,7 +22,7 @@
     margin: 0;
     z-index: 11000;
     position: absolute;
-    overflow: scroll;
+    overflow-y: scroll;
     width: 400px;
     opacity: 1.0;
     display: none;
