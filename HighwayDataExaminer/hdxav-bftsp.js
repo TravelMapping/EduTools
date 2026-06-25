@@ -32,6 +32,9 @@ const hdxBFTravelingSalesmanAV = {
 
     // number of paths visited so far
     pathCount: -1,
+    
+    // saves the 5 most recent times at which current iteration started
+    iterStartTime: [],
 
     avActions : [
         {
@@ -42,6 +45,9 @@ const hdxBFTravelingSalesmanAV = {
 		
                 // gets the staring vertex selected by the user as an integer
                 thisAV.startPoint = Number(document.getElementById("startPoint").value);
+                
+                thisAV.iterStartTime = [];
+                thisAV.iterStartTime.push(new Date().getTime());
 		
                 // we want to highlight the starting vertex
                 updateMarkerAndTable(thisAV.startPoint,
@@ -206,6 +212,23 @@ const hdxBFTravelingSalesmanAV = {
                     hdxAV.nextAction = "setMin";
                 }
                 
+                // recalculating time to completion
+                iterEndTime = new Date().getTime();
+                estTimeMs = ((iterEndTime - thisAV.iterStartTime[0])*thisAV.pathsRemaining)/(1000*thisAV.iterStartTime.length);
+                estTimeMin = Math.floor(estTimeMs/60);
+                estTimeSec = Math.floor(estTimeMs%60)
+                // standard time formatting for seconds
+                if(estTimeSec<10){
+                	estTimeNice=estTimeMin+":0"+estTimeSec;
+                }else{
+                	estTimeNice=estTimeMin+":"+estTimeSec;
+                }
+                hdxAVCP.update("timeToCompletion", "Estimated time to completion is : "+estTimeNice);
+                // updating iterStartTime, adding the newest time and removing the oldest if >5 values
+                thisAV.iterStartTime.push(iterEndTime);
+                if(thisAV.iterStartTime.length>5){
+                	thisAV.iterStartTime.shift();
+                }
             },
             logMessage: function(thisAV) {
                 return "Calculate distance of path " + thisAV.pathCount;
@@ -266,6 +289,7 @@ const hdxBFTravelingSalesmanAV = {
 			       thisAV.minDistance.toFixed(3) + " miles");
                 hdxAVCP.update('undiscovered', '');
                 hdxAVCP.update("currSum", "");
+                hdxAVCP.update("timeToCompletion", "");
 		
                 // rainbow constructor, used to make pattern so
                 // that users can better see the path in which the
@@ -388,6 +412,7 @@ const hdxBFTravelingSalesmanAV = {
 				  waypoints.length - 1);
 
 	// AVCP entries
+        hdxAVCP.add("timeToCompletion", visualSettings.discarded);
         hdxAVCP.add("undiscovered", visualSettings.undiscovered); 
         hdxAVCP.add("visiting", visualSettings.visiting);
         hdxAVCP.add("currSum", visualSettings.discovered);
