@@ -214,16 +214,20 @@ const hdxBFTravelingSalesmanAV = {
                 
                 // recalculating time to completion
                 iterEndTime = new Date().getTime();
-                estTimeMs = ((iterEndTime - thisAV.iterStartTime[0])*thisAV.pathsRemaining)/(1000*thisAV.iterStartTime.length);
-                estTimeMin = Math.floor(estTimeMs/60);
-                estTimeSec = Math.floor(estTimeMs%60)
-                // standard time formatting for seconds
-                if(estTimeSec<10){
-                	estTimeNice=estTimeMin+":0"+estTimeSec;
+                if(thisAV.pathsRemaining!="Infinity"){
+                	estTimeMs = ((iterEndTime - thisAV.iterStartTime[0])*thisAV.pathsRemaining)/(1000*thisAV.iterStartTime.length);
+                	estTimeMin = Math.floor(estTimeMs/60);
+                	estTimeSec = Math.floor(estTimeMs%60)
+                	// standard time formatting for seconds
+                	if(estTimeSec<10){
+                		estTimeNice=estTimeMin+":0"+estTimeSec;
+                	}else{
+                		estTimeNice=estTimeMin+":"+estTimeSec;
+                	}
+                	hdxAVCP.update("timeToCompletion", "Estimated time to completion is : "+estTimeNice);
                 }else{
-                	estTimeNice=estTimeMin+":"+estTimeSec;
+                	hdxAVCP.update("timeToCompletion", "Estimated time to completion is too high to compute");
                 }
-                hdxAVCP.update("timeToCompletion", "Estimated time to completion is : "+estTimeNice);
                 // updating iterStartTime, adding the newest time and removing the oldest if >5 values
                 thisAV.iterStartTime.push(iterEndTime);
                 if(thisAV.iterStartTime.length>5){
