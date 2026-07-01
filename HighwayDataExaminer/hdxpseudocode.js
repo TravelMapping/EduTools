@@ -72,7 +72,7 @@ function pcEntry(indent, code, id) {
 
     let entry;
     if (id != "") {
-        entry = '<tr class="codeRow" custom-title="0 executions"><td id="' + id + '"><div style="white-space: nowrap;">';
+        entry = '<tr class="codeRow" custom-title="0 executions"><td id="' + id + '" style="white-space: nowrap;">';
     }
     else {
         entry = '<tr class="codeRow"><td>';
@@ -91,7 +91,7 @@ function pcEntry(indent, code, id) {
         }
         entry += code;
     }
-    entry += '</div></td></tr>';    
+    entry += '</td></tr>';    
     return entry;
 }
 

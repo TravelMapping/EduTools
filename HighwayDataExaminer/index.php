@@ -246,7 +246,7 @@ will display
 	<tr>
 	  <td id="pseudo">
 	    <p id = "pscode" style="display:none;">Pseudocode</p>
-	    <span id="pseudoText" style="display:none;">Select an algorithm to view pseudocode.</span>
+	    <div id="pseudoText" style="display:none;">Select an algorithm to view pseudocode.</div>
 	  </td>
 	</tr>
       </tbody>
